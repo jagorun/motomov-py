@@ -1,1 +1,12 @@
-{"test": true}
+[
+  {
+    "id": "2026-09-26-utro",
+    "kind": "utro",
+    "date": "2026-09-26",
+    "dateLabel": "26.09.2026, суббота",
+    "topic": "collections (Counter, defaultdict, deque, namedtuple/NamedTuple)",
+    "title": "Утро · Python · 26.09.2026, суббота · collections: Counter, defaultdict, deque, namedtuple",
+    "summary": "Counter считает частоты и отдаёт 0 вместо KeyError; defaultdict создаёт значение фабрикой при первом обращении; deque — O(1) с обоих концов; namedtuple — лёгкая неизменяемая запись с полями по имени.",
+    "body": ["placeholder"]
+  }
+]
