@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Новости · py.motomov.ru</title>
+  <meta name="description" content="Сводки по ИИ-моделям, агентам и инженерным трендам.">
+  <meta name="theme-color" content="#f3efe6">
+  <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
+  <link rel="canonical" href="https://py.motomov.ru/novosti">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="index.html">
+        <img class="brand-logo" src="https://www.motomov.ru/logo.jpg" width="40" height="40" alt="Moto">
+        <span><span class="brand-name">Moto</span><span class="brand-sub">py.motomov.ru</span></span>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Старт</a>
+        <a href="news.html">Новое</a>
+        <a class="active" href="novosti.html" aria-current="page">Новости</a>
+        <a href="course.html">Курс</a>
+        <a href="kb.html">База</a>
+        <a href="https://www.motomov.ru/">Визитка</a>
+      </nav>
+    </header>
+    <header class="hero">
+      <span class="badge">ИИ · модели · агенты · каждый день 07:00 Москва</span>
+      <h1>Новости</h1>
+      <p class="bio">Сводки по новым моделям и агентам. Без видеомонтажа и подписок. Курс Python лежит отдельно в «Новое».</p>
+    </header>
+    <section>
+      <div class="section-head"><h2>Лента</h2></div>
+      <div class="grid" id="novosti-list"><div class="empty">Загрузка новостей…</div></div>
+    </section>
+    <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
+  </div>
+  <script src="js/app.js" defer></script>
+</body>
+</html>
