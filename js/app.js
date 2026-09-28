@@ -5,7 +5,7 @@
   if (document.getElementById("kb-list")) loadKb();
   if (document.getElementById("news-list")) loadNews();
   if (document.getElementById("novosti-list")) loadNovosti();
-  if (document.getElementById("brief-root")) loadBrief(params.get("id"));
+  if (document.getElementById("brief-root")) loadBrief(params.get("id"), params.get("kind"));
 })();
 function el(html) {
   const t = document.createElement("template");
@@ -24,6 +24,9 @@ function kindLabel(kind) {
   if (kind === "vecher") return "вечер";
   if (kind === "ai") return "новости";
   return "заметка";
+}
+function briefHref(it) {
+  return `brief.html?id=${encodeURIComponent(it.id)}&kind=${encodeURIComponent(it.kind)}`;
 }
 function renderBody(parts) {
   return parts.map((block) => {
@@ -50,7 +53,7 @@ function renderBody(parts) {
   }).join("");
 }
 function cardHtml(it) {
-  return `<a class="lesson-card" href="brief.html?id=${encodeURIComponent(it.id)}"><span class="badge">${kindLabel(it.kind)} · ${escapeHtml(it.dateLabel)}</span><h3>${escapeHtml(it.title)}</h3><p>${escapeHtml(it.summary)}</p><div class="meta">${escapeHtml(it.topic || "")}</div></a>`;
+  return `<a class="lesson-card" href="${briefHref(it)}"><span class="badge">${kindLabel(it.kind)} · ${escapeHtml(it.dateLabel)}</span><h3>${escapeHtml(it.title)}</h3><p>${escapeHtml(it.summary)}</p><div class="meta">${escapeHtml(it.topic || "")}</div></a>`;
 }
 async function loadCourse() {
   const box = document.getElementById("course-list");
@@ -101,13 +104,6 @@ async function fetchJson(url) {
     return [];
   }
 }
-async function fetchBriefs() {
-  const [python, ai] = await Promise.all([
-    fetchJson("data/briefs.json"),
-    fetchJson("data/novosti.json")
-  ]);
-  return ai.concat(python);
-}
 async function loadNews() {
   const list = document.getElementById("news-list");
   const items = (await fetchJson("data/briefs.json")).filter((it) => it.kind !== "ai");
@@ -120,7 +116,7 @@ async function loadNews() {
 }
 async function loadNovosti() {
   const list = document.getElementById("novosti-list");
-  const items = (await fetchJson("data/novosti.json")).filter((it) => it.kind === "ai" || true);
+  const items = await fetchJson("data/novosti.json");
   list.innerHTML = "";
   if (!items.length) {
     list.innerHTML = '<div class="empty">Новостей пока нет. Утренняя сводка придёт в 07:00 по Москве.</div>';
@@ -128,18 +124,31 @@ async function loadNovosti() {
   }
   items.forEach((it) => list.appendChild(el(cardHtml(it))));
 }
-async function loadBrief(id) {
+async function loadBrief(id, kind) {
   const root = document.getElementById("brief-root");
-  const items = await fetchBriefs();
-  const i = items.findIndex((it) => it.id === id);
-  const brief = i >= 0 ? items[i] : items[0];
+  const [python, ai] = await Promise.all([
+    fetchJson("data/briefs.json"),
+    fetchJson("data/novosti.json")
+  ]);
+  let pool;
+  if (kind === "ai") {
+    pool = ai;
+  } else if (kind) {
+    pool = python.filter((it) => it.kind === kind);
+    if (!pool.some((it) => it.id === id)) pool = python;
+  } else {
+    const inPy = python.find((it) => it.id === id);
+    pool = inPy ? python : ai.concat(python);
+  }
+  const i = id ? pool.findIndex((it) => it.id === id) : -1;
+  const brief = i >= 0 ? pool[i] : null;
   if (!brief) { root.innerHTML = '<div class="empty">Сводка не найдена.</div>'; return; }
   document.title = brief.title + " · py.motomov.ru";
-  const same = items.filter((it) => it.kind === brief.kind);
+  const same = pool.filter((it) => it.kind === brief.kind);
   const si = same.findIndex((it) => it.id === brief.id);
   const prev = same[si - 1];
   const next = same[si + 1];
   const backHref = brief.kind === "ai" ? "novosti.html" : "news.html";
-  const backLabel = brief.kind === "ai" ? "К новостям" : "К ленте";
-  root.innerHTML = `<span class="badge">${kindLabel(brief.kind)} · ${escapeHtml(brief.dateLabel)} · ${escapeHtml(brief.topic || "")}</span><h1>${escapeHtml(brief.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(brief.summary)}</p><article class="article">${renderBody(brief.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="brief.html?id=${encodeURIComponent(prev.id)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel}</a>`}${next ? `<a class="ghost-btn" href="brief.html?id=${encodeURIComponent(next.id)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel} →</a>`}</div>`;
+  const backLabel = brief.kind === "ai" ? "К новостям" : "К ленте python";
+  root.innerHTML = `<span class="badge">${kindLabel(brief.kind)} · ${escapeHtml(brief.dateLabel)} · ${escapeHtml(brief.topic || "")}</span><h1>${escapeHtml(brief.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(brief.summary)}</p><article class="article">${renderBody(brief.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="${briefHref(prev)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel}</a>`}${next ? `<a class="ghost-btn" href="${briefHref(next)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel} →</a>`}</div>`;
 }
