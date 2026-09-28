@@ -144,7 +144,7 @@ async function loadKb() {
       filters.appendChild(el(`<button type="button" class="ghost-btn" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>`));
     });
     filters.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-tab],button[data-tag]");
+      const btn = e.target.closest("button[data-tag]");
       if (!btn) return;
       activeTag = btn.getAttribute("data-tag") || "";
       Array.from(filters.querySelectorAll("button")).forEach((b) => b.classList.toggle("active", b === btn));
@@ -192,7 +192,7 @@ async function loadSlovar() {
       if (activeTag && it.tag !== activeTag) return false;
       return !needle || kbHaystack(it).includes(needle);
     });
-    shown.sort((a, b) => String(b.updated || b.source || "").localeCompare(String(a.updated || a.source || ""));
+    shown.sort((a, b) => String(b.updated || b.source || "").localeCompare(String(a.updated || a.source || "")));
     list.innerHTML = "";
     if (!shown.length) {
       list.innerHTML = '<div class="empty">В словаре пока пусто. Термины появятся после следующих сводок.</div>';
