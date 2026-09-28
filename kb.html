@@ -28,10 +28,11 @@
     <header class="hero">
       <span class="badge">учебная база · поиск без нейросети</span>
       <h1>База знаний</h1>
-      <p class="bio">Карточки по Python, RAG и motomov. Поиск идёт в браузере — первый этаж той же идеи, что и векторный RAG.</p>
+      <p class="bio">Словарь технологий из сводок плюс карточки курса Python/RAG. Поиск в браузере — первый этаж той же идеи, что и векторный RAG. Термины копятся отдельно от ленты новостей.</p>
     </header>
     <section>
-      <input class="search-box" id="kb-search" type="search" placeholder="Найти: venv, чанки, Grok, Chroma…" autocomplete="off">
+      <input class="search-box" id="kb-search" type="search" placeholder="Найти: tool-use, RAG, TPU, sandbox, venv…" autocomplete="off">
+      <div class="pager" id="kb-filters" style="margin:0.8rem 0 1rem; flex-wrap:wrap; gap:0.5rem"></div>
       <div class="grid" id="kb-list"><div class="empty">Загрузка базы…</div></div>
     </section>
     <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>

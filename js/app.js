@@ -78,18 +78,61 @@ async function loadLesson(id) {
   const next = lessons[i + 1];
   root.innerHTML = `<span class="badge">урок ${lesson.num} · ${lesson.level} · ${lesson.time}</span><h1>${lesson.title}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${lesson.summary}</p><article class="article">${renderBody(lesson.body)}</article><div class="pager">${prev ? `<a class="ghost-btn" href="lesson.html?id=${prev.id}">← ${prev.title}</a>` : `<a class="ghost-btn" href="course.html">К программе</a>`}${next ? `<a class="ghost-btn" href="lesson.html?id=${next.id}">${next.title} →</a>` : `<a class="ghost-btn" href="kb.html">К базе →</a>`}</div>`;
 }
+function kbHaystack(it) {
+  return [it.title, it.text, it.tag, it.what, it.why, it.notConfuse, it.source]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+function kbCardHtml(it) {
+  const badge = escapeHtml(it.tag || "заметка");
+  const title = escapeHtml(it.title || "");
+  let body = "";
+  if (it.what || it.why || it.notConfuse) {
+    if (it.what) body += `<p><strong>Что это:</strong> ${escapeHtml(it.what)}</p>`;
+    if (it.why) body += `<p><strong>Зачем:</strong> ${escapeHtml(it.why)}</p>`;
+    if (it.notConfuse) body += `<p><strong>Не путать с:</strong> ${escapeHtml(it.notConfuse)}</p>`;
+  } else {
+    body = `<p>${escapeHtml(it.text || "")}</p>`;
+  }
+  let meta = "";
+  if (it.source) {
+    const href = `brief.html?id=${encodeURIComponent(it.source)}&kind=ai`;
+    meta = `<div class="meta"><a href="${href}">из сводки ${escapeHtml(it.source)}</a>${it.updated ? " · " + escapeHtml(it.updated) : ""}</div>`;
+  }
+  return `<article class="kb-card"><span class="badge">${badge}</span><h3>${title}</h3>${body}${meta}</article>`;
+}
 async function loadKb() {
   const list = document.getElementById("kb-list");
   const input = document.getElementById("kb-search");
+  const filters = document.getElementById("kb-filters");
   const items = await fetch("data/kb.json", { cache: "no-store" }).then((r) => r.json()).catch(() => []);
+  let activeTag = "";
+  const tags = Array.from(new Set(items.map((it) => it.tag).filter(Boolean)));
+  if (filters) {
+    filters.innerHTML = "";
+    const allBtn = el(`<button type="button" class="ghost-btn active" data-tag="">Все</button>`);
+    filters.appendChild(allBtn);
+    tags.forEach((tag) => {
+      filters.appendChild(el(`<button type="button" class="ghost-btn" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>`));
+    });
+    filters.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-tag]");
+      if (!btn) return;
+      activeTag = btn.getAttribute("data-tag") || "";
+      Array.from(filters.querySelectorAll("button")).forEach((b) => b.classList.toggle("active", b === btn));
+      draw(input ? input.value : "");
+    });
+  }
   function draw(q) {
     const needle = (q || "").trim().toLowerCase();
-    const shown = items.filter((it) => !needle || (it.title + " " + it.text + " " + it.tag).toLowerCase().includes(needle));
+    const shown = items.filter((it) => {
+      if (activeTag && it.tag !== activeTag) return false;
+      return !needle || kbHaystack(it).includes(needle);
+    });
     list.innerHTML = "";
     if (!shown.length) { list.innerHTML = '<div class="empty">В базе этого нет.</div>'; return; }
-    shown.forEach((it) => {
-      list.appendChild(el(`<article class="kb-card"><span class="badge">${it.tag}</span><h3>${it.title}</h3><p>${it.text}</p></article>`));
-    });
+    shown.forEach((it) => list.appendChild(el(kbCardHtml(it))));
   }
   draw("");
   if (input) input.addEventListener("input", () => draw(input.value));
