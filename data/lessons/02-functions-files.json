@@ -1,0 +1,17 @@
+[
+  {
+    "id": "02-functions-files",
+    "num": "02",
+    "title": "Функции и файлы",
+    "time": "60 мин",
+    "level": "старт",
+    "summary": "pathlib, utf-8 и функции — тот же приём, что renderBody и fetchJson.",
+    "body": ["Вынеси повтор в функцию. Читай файл как utf-8."],
+    "tabs": [
+      {"id": "zachem", "title": "Зачем", "body": ["renderBody рисует и урок, и сводку. fetchJson читает разные JSON одним способом."]},
+      {"id": "syntax", "title": "Синтаксис", "body": ["```\nfrom pathlib import Path\ntext = Path(\"note.md\").read_text(encoding=\"utf-8\")\nchunks = [b.strip() for b in text.split(\"\\n\\n\") if b.strip()]\n```", "def — объявить функцию. Path сам открывает и закрывает файл."]},
+      {"id": "mehanika", "title": "Механика", "body": ["fetch(..., { cache: \"no-store\" }) — иначе после пуша страница покажет вчерашний урок."]},
+      {"id": "praktika", "title": "Практика", "body": ["Два .md и подсчёт символов через pathlib."]}
+    ]
+  }
+]
