@@ -1,0 +1,17 @@
+[
+  {
+    "id": "03-json-search",
+    "num": "03",
+    "title": "JSON и поиск",
+    "time": "55 мин",
+    "level": "база",
+    "summary": "Первый этаж RAG без нейросети. Так устроена страница База.",
+    "body": ["Текстовый поиск по JSON — как kb.html."],
+    "tabs": [
+      {"id": "zachem", "title": "Зачем", "body": ["Пока нет векторов — ищем подстрокой. База работает так: kb.json в браузер, без сервера."]},
+      {"id": "syntax", "title": "Синтаксис", "body": ["Карточка базы — объект tag/title/text. Запятая после последнего поля запрещена.", "```\nneedle = \"venv\"\nhay = (it.get(\"title\",\"\") + \" \" + it.get(\"text\",\"\")).lower()\nfound = needle in hay\n```"]},
+      {"id": "mehanika", "title": "Механика", "body": ["kbHaystack склеивает поля, filter(Boolean) чистит пустые, includes(needle) — весь поиск.", "Словарь берёт тот же kb.json, но только карточки с source или what."]},
+      {"id": "praktika", "title": "Практика", "body": ["8 заметок в notes.json и search.py с `if q in hay`."]}
+    ]
+  }
+]
