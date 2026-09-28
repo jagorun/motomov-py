@@ -1,0 +1,17 @@
+[
+  {
+    "id": "00-setup",
+    "num": "00",
+    "title": "Среда и привычка",
+    "time": "40 мин",
+    "level": "старт",
+    "summary": "Python, редактор, виртуальное окружение. Как устроена привычка, из которой потом растёт сайт.",
+    "body": ["Открой вкладки. Этот урок — не про весь язык, а про рабочий стол на каждый вечер."],
+    "tabs": [
+      {"id": "zachem", "title": "Зачем", "body": ["Цель урока — не выучить Python за вечер. Цель — чтобы завтра вечером было куда сесть.", "Сайт py.motomov.ru сам устроен так же: маленькие файлы, одна привычка (править JSON и пушить main), без сервера и базы.", "## Что должно появиться на диске", "Папка проекта. Внутри — .venv. Файл hello.py. Редактор, который открывает эту папку, а не один файл."]},
+      {"id": "syntax", "title": "Синтаксис", "body": ["Команды ниже — речь терминала, не программа Python.", "## Проверка PATH", "```\npython --version\npip --version\n```", "## Виртуальное окружение", "```\npython -m venv .venv\n```", "python — интерпретатор; -m — запусти модуль; venv — модуль; .venv — имя папки.", "Windows: `.venv\\Scripts\\activate`. Linux: `source .venv/bin/activate`."]},
+      {"id": "mehanika", "title": "Механика", "body": ["`.venv` изолирует пакеты, как briefs.json и novosti.json изолируют ленты.", "Сайт на Vercel Python не запускает. Python на диске проверяет JSON: `python -m json.tool data/lessons.json`.", "Битый JSON валит весь курс: loadCourse делает r.json()."]},
+      {"id": "praktika", "title": "Практика", "body": ["Папка sandbox, .venv, hello.py с print(\"ok\").", "Затем: git clone motomov-py и python -m json.tool data/lessons.json."]}
+    ]
+  }
+]
