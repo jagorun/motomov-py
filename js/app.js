@@ -1,6 +1,6 @@
 (function () {
   const params = new URLSearchParams(location.search);
-  if (document.getElementById("lesson-root")) loadLesson(params.get("id"));
+  if (document.getElementById("lesson-root")) loadLesson(params.get("id"), params.get("tab"));
   if (document.getElementById("course-list")) loadCourse();
   if (document.getElementById("kb-list")) loadKb();
   if (document.getElementById("slovar-list")) loadSlovar();
@@ -15,10 +15,10 @@ function el(html) {
 }
 function escapeHtml(s) {
   return String(s)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/&/g, "&")
+    .replace(/</g, "<")
+    .replace(/>/g, ">")
+    .replace(/"/g, """);
 }
 function kindLabel(kind) {
   if (kind === "utro") return "утро";
@@ -68,16 +68,42 @@ async function loadCourse() {
     box.innerHTML = '<div class="empty">Не удалось загрузить программу.</div>';
   }
 }
-async function loadLesson(id) {
+function lessonTabList(lesson) {
+  if (Array.isArray(lesson.tabs) && lesson.tabs.length) return lesson.tabs;
+  return [{ id: "text", title: "Урок", body: lesson.body || [] }];
+}
+function paintLesson(root, lesson, lessons, index, tabId) {
+  const tabs = lessonTabList(lesson);
+  const current = tabs.find((t) => t.id === tabId) || tabs[0];
+  const prev = lessons[index - 1];
+  const next = lessons[index + 1];
+  const showTabs = tabs.length > 1;
+  if (showTabs) {
+    const url = new URL(location.href);
+    url.searchParams.set("id", lesson.id);
+    url.searchParams.set("tab", current.id);
+    history.replaceState({}, "", url);
+  }
+  const tabBar = showTabs
+    ? `<div class="lesson-tabs" role="tablist">${tabs.map((t) => `<button type="button" class="lesson-tab${t.id === current.id ? " active" : ""}" data-tab="${escapeHtml(t.id)}" role="tab" aria-selected="${t.id === current.id ? "true" : "false"}">${escapeHtml(t.title)}</button>`).join("")}</div>`
+    : "";
+  root.innerHTML = `<span class="badge">урок ${escapeHtml(String(lesson.num))} · ${escapeHtml(lesson.level)} · ${escapeHtml(lesson.time)}</span><h1>${escapeHtml(lesson.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(lesson.summary)}</p>${tabBar}<article class="article">${renderBody(current.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="lesson.html?id=${encodeURIComponent(prev.id)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="course.html">К программе</a>`}${next ? `<a class="ghost-btn" href="lesson.html?id=${encodeURIComponent(next.id)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="kb.html">К базе →</a>`}</div>`;
+  if (showTabs) {
+    root.querySelector(".lesson-tabs").addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-tab]");
+      if (!btn) return;
+      paintLesson(root, lesson, lessons, index, btn.getAttribute("data-tab"));
+    });
+  }
+}
+async function loadLesson(id, tabId) {
   const root = document.getElementById("lesson-root");
   const lessons = await fetch("data/lessons.json", { cache: "no-store" }).then((r) => r.json()).catch(() => []);
   const i = Math.max(0, lessons.findIndex((l) => l.id === id));
   const lesson = lessons[i] || lessons[0];
   if (!lesson) { root.innerHTML = '<div class="empty">Урок не найден.</div>'; return; }
   document.title = lesson.title + " · py.motomov.ru";
-  const prev = lessons[i - 1];
-  const next = lessons[i + 1];
-  root.innerHTML = `<span class="badge">урок ${lesson.num} · ${lesson.level} · ${lesson.time}</span><h1>${lesson.title}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${lesson.summary}</p><article class="article">${renderBody(lesson.body)}</article><div class="pager">${prev ? `<a class="ghost-btn" href="lesson.html?id=${prev.id}">← ${prev.title}</a>` : `<a class="ghost-btn" href="course.html">К программе</a>`}${next ? `<a class="ghost-btn" href="lesson.html?id=${next.id}">${next.title} →</a>` : `<a class="ghost-btn" href="kb.html">К базе →</a>`}</div>`;
+  paintLesson(root, lesson, lessons, i, tabId);
 }
 function kbHaystack(it) {
   return [it.title, it.text, it.tag, it.what, it.why, it.notConfuse, it.source]
@@ -138,7 +164,6 @@ async function loadKb() {
   draw("");
   if (input) input.addEventListener("input", () => draw(input.value));
 }
-
 async function loadSlovar() {
   const list = document.getElementById("slovar-list");
   const input = document.getElementById("slovar-search");
@@ -167,7 +192,6 @@ async function loadSlovar() {
       if (activeTag && it.tag !== activeTag) return false;
       return !needle || kbHaystack(it).includes(needle);
     });
-    // newest first by updated/source
     shown.sort((a, b) => String(b.updated || b.source || "").localeCompare(String(a.updated || a.source || "")));
     list.innerHTML = "";
     if (!shown.length) {
