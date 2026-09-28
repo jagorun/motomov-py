@@ -1,1 +1,132 @@
-PLACEHOLDER
+[
+  {
+    "id": "00-setup",
+    "num": "00",
+    "title": "Среда и привычка",
+    "time": "40 мин",
+    "level": "старт",
+    "summary": "Python, редактор, виртуальное окружение.",
+    "body": [
+      "Цель — рабочий стол на каждый вечер, а не выучить весь язык сразу.",
+      "Поставьте Python 3.12. На Windows отметьте Add python.exe to PATH.",
+      "```\npython --version\npip --version\n```",
+      "Виртуальное окружение — изолированный Python для проекта.",
+      "```\npython -m venv .venv\n.venv\\Scripts\\activate\n```",
+      "Домашнее: папка sandbox, .venv и hello.py."
+    ]
+  },
+  {
+    "id": "01-basics",
+    "num": "01",
+    "title": "Переменные и типы",
+    "time": "50 мин",
+    "level": "старт",
+    "summary": "Строки, числа, списки, словари.",
+    "body": [
+      "Имя — ярлык на объект. Тип живёт у объекта.",
+      "```\nname = \"Moto\"\nparts = [\"сайлентблок\", \"W5W\"]\n```",
+      "Словарь — мини-база знаний.",
+      "```\nnote = {\"title\": \"Беседка\", \"paint\": \"Pinotex Ultra\"}\n```",
+      "Домашнее: скрипт расхода материала."
+    ]
+  },
+  {
+    "id": "02-functions-files",
+    "num": "02",
+    "title": "Функции и файлы",
+    "time": "60 мин",
+    "level": "старт",
+    "summary": "pathlib и utf-8.",
+    "body": [
+      "Если блок повторяется — вынесите в функцию.",
+      "```\nfrom pathlib import Path\ntext = Path(\"note.md\").read_text(encoding=\"utf-8\")\n```",
+      "Нарезка на абзацы — заготовка RAG.",
+      "Домашнее: два .md и скрипт подсчёта символов."
+    ]
+  },
+  {
+    "id": "03-json-search",
+    "num": "03",
+    "title": "JSON и поиск",
+    "time": "55 мин",
+    "level": "база",
+    "summary": "Первый этаж RAG без нейросети.",
+    "body": [
+      "Пока нет векторов — ищем обычным текстом.",
+      "Так устроена страница База на этом сайте.",
+      "Домашнее: 8 своих заметок в JSON."
+    ]
+  },
+  {
+    "id": "04-rag",
+    "num": "04",
+    "title": "Своя RAG-система",
+    "time": "90 мин",
+    "level": "ядро",
+    "summary": "Чанки, векторы, Chroma, ответ только по кускам.",
+    "body": [
+      "RAG = сначала найти свои абзацы, потом отдать их модели.",
+      "Конвейер: файлы → чанки ~900 символов → e5-small → Chroma → Grok или Ollama.",
+      "Поиск всегда на вашем диске.",
+      "Домашнее: ingest.py на двух своих заметках."
+    ]
+  },
+  {
+    "id": "05-site",
+    "num": "05",
+    "title": "Сайт py.motomov.ru",
+    "time": "90 мин",
+    "level": "продукт",
+    "summary": "Чертёж учебного сайта: файлы, меню, две ленты сводок, выкладка. С этого урока править сайт самому.",
+    "body": [
+      "Этот урок — чертёж именно py.motomov.ru. После него можно открыть файл и понять, какая строка отвечает за то, что на экране.",
+      "Дата этой карты: 28.09.2026. Правка сайта без дописки этого урока не закрыта.",
+      "## Правило",
+      "Поменял меню, раздел, выкладку, сводки или файлы — в том же коммите допиши этот урок: что было / что стало / какой файл. Правило для тебя и для Grok. См. также PRAVILA.md.",
+      "## Два сайта",
+      "motomov.ru — визитка, репозиторий jagorun/roy-business-card.",
+      "py.motomov.ru — учеба, репозиторий jagorun/motomov-py. Общие только логотип и фавикон.",
+      "## Как страница доходит до браузера",
+      "GitHub main → Vercel → py.motomov.ru (запасной motomov-py.vercel.app).",
+      "vercel.json: cleanUrls и редирект / → /novosti. Старт живёт по /index.",
+      "## Карта файлов",
+      "Серверной базы нет. Браузер качает HTML, CSS, JS, JSON.",
+      "### Оболочки",
+      "index.html — Старт. novosti.html — Новости, дырка novosti-list. news.html — python, дырка news-list.",
+      "course.html — список уроков, course-list. lesson.html?id=05-site — текст урока, lesson-root.",
+      "kb.html — База, kb-search и kb-list. slovar.html — Словарь, slovar-search / slovar-filters / slovar-list.",
+      "brief.html?id=&kind= — одна сводка, brief-root.",
+      "### Мозг и вид",
+      "js/app.js — единственный скрипт. styles.css — только вид.",
+      "### Склады",
+      "data/lessons.json — уроки. data/briefs.json — python. data/novosti.json — ИИ. data/kb.json — база и часто словарь.",
+      "## Меню",
+      "Порядок: Новости, python, Курс, База, Словарь, Старт, Визитка.",
+      "Бренд ведёт на novosti.html. Класс active ставят вручную в каждой HTML-оболочке. Новый пункт — во все страницы шапки.",
+      "## Как страница оживает",
+      "app.js смотрит, какая дырка есть на странице, и грузит JSON через fetch (cache: no-store).",
+      "news-list → briefs.json. novosti-list → novosti.json. course-list / lesson-root → lessons.json. kb-list и slovar-list → kb.json. brief-root → id+kind.",
+      "## Две ленты сводок",
+      "python: data/briefs.json (utro, vecher, note). Новости: data/novosti.json (kind=ai).",
+      "Ссылка brief.html?id=...&kind=... (функция briefHref). 28.09 утро Python и ИИ имели один id 2026-09-28-utro — без kind открывался ИИ.",
+      "Поля сводки: id, kind, date, dateLabel, topic, title, summary, body.",
+      "## Курс",
+      "Эта страница — объект id 05-site в data/lessons.json. Поля: id, num, title, time, level, summary, body.",
+      "renderBody: ``` код; # и ## — заголовок; ### — подзаголовок; иначе абзац.",
+      "## База и Словарь",
+      "База — учебные карточки Python/RAG (tag, title, text).",
+      "Словарь — термины из сводок, формат «что это / зачем / не путать». Функция loadSlovar в app.js.",
+      "## Вид",
+      "styles.css, :root, акцент #2c6b3c. Классы: nav, hero, lesson-card, article, pager, ghost-btn, empty, bg-grid.",
+      "## Чтобы править самому",
+      "HTML — рамка. JS — дырка + JSON. Запятая в JSON ломает ленту: python -m json.tool data/lessons.json",
+      "Пуш в main обновляет сайт. Проверка: живой URL + Ctrl+F5.",
+      "## Куда идти",
+      "Меню — все HTML. Вход сайта — vercel.json. Новый урок — lessons.json. База — kb.json. Сводка python — briefs.json + kind. Цвет — --accent.",
+      "Новая фишка = дырка в HTML + функция в app.js + поле в JSON + абзац здесь.",
+      "## Домашнее",
+      "Найди в репозитории: python в news.html; редирект в vercel.json; briefHref в app.js; этот объект 05-site.",
+      "Запиши 4 строки: что хотел утро 28.09; где жил одинаковый id; как различаются python и ИИ; куда дописывать правку сайта."
+    ]
+  }
+]
