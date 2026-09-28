@@ -9,5 +9,7 @@
 
 ## Вкладки урока
 
-В `data/lessons.json` у урока может быть массив `tabs`: `id` в адресе (`?tab=`), `title` — кнопка, `body` — блоки как у `body`.
-Рендер: `lessonTabList` + `paintLesson` в `js/app.js`. Стили: `.lesson-tab`.
+В `data/lessons.json` у урока массив `tabs`: `id` в адресе (`?tab=`), `title` — кнопка, `body` — блоки как у `body`.
+Рендер: `lessonTabList` + `paintLesson` в `js/app.js`. Стили: `.lesson-tabs`, `.lesson-tab`.
+Уроки 00–04: вкладки Зачем / Синтаксис / Механика / Практика.
+Урок 05: Карта / HTML / JavaScript / JSON / Git / Практика.
