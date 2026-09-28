@@ -3,6 +3,7 @@
   if (document.getElementById("lesson-root")) loadLesson(params.get("id"));
   if (document.getElementById("course-list")) loadCourse();
   if (document.getElementById("kb-list")) loadKb();
+  if (document.getElementById("slovar-list")) loadSlovar();
   if (document.getElementById("news-list")) loadNews();
   if (document.getElementById("novosti-list")) loadNovosti();
   if (document.getElementById("brief-root")) loadBrief(params.get("id"), params.get("kind"));
@@ -132,6 +133,47 @@ async function loadKb() {
     });
     list.innerHTML = "";
     if (!shown.length) { list.innerHTML = '<div class="empty">В базе этого нет.</div>'; return; }
+    shown.forEach((it) => list.appendChild(el(kbCardHtml(it))));
+  }
+  draw("");
+  if (input) input.addEventListener("input", () => draw(input.value));
+}
+
+async function loadSlovar() {
+  const list = document.getElementById("slovar-list");
+  const input = document.getElementById("slovar-search");
+  const filters = document.getElementById("slovar-filters");
+  const all = await fetch("data/kb.json", { cache: "no-store" }).then((r) => r.json()).catch(() => []);
+  const items = all.filter((it) => it.source || it.what);
+  let activeTag = "";
+  const tags = Array.from(new Set(items.map((it) => it.tag).filter(Boolean))).sort();
+  if (filters) {
+    filters.innerHTML = "";
+    filters.appendChild(el(`<button type="button" class="ghost-btn active" data-tag="">Все</button>`));
+    tags.forEach((tag) => {
+      filters.appendChild(el(`<button type="button" class="ghost-btn" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>`));
+    });
+    filters.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-tag]");
+      if (!btn) return;
+      activeTag = btn.getAttribute("data-tag") || "";
+      Array.from(filters.querySelectorAll("button")).forEach((b) => b.classList.toggle("active", b === btn));
+      draw(input ? input.value : "");
+    });
+  }
+  function draw(q) {
+    const needle = (q || "").trim().toLowerCase();
+    const shown = items.filter((it) => {
+      if (activeTag && it.tag !== activeTag) return false;
+      return !needle || kbHaystack(it).includes(needle);
+    });
+    // newest first by updated/source
+    shown.sort((a, b) => String(b.updated || b.source || "").localeCompare(String(a.updated || a.source || "")));
+    list.innerHTML = "";
+    if (!shown.length) {
+      list.innerHTML = '<div class="empty">В словаре пока пусто. Термины появятся после следующих сводок.</div>';
+      return;
+    }
     shown.forEach((it) => list.appendChild(el(kbCardHtml(it))));
   }
   draw("");

@@ -112,6 +112,7 @@ pre code{color:#2a332c}
   font:inherit;font-size:.85rem;padding:.45rem .85rem;border-radius:999px;text-decoration:none
 }
 .ghost-btn:hover{color:var(--accent);background:var(--accent-soft)}
+.ghost-btn.active{color:var(--accent);background:var(--accent-soft);border-color:var(--accent);font-weight:600}
 footer.site{margin-top:2.5rem;text-align:center;color:var(--muted);font-size:.8rem}
 footer.site a{color:var(--accent);text-decoration:none}
 .empty{color:var(--muted);text-align:center;padding:1.5rem;border:1px dashed rgba(92,100,92,.35);border-radius:var(--radius)}

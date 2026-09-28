@@ -1,0 +1,78 @@
+{
+  "filesScanned": 42,
+  "filesWithGlossary": 28,
+  "termsExtracted": 292,
+  "termsUpserted": 209,
+  "skippedFiles": [
+    {
+      "id": "1qzhi0Uo0BffAbhj8hTaSZOiLloXmh505xKAv_7dk8jk",
+      "title": "Инструкция бота · техсводки Аi",
+      "reason": "instruction-doc"
+    },
+    {
+      "id": "13hTUaXa6tEVS1Fl6OAGCmRJ4PLiVOLAQbRMDWGOMzSA",
+      "title": "Утренняя сводка · 28.09.2026",
+      "reason": "empty-placeholder"
+    },
+    {
+      "id": "1d3cI7OoStQR1Fd3Xe07NlJvCzU1854N-ozGOH7-RD04",
+      "title": "Инструкция бота · техсводки Аi · канон",
+      "reason": "instruction-doc"
+    },
+    {
+      "id": "1gsuh5Dh1steHGGL2J4-O2N7E1jxh1B_9UHu85Wpbj4M",
+      "title": "Вечерняя сводка · 26.09.2026",
+      "reason": "empty-placeholder"
+    },
+    {
+      "id": "1SSRk3bRWb4zwCixN03QJtBPvx8Kr1dtS",
+      "title": "Утренняя сводка · 28.09.2026.docx",
+      "reason": "non-google-doc"
+    },
+    {
+      "id": "141JlCvLXjjcTpUViBPHuLImPIg06smxz",
+      "title": "Утренняя сводка · 28.09.2026.html",
+      "reason": "non-google-doc"
+    },
+    {
+      "id": "1N_NvFvzYeINTbAptpjlqccJbJyONhg-2",
+      "title": "Утренняя сводка · 28.09.2026.txt",
+      "reason": "non-google-doc"
+    },
+    {
+      "id": "1RCHYONVQkvYT-rlPzaKKFAgVAdM3THOh",
+      "title": "Утренняя сводка · 28.09.2026 · новый формат.md",
+      "reason": "non-google-doc"
+    },
+    {
+      "id": "1QOBrAuDZ_mJp0QW9EB19GUYvMOOrpzPR",
+      "title": "Утренняя сводка · 27.09.2026",
+      "reason": "non-google-doc"
+    },
+    {
+      "id": "1EO-Bz-G579chyWunjuosrkGRVRCQywzx",
+      "title": "Утренняя сводка · 27.09.2026.md",
+      "reason": "non-google-doc"
+    },
+    {
+      "id": "1eOgE32fvUXBvnFLtNhonJcFlTfwQJbjH",
+      "title": "Вечерняя сводка · 26.09.2026.txt",
+      "reason": "non-google-doc"
+    },
+    {
+      "id": "1EPdx7-9vxVvHSSnYWAIPlqFG-x5UwLwI",
+      "title": "Вечерняя сводка · 26.09.2026.md",
+      "reason": "non-google-doc"
+    },
+    {
+      "id": "1e_9qUS4VfwC-yJT3C4VU50q7uDUJ4LC6hMccTxFC8Mc",
+      "title": "Вечерняя сводка · 26.09.2026",
+      "reason": "duplicate-smaller"
+    },
+    {
+      "id": "1SO-Ob2slXOp2mpEAecC1_UVHq3UZnLB7UCdynriXkso",
+      "title": "Утренняя сводка · 14.09.2026",
+      "reason": "duplicate-smaller"
+    }
+  ]
+}
