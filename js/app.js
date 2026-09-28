@@ -15,10 +15,10 @@ function el(html) {
 }
 function escapeHtml(s) {
   return String(s)
-    .replace(/&/g, "&")
-    .replace(/</g, "<")
-    .replace(/>/g, ">")
-    .replace(/"/g, """);
+    .replace(/&/g, "\u0026amp;")
+    .replace(/</g, "\u0026lt;")
+    .replace(/>/g, "\u0026gt;")
+    .replace(/"/g, "\u0026quot;");
 }
 function kindLabel(kind) {
   if (kind === "utro") return "утро";
@@ -54,7 +54,7 @@ function renderBody(parts) {
   }).join("");
 }
 function cardHtml(it) {
-  return `<a class="lesson-card" href="${briefHref(it)}"><span class="badge">${kindLabel(it.kind)} · ${escapeHtml(it.dateLabel)}</span><h3>${escapeHtml(it.title)}</h3><p>${escapeHtml(it.summary)}</p><div class="meta">${escapeHtml(it.topic || "")}</div></a>`;
+  return `<a class="lesson-card" href="${briefHref(it)}"><span class="badge">${kindLabel(it.kind)} \u00b7 ${escapeHtml(it.dateLabel)}</span><h3>${escapeHtml(it.title)}</h3><p>${escapeHtml(it.summary)}</p><div class="meta">${escapeHtml(it.topic || "")}</div></a>`;
 }
 async function loadCourse() {
   const box = document.getElementById("course-list");
@@ -62,7 +62,7 @@ async function loadCourse() {
     const lessons = await fetch("data/lessons.json", { cache: "no-store" }).then((r) => r.json());
     box.innerHTML = "";
     lessons.forEach((l) => {
-      box.appendChild(el(`<a class="lesson-card" href="lesson.html?id=${encodeURIComponent(l.id)}"><span class="badge">урок ${l.num} · ${l.level}</span><h3>${l.title}</h3><p>${l.summary}</p><div class="meta">${l.time}</div></a>`));
+      box.appendChild(el(`<a class="lesson-card" href="lesson.html?id=${encodeURIComponent(l.id)}"><span class="badge">урок ${l.num} \u00b7 ${l.level}</span><h3>${l.title}</h3><p>${l.summary}</p><div class="meta">${l.time}</div></a>`));
     });
   } catch (e) {
     box.innerHTML = '<div class="empty">Не удалось загрузить программу.</div>';
@@ -87,7 +87,7 @@ function paintLesson(root, lesson, lessons, index, tabId) {
   const tabBar = showTabs
     ? `<div class="lesson-tabs" role="tablist">${tabs.map((t) => `<button type="button" class="lesson-tab${t.id === current.id ? " active" : ""}" data-tab="${escapeHtml(t.id)}" role="tab" aria-selected="${t.id === current.id ? "true" : "false"}">${escapeHtml(t.title)}</button>`).join("")}</div>`
     : "";
-  root.innerHTML = `<span class="badge">урок ${escapeHtml(String(lesson.num))} · ${escapeHtml(lesson.level)} · ${escapeHtml(lesson.time)}</span><h1>${escapeHtml(lesson.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(lesson.summary)}</p>${tabBar}<article class="article">${renderBody(current.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="lesson.html?id=${encodeURIComponent(prev.id)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="course.html">К программе</a>`}${next ? `<a class="ghost-btn" href="lesson.html?id=${encodeURIComponent(next.id)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="kb.html">К базе →</a>`}</div>`;
+  root.innerHTML = `<span class="badge">урок ${escapeHtml(String(lesson.num))} \u00b7 ${escapeHtml(lesson.level)} \u00b7 ${escapeHtml(lesson.time)}</span><h1>${escapeHtml(lesson.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(lesson.summary)}</p>${tabBar}<article class="article">${renderBody(current.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="lesson.html?id=${encodeURIComponent(prev.id)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="course.html">К программе</a>`}${next ? `<a class="ghost-btn" href="lesson.html?id=${encodeURIComponent(next.id)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="kb.html">К базе →</a>`}</div>`;
   if (showTabs) {
     root.querySelector(".lesson-tabs").addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-tab]");
@@ -102,7 +102,7 @@ async function loadLesson(id, tabId) {
   const i = Math.max(0, lessons.findIndex((l) => l.id === id));
   const lesson = lessons[i] || lessons[0];
   if (!lesson) { root.innerHTML = '<div class="empty">Урок не найден.</div>'; return; }
-  document.title = lesson.title + " · py.motomov.ru";
+  document.title = lesson.title + " \u00b7 py.motomov.ru";
   paintLesson(root, lesson, lessons, i, tabId);
 }
 function kbHaystack(it) {
@@ -125,7 +125,7 @@ function kbCardHtml(it) {
   let meta = "";
   if (it.source) {
     const href = `brief.html?id=${encodeURIComponent(it.source)}&kind=ai`;
-    meta = `<div class="meta"><a href="${href}">из сводки ${escapeHtml(it.source)}</a>${it.updated ? " · " + escapeHtml(it.updated) : ""}</div>`;
+    meta = `<div class="meta"><a href="${href}">из сводки ${escapeHtml(it.source)}</a>${it.updated ? " \u00b7 " + escapeHtml(it.updated) : ""}</div>`;
   }
   return `<article class="kb-card"><span class="badge">${badge}</span><h3>${title}</h3>${body}${meta}</article>`;
 }
@@ -144,7 +144,7 @@ async function loadKb() {
       filters.appendChild(el(`<button type="button" class="ghost-btn" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>`));
     });
     filters.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-tag]");
+      const btn = e.target.closest("button[data-tab],button[data-tag]");
       if (!btn) return;
       activeTag = btn.getAttribute("data-tag") || "";
       Array.from(filters.querySelectorAll("button")).forEach((b) => b.classList.toggle("active", b === btn));
@@ -192,7 +192,7 @@ async function loadSlovar() {
       if (activeTag && it.tag !== activeTag) return false;
       return !needle || kbHaystack(it).includes(needle);
     });
-    shown.sort((a, b) => String(b.updated || b.source || "").localeCompare(String(a.updated || a.source || "")));
+    shown.sort((a, b) => String(b.updated || b.source || "").localeCompare(String(a.updated || a.source || ""));
     list.innerHTML = "";
     if (!shown.length) {
       list.innerHTML = '<div class="empty">В словаре пока пусто. Термины появятся после следующих сводок.</div>';
@@ -252,12 +252,12 @@ async function loadBrief(id, kind) {
   const i = id ? pool.findIndex((it) => it.id === id) : -1;
   const brief = i >= 0 ? pool[i] : null;
   if (!brief) { root.innerHTML = '<div class="empty">Сводка не найдена.</div>'; return; }
-  document.title = brief.title + " · py.motomov.ru";
+  document.title = brief.title + " \u00b7 py.motomov.ru";
   const same = pool.filter((it) => it.kind === brief.kind);
   const si = same.findIndex((it) => it.id === brief.id);
   const prev = same[si - 1];
   const next = same[si + 1];
   const backHref = brief.kind === "ai" ? "novosti.html" : "news.html";
   const backLabel = brief.kind === "ai" ? "К новостям" : "К ленте python";
-  root.innerHTML = `<span class="badge">${kindLabel(brief.kind)} · ${escapeHtml(brief.dateLabel)} · ${escapeHtml(brief.topic || "")}</span><h1>${escapeHtml(brief.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(brief.summary)}</p><article class="article">${renderBody(brief.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="${briefHref(prev)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel}</a>`}${next ? `<a class="ghost-btn" href="${briefHref(next)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel} →</a>`}</div>`;
+  root.innerHTML = `<span class="badge">${kindLabel(brief.kind)} \u00b7 ${escapeHtml(brief.dateLabel)} \u00b7 ${escapeHtml(brief.topic || "")}</span><h1>${escapeHtml(brief.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(brief.summary)}</p><article class="article">${renderBody(brief.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="${briefHref(prev)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel}</a>`}${next ? `<a class="ghost-btn" href="${briefHref(next)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel} →</a>`}</div>`;
 }
