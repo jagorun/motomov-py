@@ -1,1 +1,30 @@
-see-file
+[
+  {
+    "id": "2026-09-30-vecher",
+    "kind": "vecher",
+    "date": "2026-09-30",
+    "dateLabel": "30.09.2026, среда",
+    "topic": "pathlib vs os.path",
+    "title": "Вечер · Python · 30.09.2026, среда · pathlib vs os.path",
+    "summary": "Вечерняя лекция: Path — объект маршрута, не строка. Грабли склейки, cwd, rglob в список, resolve и граница os.fspath.",
+    "body": [
+      "## Кейс",
+      "Техпис собрал утилиту оглавления. На CI cwd был другим, индекс собрался из чужого дерева. list(root.rglob('*')) съел память. Склейка root + '/' + name собрала не тот путь, индекс стал [].",
+      "## Вскрытие",
+      "Path — объект, не str. Неизменяем. / создаёт новый объект без I/O. exists/read_text/resolve идут на диск. Относительный путь якорится на cwd.",
+      "```\nfrom pathlib import Path\nroot: Path = Path('/home/work/docs')\nfull: Path = root / 'a.md'\nif full.is_file():\n    text = full.read_text(encoding='utf-8')\n```",
+      "## Подвох дня — полный разбор",
+      "os.path — функции над str. pathlib.Path — объект маршрута. На границе os.fspath. resolve(strict=True) падает, если файла ещё нет.",
+      "## Новичок vs сеньор",
+      "```\ndef collect(root: Path) -> list[Path]:\n    return [p for p in root.rglob('*.md') if p.is_file()]\n```",
+      "## Ещё один слой",
+      "if path не значит файл есть. Рядом со скриптом — Path(__file__).resolve().parent. rglob в list — выбор съесть память.",
+      "## Как это спрашивают вечером",
+      "Path + str падает, / склеивает. Path хешируется. Ключ Path и str — разные.",
+      "## На завтра",
+      "Сравните id(p) и id(p.with_suffix('.txt')), abspath и resolve из двух cwd.",
+      "## Что унести",
+      "Path неизменяем. / без диска. Якорь — cwd. Граница — os.fspath."
+    ]
+  }
+]
