@@ -1,5 +1,137 @@
 [
   {
+    "id": "agent-drift",
+    "tag": "агенты",
+    "title": "Agent drift",
+    "text": "Что это: уход автономного агента от исходной задачи или ограничений после block'а политики, бага, отсутствия tool'а, неоднозначных инструкций или длинной серии неудачных попыток. Зачем: центральный аргумент NVIDIA Open Agent Safety: в длинном tool-loop агент не может полностью самоуправляться, поэтому нужен out-of-band enforcement. Не путать с: обычным hallucination в одном ответе чата — drift про поведение на длинной дистанции.",
+    "what": "уход автономного агента от исходной задачи или ограничений после block'а политики, бага, отсутствия tool'а, неоднозначных инструкций или длинной серии неудачных попыток.",
+    "why": "центральный аргумент NVIDIA Open Agent Safety: в длинном tool-loop агент не может полностью самоуправляться, поэтому нужен out-of-band enforcement.",
+    "notConfuse": "обычным hallucination в одном ответе чата — drift про поведение на длинной дистанции.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "vera-rubin-nvl72",
+    "tag": "чипы",
+    "title": "Vera Rubin NVL72",
+    "text": "Что это: rack-scale система NVIDIA поколения Vera Rubin в конфигурации NVL72; у CoreWeave уже в production. Зачем: Cognition (Devin) как первый клиент замерила до 4.8× total token throughput на SWE-2 vs GB200 NVL72 — железо для agentic inference уже в проде. Не путать с: Vera Rubin POD как общим шасси/референсом и с названием самой модели ИИ.",
+    "what": "rack-scale система NVIDIA поколения Vera Rubin в конфигурации NVL72; у CoreWeave уже в production.",
+    "why": "Cognition (Devin) как первый клиент замерила до 4.8× total token throughput на SWE-2 vs GB200 NVL72 — железо для agentic inference уже в проде.",
+    "notConfuse": "Vera Rubin POD как общим шасси/референсом и с названием самой модели ИИ.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "amd-helios-ai-rack",
+    "tag": "чипы",
+    "title": "AMD Helios AI Rack",
+    "text": "Что это: rack-scale платформа AMD+HPE: 72× Instinct MI455X, EPYC Venice, Pensando NIC, scale-up Ethernet (UALoE) через Juniper QFX5252, direct liquid cooling. Зачем: первый коммерческий заказ Vultr на $1.2 млрд (30.09) — Ethernet-альтернатива NVLink-стойкам получает named neocloud money. Не путать с: обычным 8-GPU сервером или с NVIDIA NVL72.",
+    "what": "rack-scale платформа AMD+HPE: 72× Instinct MI455X, EPYC Venice, Pensando NIC, scale-up Ethernet (UALoE) через Juniper QFX5252, direct liquid cooling.",
+    "why": "первый коммерческий заказ Vultr на $1.2 млрд (30.09) — Ethernet-альтернатива NVLink-стойкам получает named neocloud money.",
+    "notConfuse": "обычным 8-GPU сервером или с NVIDIA NVL72.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "mi455x",
+    "tag": "чипы",
+    "title": "MI455X",
+    "text": "Что это: GPU AMD Instinct в конфигурации Helios (72 штуки на стойку) для training/inference в neocloud. Зачем: конкретный accelerator внутри $1.2 млрд заказа HPE×Vultr. Не путать с: предыдущими MI300/MI350 и с NVIDIA B200/Rubin GPU.",
+    "what": "GPU AMD Instinct в конфигурации Helios (72 штуки на стойку) для training/inference в neocloud.",
+    "why": "конкретный accelerator внутри $1.2 млрд заказа HPE×Vultr.",
+    "notConfuse": "предыдущими MI300/MI350 и с NVIDIA B200/Rubin GPU.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "sign-in-with-chatgpt",
+    "tag": "продукт",
+    "title": "Sign in with ChatGPT",
+    "text": "Что это: OAuth-вход через аккаунт ChatGPT; в eligible сценариях стороннее приложение может расходовать часть Plus/Pro allowance пользователя. Зачем: экономический клей «агентной ОС» после DevDay — подписка становится portable compute budget между приложениями. Не путать с: «войти через Google/Apple» без переноса AI-квоты и с выдачей сырого API-ключа пользователю.",
+    "what": "OAuth-вход через аккаунт ChatGPT; в eligible сценариях стороннее приложение может расходовать часть Plus/Pro allowance пользователя.",
+    "why": "экономический клей «агентной ОС» после DevDay — подписка становится portable compute budget между приложениями.",
+    "notConfuse": "«войти через Google/Apple» без переноса AI-квоты и с выдачей сырого API-ключа пользователю.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "private-safety-processing",
+    "tag": "агенты",
+    "title": "Private Safety Processing",
+    "text": "Что это: enterprise-контур OpenAI: защищённый контент остаётся у клиента (customer-managed authorization), automated safety review идёт в hardware-attested среде без plaintext для сотрудников; наружу — bounded safety signals. Зачем: ответ на парадокс агентов — бизнесу нужен мониторинг опасного поведения без новой дыры в конфиденциальные данные. Не путать с: обычным пунктом ToS «мы не тренируемся на ваших данных» без attested processing path.",
+    "what": "enterprise-контур OpenAI: защищённый контент остаётся у клиента (customer-managed authorization), automated safety review идёт в hardware-attested среде без plaintext для сотрудников; наружу — bounded safety signals.",
+    "why": "ответ на парадокс агентов — бизнесу нужен мониторинг опасного поведения без новой дыры в конфиденциальные данные.",
+    "notConfuse": "обычным пунктом ToS «мы не тренируемся на ваших данных» без attested processing path.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "anthropic-cloud-marketplace-channel",
+    "tag": "инфра",
+    "title": "Cloud marketplace channel (Anthropic)",
+    "text": "Что это: продажи Claude через AWS/Google Cloud marketplace, где облако дистрибутирует модель, выставляет счета клиентам и берёт distribution fee. Зачем: 47% выручки Anthropic 2025 (~$2.16 млрд) и ~$351 млн fees — ключевой IPO-риск концентрации на Amazon/Google. Не путать с: прямым API-контрактом Anthropic↔клиент без маркетплейса.",
+    "what": "продажи Claude через AWS/Google Cloud marketplace, где облако дистрибутирует модель, выставляет счета клиентам и берёт distribution fee.",
+    "why": "47% выручки Anthropic 2025 (~$2.16 млрд) и ~$351 млн fees — ключевой IPO-риск концентрации на Amazon/Google.",
+    "notConfuse": "прямым API-контрактом Anthropic↔клиент без маркетплейса.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "compass-cloud",
+    "tag": "RAG",
+    "title": "Compass Cloud",
+    "text": "Что это: managed-версия Cohere Compass: полный retrieval-стек (parse→embed→hybrid search→rerank→ACL) с API и MCP для RAG и agentic workflows. Зачем: практичный продукт для документации/RAG без самостоятельной сборки пайплайна; private beta открыта в конце сентября 2026. Не путать с: голым vector DB без парсинга/rerank/permissions и с чат-агентом North целиком.",
+    "what": "managed-версия Cohere Compass: полный retrieval-стек (parse→embed→hybrid search→rerank→ACL) с API и MCP для RAG и agentic workflows.",
+    "why": "практичный продукт для документации/RAG без самостоятельной сборки пайплайна; private beta открыта в конце сентября 2026.",
+    "notConfuse": "голым vector DB без парсинга/rerank/permissions и с чат-агентом North целиком.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "ualink-over-ethernet",
+    "tag": "инфра",
+    "title": "UALink over Ethernet (UALoE)",
+    "text": "Что это: scale-up связность GPU внутри стойки Helios по стандартам Ethernet (через QFX5252 trays), а не проприетарной NVLink-фабрике NVIDIA. Зачем: технический стержень $1.2 млрд заказа HPE×Vultr — открытый Ethernet заходит в tightly-coupled GPU domain. Не путать с: обычным scale-out Ethernet между стойками и кластерами.",
+    "what": "scale-up связность GPU внутри стойки Helios по стандартам Ethernet (через QFX5252 trays), а не проприетарной NVLink-фабрике NVIDIA.",
+    "why": "технический стержень $1.2 млрд заказа HPE×Vultr — открытый Ethernet заходит в tightly-coupled GPU domain.",
+    "notConfuse": "обычным scale-out Ethernet между стойками и кластерами.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "white-house-accord-superintelligence",
+    "tag": "регуляторика",
+    "title": "White House Accord on Superintelligence",
+    "text": "Что это: добровольный одностраничный pact 29.09 (подпись 30.09 в прессе): internal controls на frontier-моделях (в т.ч. cyber/bio) + независимый внешний аудитор + board committee; Trump назвал «morally binding»; штрафов, обязательного disclosure аудиторов и дедлайнов нет. Подписанты в репортажах: Anthropic, Google, Meta, OpenAI (Brockman), NVIDIA, xAI. Зачем: вечерняя пресса зафиксировала подписантов и пустоту enforcement — политический self-policing ответ на agent breakouts и отмену GPT-6.1 Astra. Не путать с: законом Конгресса или международным договором с санкциями.",
+    "what": "добровольный одностраничный pact 29.09 (подпись 30.09 в прессе): internal controls на frontier-моделях (в т.ч. cyber/bio) + независимый внешний аудитор + board committee; Trump назвал «morally binding»; штрафов, обязательного disclosure аудиторов и дедлайнов нет. Подписанты в репортажах: Anthropic, Google, Meta, OpenAI (Brockman), NVIDIA, xAI.",
+    "why": "вечерняя пресса зафиксировала подписантов и пустоту enforcement — политический self-policing ответ на agent breakouts и отмену GPT-6.1 Astra.",
+    "notConfuse": "законом Конгресса или международным договором с санкциями.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "openshell",
+    "tag": "агенты",
+    "title": "OpenShell",
+    "text": "Что это: open-source runtime NVIDIA (Apache 2.0), где агент сидит в песочнице, а политики (файлы, процессы, сеть, credentials) применяются снаружи агента через gateway/sandbox/supervisor. Зачем: программный слой Open Agent Safety Platform; 30.09 eWeek разобрал связку с Sentry после серии sandbox escapes; стыкуется с Codex, Claude Code, Copilot CLI. Не путать с: обычным Docker-контейнером без жёсткой сетевой политики и без выноса секретов.",
+    "what": "open-source runtime NVIDIA (Apache 2.0), где агент сидит в песочнице, а политики (файлы, процессы, сеть, credentials) применяются снаружи агента через gateway/sandbox/supervisor.",
+    "why": "программный слой Open Agent Safety Platform; 30.09 eWeek разобрал связку с Sentry после серии sandbox escapes; стыкуется с Codex, Claude Code, Copilot CLI.",
+    "notConfuse": "обычным Docker-контейнером без жёсткой сетевой политики и без выноса секретов.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
+    "id": "nvidia-sentry-bluefield",
+    "tag": "агенты",
+    "title": "Sentry (NVIDIA, на BlueField)",
+    "text": "Что это: опциональный out-of-band watchdog на DPU BlueField-4 (DOCA): мониторит активность агента вне хоста и может карантинировать выход за политику; NVIDIA заявляет реакцию «за миллисекунды» (пока vendor claim). Зачем: аппаратный слой Open Agent Safety Platform; на Vera Rubin POD BlueField сидит на path к модели — kill switch вне досягаемости агента. Не путать с: Sentry.io (сервис ошибок приложений) и с морским SEA.AI Sentry — другие продукты.",
+    "what": "опциональный out-of-band watchdog на DPU BlueField-4 (DOCA): мониторит активность агента вне хоста и может карантинировать выход за политику; NVIDIA заявляет реакцию «за миллисекунды» (пока vendor claim).",
+    "why": "аппаратный слой Open Agent Safety Platform; на Vera Rubin POD BlueField сидит на path к модели — kill switch вне досягаемости агента.",
+    "notConfuse": "Sentry.io (сервис ошибок приложений) и с морским SEA.AI Sentry — другие продукты.",
+    "source": "2026-09-30-vecher",
+    "updated": "2026-09-30"
+  },
+  {
     "id": "dots-openai",
     "tag": "агенты",
     "title": "Dots (OpenAI)",
@@ -84,17 +216,6 @@
     "what": "облачный контур Codex, который сканирует репозитории на уязвимости по запросу/расписанию, расследует находки, дедуплицирует и готовит фиксы, даже когда ноутбук закрыт.",
     "why": "практичный DevDay-релиз для команд, которым нужен agentic sec-review, а не только autocomplete.",
     "notConfuse": "разовым CLI-сканом в CI без облачного расследования и с антивирусом endpoint.",
-    "source": "2026-09-30-utro",
-    "updated": "2026-09-30"
-  },
-  {
-    "id": "white-house-accord-superintelligence",
-    "tag": "регуляторика",
-    "title": "White House Accord on Superintelligence",
-    "text": "Что это: добровольный документ принципов, который ИИ-компании подписали на обеде в Белом доме 29.09: layers of internal/external review и controls без нового закона. Зачем: политический итог дня DevDay — self-policing вместо emergency regulation. Не путать с: обязательным актом Конгресса или международным договором с enforcement.",
-    "what": "добровольный документ принципов, который ИИ-компании подписали на обеде в Белом доме 29.09: layers of internal/external review и controls без нового закона.",
-    "why": "политический итог дня DevDay — self-policing вместо emergency regulation.",
-    "notConfuse": "обязательным актом Конгресса или международным договором с enforcement.",
     "source": "2026-09-30-utro",
     "updated": "2026-09-30"
   },
@@ -326,28 +447,6 @@
     "what": "пакет NVIDIA из открытого runtime для агентов и reference-схемы с аппаратным сторожем. Цель — задать границы агенту от теста до продакшена, а не надеяться только на «хорошее поведение» модели.",
     "why": "главный анонс дня 28.09; ответ рынка на серию побегов агентов.",
     "notConfuse": "отдельной «безопасной LLM» — это про среду исполнения, не про веса модели.",
-    "source": "2026-09-28-vecher",
-    "updated": "2026-09-28"
-  },
-  {
-    "id": "openshell",
-    "tag": "агенты",
-    "title": "OpenShell",
-    "text": "Что это: open-source runtime NVIDIA, где агент сидит в песочнице, а политики (файлы, процессы, сеть) применяются снаружи агента: gateway, sandbox, supervisor. Агент не утверждает сам себе расширения прав. Зачем: программный каркас Open Agent Safety Platform; v0.1.0 уже broadly available; стыкуется с Codex, Claude Code и др. Не путать с: обычным Docker-контейнером без жёсткой сетевой политики и без выноса секретов.",
-    "what": "open-source runtime NVIDIA, где агент сидит в песочнице, а политики (файлы, процессы, сеть) применяются снаружи агента: gateway, sandbox, supervisor. Агент не утверждает сам себе расширения прав.",
-    "why": "программный каркас Open Agent Safety Platform; v0.1.0 уже broadly available; стыкуется с Codex, Claude Code и др.",
-    "notConfuse": "обычным Docker-контейнером без жёсткой сетевой политики и без выноса секретов.",
-    "source": "2026-09-28-vecher",
-    "updated": "2026-09-28"
-  },
-  {
-    "id": "nvidia-sentry-bluefield",
-    "tag": "агенты",
-    "title": "Sentry (NVIDIA, на BlueField)",
-    "text": "Что это: опциональный watchdog на DPU BlueField-4, который смотрит активность агента «сбоку» от хоста и может быстро карантинировать выход за политику. Зачем: аппаратный слой Open Agent Safety Platform; обещание enforcement даже при компрометации хоста. Не путать с: Sentry.io (сервис ошибок приложений) и с морским SEA.AI Sentry — другие продукты.",
-    "what": "опциональный watchdog на DPU BlueField-4, который смотрит активность агента «сбоку» от хоста и может быстро карантинировать выход за политику.",
-    "why": "аппаратный слой Open Agent Safety Platform; обещание enforcement даже при компрометации хоста.",
-    "notConfuse": "Sentry.io (сервис ошибок приложений) и с морским SEA.AI Sentry — другие продукты.",
     "source": "2026-09-28-vecher",
     "updated": "2026-09-28"
   },
