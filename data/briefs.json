@@ -1,1 +1,1 @@
-PLACEHOLDER
+[{"id":"2026-09-30-vecher","kind":"vecher","date":"2026-09-30","dateLabel":"30.09.2026, среда","topic":"pathlib vs os.path","title":"Вечер · Python · 30.09.2026, среда · pathlib vs os.path","summary":"Вечерняя лекция: Path — объект маршрута, не строка. Грабли склейки, cwd, rglob в список, resolve и граница os.fspath."}]
