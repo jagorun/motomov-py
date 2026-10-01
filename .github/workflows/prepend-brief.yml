@@ -1,0 +1,49 @@
+name: prepend-brief
+on:
+  push:
+    paths:
+      - 'scripts/_incoming_brief.json'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  prepend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepend incoming brief
+        run: |
+          python3 <<'PY'
+          import json
+          from pathlib import Path
+          incoming = Path('scripts/_incoming_brief.json')
+          entry = json.loads(incoming.read_text(encoding='utf-8'))
+          assert isinstance(entry, dict) and entry.get('id') and entry.get('body')
+          path = Path('data/briefs.json')
+          raw = path.read_text(encoding='utf-8')
+          if 'PLACEHOLDER' in raw or 'SEE_LOCAL_FILE' in raw:
+              raise SystemExit('stub briefs.json — abort')
+          data = json.loads(raw)
+          assert isinstance(data, list) and len(data) >= 10
+          if any(b.get('id') == entry['id'] for b in data):
+              print('already present:', entry['id'])
+          else:
+              before = len(data)
+              data.insert(0, entry)
+              path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+              print(f'count {before} -> {len(data)} first={data[0]["id"]}')
+          PY
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/briefs.json
+          if git diff --cached --quiet; then
+            echo "no changes"
+            exit 0
+          fi
+          MSG=$(python3 -c "import json; e=json.load(open('scripts/_incoming_brief.json',encoding='utf-8')); print(e['id'].replace('-vecher',' vecher').replace('-utro',' utro') + ' · ' + e.get('topic','brief')[:60])")
+          git commit -m "$MSG"
+          git push
