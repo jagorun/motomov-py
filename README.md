@@ -13,7 +13,8 @@
 
 ## Разделы
 
-- **Новости** (`novosti.html`, `data/novosti.json`) — ежедневная сводка по ИИ, 07:00 Москва.
+- **Новости** (`novosti.html`, `data/novosti.json`) — свежие сводки по ИИ (последние 14), 07:00 Москва.
+- **Архив** (`archive.html`) — полный `novosti.json` с фильтром по месяцу. Правила публикации: `docs/DIGEST_PUBLISH.md`.
 - **python** (`news.html`, `data/briefs.json`) — утро и вечер наставника Python.
 - **Курс** (`course.html`, `lesson.html`, `data/lessons.json`) — шесть уроков. Урок 05 — чертёж этого сайта.
 - **База** (`kb.html`, `data/kb.json`) — карточки с поиском в браузере.

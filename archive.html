@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Урок · py.motomov.ru</title>
+  <title>Архив новостей · py.motomov.ru</title>
+  <meta name="description" content="Полный архив ежедневных сводок по ИИ, моделям и агентам.">
   <meta name="theme-color" content="#f3efe6">
   <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
+  <link rel="canonical" href="https://py.motomov.ru/archive">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,7 +20,7 @@
       </a>
       <nav class="nav">
         <a href="novosti.html">Новости</a>
-        <a href="archive.html">Архив</a>
+        <a class="active" href="archive.html" aria-current="page">Архив</a>
         <a href="news.html">python</a>
         <a href="course.html">Курс</a>
         <a href="kb.html">База</a>
@@ -27,10 +29,20 @@
         <a href="https://www.motomov.ru/">Визитка</a>
       </nav>
     </header>
-    <div id="lesson-root"><div class="empty">Загрузка урока…</div></div>
+    <header class="hero">
+      <span class="badge">все сводки ИИ · без удаления</span>
+      <h1>Архив новостей</h1>
+      <p class="bio">Полная лента техсводок. Свежие выпуски — на странице «Новости». Ссылки из словаря ведут сюда же через brief.html?id=…&kind=ai.</p>
+    </header>
+    <section>
+      <div class="section-head">
+        <h2>Фильтр по месяцу</h2>
+      </div>
+      <div class="pager" id="archive-filters" style="margin:0.8rem 0 1rem; flex-wrap:wrap; gap:0.5rem"></div>
+      <div class="grid" id="archive-list"><div class="empty">Загрузка архива…</div></div>
+    </section>
     <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
   </div>
   <script src="js/app.js" defer></script>
-  <script src="js/lesson-tabs-data.js" defer></script>
 </body>
 </html>

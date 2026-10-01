@@ -6,6 +6,7 @@
   if (document.getElementById("slovar-list")) loadSlovar();
   if (document.getElementById("news-list")) loadNews();
   if (document.getElementById("novosti-list")) loadNovosti();
+  if (document.getElementById("archive-list")) loadArchive(params.get("month"));
   if (document.getElementById("brief-root")) loadBrief(params.get("id"), params.get("kind"));
 })();
 function el(html) {
@@ -223,6 +224,18 @@ async function loadNews() {
   }
   items.forEach((it) => list.appendChild(el(cardHtml(it))));
 }
+const NOVOSTI_RECENT_LIMIT = 14;
+function monthKey(it) {
+  const d = String(it.date || it.id || "").slice(0, 7);
+  return /^\d{4}-\d{2}$/.test(d) ? d : "";
+}
+function monthLabel(key) {
+  const months = ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"];
+  const parts = String(key).split("-");
+  if (parts.length !== 2) return key;
+  const m = Number(parts[1]);
+  return (months[m - 1] || parts[1]) + " " + parts[0];
+}
 async function loadNovosti() {
   const list = document.getElementById("novosti-list");
   const items = await fetchJson("data/novosti.json");
@@ -231,7 +244,46 @@ async function loadNovosti() {
     list.innerHTML = '<div class="empty">Новостей пока нет. Утренняя сводка придёт в 07:00 по Москве.</div>';
     return;
   }
-  items.forEach((it) => list.appendChild(el(cardHtml(it))));
+  items.slice(0, NOVOSTI_RECENT_LIMIT).forEach((it) => list.appendChild(el(cardHtml(it))));
+}
+async function loadArchive(monthParam) {
+  const list = document.getElementById("archive-list");
+  const filters = document.getElementById("archive-filters");
+  const items = await fetchJson("data/novosti.json");
+  if (!items.length) {
+    list.innerHTML = '<div class="empty">Архив пока пуст.</div>';
+    return;
+  }
+  const months = Array.from(new Set(items.map(monthKey).filter(Boolean)));
+  let active = monthParam && months.includes(monthParam) ? monthParam : "";
+  function draw() {
+    const shown = active ? items.filter((it) => monthKey(it) === active) : items;
+    list.innerHTML = "";
+    if (!shown.length) {
+      list.innerHTML = '<div class="empty">За этот месяц записей нет.</div>';
+      return;
+    }
+    shown.forEach((it) => list.appendChild(el(cardHtml(it))));
+    const url = new URL(location.href);
+    if (active) url.searchParams.set("month", active);
+    else url.searchParams.delete("month");
+    history.replaceState({}, "", url);
+  }
+  if (filters) {
+    filters.innerHTML = "";
+    filters.appendChild(el(`<button type="button" class="ghost-btn${active ? "" : " active"}" data-month="">Все</button>`));
+    months.forEach((m) => {
+      filters.appendChild(el(`<button type="button" class="ghost-btn${active === m ? " active" : ""}" data-month="${escapeHtml(m)}">${escapeHtml(monthLabel(m))}</button>`));
+    });
+    filters.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-month]");
+      if (!btn) return;
+      active = btn.getAttribute("data-month") || "";
+      Array.from(filters.querySelectorAll("button")).forEach((b) => b.classList.toggle("active", b === btn));
+      draw();
+    });
+  }
+  draw();
 }
 async function loadBrief(id, kind) {
   const root = document.getElementById("brief-root");
@@ -251,13 +303,13 @@ async function loadBrief(id, kind) {
   }
   const i = id ? pool.findIndex((it) => it.id === id) : -1;
   const brief = i >= 0 ? pool[i] : null;
-  if (!brief) { root.innerHTML = '<div class="empty">Сводка не найдена.</div>'; return; }
+  if (!brief) { root.innerHTML = `<div class="empty">Сводка не найдена${id ? " («" + escapeHtml(id) + "»)" : ""}. <a href="archive.html">К архиву</a> · <a href="news.html">К python</a></div>`; return; }
   document.title = brief.title + " \u00b7 py.motomov.ru";
   const same = pool.filter((it) => it.kind === brief.kind);
   const si = same.findIndex((it) => it.id === brief.id);
   const prev = same[si - 1];
   const next = same[si + 1];
-  const backHref = brief.kind === "ai" ? "novosti.html" : "news.html";
-  const backLabel = brief.kind === "ai" ? "К новостям" : "К ленте python";
+  const backHref = brief.kind === "ai" ? "archive.html" : "news.html";
+  const backLabel = brief.kind === "ai" ? "К архиву" : "К ленте python";
   root.innerHTML = `<span class="badge">${kindLabel(brief.kind)} \u00b7 ${escapeHtml(brief.dateLabel)} \u00b7 ${escapeHtml(brief.topic || "")}</span><h1>${escapeHtml(brief.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(brief.summary)}</p><article class="article">${renderBody(brief.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="${briefHref(prev)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel}</a>`}${next ? `<a class="ghost-btn" href="${briefHref(next)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel} →</a>`}</div>`;
 }

@@ -1,0 +1,4 @@
+.venv/
+scripts/drive-raw/
+__pycache__/
+*.pyc
