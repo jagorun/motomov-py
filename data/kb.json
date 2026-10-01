@@ -1,5 +1,126 @@
 [
   {
+    "id": "gemini-4-argon",
+    "tag": "ИИ",
+    "title": "Gemini 4 Argon",
+    "text": "Что это: флагманская frontier-модель поколения Gemini 4 от Google DeepMind для длинных сложных workflows (coding, legal/finance, cyber defense). Зачем: главный ответ Google на DevDay; доступ пока только у trusted cyber defenders, не у всех Plus/Pro пользователей. Не путать с: Gemini 3.x / 3.5 Pro (3.5 Pro больше не планируют) и с always-on агентами вроде Dots — Argon это модель, не продукт-агент.",
+    "what": "флагманская frontier-модель поколения Gemini 4 от Google DeepMind для длинных сложных workflows (coding, legal/finance, cyber defense).",
+    "why": "главный ответ Google на DevDay; доступ пока только у trusted cyber defenders, не у всех Plus/Pro пользователей.",
+    "notConfuse": "Gemini 3.x / 3.5 Pro (3.5 Pro больше не планируют) и с always-on агентами вроде Dots — Argon это модель, не продукт-агент.",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "fairwind-program",
+    "tag": "регуляторика",
+    "title": "Fairwind Program",
+    "text": "Что это: программа Google ограниченного pre-release доступа к мощным моделям для trusted cyber defenders до широкого публичного rollout. Зачем: через Fairwind стартует Argon; связка с voluntary US pre-release process. Не путать с: обычным waitlist API или Google AI Ultra подпиской — это safety staging, не тариф.",
+    "what": "программа Google ограниченного pre-release доступа к мощным моделям для trusted cyber defenders до широкого публичного rollout.",
+    "why": "через Fairwind стартует Argon; связка с voluntary US pre-release process.",
+    "notConfuse": "обычным waitlist API или Google AI Ultra подпиской — это safety staging, не тариф.",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "output-token-limit",
+    "tag": "ИИ",
+    "title": "Output token limit",
+    "text": "Что это: максимум токенов, которые модель может сгенерировать в одном ответе/траектории (не путать с context window на вход). Зачем: у Argon лимит выхода поднят с 64K до 1M — критично для long-horizon coding и research loops. Не путать с: context window (сколько можно подать на вход) и с Ultrafast (скорость tok/s).",
+    "what": "максимум токенов, которые модель может сгенерировать в одном ответе/траектории (не путать с context window на вход).",
+    "why": "у Argon лимит выхода поднят с 64K до 1M — критично для long-horizon coding и research loops.",
+    "notConfuse": "context window (сколько можно подать на вход) и с Ultrafast (скорость tok/s).",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "indirect-prompt-injection",
+    "tag": "агенты",
+    "title": "Indirect prompt injection (IPI)",
+    "text": "Что это: атака, когда вредоносные инструкции встраивают не в прямой запрос пользователя, а в внешний контекст (документ, страница, tool output), чтобы увести агента. Зачем: Google заявляет лидерство Argon по Gray Swan IPI benchmark перед broad release. Не путать с: обычным jailbreak в чате (прямой запрос) и с model weight exfiltration.",
+    "what": "атака, когда вредоносные инструкции встраивают не в прямой запрос пользователя, а в внешний контекст (документ, страница, tool output), чтобы увести агента.",
+    "why": "Google заявляет лидерство Argon по Gray Swan IPI benchmark перед broad release.",
+    "notConfuse": "обычным jailbreak в чате (прямой запрос) и с model weight exfiltration.",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "cwe-bench",
+    "tag": "ИИ",
+    "title": "CWE-bench",
+    "text": "Что это: бенчмарк способности модели находить и чинить уязвимости ПО (семейства CWE — Common Weakness Enumeration). Зачем: Argon 68% на CWE-bench v1 (tie for first) — обоснование cyber-first запуска. Не путать с: общим coding benchmark вроде SWE-bench/DeepSWE без security-фокуса.",
+    "what": "бенчмарк способности модели находить и чинить уязвимости ПО (семейства CWE — Common Weakness Enumeration).",
+    "why": "Argon 68% на CWE-bench v1 (tie for first) — обоснование cyber-first запуска.",
+    "notConfuse": "общим coding benchmark вроде SWE-bench/DeepSWE без security-фокуса.",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "vals-index",
+    "tag": "ИИ",
+    "title": "Vals Index",
+    "text": "Что это: составной индекс «экономического» impact модели по finance/coding/legal/tax с весами по вкладу секторов в GDP США (Vals.ai). Зачем: Google ставит Argon #1 на Vals Index как аргумент для enterprise knowledge work. Не путать с: узким coding-only leaderboard или маркетинговым «IQ» без методики.",
+    "what": "составной индекс «экономического» impact модели по finance/coding/legal/tax с весами по вкладу секторов в GDP США (Vals.ai).",
+    "why": "Google ставит Argon #1 на Vals Index как аргумент для enterprise knowledge work.",
+    "notConfuse": "узким coding-only leaderboard или маркетинговым «IQ» без методики.",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "project-suncatcher",
+    "tag": "космос",
+    "title": "Project Suncatcher (M1)",
+    "text": "Что это: moonshot Google Research по ML-инфре в космосе; M1 — первый прототип на Transporter-18 с 4× TPU на спутнике Planet. Зачем: запуск 01.10.2026; проверяют радиацию, вибрацию и охлаждение AI-чипов в вакууме. Не путать с: работающим орбитальным ЦОДом или со Starlink — это short-burst research satellite на месяцы, не production inference farm.",
+    "what": "moonshot Google Research по ML-инфре в космосе; M1 — первый прототип на Transporter-18 с 4× TPU на спутнике Planet.",
+    "why": "запуск 01.10.2026; проверяют радиацию, вибрацию и охлаждение AI-чипов в вакууме.",
+    "notConfuse": "работающим орбитальным ЦОДом или со Starlink — это short-burst research satellite на месяцы, не production inference farm.",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "amd-ross",
+    "tag": "автоматизация",
+    "title": "AMD Ross",
+    "text": "Что это: agentic AI assistant AMD для embedded-разработки: MCP к Vivado/Vitis и др., AMD Knowledge Base, open agent skills. Зачем: редкий verified product-релиз на стыке чипов, документации и автоматизации (30.09). Не путать с: общим coding copilтом без доступа к EDA-тулчейну и с самой покупкой World Labs AMD.",
+    "what": "agentic AI assistant AMD для embedded-разработки: MCP к Vivado/Vitis и др., AMD Knowledge Base, open agent skills.",
+    "why": "редкий verified product-релиз на стыке чипов, документации и автоматизации (30.09).",
+    "notConfuse": "общим coding copilтом без доступа к EDA-тулчейну и с самой покупкой World Labs AMD.",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "stack-internal",
+    "tag": "RAG",
+    "title": "Stack Internal",
+    "text": "Что это: платформа Stack Overflow для verified org knowledge: connectors, SME validation, trust score, MCP для агентов; Starter — бесплатно. Зачем: GA 30.09 — практичный слой RAG/документации «с provenance», а не сырой dump wiki. Не путать с: публичным Stack Overflow Q&A и с обычным vector store без human validation.",
+    "what": "платформа Stack Overflow для verified org knowledge: connectors, SME validation, trust score, MCP для агентов; Starter — бесплатно.",
+    "why": "GA 30.09 — практичный слой RAG/документации «с provenance», а не сырой dump wiki.",
+    "notConfuse": "публичным Stack Overflow Q&A и с обычным vector store без human validation.",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "querit-code-search",
+    "tag": "RAG",
+    "title": "Querit Code Search",
+    "text": "Что это: vertical в Querit Search API (Vertical=Code), заточенный под coding agents: official docs first, constraint-aware retrieval, structured output. Зачем: запуск 30.09 закрывает дыру «агент нашёл устаревший SO-ответ не той версии фреймворка». Не путать с: общим web search и с локальным code-index репозитория (это внешний real-time слой).",
+    "what": "vertical в Querit Search API (Vertical=Code), заточенный под coding agents: official docs first, constraint-aware retrieval, structured output.",
+    "why": "запуск 30.09 закрывает дыру «агент нашёл устаревший SO-ответ не той версии фреймворка».",
+    "notConfuse": "общим web search и с локальным code-index репозитория (это внешний real-time слой).",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "ftc-ai-probe",
+    "tag": "регуляторика",
+    "title": "FTC AI probe",
+    "text": "Что это: расследование Федеральной торговой комиссии США в отношении OpenAI, Anthropic и других AI-компаний по рискам продуктов и возможным unfair/deceptive practices. Зачем: подтверждено 30.09 рядом с добровольным WH Accord — показывает, что self-policing не закрывает consumer-protection трек. Не путать с: с White House Accord (добровольный документ без штрафов) и с уголовным делом — это civil consumer-protection контур.",
+    "what": "расследование Федеральной торговой комиссии США в отношении OpenAI, Anthropic и других AI-компаний по рискам продуктов и возможным unfair/deceptive practices.",
+    "why": "подтверждено 30.09 рядом с добровольным WH Accord — показывает, что self-policing не закрывает consumer-protection трек.",
+    "notConfuse": "с White House Accord (добровольный документ без штрафов) и с уголовным делом — это civil consumer-protection контур.",
+    "source": "2026-10-01-utro",
+    "updated": "2026-10-01"
+  },
+  {
     "id": "agent-drift",
     "tag": "агенты",
     "title": "Agent drift",
@@ -612,17 +733,6 @@
     "what": "тензорный ускоритель Google для обучения и инференса моделей; Trillium — актуальное поколение в этом тесте.",
     "why": "четыре таких чипа летят на орбиту в MVP Suncatcher.",
     "notConfuse": "GPU Nvidia — другой вендор и другая экосистема ПО.",
-    "source": "2026-09-28-utro",
-    "updated": "2026-09-28"
-  },
-  {
-    "id": "project-suncatcher",
-    "tag": "космос",
-    "title": "Project Suncatcher",
-    "text": "Что это: исследовательский проект Google по проверке, может ли AI-железо работать в космосе на солнечной энергии. Зачем: 1 октября стартует первый MVP-спутник на Falcon 9 Transporter-18. Не путать с: готовым коммерческим «дата-центром на орбите» — это ранний тест на месяцы.",
-    "what": "исследовательский проект Google по проверке, может ли AI-железо работать в космосе на солнечной энергии.",
-    "why": "1 октября стартует первый MVP-спутник на Falcon 9 Transporter-18.",
-    "notConfuse": "готовым коммерческим «дата-центром на орбите» — это ранний тест на месяцы.",
     "source": "2026-09-28-utro",
     "updated": "2026-09-28"
   },
