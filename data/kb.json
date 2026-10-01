@@ -1,5 +1,115 @@
 [
   {
+    "id": "adversarial-distillation",
+    "tag": "безопасность",
+    "title": "Adversarial distillation",
+    "text": "Что это: систематическое извлечение outputs или скрытого reasoning одной модели, чтобы обучить/ускорить другую без того же объёма R&D и safety. Зачем: центральный сюжет блога OpenAI о кампании июля 2026 и вечерней сводки 01.10. Не путать с: легитимным knowledge distillation внутри своей организации или с обычным «подсмотреть ответ в чате».",
+    "what": "систематическое извлечение outputs или скрытого reasoning одной модели, чтобы обучить/ускорить другую без того же объёма R&D и safety.",
+    "why": "центральный сюжет блога OpenAI о кампании июля 2026 и вечерней сводки 01.10.",
+    "notConfuse": "легитимным knowledge distillation внутри своей организации или с обычным «подсмотреть ответ в чате».",
+    "source": "2026-10-01-vecher",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "protected-reasoning",
+    "tag": "безопасность",
+    "title": "Protected reasoning",
+    "text": "Что это: внутренний ход мысли модели (chain-of-thought / scratchpad), который провайдер намеренно скрывает от пользователя и отдаёт только как защищённый артефакт. Зачем: именно его пытались извлечь в кампании distillation; может содержать то, чего нет в финальном ответе. Не путать с: видимым «thinking» блоком в UI, который модель сама показывает пользователю.",
+    "what": "внутренний ход мысли модели (chain-of-thought / scratchpad), который провайдер намеренно скрывает от пользователя и отдаёт только как защищённый артефакт.",
+    "why": "именно его пытались извлечь в кампании distillation; может содержать то, чего нет в финальном ответе.",
+    "notConfuse": "видимым «thinking» блоком в UI, который модель сама показывает пользователю.",
+    "source": "2026-10-01-vecher",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "reasoning-decryption-oracle",
+    "tag": "безопасность",
+    "title": "Reasoning decryption oracle",
+    "text": "Что это: приём, когда encrypted reasoning из одной сессии переносят в другую (иногда через более дешёвую модель того же семейства), и та «расшифровывает»/транскрибирует скрытый текст. Зачем: описанный OpenAI и исследователями путь extraction без взлома БД. Не путать с: кражей API-ключей или утечкой весов модели.",
+    "what": "приём, когда encrypted reasoning из одной сессии переносят в другую (иногда через более дешёвую модель того же семейства), и та «расшифровывает»/транскрибирует скрытый текст.",
+    "why": "описанный OpenAI и исследователями путь extraction без взлома БД.",
+    "notConfuse": "кражей API-ключей или утечкой весов модели.",
+    "source": "2026-10-01-vecher",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "partner-hosted-endpoint-gap",
+    "tag": "инфра",
+    "title": "Partner-hosted endpoint gap",
+    "text": "Что это: разрыв защит между first-party API лаборатории и тем же весом модели у облачного партнёра (например Azure), из‑за которого патч «у себя» не закрывает атаку «через облако». Зачем: исследователи показали работоспособность extraction на Azure после блокировки на native API. Не путать с: разницей цен/квот между регионами — речь о security controls, не о тарифе.",
+    "what": "разрыв защит между first-party API лаборатории и тем же весом модели у облачного партнёра (например Azure), из‑за которого патч «у себя» не закрывает атаку «через облако».",
+    "why": "исследователи показали работоспособность extraction на Azure после блокировки на native API.",
+    "notConfuse": "разницей цен/квот между регионами — речь о security controls, не о тарифе.",
+    "source": "2026-10-01-vecher",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "meta-muse",
+    "tag": "агенты",
+    "title": "Meta Muse",
+    "text": "Что это: персональный AI-агент Meta на dedicated cloud VM (Muse Spark), доступный в США/Канаде через apps, web и WhatsApp; free + платные capacity-тарифы. Зачем: ~5 млн US downloads за ~22 дня и прямой конкурент платному Dots OpenAI. Не путать с: Muse как кодовым именем других продуктов Meta и с ChatGPT «просто чатом» без VM.",
+    "what": "персональный AI-агент Meta на dedicated cloud VM (Muse Spark), доступный в США/Канаде через apps, web и WhatsApp; free + платные capacity-тарифы.",
+    "why": "~5 млн US downloads за ~22 дня и прямой конкурент платному Dots OpenAI.",
+    "notConfuse": "Muse как кодовым именем других продуктов Meta и с ChatGPT «просто чатом» без VM.",
+    "source": "2026-10-01-vecher",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "model-choice-copilot",
+    "tag": "продукт",
+    "title": "Model choice (Microsoft Copilot)",
+    "text": "Что это: возможность в Copilot выбирать конкретную frontier-модель (Sol, Sonnet 5.5 и др.) под задачу вместо одного скрытого default. Зачем: GPT-6.1 Sol и Claude Sonnet 5.5 начинают rollout в Cowork/Studio и Office. Не путать с: отдельной подпиской на ChatGPT/Claude вне M365 — здесь модели живут внутри Copilot license/UBB.",
+    "what": "возможность в Copilot выбирать конкретную frontier-модель (Sol, Sonnet 5.5 и др.) под задачу вместо одного скрытого default.",
+    "why": "GPT-6.1 Sol и Claude Sonnet 5.5 начинают rollout в Cowork/Studio и Office.",
+    "notConfuse": "отдельной подпиской на ChatGPT/Claude вне M365 — здесь модели живут внутри Copilot license/UBB.",
+    "source": "2026-10-01-vecher",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "smart-agent-progress",
+    "tag": "RAG",
+    "title": "Smart Agent (Progress Agentic RAG)",
+    "text": "Что это: агентный слой над knowledge base: планирует вопрос, дробит на sub-questions, ходит по источникам и MCP-приложениям, оценивает quality/sufficiency перед остановкой. Зачем: релиз 01.10 переносит routing logic из application code в платформу Progress. Не путать с: простым chat-over-docs без планирования и без live CRM/ERP.",
+    "what": "агентный слой над knowledge base: планирует вопрос, дробит на sub-questions, ходит по источникам и MCP-приложениям, оценивает quality/sufficiency перед остановкой.",
+    "why": "релиз 01.10 переносит routing logic из application code в платформу Progress.",
+    "notConfuse": "простым chat-over-docs без планирования и без live CRM/ERP.",
+    "source": "2026-10-01-vecher",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "cloudflare-ai-search",
+    "tag": "RAG",
+    "title": "Cloudflare AI Search",
+    "text": "Что это: managed pipeline индексации и retrieval на стеке Cloudflare (Workers AI, Vectorize, R2) с multimodal embeddings и OCR; с 01.10 в GA. Зачем: практичный слой поиска по docs/сайту для агентов и людей без самосборки векторной инфры. Не путать с: обычным Cloudflare CDN/WAF и с «просто Workers AI chat».",
+    "what": "managed pipeline индексации и retrieval на стеке Cloudflare (Workers AI, Vectorize, R2) с multimodal embeddings и OCR; с 01.10 в GA.",
+    "why": "практичный слой поиска по docs/сайту для агентов и людей без самосборки векторной инфры.",
+    "notConfuse": "обычным Cloudflare CDN/WAF и с «просто Workers AI chat».",
+    "source": "2026-10-01-vecher",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "ocr-ingestion-rag",
+    "tag": "RAG",
+    "title": "OCR ingestion (для RAG)",
+    "text": "Что это: распознавание текста со сканов/страниц PDF перед chunking и embedding, когда в файле нет текстового слоя. Зачем: Cloudflare AI Search включает OCR в GA — иначе корпоративные сканы невидимы для retrieval. Не путать с: captioning картинок для multimodal search (соседний, но другой сигнал).",
+    "what": "распознавание текста со сканов/страниц PDF перед chunking и embedding, когда в файле нет текстового слоя.",
+    "why": "Cloudflare AI Search включает OCR в GA — иначе корпоративные сканы невидимы для retrieval.",
+    "notConfuse": "captioning картинок для multimodal search (соседний, но другой сигнал).",
+    "source": "2026-10-01-vecher",
+    "updated": "2026-10-01"
+  },
+  {
+    "id": "transporter-18-launch-window",
+    "tag": "космос",
+    "title": "Transporter-18 launch window",
+    "text": "Что это: 58-минутное окно пуска Falcon 9 rideshare с SLC-4E; 01.10 открытие ~11:18 PT / 21:18 UTC+3, backup 02.10. Зачем: вечерний статус Suncatcher M1 — GO, но liftoff ещё впереди на момент сводки ~20:05 UTC+3. Не путать с: уже состоявшимся орбитальным успехом или с пилотируемым пуском SpaceX в тот же день с Флориды.",
+    "what": "58-минутное окно пуска Falcon 9 rideshare с SLC-4E; 01.10 открытие ~11:18 PT / 21:18 UTC+3, backup 02.10.",
+    "why": "вечерний статус Suncatcher M1 — GO, но liftoff ещё впереди на момент сводки ~20:05 UTC+3.",
+    "notConfuse": "уже состоявшимся орбитальным успехом или с пилотируемым пуском SpaceX в тот же день с Флориды.",
+    "source": "2026-10-01-vecher",
+    "updated": "2026-10-01"
+  },
+  {
     "id": "gemini-4-argon",
     "tag": "ИИ",
     "title": "Gemini 4 Argon",
