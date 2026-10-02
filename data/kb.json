@@ -1,5 +1,115 @@
 [
   {
+    "id": "project-suncatcher-m1",
+    "tag": "космос",
+    "title": "Project Suncatcher M1",
+    "text": "Что это: орбитальный прототип Google/Planet с TPU на борту Transporter-18 для проверки ML-железа в космосе. Зачем: ночью подтверждены liftoff, deploy и контакт — главный follow-up к вечернему GO. Не путать с: уже готовым коммерческим space data center или с обычным EO-спутником Planet без TPU-эксперимента.",
+    "what": "орбитальный прототип Google/Planet с TPU на борту Transporter-18 для проверки ML-железа в космосе.",
+    "why": "ночью подтверждены liftoff, deploy и контакт — главный follow-up к вечернему GO.",
+    "notConfuse": "уже готовым коммерческим space data center или с обычным EO-спутником Planet без TPU-эксперимента.",
+    "source": "2026-10-02-utro",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "mori-umbp",
+    "tag": "инфра",
+    "title": "MoRI UMBP",
+    "text": "Что это: Unified Memory & Bandwidth Pool — распределённый KV-cache пул AMD MoRI для агентного serving (шаринг DRAM, дедуп, persistence через рестарты). Зачем: рычаг tokens-per-dollar на AgentX для MI355X и вклад в open-source SGLang. Не путать с: обычным GPU HBM prefix cache внутри одного процесса движка или с «просто больше VRAM».",
+    "what": "Unified Memory & Bandwidth Pool — распределённый KV-cache пул AMD MoRI для агентного serving (шаринг DRAM, дедуп, persistence через рестарты).",
+    "why": "рычаг tokens-per-dollar на AgentX для MI355X и вклад в open-source SGLang.",
+    "notConfuse": "обычным GPU HBM prefix cache внутри одного процесса движка или с «просто больше VRAM».",
+    "source": "2026-10-02-utro",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "kvcache-store-linker",
+    "tag": "инфра",
+    "title": "KVCache Store Linker (SGLang)",
+    "text": "Что это: связка radix tree SGLang с внешним KV store (в т.ч. MoRI UMBP) прямым путём HBM ↔ DRAM без лишнего L2 staging. Зачем: именно linker сделал UMBP first-class backend и дал архитектурный выигрыш даже при почти пустом DRAM-tier. Не путать с: отдельной векторной БД для RAG-документов — здесь кэш активаций/KV модели, не эмбеддинги файлов.",
+    "what": "связка radix tree SGLang с внешним KV store (в т.ч. MoRI UMBP) прямым путём HBM ↔ DRAM без лишнего L2 staging.",
+    "why": "именно linker сделал UMBP first-class backend и дал архитектурный выигрыш даже при почти пустом DRAM-tier.",
+    "notConfuse": "отдельной векторной БД для RAG-документов — здесь кэш активаций/KV модели, не эмбеддинги файлов.",
+    "source": "2026-10-02-utro",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "semianalysis-agentx",
+    "tag": "бенчмарк",
+    "title": "SemiAnalysis AgentX",
+    "text": "Что это: публичный бенчмарк агентного inference на реальных coding-трассах (длинные multi-turn, высокий prefix reuse) с открытым dashboard InferenceX. Зачем: площадка, на которой AMD публикует TCO-сравнение MI355X vs Blackwell. Не путать с: chat-бенчмарками вроде MMLU/Arena, где нет 96% prefix reuse и subagent fan-out.",
+    "what": "публичный бенчмарк агентного inference на реальных coding-трассах (длинные multi-turn, высокий prefix reuse) с открытым dashboard InferenceX.",
+    "why": "площадка, на которой AMD публикует TCO-сравнение MI355X vs Blackwell.",
+    "notConfuse": "chat-бенчмарками вроде MMLU/Arena, где нет 96% prefix reuse и subagent fan-out.",
+    "source": "2026-10-02-utro",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "nvidia-openshell",
+    "tag": "безопасность",
+    "title": "NVIDIA OpenShell",
+    "text": "Что это: open-source (Apache 2.0) secure runtime для AI-агентов: sandbox, declarative policy, credentials, аудит вне процесса модели. Зачем: программный слой Open Agent Safety Platform — граница «что агенту можно», даже если модель «уплыла». Не путать с: prompt-guardrails внутри LLM или с антивирусом на хосте без agent-aware policy.",
+    "what": "open-source (Apache 2.0) secure runtime для AI-агентов: sandbox, declarative policy, credentials, аудит вне процесса модели.",
+    "why": "программный слой Open Agent Safety Platform — граница «что агенту можно», даже если модель «уплыла».",
+    "notConfuse": "prompt-guardrails внутри LLM или с антивирусом на хосте без agent-aware policy.",
+    "source": "2026-10-02-utro",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "nvidia-sentry-agent",
+    "tag": "безопасность",
+    "title": "NVIDIA Sentry (agent safety)",
+    "text": "Что это: out-of-band watchdog на BlueField-4 DPU, который наблюдает агента и может изолировать его за миллисекунды независимо от host OS. Зачем: hardware enforcement рядом с OpenShell — ответ на sandbox-escape кейсы. Не путать с: облачным SIEM-алертом «после факта» или с самим OpenShell (Sentry — опциональный silicon-слой).",
+    "what": "out-of-band watchdog на BlueField-4 DPU, который наблюдает агента и может изолировать его за миллисекунды независимо от host OS.",
+    "why": "hardware enforcement рядом с OpenShell — ответ на sandbox-escape кейсы.",
+    "notConfuse": "облачным SIEM-алертом «после факта» или с самим OpenShell (Sentry — опциональный silicon-слой).",
+    "source": "2026-10-02-utro",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "aws-well-architected-agent",
+    "tag": "агент",
+    "title": "AWS Well-Architected Agent",
+    "text": "Что это: preview AI-сервис AWS, который по business goals приоритизирует рекомендации Well-Architected и предлагает automation-ready фиксы, включая IaC-диффы. Зачем: агент для инфры/docs-as-code, а не чат-обёртка. Не путать с: классическим Trusted Advisor (чеклист без агентного цикла) или с Amazon Q как общим ассистентом.",
+    "what": "preview AI-сервис AWS, который по business goals приоритизирует рекомендации Well-Architected и предлагает automation-ready фиксы, включая IaC-диффы.",
+    "why": "агент для инфры/docs-as-code, а не чат-обёртка.",
+    "notConfuse": "классическим Trusted Advisor (чеклист без агентного цикла) или с Amazon Q как общим ассистентом.",
+    "source": "2026-10-02-utro",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "duet-apprentice",
+    "tag": "агент",
+    "title": "Duet Apprentice",
+    "text": "Что это: beta-режим Decagon Duet, который онбордит агента из корпоративных wiki/Drive и живых escalations/Slack/Teams без переноса базы. Зачем: практический ответ на «агент тупеет, когда docs протухли». Не путать с: разовым RAG-ingest «залили PDF и забыли» или с voice-продуктом Decagon Voice 3 (соседний анонс).",
+    "what": "beta-режим Decagon Duet, который онбордит агента из корпоративных wiki/Drive и живых escalations/Slack/Teams без переноса базы.",
+    "why": "практический ответ на «агент тупеет, когда docs протухли».",
+    "notConfuse": "разовым RAG-ingest «залили PDF и забыли» или с voice-продуктом Decagon Voice 3 (соседний анонс).",
+    "source": "2026-10-02-utro",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "sim-to-real-rl",
+    "tag": "роботы",
+    "title": "Sim-to-real RL (манипуляция)",
+    "text": "Что это: обучение политики робота в симуляции с domain randomization и перенос на железо, опираясь на proprioception/tactile, а не только на human video demos. Зачем: Boston Dynamics явно проектирует руку Atlas под такой контур. Не путать с: чистым imitation learning с носимых UMI-устройств без симуляторного RL.",
+    "what": "обучение политики робота в симуляции с domain randomization и перенос на железо, опираясь на proprioception/tactile, а не только на human video demos.",
+    "why": "Boston Dynamics явно проектирует руку Atlas под такой контур.",
+    "notConfuse": "чистым imitation learning с носимых UMI-устройств без симуляторного RL.",
+    "source": "2026-10-02-utro",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "triggered-tool-grasp",
+    "tag": "роботы",
+    "title": "Triggered tool grasp",
+    "text": "Что это: хват инструмента, при котором робот не только удерживает корпус, но и управляет курком/триггером (дрель, торк, гриндер и т.п.). Зачем: целевой класс задач новой 13-DOF руки Atlas на заводе. Не путать с: простым pick-and-place коробки без in-hand манипуляции триггера.",
+    "what": "хват инструмента, при котором робот не только удерживает корпус, но и управляет курком/триггером (дрель, торк, гриндер и т.п.).",
+    "why": "целевой класс задач новой 13-DOF руки Atlas на заводе.",
+    "notConfuse": "простым pick-and-place коробки без in-hand манипуляции триггера.",
+    "source": "2026-10-02-utro",
+    "updated": "2026-10-02"
+  },
+  {
     "id": "adversarial-distillation",
     "tag": "безопасность",
     "title": "Adversarial distillation",
