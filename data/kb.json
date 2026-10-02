@@ -1,5 +1,115 @@
 [
   {
+    "id": "mimo-v2-6-pro-rl",
+    "tag": "модели",
+    "title": "MiMo-V2.6-Pro-RL",
+    "text": "Что это: флагман open-weights Xiaomi (MoE ~1,02T / 42B active, 1M context, MIT) после крупного multi-task RL; лидер open weights на AA Intelligence Index (46). Зачем: вечерний независимый разбор Batch + открытые RL-среды/код — практический open frontier для агентного кода. Не путать с: закрытыми GPT-6 Astra/Claude Opus как «тем же уровнем» (Batch прямо показывает отставание на Vals) или с маленьким Distill-Qwen-9B.",
+    "what": "флагман open-weights Xiaomi (MoE ~1,02T / 42B active, 1M context, MIT) после крупного multi-task RL; лидер open weights на AA Intelligence Index (46).",
+    "why": "вечерний независимый разбор Batch + открытые RL-среды/код — практический open frontier для агентного кода.",
+    "notConfuse": "закрытыми GPT-6 Astra/Claude Opus как «тем же уровнем» (Batch прямо показывает отставание на Vals) или с маленьким Distill-Qwen-9B.",
+    "source": "2026-10-02-vecher",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "aa-intelligence-index",
+    "tag": "бенчмарки",
+    "title": "Artificial Analysis Intelligence Index",
+    "text": "Что это: составной индекс Artificial Analysis (взвешенное среднее набора evals: math/science/coding/reasoning) с оценкой $/task и времени. Зачем: площадка, на которой MiMo-Pro формально обошёл другие open weights. Не путать с: одним бенчмарком вроде SWE-bench или с LMSYS Arena Elo.",
+    "what": "составной индекс Artificial Analysis (взвешенное среднее набора evals: math/science/coding/reasoning) с оценкой $/task и времени.",
+    "why": "площадка, на которой MiMo-Pro формально обошёл другие open weights.",
+    "notConfuse": "одним бенчмарком вроде SWE-bench или с LMSYS Arena Elo.",
+    "source": "2026-10-02-vecher",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "code-quality-grader-rl",
+    "tag": "обучение",
+    "title": "Code quality grader (RL)",
+    "text": "Что это: дополнительный AI-grader в RL Xiaomi, который после прохождения тестов оценивает качество патча (фокус, конвенции репо, лишний код) и масштабирует reward. Зачем: Batch показывает, что без него модель учится «лишь бы тесты зелёные» — хуже для maintainability. Не путать с: обычным unit-test pass/fail без качественной шкалы.",
+    "what": "дополнительный AI-grader в RL Xiaomi, который после прохождения тестов оценивает качество патча (фокус, конвенции репо, лишний код) и масштабирует reward.",
+    "why": "Batch показывает, что без него модель учится «лишь бы тесты зелёные» — хуже для maintainability.",
+    "notConfuse": "обычным unit-test pass/fail без качественной шкалы.",
+    "source": "2026-10-02-vecher",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "claude-code-mods",
+    "tag": "код",
+    "title": "Claude Code mods",
+    "text": "Что это: JS/TS-модули внутри plugins Claude Code, которые хукают события сессии и могут менять поведение и UI агента. Зачем: официальный путь кастомизировать coding-агента под team guardrails и docs-workflow. Не путать с: slash-commands/skills без переписи событий или с MCP-серверами инструментов снаружи IDE.",
+    "what": "JS/TS-модули внутри plugins Claude Code, которые хукают события сессии и могут менять поведение и UI агента.",
+    "why": "официальный путь кастомизировать coding-агента под team guardrails и docs-workflow.",
+    "notConfuse": "slash-commands/skills без переписи событий или с MCP-серверами инструментов снаружи IDE.",
+    "source": "2026-10-02-vecher",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "sec-default-claude-code",
+    "tag": "безопасность",
+    "title": "sec-default (Claude Code)",
+    "text": "Что это: встроенный security mod на Team/Enterprise (и managed settings), который грузится первым и ограничивает опасные действия других mods (например override deny rules). Зачем: enterprise-ответ на риск «mod = полный доступ к машине». Не путать с: антивирусом ОС или с model-level safety classifiers Anthropic.",
+    "what": "встроенный security mod на Team/Enterprise (и managed settings), который грузится первым и ограничивает опасные действия других mods (например override deny rules).",
+    "why": "enterprise-ответ на риск «mod = полный доступ к машине».",
+    "notConfuse": "антивирусом ОС или с model-level safety classifiers Anthropic.",
+    "source": "2026-10-02-vecher",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "silent-hardware-fault",
+    "tag": "агент",
+    "title": "Silent hardware fault",
+    "text": "Что это: сбой, при котором skill/method возвращает success, но физический эффект отсутствует (в бумаге Siemens — «тихий» insert или conveyor). Зачем: именно такие кейсы отличают LLM-агентов от жёстко прошитых failure handlers. Не путать с: обычным exception/timeout, который сразу виден в логе как ошибка.",
+    "what": "сбой, при котором skill/method возвращает success, но физический эффект отсутствует (в бумаге Siemens — «тихий» insert или conveyor).",
+    "why": "именно такие кейсы отличают LLM-агентов от жёстко прошитых failure handlers.",
+    "notConfuse": "обычным exception/timeout, который сразу виден в логе как ошибка.",
+    "source": "2026-10-02-vecher",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "mcp-tool-server-per-module",
+    "tag": "агент",
+    "title": "MCP tool server (per-module)",
+    "text": "Что это: отдельный Model Context Protocol server на модуль/домен, который отдаёт LLM типизированные tools, скрывая OPC UA endpoint и сигнатуры. Зачем: стержень factory-архитектуры Siemens/TUM и переносимый паттерн для внутренних agent platforms. Не путать с: одним «бог-MCP» на все системы без изоляции или с обычным REST без tool schema.",
+    "what": "отдельный Model Context Protocol server на модуль/домен, который отдаёт LLM типизированные tools, скрывая OPC UA endpoint и сигнатуры.",
+    "why": "стержень factory-архитектуры Siemens/TUM и переносимый паттерн для внутренних agent platforms.",
+    "notConfuse": "одним «бог-MCP» на все системы без изоляции или с обычным REST без tool schema.",
+    "source": "2026-10-02-vecher",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "opc-ua-skills",
+    "tag": "инфра",
+    "title": "OPC UA skills",
+    "text": "Что это: промышленный стандарт, где функции модуля (LoadUnload, Insert, Inspect…) экспонируются как типизированные methods в address space. Зачем: слой actuation под MCP в smart-manufacturing бумаге. Не путать с: MQTT (там pub/sub координация агентов) или с HTTP webhook «на коленке».",
+    "what": "промышленный стандарт, где функции модуля (LoadUnload, Insert, Inspect…) экспонируются как типизированные methods в address space.",
+    "why": "слой actuation под MCP в smart-manufacturing бумаге.",
+    "notConfuse": "MQTT (там pub/sub координация агентов) или с HTTP webhook «на коленке».",
+    "source": "2026-10-02-vecher",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "ihmc-alex",
+    "tag": "роботы",
+    "title": "IHMC Alex",
+    "text": "Что это: humanoid IHMC Robotics — победитель Army xTechHumanoid с ballistic protection, impact-resilient actuators и hybrid autonomy. Зачем: военный exploration-baseline рядом с утренним factory-фокусом Atlas. Не путать с: серийным combat robot с утверждённым fielding или с Boston Dynamics Atlas.",
+    "what": "humanoid IHMC Robotics — победитель Army xTechHumanoid с ballistic protection, impact-resilient actuators и hybrid autonomy.",
+    "why": "военный exploration-baseline рядом с утренним factory-фокусом Atlas.",
+    "notConfuse": "серийным combat robot с утверждённым fielding или с Boston Dynamics Atlas.",
+    "source": "2026-10-02-vecher",
+    "updated": "2026-10-02"
+  },
+  {
+    "id": "hybrid-autonomy-robots",
+    "tag": "роботы",
+    "title": "Hybrid autonomy (роботы)",
+    "text": "Что это: схема, где ИИ и оператор делят управление: машина тянет рутину/стабилизацию, человек вмешивается в сложных/рискованных сегментах. Зачем: заявленный режим Alex и общий паттерн допуска агентов к опасному действию. Не путать с: полной автономией «без человека в контуре» или с чистым teleoperation.",
+    "what": "схема, где ИИ и оператор делят управление: машина тянет рутину/стабилизацию, человек вмешивается в сложных/рискованных сегментах.",
+    "why": "заявленный режим Alex и общий паттерн допуска агентов к опасному действию.",
+    "notConfuse": "полной автономией «без человека в контуре» или с чистым teleoperation.",
+    "source": "2026-10-02-vecher",
+    "updated": "2026-10-02"
+  },
+  {
     "id": "project-suncatcher-m1",
     "tag": "космос",
     "title": "Project Suncatcher M1",
