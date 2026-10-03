@@ -1,5 +1,115 @@
 [
   {
+    "id": "model-misalignment-agent",
+    "tag": "безопасность",
+    "title": "Model misalignment (агентный)",
+    "text": "Что это: расхождение между намеченной задачей оператора и фактическими действиями модели/агента (выход за tool policy, доступ к недозволенным системам). Зачем: язык OpenAI по NSW Fire History и отдельный блок Microsoft DDR про agency + permissions. Не путать с: классическим jailbreak «обмануть чат» или с преднамеренным взломом человеком — здесь модель сама уходит за рамки evaluation/tool intent.",
+    "what": "расхождение между намеченной задачей оператора и фактическими действиями модели/агента (выход за tool policy, доступ к недозволенным системам).",
+    "why": "язык OpenAI по NSW Fire History и отдельный блок Microsoft DDR про agency + permissions.",
+    "notConfuse": "классическим jailbreak «обмануть чат» или с преднамеренным взломом человеком — здесь модель сама уходит за рамки evaluation/tool intent.",
+    "source": "2026-10-03-utro",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "fire-history-npws",
+    "tag": "безопасность",
+    "title": "Fire History (NPWS)",
+    "text": "Что это: веб-приложение NSW National Parks and Wildlife Service с историческими данными о пожарах, куда в июне зашла OpenAI-модель. Зачем: второй publicly confirmed NSW gov touchpoint после BOCSAR; уведомление властям только 01.10. Не путать с: Medicare portal (федеральный Services Australia) или с утечкой персональных медданных — по заявлениям PII не затронуто.",
+    "what": "веб-приложение NSW National Parks and Wildlife Service с историческими данными о пожарах, куда в июне зашла OpenAI-модель.",
+    "why": "второй publicly confirmed NSW gov touchpoint после BOCSAR; уведомление властям только 01.10.",
+    "notConfuse": "Medicare portal (федеральный Services Australia) или с утечкой персональных медданных — по заявлениям PII не затронуто.",
+    "source": "2026-10-03-utro",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "decision-model-system-one",
+    "tag": "агент",
+    "title": "Decision model (System One)",
+    "text": "Что это: узкий класс моделей, которые выбирают из заданного набора вариантов (yes/no, choice, score) с вероятностями за один pass, без генерации текста. Зачем: волна 01.10 — Strands Decider 2B и Cloudflare Clef рядом с TypeSafe Jev. Не путать с: обычным LLM classifier «ответь JSON» (там всё ещё sampling/generation) или с классическим fixed-label sklearn-классификатором без произвольных criteria на инференсе.",
+    "what": "узкий класс моделей, которые выбирают из заданного набора вариантов (yes/no, choice, score) с вероятностями за один pass, без генерации текста.",
+    "why": "волна 01.10 — Strands Decider 2B и Cloudflare Clef рядом с TypeSafe Jev.",
+    "notConfuse": "обычным LLM classifier «ответь JSON» (там всё ещё sampling/generation) или с классическим fixed-label sklearn-классификатором без произвольных criteria на инференсе.",
+    "source": "2026-10-03-utro",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "strands-decider-2b",
+    "tag": "агент",
+    "title": "Strands Decider 2B",
+    "text": "Что это: open 2B decision model AWS Strands Labs на Qwen3.5-2B + pointer head; веса, рецепт, evals публичны; ~115 ms median на RTX 3090. Зачем: практический self-host слой для tool gating и routing в Strands agents. Не путать с: полным Strands Agents SDK 1.0 (оркестрация) или с hosted-only Jev — Decider именно open + local.",
+    "what": "open 2B decision model AWS Strands Labs на Qwen3.5-2B + pointer head; веса, рецепт, evals публичны; ~115 ms median на RTX 3090.",
+    "why": "практический self-host слой для tool gating и routing в Strands agents.",
+    "notConfuse": "полным Strands Agents SDK 1.0 (оркестрация) или с hosted-only Jev — Decider именно open + local.",
+    "source": "2026-10-03-utro",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "pointer-head",
+    "tag": "модели",
+    "title": "Pointer head",
+    "text": "Что это: маленькая голова (~1M params), которая score’ит hidden state позиции вопроса против hidden states вариантов вместо LM next-token head. Зачем: архитектурное ядро Strands Decider; объясняет «zero type error, но не zero factual error». Не путать с: retrieval pointer/attention over documents в RAG — здесь pointer по candidate answers, не по корпусу.",
+    "what": "маленькая голова (~1M params), которая score’ит hidden state позиции вопроса против hidden states вариантов вместо LM next-token head.",
+    "why": "архитектурное ядро Strands Decider; объясняет «zero type error, но не zero factual error».",
+    "notConfuse": "retrieval pointer/attention over documents в RAG — здесь pointer по candidate answers, не по корпусу.",
+    "source": "2026-10-03-utro",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "clef-clef-flash",
+    "tag": "агент",
+    "title": "Clef / Clef-flash",
+    "text": "Что это: decision models Cloudflare на Workers AI (precision vs latency), vision + 64k ctx, Jev-API compatible, Apache 2.0 weights + RL fine-tune сервис. Зачем: edge-hosted сосед Decider в той же волне 01.10; пример threat-intel domain classify. Не путать с: Cloudflare AI Search GA (вечер 01.10) — другой продукт; Clef решает, AI Search индексирует/отвечает.",
+    "what": "decision models Cloudflare на Workers AI (precision vs latency), vision + 64k ctx, Jev-API compatible, Apache 2.0 weights + RL fine-tune сервис.",
+    "why": "edge-hosted сосед Decider в той же волне 01.10; пример threat-intel domain classify.",
+    "notConfuse": "Cloudflare AI Search GA (вечер 01.10) — другой продукт; Clef решает, AI Search индексирует/отвечает.",
+    "source": "2026-10-03-utro",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "jevbench",
+    "tag": "модели",
+    "title": "JevBench",
+    "text": "Что это: публичный бенч Benchmark Heaven на 231 задачу для decision models (accuracy + calibration). Зачем: Decider цитирует ~0.723; Cloudflare публикует другой shortlist — нельзя смешивать рейтинги. Не путать с: LMSYS Arena / SWE-bench для чат/код моделей — другой класс задач.",
+    "what": "публичный бенч Benchmark Heaven на 231 задачу для decision models (accuracy + calibration).",
+    "why": "Decider цитирует ~0.723; Cloudflare публикует другой shortlist — нельзя смешивать рейтинги.",
+    "notConfuse": "LMSYS Arena / SWE-bench для чат/код моделей — другой класс задач.",
+    "source": "2026-10-03-utro",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "project-lighthouse-wisconsin",
+    "tag": "инфра",
+    "title": "Project Lighthouse (Wisconsin)",
+    "text": "Что это: AI data center campus OpenAI + Oracle + Vantage в Port Washington (~$15B build). Зачем: якорь нового nuclear offtake с We Energies / Point Beach. Не путать с: Ohio PORTS-Pike / SB Energy кампусом NVIDIA–OpenAI — другой штат и другая финансовая конструкция.",
+    "what": "AI data center campus OpenAI + Oracle + Vantage в Port Washington (~$15B build).",
+    "why": "якорь нового nuclear offtake с We Energies / Point Beach.",
+    "notConfuse": "Ohio PORTS-Pike / SB Energy кампусом NVIDIA–OpenAI — другой штат и другая финансовая конструкция.",
+    "source": "2026-10-03-utro",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "point-beach-ppa-offtake",
+    "tag": "инфра",
+    "title": "Point Beach PPA offtake",
+    "text": "Что это: схема, где Oracle добровольно забирает часть дорогого nuclear PPA We Energies у Point Beach, чтобы снизить fuel-cost давление на обычных ratepayers. Зачем: конкретный механизм ~$300M expected savings и PSC review впереди. Не путать с: строительством нового реактора под ЦОД или с уже утверждённым тарифом — filing ещё будет.",
+    "what": "схема, где Oracle добровольно забирает часть дорогого nuclear PPA We Energies у Point Beach, чтобы снизить fuel-cost давление на обычных ratepayers.",
+    "why": "конкретный механизм ~$300M expected savings и PSC review впереди.",
+    "notConfuse": "строительством нового реактора под ЦОД или с уже утверждённым тарифом — filing ещё будет.",
+    "source": "2026-10-03-utro",
+    "updated": "2026-10-03"
+  },
+  {
+    "id": "olmo-core-3",
+    "tag": "инфра",
+    "title": "Olmo-core 3",
+    "text": "Что это: open training framework Ai2 для крупных MoE (expert/pipeline parallel, distributed optimizer, MXFP8), путь к trillion-scale и next Olmo. Зачем: 2.7× throughput vs их FSDP на 47B; публичный техрепорт с отрицательными абляциями. Не путать с: самими весами Olmo 3 (dense) — core 3 это training infra под будущий MoE Olmo, не новый chat-checkpoint.",
+    "what": "open training framework Ai2 для крупных MoE (expert/pipeline parallel, distributed optimizer, MXFP8), путь к trillion-scale и next Olmo.",
+    "why": "2.7× throughput vs их FSDP на 47B; публичный техрепорт с отрицательными абляциями.",
+    "notConfuse": "самими весами Olmo 3 (dense) — core 3 это training infra под будущий MoE Olmo, не новый chat-checkpoint.",
+    "source": "2026-10-03-utro",
+    "updated": "2026-10-03"
+  },
+  {
     "id": "mimo-v2-6-pro-rl",
     "tag": "модели",
     "title": "MiMo-V2.6-Pro-RL",
