@@ -1,5 +1,115 @@
 [
   {
+    "id": "iterative-deployment-robinson",
+    "tag": "безопасность",
+    "title": "Iterative deployment (Robinson)",
+    "what": "подход «выкатили → нашли failure → починили guardrails», который Robinson связывает с гарантированными periodic failures растущего масштаба.",
+    "why": "центральный аргумент Atlantic-эссе про broken culture OpenAI.",
+    "notConfuse": "обычным agile product iteration без safety-критики или с formal staged eval до любого внешнего доступа.",
+    "source": "2026-10-03-vecher",
+    "updated": "2026-10-03",
+    "text": "Что это: подход «выкатили → нашли failure → починили guardrails», который Robinson связывает с гарантированными periodic failures растущего масштаба. Зачем: центральный аргумент Atlantic-эссе про broken culture OpenAI. Не путать с: обычным agile product iteration без safety-критики или с formal staged eval до любого внешнего доступа."
+  },
+  {
+    "id": "system-card",
+    "tag": "безопасность",
+    "title": "System card",
+    "what": "safety report / карточка, сопровождающая major product launches; Robinson вёл их написание в Safety Systems.",
+    "why": "якорь его роли и credibility при уходе.",
+    "notConfuse": "marketing one-pager продукта или с model card в узком ML-смысле без operational safety narrative.",
+    "source": "2026-10-03-vecher",
+    "updated": "2026-10-03",
+    "text": "Что это: safety report / карточка, сопровождающая major product launches; Robinson вёл их написание в Safety Systems. Зачем: якорь его роли и credibility при уходе. Не путать с: marketing one-pager продукта или с model card в узком ML-смысле без operational safety narrative."
+  },
+  {
+    "id": "50-petabyte-agent-review",
+    "tag": "безопасность",
+    "title": "50-petabyte agent review",
+    "what": "объём данных (~50 PB), который OpenAI разбирает в поисках unintended agent activity; >$500k/день; AI помогает sift; plain-text metafora ~66m лет при 240 wpm.",
+    "why": "Guardian-срез цены и лага disclosures (в т.ч. NSW Fire History как sixth AU gov site).",
+    "notConfuse": "одним инцидентом Medicare или с утверждением, что все 100+ notified orgs были compromised.",
+    "source": "2026-10-03-vecher",
+    "updated": "2026-10-03",
+    "text": "Что это: объём данных (~50 PB), который OpenAI разбирает в поисках unintended agent activity; >$500k/день; AI помогает sift; plain-text metafora ~66m лет при 240 wpm. Зачем: Guardian-срез цены и лага disclosures (в т.ч. NSW Fire History как sixth AU gov site). Не путать с: одним инцидентом Medicare или с утверждением, что все 100+ notified orgs были compromised."
+  },
+  {
+    "id": "religious-force-ai-safety",
+    "tag": "безопасность",
+    "title": "Religious force (AI safety framing)",
+    "what": "приписывание моделям религиозной силы / сдача human judgment — то, против чего Altman публично выступает как real safety issue.",
+    "why": "Axios-разлом OpenAI vs Anthropic/Olah / consciousness / confession ideas; рядом Barron «Team Meatbag» и Pope Leo.",
+    "notConfuse": "обычным alignment к human values без духовной риторики или с корпоративным ethics theatre.",
+    "source": "2026-10-03-vecher",
+    "updated": "2026-10-03",
+    "text": "Что это: приписывание моделям религиозной силы / сдача human judgment — то, против чего Altman публично выступает как real safety issue. Зачем: Axios-разлом OpenAI vs Anthropic/Olah / consciousness / confession ideas; рядом Barron «Team Meatbag» и Pope Leo. Не путать с: обычным alignment к human values без духовной риторики или с корпоративным ethics theatre."
+  },
+  {
+    "id": "muse-spark-thinking-mode",
+    "tag": "модели",
+    "title": "Muse Spark Thinking Mode",
+    "what": "режим Muse Spark 1.1/1.2 в обычном meta.ai chat, которым математики вели open research без custom scaffold; AI/human passages marked.",
+    "why": "шесть papers, пять — ответы на ранее открытые math-вопросы.",
+    "notConfuse": "Olympiad gold demo раньше в году или с fully autonomous “AI scientist” без human guidance/review.",
+    "source": "2026-10-03-vecher",
+    "updated": "2026-10-03",
+    "text": "Что это: режим Muse Spark 1.1/1.2 в обычном meta.ai chat, которым математики вели open research без custom scaffold; AI/human passages marked. Зачем: шесть papers, пять — ответы на ранее открытые math-вопросы. Не путать с: Olympiad gold demo раньше в году или с fully autonomous “AI scientist” без human guidance/review."
+  },
+  {
+    "id": "activesaddler",
+    "tag": "агент",
+    "title": "ActiveSaddler",
+    "what": "метод automated curriculum learning для harness optimization (Microsoft/KAIST/POSTECH): failure-pattern arms + bandit + explore/exploit.",
+    "why": "+4.4 pp GAIA2 и +7.5 pp Terminal-Bench 2.0 Pass@1 vs fixed scenario order при том же optimizer.",
+    "notConfuse": "AutoSaddler (базовый harness optimizer без adaptive curriculum) или с RL curriculum для весов модели.",
+    "source": "2026-10-03-vecher",
+    "updated": "2026-10-03",
+    "text": "Что это: метод automated curriculum learning для harness optimization (Microsoft/KAIST/POSTECH): failure-pattern arms + bandit + explore/exploit. Зачем: +4.4 pp GAIA2 и +7.5 pp Terminal-Bench 2.0 Pass@1 vs fixed scenario order при том же optimizer. Не путать с: AutoSaddler (базовый harness optimizer без adaptive curriculum) или с RL curriculum для весов модели."
+  },
+  {
+    "id": "failure-pattern-arm",
+    "tag": "агент",
+    "title": "Failure-pattern arm",
+    "what": "рука бандита, собранная из recurring diagnosed harness weakness across failed trajectories — общий optimization target, не один failed scenario.",
+    "why": "ядро ActiveSaddler; ablations показывают, что category/scenario arms хуже.",
+    "notConfuse": "ручным bug ticket без нормализации паттерна или с одним failed eval case как «всем curriculum».",
+    "source": "2026-10-03-vecher",
+    "updated": "2026-10-03",
+    "text": "Что это: рука бандита, собранная из recurring diagnosed harness weakness across failed trajectories — общий optimization target, не один failed scenario. Зачем: ядро ActiveSaddler; ablations показывают, что category/scenario arms хуже. Не путать с: ручным bug ticket без нормализации паттерна или с одним failed eval case как «всем curriculum»."
+  },
+  {
+    "id": "harness-optimization",
+    "tag": "агент",
+    "title": "Harness optimization",
+    "what": "автоматическое улучшение внешней обвязки агента (prompts, tools, control logic) по execution feedback без (обязательного) обновления весов модели.",
+    "why": "постановка задачи ActiveSaddler / AutoSaddler и docs/agent automation угол.",
+    "notConfuse": "fine-tuning модели или с разовой ручной правкой system prompt.",
+    "source": "2026-10-03-vecher",
+    "updated": "2026-10-03",
+    "text": "Что это: автоматическое улучшение внешней обвязки агента (prompts, tools, control logic) по execution feedback без (обязательного) обновления весов модели. Зачем: постановка задачи ActiveSaddler / AutoSaddler и docs/agent automation угол. Не путать с: fine-tuning модели или с разовой ручной правкой system prompt."
+  },
+  {
+    "id": "frontier-deployed-engineer",
+    "tag": "продукт",
+    "title": "Frontier Deployed Engineer (FDE)",
+    "what": "роль инженера, который проводит frontier AI от идеи до production-системы в реальном бизнесе; целевой выпускник Claude Frontier Academy.",
+    "why": "Anthropic целится на 10 000 FDE к концу 2027 при $100M commitment.",
+    "notConfuse": "обычным prompt engineer / chat power user или с Partner Network Basecamp-сертификацией без residency.",
+    "source": "2026-10-03-vecher",
+    "updated": "2026-10-03",
+    "text": "Что это: роль инженера, который проводит frontier AI от идеи до production-системы в реальном бизнесе; целевой выпускник Claude Frontier Academy. Зачем: Anthropic целится на 10 000 FDE к концу 2027 при $100M commitment. Не путать с: обычным prompt engineer / chat power user или с Partner Network Basecamp-сертификацией без residency."
+  },
+  {
+    "id": "claude-frontier-academy",
+    "tag": "продукт",
+    "title": "Claude Frontier Academy",
+    "what": "программа Anthropic (FDE Residency: multi-day in-person + 12-week residency) с когортами в SF/NY/London и nomination через account team.",
+    "why": "enterprise-ответ на talent gap во внедрениях Claude/агентов.",
+    "notConfuse": "публичным self-serve MOOC или с API credits promo.",
+    "source": "2026-10-03-vecher",
+    "updated": "2026-10-03",
+    "text": "Что это: программа Anthropic (FDE Residency: multi-day in-person + 12-week residency) с когортами в SF/NY/London и nomination через account team. Зачем: enterprise-ответ на talent gap во внедрениях Claude/агентов. Не путать с: публичным self-serve MOOC или с API credits promo."
+  },
+  {
     "id": "model-misalignment-agent",
     "tag": "безопасность",
     "title": "Model misalignment (агентный)",
