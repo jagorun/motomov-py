@@ -1,5 +1,115 @@
 [
   {
+    "id": "rrsi",
+    "tag": "агент",
+    "title": "RRSI",
+    "what": "Regularized Recursive Self-Improvement of Agent Harnesses — метод Google Cloud AI Research, который ограничивает proposer/selector при эволюции harness’а, чтобы gains переносились на OOD, а не только на evolve-split.",
+    "why": "утренний research-ответ на проблему overfitting harness RSI; цифры до +4.7 OOD и ~30% меньше policy tokens.",
+    "notConfuse": "RL fine-tune весов модели или с ActiveSaddler (curriculum порядка сценариев).",
+    "source": "2026-10-04-utro",
+    "updated": "2026-10-04",
+    "text": "Что это: Regularized Recursive Self-Improvement of Agent Harnesses — метод Google Cloud AI Research, который ограничивает proposer/selector при эволюции harness’а, чтобы gains переносились на OOD, а не только на evolve-split. Зачем: утренний research-ответ на проблему overfitting harness RSI; цифры до +4.7 OOD и ~30% меньше policy tokens. Не путать с: RL fine-tune весов модели или с ActiveSaddler (curriculum порядка сценариев)."
+  },
+  {
+    "id": "leakage-critic",
+    "tag": "агент",
+    "title": "Leakage critic",
+    "what": "фильтр на стороне selector в RRSI, который отсекает кандидатов с benchmark-specific логикой / сущностями / ответами до скоринга.",
+    "why": "ключевой механизм против «выучить бенчмарк».",
+    "notConfuse": "обычным lint/static analysis кода harness’а без привязки к leakage на eval suite.",
+    "source": "2026-10-04-utro",
+    "updated": "2026-10-04",
+    "text": "Что это: фильтр на стороне selector в RRSI, который отсекает кандидатов с benchmark-specific логикой / сущностями / ответами до скоринга. Зачем: ключевой механизм против «выучить бенчмарк». Не путать с: обычным lint/static analysis кода harness’а без привязки к leakage на eval suite."
+  },
+  {
+    "id": "mixture-of-self-improving-branches",
+    "tag": "агент",
+    "title": "Mixture of Self-Improving Branches",
+    "what": "схема Meta/Duke/UC Davis: несколько параллельных веток harness-поиска с разными development subsets и proposal policies + router на деплое.",
+    "why": "46%→62% на Olympiad math (Gemini 3 Flash) и приросты на Terminal-Bench / SWE-bench Lite vs Meta-Harness.",
+    "notConfuse": "mixture-of-experts внутри весов одной модели или с простым A/B двух system prompts без эволюции.",
+    "source": "2026-10-04-utro",
+    "updated": "2026-10-04",
+    "text": "Что это: схема Meta/Duke/UC Davis: несколько параллельных веток harness-поиска с разными development subsets и proposal policies + router на деплое. Зачем: 46%→62% на Olympiad math (Gemini 3 Flash) и приросты на Terminal-Bench / SWE-bench Lite vs Meta-Harness. Не путать с: mixture-of-experts внутри весов одной модели или с простым A/B двух system prompts без эволюции."
+  },
+  {
+    "id": "branch-router-harness",
+    "tag": "агент",
+    "title": "Branch router (harness)",
+    "what": "компонент, который для каждого нового входа выбирает один development-selected branch head до исполнения, без доступа к test labels.",
+    "why": "способ собрать complementary experts без «подглядывания» в holdout.",
+    "notConfuse": "load balancer трафика API или с MoE gating на токенах.",
+    "source": "2026-10-04-utro",
+    "updated": "2026-10-04",
+    "text": "Что это: компонент, который для каждого нового входа выбирает один development-selected branch head до исполнения, без доступа к test labels. Зачем: способ собрать complementary experts без «подглядывания» в holdout. Не путать с: load balancer трафика API или с MoE gating на токенах."
+  },
+  {
+    "id": "behind-the-meter-ai-campus",
+    "tag": "инфра",
+    "title": "Behind-the-meter (AI campus)",
+    "what": "схема, когда AI data center берёт мощность напрямую от соседней gen asset (как Chiba у станции JERA), минуя долгий новый grid interconnect.",
+    "why": "ядро ускорения JERA–Dell–RHAELM проекта на 400 MW / >$15B.",
+    "notConfuse": "обычным corporate PPA «где-то в сети» без колокации у электростанции.",
+    "source": "2026-10-04-utro",
+    "updated": "2026-10-04",
+    "text": "Что это: схема, когда AI data center берёт мощность напрямую от соседней gen asset (как Chiba у станции JERA), минуя долгий новый grid interconnect. Зачем: ядро ускорения JERA–Dell–RHAELM проекта на 400 MW / >$15B. Не путать с: обычным corporate PPA «где-то в сети» без колокации у электростанции."
+  },
+  {
+    "id": "watt-bit-collaboration",
+    "tag": "инфра",
+    "title": "Watt-Bit Collaboration",
+    "what": "японская гослогика согласованного развития электроэнергетики и цифровой/телеком инфраструктуры под AI.",
+    "why": "политический якорь MoU JERA/Dell/RHAELM.",
+    "notConfuse": "чисто маркетинговым слоганом облачного провайдера вне JP policy.",
+    "source": "2026-10-04-utro",
+    "updated": "2026-10-04",
+    "text": "Что это: японская гослогика согласованного развития электроэнергетики и цифровой/телеком инфраструктуры под AI. Зачем: политический якорь MoU JERA/Dell/RHAELM. Не путать с: чисто маркетинговым слоганом облачного провайдера вне JP policy."
+  },
+  {
+    "id": "physical-ai-noetra-kawasaki",
+    "tag": "роботы",
+    "title": "Physical AI (Noetra / Kawasaki)",
+    "what": "класс моделей и платформ, которые связывают восприятие, reasoning и управление роботом в реальном мире (не только chat/tools в ПО).",
+    "why": "Noetra platform под Kaleido и цель автономии ~2030 по Nikkei.",
+    "notConfuse": "«AI в облаке, который советует оператору» без контура управления телом робота.",
+    "source": "2026-10-04-utro",
+    "updated": "2026-10-04",
+    "text": "Что это: класс моделей и платформ, которые связывают восприятие, reasoning и управление роботом в реальном мире (не только chat/tools в ПО). Зачем: Noetra platform под Kaleido и цель автономии ~2030 по Nikkei. Не путать с: «AI в облаке, который советует оператору» без контура управления телом робота."
+  },
+  {
+    "id": "kaleido-kawasaki",
+    "tag": "роботы",
+    "title": "Kaleido (Kawasaki)",
+    "what": "линейка humanoid-роботов Kawasaki Heavy (развитие с ~2015; актуальные поколения вроде Kaleido 9).",
+    "why": "носитель, на который Kawasaki планирует посадить Noetra physical AI.",
+    "notConfuse": "Boston Dynamics Atlas или с промышленным манипулятором без humanoid форм-фактора.",
+    "source": "2026-10-04-utro",
+    "updated": "2026-10-04",
+    "text": "Что это: линейка humanoid-роботов Kawasaki Heavy (развитие с ~2015; актуальные поколения вроде Kaleido 9). Зачем: носитель, на который Kawasaki планирует посадить Noetra physical AI. Не путать с: Boston Dynamics Atlas или с промышленным манипулятором без humanoid форм-фактора."
+  },
+  {
+    "id": "osmo-nvidia",
+    "tag": "роботы",
+    "title": "OSMO (NVIDIA)",
+    "what": "open-source Kubernetes-native workflow orchestrator для physical AI: YAML workflows от data/training/sim до SIL/HIL, с CLI и agent context.",
+    "why": "инфраструктурный фон недели рядом с Kawasaki/Isaac-контуром.",
+    "notConfuse": "Isaac Sim (симулятор) или с GR00T (foundation model) — OSMO оркестрирует, а не заменяет их.",
+    "source": "2026-10-04-utro",
+    "updated": "2026-10-04",
+    "text": "Что это: open-source Kubernetes-native workflow orchestrator для physical AI: YAML workflows от data/training/sim до SIL/HIL, с CLI и agent context. Зачем: инфраструктурный фон недели рядом с Kawasaki/Isaac-контуром. Не путать с: Isaac Sim (симулятор) или с GR00T (foundation model) — OSMO оркестрирует, а не заменяет их."
+  },
+  {
+    "id": "dell-ai-factory-rack-scale",
+    "tag": "инфра",
+    "title": "Dell AI Factory (rack-scale)",
+    "what": "стандартизированный rack-scale AI infrastructure слой Dell, который в Chiba-проекте задаёт compute-стандарт кампуса.",
+    "why": "роль Dell в MoU с JERA/RHAELM — «повторяемый» compute brick.",
+    "notConfuse": "одним сервером GPU workstation или с hyperscaler-only bare metal без vendor factory packaging.",
+    "source": "2026-10-04-utro",
+    "updated": "2026-10-04",
+    "text": "Что это: стандартизированный rack-scale AI infrastructure слой Dell, который в Chiba-проекте задаёт compute-стандарт кампуса. Зачем: роль Dell в MoU с JERA/RHAELM — «повторяемый» compute brick. Не путать с: одним сервером GPU workstation или с hyperscaler-only bare metal без vendor factory packaging."
+  },
+  {
     "id": "iterative-deployment-robinson",
     "tag": "безопасность",
     "title": "Iterative deployment (Robinson)",
