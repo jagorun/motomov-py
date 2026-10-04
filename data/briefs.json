@@ -6,7 +6,7 @@
     "dateLabel": "04.10.2026, воскресенье",
     "topic": "except ValueError",
     "title": "# Утро · Python · 04.10.2026, воскресенье · except ValueError",
-    "summary": "Исключение ValueError и ловля: try / except ValueError; int(\"abc\") и input; except ловит только названный тип; голый except — ловушка; ямы TypeError/NameError/pass; баттл узкая ловушка vs except: pass.",
+    "summary": "int по строке из ввода бросает ValueError, если значение не целое; try / except ValueError ловит только этот класс и даёт второй шанс, голый except глотает чужие ошибки.",
     "body": [
       "# Утро · Python · 04.10.2026, воскресенье · except ValueError",
       "## Зачем это читать",
