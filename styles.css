@@ -88,6 +88,9 @@ section{margin-top:2rem}
 .card h3,.lesson-card h3,.kb-card h3{font-size:1.05rem;margin-bottom:.4rem;color:var(--accent)}
 .card p,.lesson-card p,.kb-card p{color:var(--muted);font-size:.92rem}
 .meta{margin-top:.7rem;color:var(--muted);font-size:.78rem}
+article.lesson-card h3 a{color:inherit;text-decoration:none}
+article.lesson-card .meta a{color:var(--accent);text-decoration:none}
+article.lesson-card h3 a:hover,article.lesson-card .meta a:hover{text-decoration:underline}
 .search-box{
   width:100%;padding:.9rem 1.1rem;border-radius:.9rem;
   border:1px solid var(--line);background:#fffdf8;color:var(--text);font:inherit;margin-bottom:1rem

@@ -57,13 +57,26 @@ function renderBody(parts) {
 function cardHtml(it) {
   return `<a class="lesson-card" href="${briefHref(it)}"><span class="badge">${kindLabel(it.kind)} \u00b7 ${escapeHtml(it.dateLabel)}</span><h3>${escapeHtml(it.title)}</h3><p>${escapeHtml(it.summary)}</p><div class="meta">${escapeHtml(it.topic || "")}</div></a>`;
 }
+function courseBriefHref(id, kind) {
+  return `brief.html?id=${encodeURIComponent(id)}&kind=${encodeURIComponent(kind)}`;
+}
+function courseCardHtml(l) {
+  const mainId = l.utro || l.vecher;
+  const mainKind = l.utro ? "utro" : "vecher";
+  const href = courseBriefHref(mainId, mainKind);
+  const links = [];
+  if (l.utro) links.push(`<a href="${courseBriefHref(l.utro, "utro")}">утро</a>`);
+  if (l.vecher) links.push(`<a href="${courseBriefHref(l.vecher, "vecher")}">вечер</a>`);
+  const meta = links.length ? `<div class="meta">${links.join(" · ")}</div>` : "";
+  return `<article class="lesson-card"><span class="badge">урок ${escapeHtml(l.num)}</span><h3><a href="${href}">${escapeHtml(l.title)}</a></h3><p>${escapeHtml(l.summary)}</p>${meta}</article>`;
+}
 async function loadCourse() {
   const box = document.getElementById("course-list");
   try {
-    const lessons = await fetch("data/lessons.json", { cache: "no-store" }).then((r) => r.json());
+    const lessons = await fetch("data/course-path.json", { cache: "no-store" }).then((r) => r.json());
     box.innerHTML = "";
     lessons.forEach((l) => {
-      box.appendChild(el(`<a class="lesson-card" href="lesson.html?id=${encodeURIComponent(l.id)}"><span class="badge">урок ${l.num} \u00b7 ${l.level}</span><h3>${l.title}</h3><p>${l.summary}</p><div class="meta">${l.time}</div></a>`));
+      box.appendChild(el(courseCardHtml(l)));
     });
   } catch (e) {
     box.innerHTML = '<div class="empty">Не удалось загрузить программу.</div>';

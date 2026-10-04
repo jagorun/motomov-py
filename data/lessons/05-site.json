@@ -15,6 +15,7 @@
         "title": "Карта",
         "body": [
           "Дата карты: 01.10.2026. Вечер: во все уроки добавлены вкладки. Тексты уроков лежат в data/lessons/<id>.json. Сборка: js/lesson-tabs-data.js после app.js.",
+          "04.10.2026. Курс: было — шесть RAG-уроков, клик вёл на lesson.html. Стало — линейный путь основ из data/course-path.json (14 уроков); название и ссылки «утро»/«вечер» ведут в brief.html (раздел python). Файлы: course.html, js/app.js (loadCourse), js/lesson-tabs-data.js (course-list больше не перерисовывает RAG; старые /lesson?id= собираются как раньше), styles.css (ссылки внутри article.lesson-card).",
           "## Правило",
           "Поменял сайт — в том же коммите допиши эту вкладку: что было / что стало / какой файл. PRAVILA.md.",
           "## Два сайта",
