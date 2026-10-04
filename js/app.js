@@ -65,6 +65,7 @@ function courseLessonHtml(lesson) {
   let name = `<span class="lesson-name">${title}</span>`;
   if (lesson.utro) name = `<a href="${courseBriefHref(lesson.utro, "utro")}">${title}</a>`;
   else if (lesson.vecher) name = `<a href="${courseBriefHref(lesson.vecher, "vecher")}">${title}</a>`;
+  else if (lesson.brief) name = `<a href="${courseBriefHref(lesson.brief, "note")}">${title}</a>`;
   const evening = lesson.utro && lesson.vecher
     ? `<a href="${courseBriefHref(lesson.vecher, "vecher")}">вечер</a>`
     : "";

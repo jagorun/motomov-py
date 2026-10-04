@@ -42,11 +42,13 @@
             },
             {
               "title": "Параметры sep и end",
-              "pending": true
+              "brief": "c1-sep-end",
+              "note": "Урок курса. sep и end только у вывода, строку в памяти не склеивают."
             },
             {
               "title": "PEP 8",
-              "pending": true
+              "brief": "c1-pep8",
+              "note": "Урок курса. Семь живых правил читаемости, не полный список PEP 8."
             },
             {
               "title": "Целочисленная арифметика: счёт и яма «2»+«2»",
@@ -70,7 +72,8 @@
             },
             {
               "title": "Логические операции and, or, not",
-              "pending": true
+              "brief": "c1-logic",
+              "note": "Урок курса. and, or и not, короткое замыкание и порядок."
             },
             {
               "title": "bool и сравнение",
@@ -79,11 +82,13 @@
             },
             {
               "title": "Вложенные условия",
-              "pending": true
+              "brief": "c1-nested-if",
+              "note": "Урок курса. Отступ четыре пробела. Одно действие — лучше and."
             },
             {
               "title": "Каскадные условия: elif",
-              "pending": true
+              "brief": "c1-elif",
+              "note": "Урок курса. Одна деталь: годна, брак, не проверена."
             }
           ]
         },
@@ -101,7 +106,8 @@
             },
             {
               "title": "Модуль math",
-              "pending": true
+              "brief": "c1-math",
+              "note": "Урок курса. sqrt, floor, ceil и pi. Не весь модуль."
             }
           ]
         },
@@ -125,19 +131,23 @@
             },
             {
               "title": "range()",
-              "pending": true
+              "brief": "c1-range",
+              "note": "Урок курса. Правый край не входит. Это не список."
             },
             {
               "title": "Вложенные циклы",
-              "pending": true
+              "brief": "c1-nested-loops",
+              "note": "Урок курса. Строки и столбцы простой таблицы."
             },
             {
               "title": "break и continue",
-              "pending": true
+              "brief": "c1-break-continue",
+              "note": "Урок курса. Ближайший цикл, не внешний."
             },
             {
               "title": "else у цикла",
-              "pending": true
+              "brief": "c1-loop-else",
+              "note": "Урок курса. else после цикла — это «не было break»."
             }
           ]
         },
