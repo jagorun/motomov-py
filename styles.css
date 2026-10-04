@@ -188,3 +188,6 @@ footer.site a{color:var(--accent);text-decoration:none}
   .fold-title{order:1}
   .fold-item summary .badge{order:3}
 }
+
+.sort-row{display:flex;align-items:center;flex-wrap:wrap;gap:.45rem;margin:0 0 .85rem}
+.sort-label{color:var(--muted);font-size:.85rem;margin-right:.15rem}

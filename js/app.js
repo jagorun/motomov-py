@@ -224,14 +224,35 @@ async function loadKb() {
   draw("");
   if (input) input.addEventListener("input", () => draw(input.value));
 }
+function slovarNameKey(it) {
+  return String(it.title || "").trim();
+}
+function slovarTagKey(it) {
+  return String(it.tag || "").trim();
+}
+function slovarFreshKey(it) {
+  return String(it.updated || it.source || "");
+}
+function compareSlovar(a, b, mode) {
+  const byName = (x, y) => slovarNameKey(x).localeCompare(slovarNameKey(y), "ru", { sensitivity: "base" });
+  if (mode === "name") return byName(a, b);
+  if (mode === "tag") {
+    const tagCmp = slovarTagKey(a).localeCompare(slovarTagKey(b), "ru", { sensitivity: "base" });
+    return tagCmp || byName(a, b);
+  }
+  const freshCmp = slovarFreshKey(b).localeCompare(slovarFreshKey(a));
+  return freshCmp || byName(a, b);
+}
 async function loadSlovar() {
   const list = document.getElementById("slovar-list");
   const input = document.getElementById("slovar-search");
   const filters = document.getElementById("slovar-filters");
+  const sortBox = document.getElementById("slovar-sort");
   const all = await fetch("data/kb.json", { cache: "no-store" }).then((r) => r.json()).catch(() => []);
   const items = all.filter((it) => it.source || it.what);
   let activeTag = "";
-  const tags = Array.from(new Set(items.map((it) => it.tag).filter(Boolean))).sort();
+  let sortMode = "fresh";
+  const tags = Array.from(new Set(items.map((it) => it.tag).filter(Boolean))).sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
   if (filters) {
     filters.innerHTML = "";
     filters.appendChild(el(`<button type="button" class="ghost-btn active" data-tag="">Все</button>`));
@@ -246,13 +267,31 @@ async function loadSlovar() {
       draw(input ? input.value : "");
     });
   }
+  if (sortBox) {
+    Array.from(sortBox.querySelectorAll("button[data-sort]")).forEach((b) => {
+      const on = b.getAttribute("data-sort") === sortMode;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+    sortBox.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-sort]");
+      if (!btn) return;
+      sortMode = btn.getAttribute("data-sort") || "fresh";
+      Array.from(sortBox.querySelectorAll("button[data-sort]")).forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle("active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      draw(input ? input.value : "");
+    });
+  }
   function draw(q) {
     const needle = (q || "").trim().toLowerCase();
     const shown = items.filter((it) => {
       if (activeTag && it.tag !== activeTag) return false;
       return !needle || kbHaystack(it).includes(needle);
     });
-    shown.sort((a, b) => String(b.updated || b.source || "").localeCompare(String(a.updated || a.source || "")));
+    shown.sort((a, b) => compareSlovar(a, b, sortMode));
     list.innerHTML = "";
     if (!shown.length) {
       list.innerHTML = '<div class="empty">В словаре пока пусто. Термины появятся после следующих сводок.</div>';

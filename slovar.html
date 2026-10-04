@@ -34,6 +34,12 @@
     </header>
     <section>
       <input class="search-box" id="slovar-search" type="search" placeholder="Найти: tool-use, RAG, TPU, sandbox, venv…" autocomplete="off">
+      <div class="sort-row" id="slovar-sort" role="group" aria-label="Сортировка">
+        <span class="sort-label">Сортировка:</span>
+        <button type="button" class="ghost-btn" data-sort="name">по имени</button>
+        <button type="button" class="ghost-btn" data-sort="tag">по тегу</button>
+        <button type="button" class="ghost-btn active" data-sort="fresh" aria-pressed="true">по новизне</button>
+      </div>
       <div class="pager" id="slovar-filters" style="margin:0.8rem 0 1rem; flex-wrap:wrap; gap:0.5rem"></div>
       <div class="fold-list" id="slovar-list"><div class="empty">Загрузка словаря…</div></div>
     </section>
