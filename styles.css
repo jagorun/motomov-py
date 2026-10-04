@@ -191,3 +191,17 @@ footer.site a{color:var(--accent);text-decoration:none}
 
 .sort-row{display:flex;align-items:center;flex-wrap:wrap;gap:.45rem;margin:0 0 .85rem}
 .sort-label{color:var(--muted);font-size:.85rem;margin-right:.15rem}
+
+.block-glossary{
+  margin:.85rem 0 1rem;padding:.9rem 1rem .35rem;
+  background:#f7f3ea;border:1px solid var(--line);border-radius:.85rem
+}
+.block-glossary h4{font-size:.95rem;margin:0 0 .75rem;color:var(--accent)}
+.glossary-card{margin:0 0 .85rem;padding:0 0 .75rem;border-bottom:1px solid var(--line)}
+.glossary-card:last-child{border-bottom:0;margin-bottom:.4rem;padding-bottom:.15rem}
+.glossary-card h5{font-size:.92rem;margin:0 0 .35rem;color:#243028}
+.glossary-card p,.glossary-remind{color:var(--muted);font-size:.88rem;margin:0 0 .4rem;line-height:1.45}
+.glossary-card p strong,.glossary-remind strong{color:var(--text);font-weight:650}
+.glossary-remind{margin:0 0 .85rem}
+.glossary-remind a{color:var(--accent);text-decoration:none}
+.glossary-remind a:hover{text-decoration:underline}

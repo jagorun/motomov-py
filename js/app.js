@@ -73,7 +73,29 @@ function courseLessonHtml(lesson) {
   const note = lesson.note ? `<p class="lesson-note">${escapeHtml(lesson.note)}</p>` : "";
   return `<div class="lesson-row">${name}${evening}${pending}</div>${note}`;
 }
-function courseBlockHtml(block) {
+function glossarySectionFor(course, block, glossary) {
+  if (!glossary || glossary.courseId !== course.id || !glossary.blocks) return null;
+  if (block.kind === "module") return glossary.blocks[String(block.num)] || null;
+  if (block.kind === "extra") return glossary.blocks.prelude || null;
+  return null;
+}
+function glossaryHtml(section) {
+  if (!section || !Array.isArray(section.terms) || !section.terms.length) return "";
+  const cards = section.terms.map((term) => {
+    const title = escapeHtml(term.title || "");
+    const id = escapeHtml(term.id || "");
+    if (term.see) {
+      const href = "#" + String(term.see).replace(/[^a-z0-9-]/gi, "");
+      const link = escapeHtml(term.link || "первая карточка");
+      return `<p class="glossary-remind" id="${id}"><strong>${title}.</strong> ${escapeHtml(term.reminder || "")} <a href="${href}">${link}</a></p>`;
+    }
+    return `<article class="glossary-card" id="${id}"><h5>${title}</h5><p><strong>Что это.</strong> ${escapeHtml(term.what || "")}</p><p><strong>Зачем.</strong> ${escapeHtml(term.why || "")}</p><p><strong>Не путать.</strong> ${escapeHtml(term.notConfuse || "")}</p></article>`;
+  }).join("");
+  const anchor = escapeHtml(section.anchor || "");
+  const heading = escapeHtml(section.title || "Словарь блока");
+  return `<div class="block-glossary" id="${anchor}"><h4>${heading}</h4>${cards}</div>`;
+}
+function courseBlockHtml(block, section) {
   if (block.kind === "note") return `<p class="course-aside">${escapeHtml(block.text)}</p>`;
   const head = block.kind === "module"
     ? `<h3>Модуль ${escapeHtml(String(block.num))}. ${escapeHtml(block.title)}</h3>`
@@ -81,12 +103,12 @@ function courseBlockHtml(block) {
   const summary = block.summary ? `<p class="lesson-note">${escapeHtml(block.summary)}</p>` : "";
   const note = block.note ? `<p class="lesson-note">${escapeHtml(block.note)}</p>` : "";
   const rows = (block.lessons || []).map(courseLessonHtml).join("");
-  return `<div class="module">${head}${summary}${note}${rows}</div>`;
+  return `<div class="module">${head}${summary}${note}${rows}${glossaryHtml(section)}</div>`;
 }
-function courseHtml(course) {
+function courseHtml(course, glossary) {
   const open = course.open ? " open" : "";
   const later = course.later ? " later" : "";
-  const blocks = (course.blocks || []).map(courseBlockHtml).join("");
+  const blocks = (course.blocks || []).map((block) => courseBlockHtml(block, glossarySectionFor(course, block, glossary))).join("");
   const blurb = course.blurb ? `<p class="course-aside">${escapeHtml(course.blurb)}</p>` : "";
   const foot = course.footnote ? `<p class="course-aside">${escapeHtml(course.footnote)}</p>` : "";
   return `<details class="course-block${later}"${open}><summary><span class="badge">${escapeHtml(course.badge || "")}</span><h2>${escapeHtml(course.title)}</h2><p>${escapeHtml(course.meta || "")}</p></summary><div class="course-body">${blurb}${blocks}${foot}</div></details>`;
@@ -94,10 +116,13 @@ function courseHtml(course) {
 async function loadCourse() {
   const box = document.getElementById("course-list");
   try {
-    const data = await fetch("data/course-path.json", { cache: "no-store" }).then((r) => r.json());
+    const [data, glossary] = await Promise.all([
+      fetch("data/course-path.json", { cache: "no-store" }).then((r) => r.json()),
+      fetch("data/course-glossary.json", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+    ]);
     const courses = Array.isArray(data) ? data : (data.courses || []);
     if (!courses.length || !courses[0].blocks) throw new Error("empty");
-    box.innerHTML = courses.map(courseHtml).join("");
+    box.innerHTML = courses.map((course) => courseHtml(course, glossary)).join("");
   } catch (e) {
     box.innerHTML = '<div class="empty">Не удалось загрузить программу.</div>';
   }
