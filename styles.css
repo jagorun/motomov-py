@@ -131,3 +131,25 @@ footer.site a{color:var(--accent);text-decoration:none}
 .lesson-tab{border:1px solid var(--line);background:#fffdf8;color:var(--muted);font:inherit;font-size:.82rem;padding:.4rem .85rem;border-radius:999px;cursor:pointer}
 .lesson-tab:hover{color:var(--accent);background:var(--accent-soft)}
 .lesson-tab.active{color:#f7f4ea;background:var(--accent);border-color:var(--accent);font-weight:600}
+
+.course-block{
+  margin-bottom:1rem;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--card);border-left:3px solid var(--accent-dim)
+}
+.course-block.later{border-left-color:rgba(92,100,92,.45)}
+.course-block summary{cursor:pointer;padding:1.05rem 1.2rem 1rem;list-style:none}
+.course-block summary::-webkit-details-marker{display:none}
+.course-block summary h2{font-size:1.15rem;margin:0 0 .2rem;color:#243028}
+.course-block summary p{color:var(--muted);font-size:.88rem}
+.course-block summary .badge{margin-bottom:.45rem}
+.course-block.later summary h2{color:var(--muted)}
+.course-body{padding:0 1.2rem 1.1rem}
+.course-aside{color:var(--muted);font-size:.88rem;margin:.35rem 0 .7rem}
+.module{margin:.35rem 0 0;padding:.85rem 0 .15rem;border-top:1px solid var(--line)}
+.module h3{font-size:1rem;color:var(--accent);margin-bottom:.2rem}
+.lesson-row{display:flex;flex-wrap:wrap;gap:.35rem .7rem;align-items:baseline;padding:.28rem 0;font-size:.95rem}
+.lesson-row > a{color:var(--accent);text-decoration:none}
+.lesson-row > a:hover{text-decoration:underline}
+.lesson-row .lesson-name{color:var(--text)}
+.lesson-row .pending{color:var(--muted);font-size:.78rem}
+.lesson-note{color:var(--muted);font-size:.84rem;margin:.1rem 0 .35rem}

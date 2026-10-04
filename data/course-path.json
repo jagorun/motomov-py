@@ -1,98 +1,659 @@
-[
-  {
-    "num": "01",
-    "title": "Программа, интерпретатор и REPL",
-    "summary": "Что такое программа и чем консоль отличается от файла .py.",
-    "utro": "2026-09-21-utro",
-    "vecher": "2026-09-21-vecher"
-  },
-  {
-    "num": "02",
-    "title": "Имя и присваивание",
-    "summary": "Имя — бирка на объекте, не ящик.",
-    "utro": "2026-09-22-utro",
-    "vecher": "2026-09-22-vecher"
-  },
-  {
-    "num": "03",
-    "title": "Типы: int, float, str",
-    "summary": "Число, дробь и строка. Функция type().",
-    "utro": "2026-09-23-utro",
-    "vecher": "2026-09-23-vecher"
-  },
-  {
-    "num": "04",
-    "title": "print и input",
-    "summary": "Печать — не результат. input всегда приносит строку.",
-    "utro": "2026-09-24-utro",
-    "vecher": "2026-09-24-vecher"
-  },
-  {
-    "num": "05",
-    "title": "Счёт и яма «2»+«2»",
-    "summary": "+ - * / // % ** и почему строка с строкой склеивается, а не складывается.",
-    "utro": "2026-09-25-utro",
-    "vecher": "2026-09-25-vecher"
-  },
-  {
-    "num": "06",
-    "title": "bool и сравнение",
-    "summary": "Правда и ложь. == сравнивает, = присваивает. Утро этого дня не ссылать: там collections.",
-    "vecher": "2026-09-19-vecher"
-  },
-  {
-    "num": "07",
-    "title": "if / else",
-    "summary": "Развилка, двоеточие и отступ.",
-    "utro": "2026-09-20-utro",
-    "vecher": "2026-09-20-vecher"
-  },
-  {
-    "num": "08",
-    "title": "for по строке и по списку",
-    "summary": "Цикл обходит элементы. Имя цикла — тоже бирка.",
-    "utro": "2026-09-26-utro",
-    "vecher": "2026-09-26-vecher"
-  },
-  {
-    "num": "09",
-    "title": "while",
-    "summary": "Крутить, пока условие живо. Когда for уже хватает.",
-    "utro": "2026-09-27-utro",
-    "vecher": "2026-09-27-vecher"
-  },
-  {
-    "num": "10",
-    "title": "Строка",
-    "summary": "Кавычки, длина, сложение и повтор.",
-    "utro": "2026-09-28-utro",
-    "vecher": "2026-09-28-vecher"
-  },
-  {
-    "num": "11",
-    "title": "Индекс и срез",
-    "summary": "Нумерация с нуля. Жёсткий индекс падает, срез края мягкий.",
-    "utro": "2026-09-29-utro",
-    "vecher": "2026-09-29-vecher"
-  },
-  {
-    "num": "12",
-    "title": "Методы строк",
-    "summary": "strip, split, replace. Метод строки возвращает новую строку.",
-    "utro": "2026-09-30-utro",
-    "vecher": "2026-09-30-vecher"
-  },
-  {
-    "num": "13",
-    "title": "Список",
-    "summary": "Полка ячеек. Индекс, len, запись в клетку. Вечер этого дня не ссылать: там чужая тема про исключения.",
-    "utro": "2026-10-01-utro"
-  },
-  {
-    "num": "14",
-    "title": "append",
-    "summary": "Доложить в конец той же полки. Возвращает None.",
-    "utro": "2026-10-02-utro",
-    "vecher": "2026-10-02-vecher"
-  }
-]
+{
+  "courses": [
+    {
+      "id": "stepik-58852",
+      "title": "Курс 1. Для начинающих",
+      "meta": "Stepik 58852 · бесплатно · 8 модулей",
+      "badge": "сейчас",
+      "open": true,
+      "later": false,
+      "blurb": "Вы здесь. Сводки ниже дополняют уроки Stepik. Задачи курса остаются на Stepik.",
+      "footnote": "Между модулями на Stepik стоят итоговые работы. Отдельной теорией они не являются, в уроки их не выносим.",
+      "blocks": [
+        {
+          "kind": "extra",
+          "title": "До модуля 1",
+          "lessons": [
+            {
+              "title": "Программа, интерпретатор и REPL",
+              "note": "Наше дополнение, не урок Stepik. Что такое программа и чем REPL отличается от файла .py.",
+              "utro": "2026-09-21-utro",
+              "vecher": "2026-09-21-vecher"
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 1,
+          "title": "Ввод-вывод данных",
+          "summary": "print() и input(), переменные, параметры sep и end, PEP 8, целочисленная арифметика.",
+          "lessons": [
+            {
+              "title": "print() и input()",
+              "note": "Печать — не результат. input всегда приносит строку.",
+              "utro": "2026-09-24-utro",
+              "vecher": "2026-09-24-vecher"
+            },
+            {
+              "title": "Переменные: имя и присваивание",
+              "note": "Имя — бирка на объекте, не ящик.",
+              "utro": "2026-09-22-utro",
+              "vecher": "2026-09-22-vecher"
+            },
+            {
+              "title": "Параметры sep и end",
+              "pending": true
+            },
+            {
+              "title": "PEP 8",
+              "pending": true
+            },
+            {
+              "title": "Целочисленная арифметика: счёт и яма «2»+«2»",
+              "note": "+ - * / // % **. Строка со строкой склеивается, а не складывается.",
+              "utro": "2026-09-25-utro",
+              "vecher": "2026-09-25-vecher"
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 2,
+          "title": "Условный оператор",
+          "summary": "Выбор из двух, логические операции, вложенные и каскадные условия.",
+          "lessons": [
+            {
+              "title": "Выбор из двух: if / else",
+              "note": "Развилка, двоеточие и отступ.",
+              "utro": "2026-09-20-utro",
+              "vecher": "2026-09-20-vecher"
+            },
+            {
+              "title": "Логические операции and, or, not",
+              "pending": true
+            },
+            {
+              "title": "bool и сравнение",
+              "note": "Наше дополнение к логическим операциям, не урок Stepik про тип bool. Ссылка только на вечер 19.09: утро того дня — другая тема. В курсе 2 модуль bool и None будет отдельно, эту сводку туда не ставим.",
+              "vecher": "2026-09-19-vecher"
+            },
+            {
+              "title": "Вложенные условия",
+              "pending": true
+            },
+            {
+              "title": "Каскадные условия: elif",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 3,
+          "title": "Типы данных",
+          "summary": "int, float, первое знакомство со строкой, модуль math.",
+          "lessons": [
+            {
+              "title": "int, float и первое знакомство со строкой",
+              "note": "Число, дробь, строка и type().",
+              "utro": "2026-09-23-utro",
+              "vecher": "2026-09-23-vecher"
+            },
+            {
+              "title": "Модуль math",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 4,
+          "title": "Циклы for и while",
+          "summary": "range(), вложенные циклы, break, continue, else у цикла.",
+          "lessons": [
+            {
+              "title": "for по строке и по списку",
+              "note": "Цикл обходит элементы. Имя цикла — тоже бирка.",
+              "utro": "2026-09-26-utro",
+              "vecher": "2026-09-26-vecher"
+            },
+            {
+              "title": "while",
+              "note": "Крутить, пока условие живо.",
+              "utro": "2026-09-27-utro",
+              "vecher": "2026-09-27-vecher"
+            },
+            {
+              "title": "range()",
+              "pending": true
+            },
+            {
+              "title": "Вложенные циклы",
+              "pending": true
+            },
+            {
+              "title": "break и continue",
+              "pending": true
+            },
+            {
+              "title": "else у цикла",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 5,
+          "title": "Строковый тип данных",
+          "summary": "Индексация, срезы, методы строк, как строка лежит в памяти.",
+          "lessons": [
+            {
+              "title": "Строка: кавычки, длина, сложение, повтор",
+              "utro": "2026-09-28-utro",
+              "vecher": "2026-09-28-vecher"
+            },
+            {
+              "title": "Индекс и срез",
+              "note": "Нумерация с нуля. Жёсткий индекс падает, срез края мягкий.",
+              "utro": "2026-09-29-utro",
+              "vecher": "2026-09-29-vecher"
+            },
+            {
+              "title": "Методы строк",
+              "note": "strip, split, replace. Метод возвращает новую строку.",
+              "utro": "2026-09-30-utro",
+              "vecher": "2026-09-30-vecher"
+            },
+            {
+              "title": "Как строка лежит в памяти",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 6,
+          "title": "Списки",
+          "summary": "Индексация, срезы, методы, списочные выражения, сортировка.",
+          "lessons": [
+            {
+              "title": "Список",
+              "note": "Индексация, len, запись в клетку. Вечер 01.10 — другая тема, ссылки нет.",
+              "utro": "2026-10-01-utro"
+            },
+            {
+              "title": "append",
+              "note": "Доложить в конец той же полки. Возвращает None.",
+              "utro": "2026-10-02-utro",
+              "vecher": "2026-10-02-vecher"
+            },
+            {
+              "title": "Срезы списка",
+              "pending": true
+            },
+            {
+              "title": "Методы списка, кроме append",
+              "pending": true
+            },
+            {
+              "title": "Списочные выражения",
+              "pending": true
+            },
+            {
+              "title": "Сортировка",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 7,
+          "title": "Функции",
+          "summary": "Объявление, параметры, локальные и глобальные переменные.",
+          "lessons": [
+            {
+              "title": "Объявление функции",
+              "pending": true
+            },
+            {
+              "title": "Параметры",
+              "pending": true
+            },
+            {
+              "title": "Локальные и глобальные переменные",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 8,
+          "title": "Мини-проект",
+          "summary": "Числовая угадайка, магический шар, генератор паролей, шифр Цезаря, калькулятор систем счисления.",
+          "lessons": [
+            {
+              "title": "Числовая угадайка",
+              "pending": true
+            },
+            {
+              "title": "Магический шар",
+              "pending": true
+            },
+            {
+              "title": "Генератор паролей",
+              "pending": true
+            },
+            {
+              "title": "Шифр Цезаря",
+              "pending": true
+            },
+            {
+              "title": "Калькулятор систем счисления",
+              "pending": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stepik-68343",
+      "title": "Курс 2. Для продвинутых",
+      "meta": "Stepik 68343 · бесплатно · 11 модулей · после курса 1",
+      "badge": "потом",
+      "open": false,
+      "later": true,
+      "blurb": "Программа впереди, не текущие уроки. Сводок на эти темы в ленте пока нет.",
+      "blocks": [
+        {
+          "kind": "module",
+          "num": 1,
+          "title": "Повторение",
+          "summary": "Ввод-вывод, условия, циклы, строки, списки, функции курса 1.",
+          "lessons": [
+            {
+              "title": "Ввод-вывод",
+              "pending": true
+            },
+            {
+              "title": "Условия",
+              "pending": true
+            },
+            {
+              "title": "Циклы",
+              "pending": true
+            },
+            {
+              "title": "Строки",
+              "pending": true
+            },
+            {
+              "title": "Списки",
+              "pending": true
+            },
+            {
+              "title": "Функции",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 2,
+          "title": "bool и NoneType",
+          "summary": "Логический тип и пустое значение None.",
+          "lessons": [
+            {
+              "title": "Логический тип bool",
+              "pending": true
+            },
+            {
+              "title": "Пустое значение None",
+              "pending": true
+            }
+          ],
+          "note": "Сводку 19.09 сюда не ставим: в курсе 1 она уже как дополнение к логическим операциям. Здесь будет отдельный урок."
+        },
+        {
+          "kind": "module",
+          "num": 3,
+          "title": "Вложенные списки, матрицы",
+          "summary": "Вложенные списки и способы заполнения матриц.",
+          "lessons": [
+            {
+              "title": "Вложенные списки",
+              "pending": true
+            },
+            {
+              "title": "Способы заполнения матриц",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 4,
+          "title": "Кортежи",
+          "summary": "Неизменяемая коллекция tuple.",
+          "lessons": [
+            {
+              "title": "tuple",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 5,
+          "title": "Множества",
+          "summary": "set и уникальные элементы.",
+          "lessons": [
+            {
+              "title": "set",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 6,
+          "title": "Словари",
+          "summary": "dict, пары ключ–значение.",
+          "lessons": [
+            {
+              "title": "dict",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 7,
+          "title": "random и string",
+          "summary": "Случайные числа и строковые константы.",
+          "lessons": [
+            {
+              "title": "random",
+              "pending": true
+            },
+            {
+              "title": "string",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 8,
+          "title": "decimal, Fraction и complex",
+          "summary": "Точные дроби и комплексные числа.",
+          "lessons": [
+            {
+              "title": "decimal",
+              "pending": true
+            },
+            {
+              "title": "Fraction",
+              "pending": true
+            },
+            {
+              "title": "complex",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 9,
+          "title": "turtle",
+          "summary": "Черепашья графика.",
+          "lessons": [
+            {
+              "title": "Черепашья графика",
+              "pending": true
+            }
+          ],
+          "note": "Проходной модуль: для цели курса не обязателен."
+        },
+        {
+          "kind": "module",
+          "num": 10,
+          "title": "Функции",
+          "summary": "Функция как объект, функции высшего порядка, анонимные функции.",
+          "lessons": [
+            {
+              "title": "Функция как объект",
+              "pending": true
+            },
+            {
+              "title": "Функции высшего порядка",
+              "pending": true
+            },
+            {
+              "title": "Анонимные функции",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 11,
+          "title": "Файлы",
+          "summary": "Чтение и запись текстовых файлов.",
+          "lessons": [
+            {
+              "title": "Чтение текстового файла",
+              "pending": true
+            },
+            {
+              "title": "Запись текстового файла",
+              "pending": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stepik-82541",
+      "title": "Курс 3. Для профессионалов",
+      "meta": "Stepik 82541 · платный · 10 учебных модулей плюс вступление и заключение",
+      "badge": "потом",
+      "open": false,
+      "later": true,
+      "blurb": "Программа впереди, не текущие уроки. Сводок на эти темы в ленте пока нет.",
+      "blocks": [
+        {
+          "kind": "note",
+          "text": "Вступление на Stepik есть, но это не учебный модуль и не урок."
+        },
+        {
+          "kind": "module",
+          "num": 1,
+          "title": "Повторение",
+          "summary": "Списки, множества, словари, функции, файлы из курса для продвинутых.",
+          "lessons": [
+            {
+              "title": "Списки",
+              "pending": true
+            },
+            {
+              "title": "Множества",
+              "pending": true
+            },
+            {
+              "title": "Словари",
+              "pending": true
+            },
+            {
+              "title": "Функции",
+              "pending": true
+            },
+            {
+              "title": "Файлы",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 2,
+          "title": "Дата и время",
+          "summary": "Модуль datetime, типы date и datetime.",
+          "lessons": [
+            {
+              "title": "date",
+              "pending": true
+            },
+            {
+              "title": "datetime",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 3,
+          "title": "Файлы",
+          "summary": "json, csv, zip, pickle.",
+          "lessons": [
+            {
+              "title": "json",
+              "pending": true
+            },
+            {
+              "title": "csv",
+              "pending": true
+            },
+            {
+              "title": "zip",
+              "pending": true
+            },
+            {
+              "title": "pickle",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 4,
+          "title": "Память и типы данных",
+          "summary": "Как устроены объекты и чем типы отличаются в памяти.",
+          "lessons": [
+            {
+              "title": "Объекты в памяти",
+              "pending": true
+            },
+            {
+              "title": "Чем типы отличаются",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 5,
+          "title": "Дополнительные коллекции",
+          "summary": "Counter, defaultdict, namedtuple, deque и соседние типы из collections.",
+          "lessons": [
+            {
+              "title": "Counter",
+              "pending": true
+            },
+            {
+              "title": "defaultdict",
+              "pending": true
+            },
+            {
+              "title": "namedtuple",
+              "pending": true
+            },
+            {
+              "title": "deque",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 6,
+          "title": "Исключения",
+          "summary": "try/except, свои ошибки, где ловить сбой.",
+          "lessons": [
+            {
+              "title": "try/except",
+              "pending": true
+            },
+            {
+              "title": "Свои ошибки",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 7,
+          "title": "Рекурсия",
+          "summary": "Функция, которая вызывает саму себя.",
+          "lessons": [
+            {
+              "title": "Рекурсия",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 8,
+          "title": "Функции",
+          "summary": "Замыкания, *args и **kwargs, декораторы.",
+          "lessons": [
+            {
+              "title": "Замыкания",
+              "pending": true
+            },
+            {
+              "title": "*args и **kwargs",
+              "pending": true
+            },
+            {
+              "title": "Декораторы",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 9,
+          "title": "Итераторы и генераторы",
+          "summary": "Одноразовый обход и yield.",
+          "lessons": [
+            {
+              "title": "Итераторы",
+              "pending": true
+            },
+            {
+              "title": "Генераторы",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "module",
+          "num": 10,
+          "title": "Регулярные выражения",
+          "summary": "Модуль re.",
+          "lessons": [
+            {
+              "title": "Модуль re",
+              "pending": true
+            }
+          ]
+        },
+        {
+          "kind": "note",
+          "text": "Заключение на Stepik есть, но это не учебный модуль и не урок."
+        }
+      ]
+    }
+  ]
+}

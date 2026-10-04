@@ -60,24 +60,43 @@ function cardHtml(it) {
 function courseBriefHref(id, kind) {
   return `brief.html?id=${encodeURIComponent(id)}&kind=${encodeURIComponent(kind)}`;
 }
-function courseCardHtml(l) {
-  const mainId = l.utro || l.vecher;
-  const mainKind = l.utro ? "utro" : "vecher";
-  const href = courseBriefHref(mainId, mainKind);
-  const links = [];
-  if (l.utro) links.push(`<a href="${courseBriefHref(l.utro, "utro")}">утро</a>`);
-  if (l.vecher) links.push(`<a href="${courseBriefHref(l.vecher, "vecher")}">вечер</a>`);
-  const meta = links.length ? `<div class="meta">${links.join(" · ")}</div>` : "";
-  return `<article class="lesson-card"><span class="badge">урок ${escapeHtml(l.num)}</span><h3><a href="${href}">${escapeHtml(l.title)}</a></h3><p>${escapeHtml(l.summary)}</p>${meta}</article>`;
+function courseLessonHtml(lesson) {
+  const title = escapeHtml(lesson.title);
+  let name = `<span class="lesson-name">${title}</span>`;
+  if (lesson.utro) name = `<a href="${courseBriefHref(lesson.utro, "utro")}">${title}</a>`;
+  else if (lesson.vecher) name = `<a href="${courseBriefHref(lesson.vecher, "vecher")}">${title}</a>`;
+  const evening = lesson.utro && lesson.vecher
+    ? `<a href="${courseBriefHref(lesson.vecher, "vecher")}">вечер</a>`
+    : "";
+  const pending = lesson.pending ? `<span class="pending">ещё не написано</span>` : "";
+  const note = lesson.note ? `<p class="lesson-note">${escapeHtml(lesson.note)}</p>` : "";
+  return `<div class="lesson-row">${name}${evening}${pending}</div>${note}`;
+}
+function courseBlockHtml(block) {
+  if (block.kind === "note") return `<p class="course-aside">${escapeHtml(block.text)}</p>`;
+  const head = block.kind === "module"
+    ? `<h3>Модуль ${escapeHtml(String(block.num))}. ${escapeHtml(block.title)}</h3>`
+    : `<h3>${escapeHtml(block.title)}</h3>`;
+  const summary = block.summary ? `<p class="lesson-note">${escapeHtml(block.summary)}</p>` : "";
+  const note = block.note ? `<p class="lesson-note">${escapeHtml(block.note)}</p>` : "";
+  const rows = (block.lessons || []).map(courseLessonHtml).join("");
+  return `<div class="module">${head}${summary}${note}${rows}</div>`;
+}
+function courseHtml(course) {
+  const open = course.open ? " open" : "";
+  const later = course.later ? " later" : "";
+  const blocks = (course.blocks || []).map(courseBlockHtml).join("");
+  const blurb = course.blurb ? `<p class="course-aside">${escapeHtml(course.blurb)}</p>` : "";
+  const foot = course.footnote ? `<p class="course-aside">${escapeHtml(course.footnote)}</p>` : "";
+  return `<details class="course-block${later}"${open}><summary><span class="badge">${escapeHtml(course.badge || "")}</span><h2>${escapeHtml(course.title)}</h2><p>${escapeHtml(course.meta || "")}</p></summary><div class="course-body">${blurb}${blocks}${foot}</div></details>`;
 }
 async function loadCourse() {
   const box = document.getElementById("course-list");
   try {
-    const lessons = await fetch("data/course-path.json", { cache: "no-store" }).then((r) => r.json());
-    box.innerHTML = "";
-    lessons.forEach((l) => {
-      box.appendChild(el(courseCardHtml(l)));
-    });
+    const data = await fetch("data/course-path.json", { cache: "no-store" }).then((r) => r.json());
+    const courses = Array.isArray(data) ? data : (data.courses || []);
+    if (!courses.length || !courses[0].blocks) throw new Error("empty");
+    box.innerHTML = courses.map(courseHtml).join("");
   } catch (e) {
     box.innerHTML = '<div class="empty">Не удалось загрузить программу.</div>';
   }
