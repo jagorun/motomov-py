@@ -162,6 +162,32 @@ function kbCardHtml(it) {
   }
   return `<article class="kb-card"><span class="badge">${badge}</span><h3>${title}</h3>${body}${meta}</article>`;
 }
+function slovarRowHtml(it) {
+  const badge = escapeHtml(it.tag || "термин");
+  const title = escapeHtml(it.title || "");
+  let body = "";
+  if (it.what || it.why || it.notConfuse) {
+    if (it.what) body += `<p><strong>Что это:</strong> ${escapeHtml(it.what)}</p>`;
+    if (it.why) body += `<p><strong>Зачем:</strong> ${escapeHtml(it.why)}</p>`;
+    if (it.notConfuse) body += `<p><strong>Не путать с:</strong> ${escapeHtml(it.notConfuse)}</p>`;
+  } else {
+    body = `<p>${escapeHtml(it.text || "")}</p>`;
+  }
+  let meta = "";
+  if (it.source) {
+    const href = `brief.html?id=${encodeURIComponent(it.source)}&kind=ai`;
+    meta = `<div class="meta"><a href="${href}">из сводки ${escapeHtml(it.source)}</a>${it.updated ? " \u00b7 " + escapeHtml(it.updated) : ""}</div>`;
+  }
+  return `<details class="fold-item"><summary><span class="fold-arrow" aria-hidden="true"></span><span class="fold-title">${title}</span><span class="badge">${badge}</span></summary><div class="fold-body">${body}${meta}</div></details>`;
+}
+function novostiRowHtml(it) {
+  const date = escapeHtml(it.dateLabel || "");
+  const title = escapeHtml(it.title || "");
+  const summary = escapeHtml(it.summary || "");
+  const href = briefHref(it);
+  const topic = it.topic ? `<div class="meta">${escapeHtml(it.topic)}</div>` : "";
+  return `<details class="fold-item"><summary><span class="fold-arrow" aria-hidden="true"></span><span class="fold-date">${date}</span><span class="fold-title">${title}</span></summary><div class="fold-body"><p>${summary}</p>${topic}<div class="meta"><a href="${href}">читать целиком →</a></div></div></details>`;
+}
 async function loadKb() {
   const list = document.getElementById("kb-list");
   const input = document.getElementById("kb-search");
@@ -231,7 +257,8 @@ async function loadSlovar() {
       list.innerHTML = '<div class="empty">В словаре пока пусто. Термины появятся после следующих сводок.</div>';
       return;
     }
-    shown.forEach((it) => list.appendChild(el(kbCardHtml(it))));
+    list.classList.add("fold-list");
+    shown.forEach((it) => list.appendChild(el(slovarRowHtml(it))));
   }
   draw("");
   if (input) input.addEventListener("input", () => draw(input.value));
@@ -276,7 +303,8 @@ async function loadNovosti() {
     list.innerHTML = '<div class="empty">Новостей пока нет. Утренняя сводка придёт в 07:00 по Москве.</div>';
     return;
   }
-  items.slice(0, NOVOSTI_RECENT_LIMIT).forEach((it) => list.appendChild(el(cardHtml(it))));
+  list.classList.add("fold-list");
+  items.slice(0, NOVOSTI_RECENT_LIMIT).forEach((it) => list.appendChild(el(novostiRowHtml(it))));
 }
 async function loadArchive(monthParam) {
   const list = document.getElementById("archive-list");
@@ -295,7 +323,8 @@ async function loadArchive(monthParam) {
       list.innerHTML = '<div class="empty">За этот месяц записей нет.</div>';
       return;
     }
-    shown.forEach((it) => list.appendChild(el(cardHtml(it))));
+    list.classList.add("fold-list");
+    shown.forEach((it) => list.appendChild(el(novostiRowHtml(it))));
     const url = new URL(location.href);
     if (active) url.searchParams.set("month", active);
     else url.searchParams.delete("month");

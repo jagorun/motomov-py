@@ -153,3 +153,38 @@ footer.site a{color:var(--accent);text-decoration:none}
 .lesson-row .lesson-name{color:var(--text)}
 .lesson-row .pending{color:var(--muted);font-size:.78rem}
 .lesson-note{color:var(--muted);font-size:.84rem;margin:.1rem 0 .35rem}
+
+.fold-list{display:flex;flex-direction:column;gap:.45rem}
+.fold-item{
+  border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--card);border-left:3px solid var(--accent-dim);
+  overflow:hidden
+}
+.fold-item summary{
+  cursor:pointer;list-style:none;display:flex;align-items:center;gap:.65rem;
+  padding:.85rem 1rem;user-select:none
+}
+.fold-item summary::-webkit-details-marker{display:none}
+.fold-item summary:hover{background:var(--accent-soft)}
+.fold-arrow{
+  flex:0 0 auto;width:.55rem;height:.55rem;
+  border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);
+  transform:rotate(-45deg);transition:transform .15s ease;margin:.1rem .15rem 0 0
+}
+.fold-item[open] > summary .fold-arrow{transform:rotate(45deg)}
+.fold-title{flex:1 1 auto;font-weight:650;color:#243028;font-size:.98rem;line-height:1.35}
+.fold-date{flex:0 0 auto;color:var(--accent);font-size:.78rem;font-weight:600;white-space:nowrap}
+.fold-item summary .badge{margin:0;flex:0 0 auto}
+.fold-body{padding:0 1rem 1rem 2rem;border-top:1px solid transparent}
+.fold-item[open] > .fold-body{border-top-color:var(--line);padding-top:.85rem}
+.fold-body p{color:var(--muted);font-size:.92rem;margin:0 0 .55rem}
+.fold-body p strong{color:var(--text);font-weight:650}
+.fold-body .meta{margin-top:.55rem}
+.fold-body .meta a{color:var(--accent);text-decoration:none}
+.fold-body .meta a:hover{text-decoration:underline}
+@media(max-width:560px){
+  .fold-item summary{flex-wrap:wrap;gap:.4rem .65rem}
+  .fold-date{order:2;width:100%;padding-left:1.05rem}
+  .fold-title{order:1}
+  .fold-item summary .badge{order:3}
+}
