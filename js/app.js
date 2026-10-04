@@ -6,6 +6,7 @@
   if (document.getElementById("slovar-list")) loadSlovar();
   if (document.getElementById("py-slovar-list")) loadPySlovar();
   if (document.getElementById("news-list")) loadNews();
+  if (document.getElementById("python-deep-list")) loadPythonDeep();
   if (document.getElementById("novosti-list")) loadNovosti();
   if (document.getElementById("archive-list")) loadArchive(params.get("month"));
   if (document.getElementById("brief-root")) loadBrief(params.get("id"), params.get("kind"));
@@ -526,4 +527,72 @@ async function loadPySlovar() {
   }
   draw("");
   if (input) input.addEventListener("input", () => draw(input.value));
+}
+
+function deepTabHtml(tab) {
+  const paras = (tab.paragraphs || []).map((p) => `<p>${escapeHtml(p)}</p>`).join("");
+  const code = tab.code ? `<pre><code>${escapeHtml(tab.code)}</code></pre>` : "";
+  return `<details class="fold-item"><summary><span class="fold-arrow" aria-hidden="true"></span><span class="fold-title">${escapeHtml(tab.title || "")}</span></summary><div class="fold-body">${paras}${code}</div></details>`;
+}
+function deepLessonLinks(pathCourse, num) {
+  const glossary = `<a href="slovar-python.html">словарь python</a>`;
+  const block = pathCourse && (pathCourse.blocks || []).find((b) => b.kind === "module" && Number(b.num) === Number(num));
+  if (!block) return `<p class="lesson-note">Термины модуля: ${glossary}.</p>`;
+  const bits = [];
+  (block.lessons || []).forEach((lesson) => {
+    let href = "";
+    let kind = "";
+    if (lesson.utro) {
+      href = courseBriefHref(lesson.utro, "utro");
+      kind = "утро";
+    } else if (lesson.brief) {
+      href = courseBriefHref(lesson.brief, "note");
+      kind = "урок";
+    } else if (lesson.vecher) {
+      href = courseBriefHref(lesson.vecher, "vecher");
+      kind = "вечер";
+    }
+    if (!href) return;
+    const evening = lesson.utro && lesson.vecher
+      ? ` · <a href="${courseBriefHref(lesson.vecher, "vecher")}">вечер</a>`
+      : "";
+    bits.push(`<a href="${href}">${escapeHtml(lesson.title)}</a> <span class="pending">${kind}</span>${evening}`);
+  });
+  if (!bits.length) return `<p class="lesson-note">Отдельных сводок по этому модулю ещё нет. Термины: ${glossary}.</p>`;
+  return `<p class="lesson-note">Уже написанные уроки: ${bits.join(" · ")}. Термины: ${glossary}.</p>`;
+}
+function deepCourseHtml(course, pathCourse) {
+  const open = course.open ? " open" : "";
+  const later = course.later ? " later" : "";
+  const jumps = (course.modules || []).map((m) => `<a href="#deep-${escapeHtml(course.id)}-m${Number(m.num)}">${Number(m.num)}. ${escapeHtml(m.title)}</a>`).join("");
+  const modules = (course.modules || []).map((m) => {
+    const tabs = (m.tabs || []).map(deepTabHtml).join("");
+    const id = `deep-${escapeHtml(course.id)}-m${Number(m.num)}`;
+    return `<div class="module" id="${id}"><h3>Модуль ${Number(m.num)}. ${escapeHtml(m.title)}</h3><p class="lesson-note">${escapeHtml(m.summary || "")}</p><div class="fold-list">${tabs}</div>${deepLessonLinks(pathCourse, m.num)}</div>`;
+  }).join("");
+  const blurb = course.blurb ? `<p class="course-aside">${escapeHtml(course.blurb)}</p>` : "";
+  return `<details class="course-block${later}" id="deep-${escapeHtml(course.id)}"${open}><summary><span class="badge">${escapeHtml(course.badge || "")}</span><h2>${escapeHtml(course.title)}</h2><p>${escapeHtml(course.meta || "")}</p></summary><div class="course-body">${blurb}<nav class="deep-jumps" aria-label="Модули">${jumps}</nav>${modules}</div></details>`;
+}
+async function loadPythonDeep() {
+  const box = document.getElementById("python-deep-list");
+  const nav = document.getElementById("python-deep-nav");
+  if (!box) return;
+  try {
+    const [deep, path] = await Promise.all([
+      fetch("data/python-deep.json", { cache: "no-store" }).then((r) => {
+        if (!r.ok) throw new Error("deep");
+        return r.json();
+      }),
+      fetch("data/course-path.json", { cache: "no-store" }).then((r) => (r.ok ? r.json() : { courses: [] })).catch(() => ({ courses: [] }))
+    ]);
+    const courses = deep.courses || [];
+    const pathCourses = path.courses || [];
+    if (!courses.length) throw new Error("empty");
+    if (nav) {
+      nav.innerHTML = courses.map((c) => `<a class="ghost-btn" href="#deep-${escapeHtml(c.id)}">${escapeHtml(c.nav || c.title)}</a>`).join("");
+    }
+    box.innerHTML = courses.map((c) => deepCourseHtml(c, pathCourses.find((item) => item.id === c.id))).join("");
+  } catch (e) {
+    box.innerHTML = '<div class="empty">Не удалось загрузить разбор.</div>';
+  }
 }

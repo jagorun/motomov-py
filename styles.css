@@ -218,3 +218,10 @@ footer.site a{color:var(--accent);text-decoration:none}
 .put-road-label{color:var(--accent);font-size:.75rem;font-weight:650;text-transform:lowercase}
 .put-road strong{color:#243028;font-size:.98rem;font-weight:650;line-height:1.35}
 .put-road span:last-child{color:var(--muted);font-size:.88rem;line-height:1.4}
+
+.deep-nav{display:flex;flex-wrap:wrap;gap:.45rem;margin:0 0 1rem}
+.deep-jumps{display:flex;flex-wrap:wrap;gap:.35rem .8rem;margin:0 0 .35rem}
+.deep-jumps a{color:var(--accent);font-size:.84rem;text-decoration:none}
+.deep-jumps a:hover{text-decoration:underline}
+.module .fold-list{margin:.35rem 0 .7rem}
+.course-block,.module{scroll-margin-top:.75rem}
