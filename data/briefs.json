@@ -36,7 +36,7 @@
       "`\"12\"` — значение подходит. `\"abc\"` и пустая строка — тот же класс `ValueError`: контракт `int` нарушен. Тип аргумента — `str`, но значение не целое.",
       "Теперь ловля. Ввод имитируем строкой — как будто уже пришёл из `input`.",
       "```python\n>>> raw = \"abc\"\n>>> try:\n...     n = int(raw)\n...     print(\"ок\", n)\n... except ValueError:\n...     print(\"нужно целое число, получили:\", repr(raw))\n...\nнужно целое число, получили: 'abc'\n>>> raw = \"42\"\n>>> try:\n...     n = int(raw)\n...     print(\"ок\", n)\n... except ValueError:\n...     print(\"нужно целое число\")\n...\nок 42\n```",
-      "При `abc` блок `except` сработал, `print(\"ок\")` не выполнился: после исключения строки ниже в `try` пропускаются. При `42` `except` молчит — ошибки не было.",
+      "При `\"abc\"` блок `except` сработал, `print(\"ок\")` не выполнился: после исключения строки ниже в `try` пропускаются. При `\"42\"` `except` молчит — ошибки не было.",
       "Чужой тип не ловится этим ярлыком:",
       "```python\n>>> try:\n...     n = int([1, 2])\n... except ValueError:\n...     print(\"ValueError\")\n...\nTraceback (most recent call last):\n  ...\nTypeError: int() argument must be a string, a bytes-like object or a real number, not 'list'\n```",
       "Список — неверное *устройство* аргумента → `TypeError`. Корзина `except ValueError` пустая: ошибка пролетела мимо. Это правильно: разные ярлыки — разный ремонт.",
