@@ -1,5 +1,115 @@
 [
   {
+    "id": "harnesspai",
+    "tag": "роботы",
+    "title": "HarnessPAI",
+    "what": "model-/embodiment-agnostic Physical AI harness (Darwin Agent Team): code как executable evolvable interface вокруг frozen action model; within-rollout open-loop program, across-rollouts closed-loop evolution.",
+    "why": "LIBERO-PRO 96.5% (+8.8 vs Harness VLA CC; +61.6 vs π0.5); RoboCasa +27.2; fine-tune lift +38.8.",
+    "notConfuse": "чистым code-as-policy без learned action model или с Harness VLA, где high-level agent сидит online на каждом шаге.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: model-/embodiment-agnostic Physical AI harness (Darwin Agent Team): code как executable evolvable interface вокруг frozen action model; within-rollout open-loop program, across-rollouts closed-loop evolution. Зачем: LIBERO-PRO 96.5% (+8.8 vs Harness VLA CC; +61.6 vs π0.5); RoboCasa +27.2; fine-tune lift +38.8. Не путать с: чистым code-as-policy без learned action model или с Harness VLA, где high-level agent сидит online на каждом шаге."
+  },
+  {
+    "id": "open-loop-program-execution",
+    "tag": "роботы",
+    "title": "Open-loop program execution (Physical AI)",
+    "what": "внутри одного rollout программа фиксирована — perception, geometry, вызовы action model и success checks идут без online high-level LLM на critical path; ревизия программы — между rollouts.",
+    "why": "ключевой timescale HarnessPAI; даёт скорость и $0 LLM API на execution.",
+    "notConfuse": "полностью слепым open-loop без observation checks или с «агент думает на каждом action step».",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: внутри одного rollout программа фиксирована — perception, geometry, вызовы action model и success checks идут без online high-level LLM на critical path; ревизия программы — между rollouts. Зачем: ключевой timescale HarnessPAI; даёт скорость и $0 LLM API на execution. Не путать с: полностью слепым open-loop без observation checks или с «агент думает на каждом action step»."
+  },
+  {
+    "id": "node-centric-skill-memory",
+    "tag": "агент",
+    "title": "Node-centric skill memory",
+    "what": "skill library, где failure→repair skills indexed по узлам workflow graph (grasp/transport/place…), а не по имени задачи; один node собирает repairs across tasks.",
+    "why": "механизм transfer в HarnessPAI — новая задача переиспользует skills знакомых nodes.",
+    "notConfuse": "плоской кучей markdown «skill files» без привязки к stage или с per-task hard-coded scripts.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: skill library, где failure→repair skills indexed по узлам workflow graph (grasp/transport/place…), а не по имени задачи; один node собирает repairs across tasks. Зачем: механизм transfer в HarnessPAI — новая задача переиспользует skills знакомых nodes. Не путать с: плоской кучей markdown «skill files» без привязки к stage или с per-task hard-coded scripts."
+  },
+  {
+    "id": "world-action-agent",
+    "tag": "роботы",
+    "title": "World Action Agent (visual action workspace)",
+    "what": "multi-agent harness (WAA), в котором VLM пилотирует робота через единый visual action workspace: Contact views + action rehearsal + in-view correction.",
+    "why": "LIBERO-Pro 75.6% SOTA; robosuite transfer 100%; distillation в Qwen3.5-9B.",
+    "notConfuse": "Show-Harness / VIA (visual interface без полноценного rehearsal world) или с end-to-end VLA.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: multi-agent harness (WAA), в котором VLM пилотирует робота через единый visual action workspace: Contact views + action rehearsal + in-view correction. Зачем: LIBERO-Pro 75.6% SOTA; robosuite transfer 100%; distillation в Qwen3.5-9B. Не путать с: Show-Harness / VIA (visual interface без полноценного rehearsal world) или с end-to-end VLA."
+  },
+  {
+    "id": "action-rehearsal",
+    "tag": "агент",
+    "title": "Action rehearsal",
+    "what": "действие как editable proposal с IK/motion-plan preview и feasibility feedback до physical execute; Imagination Agent итеративно правит proposal, сцена не меняется.",
+    "why": "центральный механизм WAA против irreversible mistakes.",
+    "notConfuse": "sim rollouts целой политики или с post-hoc failure replay после того, как объект уже сброшен.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: действие как editable proposal с IK/motion-plan preview и feasibility feedback до physical execute; Imagination Agent итеративно правит proposal, сцена не меняется. Зачем: центральный механизм WAA против irreversible mistakes. Не путать с: sim rollouts целой политики или с post-hoc failure replay после того, как объект уже сброшен."
+  },
+  {
+    "id": "contact-views",
+    "tag": "роботы",
+    "title": "Contact views",
+    "what": "автоматически выбранные камеры вокруг текущего interaction region (gripper/object/target), ортогональные проекции для чтения alignment error по двум осям.",
+    "why": "часть visual action workspace WAA; без них global view часто не даёт mm/cm relations.",
+    "notConfuse": "фиксированной wrist-камеры без active view selection или с чисто semantic «look here» без calibration в 3D.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: автоматически выбранные камеры вокруг текущего interaction region (gripper/object/target), ортогональные проекции для чтения alignment error по двум осям. Зачем: часть visual action workspace WAA; без них global view часто не даёт mm/cm relations. Не путать с: фиксированной wrist-камеры без active view selection или с чисто semantic «look here» без calibration в 3D."
+  },
+  {
+    "id": "rpg-reconstruct",
+    "tag": "роботы",
+    "title": "RPG (Reconstruct, Practice, Go Real)",
+    "what": "фреймворк UC Berkeley / Amazon FAR: из offline data строят sim practice tasks → autonomous revision skills+prompt без weight updates → calibrate и freeze на real robot.",
+    "why": "28.6%→95.0% за 15 rounds на 22 задачах; 30/30 physical trials.",
+    "notConfuse": "RL fine-tune весов политики или с одноразовым code-gen без cross-task validation gate.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: фреймворк UC Berkeley / Amazon FAR: из offline data строят sim practice tasks → autonomous revision skills+prompt без weight updates → calibrate и freeze на real robot. Зачем: 28.6%→95.0% за 15 rounds на 22 задачах; 30/30 physical trials. Не путать с: RL fine-tune весов политики или с одноразовым code-gen без cross-task validation gate."
+  },
+  {
+    "id": "privileged-agent-rpg",
+    "tag": "агент",
+    "title": "Privileged Agent (RPG)",
+    "what": "отдельный execution twin Runtime Agent’а с тем же model и skill library, но с доступом к simulator state (poses, sizes, velocities…) для diagnosis — не для deploy.",
+    "why": "вместе с Video Analyzer даёт complementary signal; ablation −Privileged ≈ −27 pp за 5 rounds.",
+    "notConfuse": "asymmetric actor-critic (privileged critic в обучении) или с «читерским» deploy-агентом на проде.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: отдельный execution twin Runtime Agent’а с тем же model и skill library, но с доступом к simulator state (poses, sizes, velocities…) для diagnosis — не для deploy. Зачем: вместе с Video Analyzer даёт complementary signal; ablation −Privileged ≈ −27 pp за 5 rounds. Не путать с: asymmetric actor-critic (privileged critic в обучении) или с «читерским» deploy-агентом на проде."
+  },
+  {
+    "id": "policy-prover",
+    "tag": "безопасность",
+    "title": "Policy prover (OpenShell)",
+    "what": "компонент OpenShell, который математически доказывает, что под написанными rules агент может / не может достичь определённых ресурсов и действий.",
+    "why": "закрывает gap «написали YAML политик — надеемся, что least access»; путь к CI для agent permissions.",
+    "notConfuse": "обычным unit-тестом одного tool call или с model-based «constitutional» self-check внутри промпта.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: компонент OpenShell, который математически доказывает, что под написанными rules агент может / не может достичь определённых ресурсов и действий. Зачем: закрывает gap «написали YAML политик — надеемся, что least access»; путь к CI для agent permissions. Не путать с: обычным unit-тестом одного tool call или с model-based «constitutional» self-check внутри промпта."
+  },
+  {
+    "id": "claude-code-cloud-credits",
+    "tag": "продукт",
+    "title": "Claude Code cloud session credits",
+    "what": "промо Anthropic: Pro $100 / Max $250 credits только на cloud sessions Claude Code (Anthropic-hosted); claim до 07.10.2026, unused expires 04.11; eligible individual Pro/Max с ~23.09.",
+    "why": "новый вечерний deal-angle 04.10; не распространяется на local Claude Code.",
+    "notConfuse": "Claude artifact −50% (другой promo, до 15.10) или с обычными plan usage limits.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: промо Anthropic: Pro $100 / Max $250 credits только на cloud sessions Claude Code (Anthropic-hosted); claim до 07.10.2026, unused expires 04.11; eligible individual Pro/Max с ~23.09. Зачем: новый вечерний deal-angle 04.10; не распространяется на local Claude Code. Не путать с: Claude artifact −50% (другой promo, до 15.10) или с обычными plan usage limits."
+  },
+  {
     "id": "rrsi",
     "tag": "агент",
     "title": "RRSI",
@@ -892,14 +1002,14 @@
   },
   {
     "id": "openshell",
-    "tag": "агенты",
+    "tag": "безопасность",
     "title": "OpenShell",
-    "text": "Что это: open-source runtime NVIDIA (Apache 2.0), где агент сидит в песочнице, а политики (файлы, процессы, сеть, credentials) применяются снаружи агента через gateway/sandbox/supervisor. Зачем: программный слой Open Agent Safety Platform; 30.09 eWeek разобрал связку с Sentry после серии sandbox escapes; стыкуется с Codex, Claude Code, Copilot CLI. Не путать с: обычным Docker-контейнером без жёсткой сетевой политики и без выноса секретов.",
-    "what": "open-source runtime NVIDIA (Apache 2.0), где агент сидит в песочнице, а политики (файлы, процессы, сеть, credentials) применяются снаружи агента через gateway/sandbox/supervisor.",
-    "why": "программный слой Open Agent Safety Platform; 30.09 eWeek разобрал связку с Sentry после серии sandbox escapes; стыкуется с Codex, Claude Code, Copilot CLI.",
-    "notConfuse": "обычным Docker-контейнером без жёсткой сетевой политики и без выноса секретов.",
-    "source": "2026-09-30-vecher",
-    "updated": "2026-09-30"
+    "what": "open-source secure runtime NVIDIA (Apache 2.0): default deny, enforcement политик на tools/files/network/data снаружи агента, allow/deny logs, policy prover.",
+    "why": "связка с Claude Managed Agents и Open Agent Safety Platform (Sentry на BlueField-4); вечер 04.10 — safety runtime, не OSMO orchestration.",
+    "notConfuse": "NVIDIA OSMO (orchestration physical-AI workflows) или с обычным Docker без внешней policy и vault credentials.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: open-source secure runtime NVIDIA (Apache 2.0): default deny, enforcement политик на tools/files/network/data снаружи агента, allow/deny logs, policy prover. Зачем: связка с Claude Managed Agents и Open Agent Safety Platform (Sentry на BlueField-4); вечер 04.10 — safety runtime, не OSMO orchestration. Не путать с: NVIDIA OSMO (orchestration physical-AI workflows) или с обычным Docker без внешней policy и vault credentials."
   },
   {
     "id": "nvidia-sentry-bluefield",
@@ -1266,14 +1376,14 @@
   },
   {
     "id": "claude-managed-agents",
-    "tag": "агенты",
+    "tag": "безопасность",
     "title": "Claude Managed Agents",
-    "text": "Что это: схема Anthropic, где цикл агента крутится на отдельном сервере, а полезная работа — в изолированных песочницах, чтобы компания видела и ограничивала действия. Зачем: именно этот стек стыкуют с OpenShell и BlueField. Не путать с: обычным чатом Claude в браузере без выделенного agent loop и sandbox.",
-    "what": "схема Anthropic, где цикл агента крутится на отдельном сервере, а полезная работа — в изолированных песочницах, чтобы компания видела и ограничивала действия.",
-    "why": "именно этот стек стыкуют с OpenShell и BlueField.",
-    "notConfuse": "обычным чатом Claude в браузере без выделенного agent loop и sandbox.",
-    "source": "2026-09-28-vecher",
-    "updated": "2026-09-28"
+    "what": "composable APIs Anthropic для production agents: agent loop на отдельном сервере от sandbox; credentials в vault (агент не видит); audit trails; BYO/managed sandbox.",
+    "why": "control plane рядом с OpenShell — credentials + external policy; анонс вместе с NVIDIA Open Agent Safety Platform.",
+    "notConfuse": "обычным claude.ai chat / Claude Code local CLI без отдельного managed agent loop и vault.",
+    "source": "2026-10-04-vecher",
+    "updated": "2026-10-04",
+    "text": "Что это: composable APIs Anthropic для production agents: agent loop на отдельном сервере от sandbox; credentials в vault (агент не видит); audit trails; BYO/managed sandbox. Зачем: control plane рядом с OpenShell — credentials + external policy; анонс вместе с NVIDIA Open Agent Safety Platform. Не путать с: обычным claude.ai chat / Claude Code local CLI без отдельного managed agent loop и vault."
   },
   {
     "id": "placeholder-api-key",
