@@ -205,3 +205,16 @@ footer.site a{color:var(--accent);text-decoration:none}
 .glossary-remind{margin:0 0 .85rem}
 .glossary-remind a{color:var(--accent);text-decoration:none}
 .glossary-remind a:hover{text-decoration:underline}
+
+.put-roads{display:flex;flex-direction:column;gap:.55rem;margin:0 0 1.4rem}
+.put-road{
+  display:flex;flex-direction:column;gap:.2rem;
+  padding:.9rem 1.05rem;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--card);border-left:3px solid var(--accent-dim);
+  text-decoration:none;color:inherit
+}
+.put-road:hover{background:var(--accent-soft)}
+.put-road.current{border-left-color:var(--accent)}
+.put-road-label{color:var(--accent);font-size:.75rem;font-weight:650;text-transform:lowercase}
+.put-road strong{color:#243028;font-size:.98rem;font-weight:650;line-height:1.35}
+.put-road span:last-child{color:var(--muted);font-size:.88rem;line-height:1.4}
