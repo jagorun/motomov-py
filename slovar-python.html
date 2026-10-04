@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Словарь · py.motomov.ru</title>
+  <title>словарь python · py.motomov.ru</title>
+  <meta name="description" content="Термины трёх курсов Python на Stepik: что это, зачем в курсе и с чем не путать.">
   <meta name="theme-color" content="#f3efe6">
   <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
+  <link rel="canonical" href="https://py.motomov.ru/slovar-python">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,28 +24,28 @@
         <a href="news.html">python</a>
         <a href="course.html">Курс</a>
         <a href="kb.html">База</a>
-        <a class="active" href="slovar.html" aria-current="page">Словарь</a>
-        <a href="slovar-python.html">словарь python</a>
+        <a href="slovar.html">Словарь</a>
+        <a class="active" href="slovar-python.html" aria-current="page">словарь python</a>
         <a href="put.html">Дорожка</a>
         <a href="index.html">Старт</a>
         <a href="https://www.motomov.ru/">Визитка</a>
       </nav>
     </header>
     <header class="hero">
-      <span class="badge">словарь из сводок · копится каждый день</span>
-      <h1>Словарь технологий</h1>
-      <p class="bio">Только термины из утренних и вечерних техсводок. Формат «Что это / Зачем / Не путать». Общая учебная база Python/RAG остаётся в разделе «База».</p>
+      <span class="badge">три курса stepik · не словарь сводок</span>
+      <h1>словарь python</h1>
+      <p class="bio">Термины курсов для начинающих (58852), для продвинутых (68343) и для профессионалов (82541). Формат «Что это / Зачем / Не путать». Словарь технологий из сводок по ИИ остаётся на вкладке «Словарь» и сюда не входит.</p>
     </header>
     <section>
-      <input class="search-box" id="slovar-search" type="search" placeholder="Найти: tool-use, RAG, TPU, sandbox, venv…" autocomplete="off">
-      <div class="sort-row" id="slovar-sort" role="group" aria-label="Сортировка">
+      <input class="search-box" id="py-slovar-search" type="search" placeholder="Найти: print, range, dict, try, декоратор…" autocomplete="off">
+      <div class="sort-row" id="py-slovar-sort" role="group" aria-label="Сортировка">
         <span class="sort-label">Сортировка:</span>
         <button type="button" class="ghost-btn" data-sort="name">по имени</button>
         <button type="button" class="ghost-btn" data-sort="tag">по тегу</button>
-        <button type="button" class="ghost-btn active" data-sort="fresh" aria-pressed="true">по новизне</button>
+        <button type="button" class="ghost-btn active" data-sort="course" aria-pressed="true">по курсу</button>
       </div>
-      <div class="pager" id="slovar-filters" style="margin:0.8rem 0 1rem; flex-wrap:wrap; gap:0.5rem"></div>
-      <div class="fold-list" id="slovar-list"><div class="empty">Загрузка словаря…</div></div>
+      <div class="pager" id="py-slovar-filters" style="margin:0.8rem 0 1rem; flex-wrap:wrap; gap:0.5rem"></div>
+      <div class="fold-list" id="py-slovar-list"><div class="empty">Загрузка словаря…</div></div>
     </section>
     <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
   </div>

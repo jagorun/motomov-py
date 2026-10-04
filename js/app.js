@@ -4,6 +4,7 @@
   if (document.getElementById("course-list")) loadCourse();
   if (document.getElementById("kb-list")) loadKb();
   if (document.getElementById("slovar-list")) loadSlovar();
+  if (document.getElementById("py-slovar-list")) loadPySlovar();
   if (document.getElementById("news-list")) loadNews();
   if (document.getElementById("novosti-list")) loadNovosti();
   if (document.getElementById("archive-list")) loadArchive(params.get("month"));
@@ -438,4 +439,91 @@ async function loadBrief(id, kind) {
   const backHref = brief.kind === "ai" ? "archive.html" : "news.html";
   const backLabel = brief.kind === "ai" ? "К архиву" : "К ленте python";
   root.innerHTML = `<span class="badge">${kindLabel(brief.kind)} \u00b7 ${escapeHtml(brief.dateLabel)} \u00b7 ${escapeHtml(brief.topic || "")}</span><h1>${escapeHtml(brief.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(brief.summary)}</p><article class="article">${renderBody(brief.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="${briefHref(prev)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel}</a>`}${next ? `<a class="ghost-btn" href="${briefHref(next)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel} →</a>`}</div>`;
+}
+
+function pySlovarHaystack(it) {
+  return [it.title, it.tag, it.module, it.what, it.why, it.notConfuse, it.aliases, it.stepik, it.id]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+function pySlovarRowHtml(it) {
+  const badge = escapeHtml(it.tag || "термин");
+  const title = escapeHtml(it.title || "");
+  let body = "";
+  if (it.what) body += `<p><strong>Что это:</strong> ${escapeHtml(it.what)}</p>`;
+  if (it.why) body += `<p><strong>Зачем:</strong> ${escapeHtml(it.why)}</p>`;
+  if (it.notConfuse) body += `<p><strong>Не путать с:</strong> ${escapeHtml(it.notConfuse)}</p>`;
+  const place = `курс ${it.course} · Stepik ${it.stepik || ""} · модуль «${it.module || ""}»`;
+  const meta = `<div class="meta">${escapeHtml(place)}</div>`;
+  const id = escapeHtml(it.id || "");
+  return `<details class="fold-item" id="${id}"><summary><span class="fold-arrow" aria-hidden="true"></span><span class="fold-title">${title}</span><span class="badge">${badge}</span></summary><div class="fold-body">${body}${meta}</div></details>`;
+}
+function comparePySlovar(a, b, mode) {
+  const byName = (x, y) => String(x.title || "").localeCompare(String(y.title || ""), "ru", { sensitivity: "base" });
+  const byOrder = (Number(a.order) || 0) - (Number(b.order) || 0);
+  if (mode === "name") return byName(a, b);
+  if (mode === "tag") {
+    const tagCmp = String(a.tag || "").localeCompare(String(b.tag || ""), "ru", { sensitivity: "base" });
+    return tagCmp || byOrder || byName(a, b);
+  }
+  return byOrder || byName(a, b);
+}
+async function loadPySlovar() {
+  const list = document.getElementById("py-slovar-list");
+  const input = document.getElementById("py-slovar-search");
+  const filters = document.getElementById("py-slovar-filters");
+  const sortBox = document.getElementById("py-slovar-sort");
+  const items = await fetch("data/python-glossary.json", { cache: "no-store" }).then((r) => r.json()).catch(() => []);
+  let activeTag = "";
+  let sortMode = "course";
+  const tags = Array.from(new Set(items.map((it) => it.tag).filter(Boolean))).sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
+  if (filters) {
+    filters.innerHTML = "";
+    filters.appendChild(el(`<button type="button" class="ghost-btn active" data-tag="">Все</button>`));
+    tags.forEach((tag) => {
+      filters.appendChild(el(`<button type="button" class="ghost-btn" data-tag="${escapeHtml(tag)}">${escapeHtml(tag)}</button>`));
+    });
+    filters.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-tag]");
+      if (!btn) return;
+      activeTag = btn.getAttribute("data-tag") || "";
+      Array.from(filters.querySelectorAll("button")).forEach((b) => b.classList.toggle("active", b === btn));
+      draw(input ? input.value : "");
+    });
+  }
+  if (sortBox) {
+    sortBox.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-sort]");
+      if (!btn) return;
+      sortMode = btn.getAttribute("data-sort") || "course";
+      Array.from(sortBox.querySelectorAll("button[data-sort]")).forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle("active", on);
+        b.setAttribute("aria-pressed", on ? "true" : "false");
+      });
+      draw(input ? input.value : "");
+    });
+  }
+  function draw(q) {
+    const needle = (q || "").trim().toLowerCase();
+    const shown = items.filter((it) => {
+      if (activeTag && it.tag !== activeTag) return false;
+      return !needle || pySlovarHaystack(it).includes(needle);
+    });
+    shown.sort((a, b) => comparePySlovar(a, b, sortMode));
+    list.innerHTML = "";
+    if (!shown.length) {
+      list.innerHTML = '<div class="empty">В словаре python этого нет.</div>';
+      return;
+    }
+    list.classList.add("fold-list");
+    shown.forEach((it) => list.appendChild(el(pySlovarRowHtml(it))));
+    if (location.hash) {
+      const node = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (node && node.tagName === "DETAILS") node.open = true;
+    }
+  }
+  draw("");
+  if (input) input.addEventListener("input", () => draw(input.value));
 }
