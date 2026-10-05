@@ -105,10 +105,23 @@ article.lesson-card h3 a:hover,article.lesson-card .meta a:hover{text-decoration
 pre,code{font-family:var(--mono)}
 pre{
   background:#efe9db;border:1px solid var(--line);border-radius:.85rem;
-  padding:.95rem 1rem;overflow-x:auto;font-size:.84rem;margin:.7rem 0 1rem
+  padding:.95rem 1rem;font-size:.84rem;margin:.7rem 0 1rem;
+  white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word
 }
 code{color:#215532}
-pre code{color:#2a332c}
+pre code{color:#2a332c;white-space:inherit}
+.example-block{margin:0 0 1.15rem;padding:0 0 .35rem;border-bottom:1px solid var(--line)}
+.example-block:last-child{border-bottom:0;margin-bottom:.35rem}
+.example-block .example-intro{color:var(--text);font-size:.92rem;margin:0 0 .45rem}
+.example-block .example-output-label,
+.example-block .example-explain-label{
+  display:block;margin:.55rem 0 .25rem;color:var(--accent);
+  font-size:.78rem;font-weight:650;text-transform:uppercase;letter-spacing:.03em
+}
+.example-block pre.output{
+  background:#e7efe8;border-color:#c5d4c7;margin:.25rem 0 .55rem
+}
+.example-block .example-explain{color:var(--muted);font-size:.9rem;margin:0 0 .25rem}
 .pager{display:flex;justify-content:space-between;gap:.75rem;margin-top:1.25rem;flex-wrap:wrap}
 .ghost-btn{
   border:1px solid var(--line);background:#fffdf8;color:var(--muted);

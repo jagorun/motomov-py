@@ -529,10 +529,31 @@ async function loadPySlovar() {
   if (input) input.addEventListener("input", () => draw(input.value));
 }
 
+function deepExampleHtml(ex) {
+  const intro = ex.intro ? `<p class="example-intro">${escapeHtml(ex.intro)}</p>` : "";
+  const code = ex.code ? `<pre><code>${escapeHtml(ex.code)}</code></pre>` : "";
+  let out = "";
+  if (ex.output !== undefined && ex.output !== null && String(ex.output).length) {
+    out = `<span class="example-output-label">Вывод</span><pre class="output"><code>${escapeHtml(ex.output)}</code></pre>`;
+  } else if (ex.output === "") {
+    out = `<span class="example-output-label">Вывод</span><pre class="output"><code>(пусто)</code></pre>`;
+  }
+  const stdin = ex.stdin ? `<p class="example-explain"><strong>Ввод:</strong> ${escapeHtml(ex.stdin)}</p>` : "";
+  const explain = ex.explain
+    ? `<span class="example-explain-label">Что тут произошло</span><p class="example-explain">${escapeHtml(ex.explain)}</p>`
+    : "";
+  return `<div class="example-block">${intro}${code}${stdin}${out}${explain}</div>`;
+}
 function deepTabHtml(tab) {
   const paras = (tab.paragraphs || []).map((p) => `<p>${escapeHtml(p)}</p>`).join("");
-  const code = tab.code ? `<pre><code>${escapeHtml(tab.code)}</code></pre>` : "";
-  return `<details class="fold-item"><summary><span class="fold-arrow" aria-hidden="true"></span><span class="fold-title">${escapeHtml(tab.title || "")}</span></summary><div class="fold-body">${paras}${code}</div></details>`;
+  let examples = "";
+  if (Array.isArray(tab.examples) && tab.examples.length) {
+    examples = tab.examples.map(deepExampleHtml).join("");
+  } else if (tab.code) {
+    // Старый формат курсов 2 и 3: один code без output.
+    examples = deepExampleHtml({ code: tab.code, output: tab.output, explain: tab.explain, intro: tab.intro });
+  }
+  return `<details class="fold-item"><summary><span class="fold-arrow" aria-hidden="true"></span><span class="fold-title">${escapeHtml(tab.title || "")}</span></summary><div class="fold-body">${paras}${examples}</div></details>`;
 }
 function deepLessonLinks(pathCourse, num) {
   const glossary = `<a href="slovar-python.html">словарь python</a>`;
