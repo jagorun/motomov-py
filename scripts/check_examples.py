@@ -5,6 +5,7 @@ Usage:
   python3 scripts/check_examples.py
   python3 scripts/check_examples.py --course 1
   python3 scripts/check_examples.py --course 2
+  python3 scripts/check_examples.py --course 3
   python3 scripts/check_examples.py --all
 
 Exit code 0 only when every checked example matches byte-for-byte.
@@ -43,7 +44,7 @@ def check_deep(course_num: int = 1) -> list[str]:
             examples = tab.get("examples")
             if not examples:
                 # legacy single code without output: skip match, but warn if course 1
-                if course_num in (1, 2) and tab.get("id") == "examples" and tab.get("code") and "output" not in tab:
+                if course_num in (1, 2, 3) and tab.get("id") == "examples" and tab.get("code") and "output" not in tab:
                     errors.append(f"deep m{mod.get('num')} examples: legacy code without examples[]/output")
                 continue
             for i, ex in enumerate(examples):
@@ -135,13 +136,13 @@ def check_c1_briefs() -> list[str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--course", type=int, default=None, help="1 or 2; default 1 unless --all")
+    ap.add_argument("--course", type=int, default=None, help="1, 2 or 3; default 1 unless --all")
     ap.add_argument("--all", action="store_true", help="check courses 1 and 2 plus c1 briefs")
     ap.add_argument("--skip-briefs", action="store_true")
     args = ap.parse_args()
     errs: list[str] = []
     if args.all:
-        courses = [1, 2]
+        courses = [1, 2, 3]
     elif args.course is None:
         courses = [1]
     else:
