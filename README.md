@@ -7,7 +7,7 @@
 | Сайт | Репозиторий | Задача |
 |---|---|---|
 | [motomov.ru](https://www.motomov.ru/) | `jagorun/roy-business-card` | визитка, афоризмы, стихи |
-| [py.motomov.ru](https://py.motomov.ru/) | `jagorun/motomov-py` | курс, база, лента python, новости ИИ |
+| [py.motomov.ru](https://py.motomov.ru/) | `jagorun/motomov-py` | курс, база, лента python, новости ИИ, YouTube |
 
 Корень сайта `/` сразу открывает раздел **Новости**.
 
@@ -16,6 +16,7 @@
 - **Новости** (`novosti.html`, `data/novosti.json`) — свежие сводки по ИИ (последние 14), 07:00 Москва.
 - **Архив** (`archive.html`) — полный `novosti.json` с фильтром по месяцу. Правила публикации: `docs/DIGEST_PUBLISH.md`.
 - **python** (`news.html`, `data/briefs.json`) — утро и вечер наставника Python.
+- **YouTube** (`youtube.html`, `data/youtube.json`) — выжимки с отобранных каналов; детали в `brief.html?id=yt-…&kind=youtube`. Правила: `docs/YOUTUBE_PUBLISH.md`.
 - **Курс** (`course.html`, `lesson.html`, `data/lessons.json`) — шесть уроков. Урок 05 — чертёж этого сайта.
 - **База** (`kb.html`, `data/kb.json`) — карточки с поиском в браузере.
 - **Старт** (`index.html`) — карта контура, не входная страница.

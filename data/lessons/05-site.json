@@ -17,6 +17,7 @@
           "Дата карты: 01.10.2026. Вечер: во все уроки добавлены вкладки. Тексты уроков лежат в data/lessons/<id>.json. Сборка: js/lesson-tabs-data.js после app.js.",
           "04.10.2026. Курс: было — шесть RAG-уроков, клик вёл на lesson.html. Стало — линейный путь основ из data/course-path.json (14 уроков); название и ссылки «утро»/«вечер» ведут в brief.html (раздел python). Файлы: course.html, js/app.js (loadCourse), js/lesson-tabs-data.js (course-list больше не перерисовывает RAG; старые /lesson?id= собираются как раньше), styles.css (ссылки внутри article.lesson-card).",
           "04.10.2026, вечер. Вкладка Курс переведена на три курса Stepik (58852 сейчас и развёрнут, 68343 и 82541 свёрнуты как программа впереди). data/course-path.json больше не плоский список из 14 уроков. Ссылка у названия есть только если тема сводки совпадает; иначе «ещё не написано» и нет href. Старые /lesson?id= не удалялись.",
+          "05.10.2026. Добавлена вкладка YouTube: страница youtube.html (cleanUrl /youtube), склад data/youtube.json (kind=youtube, id=yt-<videoId>, только prepend), пункт меню «YouTube» после python во всех HTML с nav. js/app.js: loadYoutube + kindLabel youtube + loadBrief читает youtube.json. docs/YOUTUBE_PUBLISH.md. Чужие склады (briefs/novosti/kb/python-*) не трогали.",
           "## Правило",
           "Поменял сайт — в том же коммите допиши эту вкладку: что было / что стало / какой файл. PRAVILA.md.",
           "## Два сайта",
@@ -25,9 +26,9 @@
           "GitHub main → Vercel → py.motomov.ru. vercel.json: cleanUrls и редирект / → /novosti.",
           "## Файлы",
           "HTML — рамка с дыркой (lesson-root, course-list, news-list, novosti-list, kb-list, brief-root). js/app.js — мозг. js/lesson-tabs-data.js — сборка вкладок. styles.css — вид, .lesson-tab.",
-          "data/briefs.json — python. data/novosti.json — ИИ (только prepend). data/kb.json — база/словарь. data/lessons/<id>.json — урок с tabs. docs/DIGEST_PUBLISH.md — правила публикации.",
+          "data/briefs.json — python. data/novosti.json — ИИ (только prepend). data/youtube.json — YouTube (только prepend). data/kb.json — база/словарь. data/lessons/<id>.json — урок с tabs. docs/DIGEST_PUBLISH.md — правила публикации.",
           "## Меню",
-          "Новости, Архив, python, Курс, База, Словарь, Старт, Визитка. Класс active ручной в каждом HTML.",
+          "Новости, Архив, python, YouTube, Курс, База, Словарь, Старт, Визитка. Класс active ручной в каждом HTML.",
           "## Две ленты",
           "Ссылка brief.html?id=&kind=. 28.09 один id 2026-09-28-utro был у python и ИИ — без kind открывался ИИ.",
           "## Вкладки",
@@ -61,7 +62,8 @@
           "## kind",
           "briefHref всегда пишет kind. loadBrief при kind=ai берёт novosti.json.",
           "## Архив",
-          "loadNovosti режет ленту до NOVOSTI_RECENT_LIMIT=14. loadArchive рисует весь массив и фильтр ?month=YYYY-MM."
+          "loadNovosti режет ленту до NOVOSTI_RECENT_LIMIT=14. loadArchive рисует весь массив и фильтр ?month=YYYY-MM.",
+          "loadYoutube читает data/youtube.json и рисует карточки (cardHtml → brief.html?kind=youtube). loadBrief при kind=youtube или id с префиксом yt- берёт youtube.json; «назад» ведёт на youtube.html."
         ]
       },
       {
@@ -71,7 +73,8 @@
           "Ключи только в двойных кавычках. Запятая в конце запрещена. Комментариев нет.",
           "```\n{\n  \"id\": \"05-site\",\n  \"tabs\": [{\"id\": \"karta\", \"title\": \"Карта\", \"body\": [\"абзац\"]}]\n}\n```",
           "Проверка: python -m json.tool data/lessons/05-site.json",
-          "Склады: lessons/части, briefs (python), novosti (ИИ, prepend-only), kb. Архив UI читает тот же novosti.json."
+          "Склады: lessons/части, briefs (python), novosti (ИИ, prepend-only), kb. Архив UI читает тот же novosti.json.",
+          "Склад YouTube: data/youtube.json, kind всегда \"youtube\", id yt-<videoId>, только prepend. См. docs/YOUTUBE_PUBLISH.md."
         ]
       },
       {

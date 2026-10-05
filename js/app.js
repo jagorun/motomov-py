@@ -6,6 +6,7 @@
   if (document.getElementById("slovar-list")) loadSlovar();
   if (document.getElementById("py-slovar-list")) loadPySlovar();
   if (document.getElementById("news-list")) loadNews();
+  if (document.getElementById("youtube-list")) loadYoutube();
   if (document.getElementById("python-deep-list")) loadPythonDeep();
   if (document.getElementById("novosti-list")) loadNovosti();
   if (document.getElementById("archive-list")) loadArchive(params.get("month"));
@@ -27,6 +28,7 @@ function kindLabel(kind) {
   if (kind === "utro") return "утро";
   if (kind === "vecher") return "вечер";
   if (kind === "ai") return "новости";
+  if (kind === "youtube") return "youtube";
   return "заметка";
 }
 function briefHref(it) {
@@ -350,6 +352,17 @@ async function loadNews() {
   }
   items.forEach((it) => list.appendChild(el(cardHtml(it))));
 }
+
+async function loadYoutube() {
+  const list = document.getElementById("youtube-list");
+  const items = await fetchJson("data/youtube.json");
+  list.innerHTML = "";
+  if (!items.length) {
+    list.innerHTML = '<div class="empty">Обзоров пока нет. Новые выжимки появятся здесь.</div>';
+    return;
+  }
+  items.forEach((it) => list.appendChild(el(cardHtml(it))));
+}
 const NOVOSTI_RECENT_LIMIT = 14;
 function monthKey(it) {
   const d = String(it.date || it.id || "").slice(0, 7);
@@ -415,30 +428,45 @@ async function loadArchive(monthParam) {
 }
 async function loadBrief(id, kind) {
   const root = document.getElementById("brief-root");
-  const [python, ai] = await Promise.all([
+  const wantYoutube = kind === "youtube" || (id && String(id).startsWith("yt-"));
+  const fetches = [
     fetchJson("data/briefs.json"),
     fetchJson("data/novosti.json")
-  ]);
+  ];
+  if (wantYoutube || !kind) fetches.push(fetchJson("data/youtube.json"));
+  const results = await Promise.all(fetches);
+  const python = results[0];
+  const ai = results[1];
+  const youtube = results[2] || [];
   let pool;
   if (kind === "ai") {
     pool = ai;
+  } else if (kind === "youtube") {
+    pool = youtube;
   } else if (kind) {
     pool = python.filter((it) => it.kind === kind);
     if (!pool.some((it) => it.id === id)) pool = python;
   } else {
-    const inPy = python.find((it) => it.id === id);
-    pool = inPy ? python : ai.concat(python);
+    const inYt = youtube.find((it) => it.id === id);
+    if (inYt) {
+      pool = youtube;
+    } else {
+      const inPy = python.find((it) => it.id === id);
+      pool = inPy ? python : ai.concat(python);
+    }
   }
   const i = id ? pool.findIndex((it) => it.id === id) : -1;
   const brief = i >= 0 ? pool[i] : null;
-  if (!brief) { root.innerHTML = `<div class="empty">Сводка не найдена${id ? " («" + escapeHtml(id) + "»)" : ""}. <a href="archive.html">К архиву</a> · <a href="news.html">К python</a></div>`; return; }
+  if (!brief) { root.innerHTML = `<div class="empty">Сводка не найдена${id ? " («" + escapeHtml(id) + "»)" : ""}. <a href="archive.html">К архиву</a> · <a href="news.html">К python</a> · <a href="youtube.html">К YouTube</a></div>`; return; }
   document.title = brief.title + " \u00b7 py.motomov.ru";
   const same = pool.filter((it) => it.kind === brief.kind);
   const si = same.findIndex((it) => it.id === brief.id);
   const prev = same[si - 1];
   const next = same[si + 1];
-  const backHref = brief.kind === "ai" ? "archive.html" : "news.html";
-  const backLabel = brief.kind === "ai" ? "К архиву" : "К ленте python";
+  let backHref = "news.html";
+  let backLabel = "К ленте python";
+  if (brief.kind === "ai") { backHref = "archive.html"; backLabel = "К архиву"; }
+  if (brief.kind === "youtube") { backHref = "youtube.html"; backLabel = "К YouTube"; }
   root.innerHTML = `<span class="badge">${kindLabel(brief.kind)} \u00b7 ${escapeHtml(brief.dateLabel)} \u00b7 ${escapeHtml(brief.topic || "")}</span><h1>${escapeHtml(brief.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(brief.summary)}</p><article class="article">${renderBody(brief.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="${briefHref(prev)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel}</a>`}${next ? `<a class="ghost-btn" href="${briefHref(next)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel} →</a>`}</div>`;
 }
 
