@@ -15,3 +15,12 @@
 Стили: `.lesson-tabs`, `.lesson-tab`.
 Уроки 00–04: Зачем / Синтаксис / Механика / Практика.
 Урок 05: Карта / HTML / JavaScript / JSON / Git / Практика.
+
+## YouTube — выжимки каналов
+
+Склад: `data/youtube.json`. Страница: `youtube.html` → https://py.motomov.ru/youtube  
+Детали: `brief.html?id=yt-…&kind=youtube`.
+
+Новую запись **всегда prepend** в начало массива. Не truncate / replace файла одной записью. Чужие склады (`briefs.json`, `novosti.json`, `kb.json`) не трогать.
+
+Правила публикации: `docs/YOUTUBE_PUBLISH.md`.
