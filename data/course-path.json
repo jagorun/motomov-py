@@ -251,7 +251,8 @@
           "lessons": [
             {
               "title": "Числовая угадайка",
-              "pending": true
+              "brief": "c1-guess-game",
+              "note": "Урок курса. Мини-проект модуля 8: randint, проверка ввода через isdigit, while True с return, счётчик попыток."
             },
             {
               "title": "Магический шар",
