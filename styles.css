@@ -238,3 +238,23 @@ footer.site a{color:var(--accent);text-decoration:none}
 .deep-jumps a:hover{text-decoration:underline}
 .module .fold-list{margin:.35rem 0 .7rem}
 .course-block,.module{scroll-margin-top:.75rem}
+
+.chapter{margin:.2rem 0 .55rem}
+.chapter-section{margin:.55rem 0 .85rem}
+.chapter-h{
+  font-size:.95rem;color:var(--accent);margin:0 0 .45rem;
+  font-weight:700;letter-spacing:.01em
+}
+.chapter-body > p{color:var(--muted);font-size:.92rem;margin:0 0 .55rem}
+.chapter-body > p:last-child{margin-bottom:.25rem}
+.chapter-fold{margin:.45rem 0}
+.chapter-links .lesson-note{margin:0}
+.example-num{
+  margin:0 0 .35rem;color:#243028;font-size:.95rem;font-weight:700
+}
+.example-missing{
+  color:#8b1e1e;background:#f8e8e6;border:1px solid #e0b4ae;
+  border-radius:.65rem;padding:.65rem .85rem;font-size:.9rem;margin:.35rem 0 .7rem
+}
+.fold-body pre,.chapter-body pre{display:block;max-width:100%}
+.module .chapter{margin-top:.35rem}

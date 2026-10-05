@@ -529,31 +529,84 @@ async function loadPySlovar() {
   if (input) input.addEventListener("input", () => draw(input.value));
 }
 
-function deepExampleHtml(ex) {
-  const intro = ex.intro ? `<p class="example-intro">${escapeHtml(ex.intro)}</p>` : "";
-  const code = ex.code ? `<pre><code>${escapeHtml(ex.code)}</code></pre>` : "";
+function deepExampleHtml(ex, index) {
+  const num = Number.isFinite(index) ? index + 1 : null;
+  const head = num != null
+    ? `<h5 class="example-num">Пример ${num}</h5>`
+    : "";
+  const intro = ex && ex.intro
+    ? `<p class="example-intro">${escapeHtml(ex.intro)}</p>`
+    : "";
+  let code = "";
+  if (ex && ex.code) {
+    code = `<pre><code>${escapeHtml(ex.code)}</code></pre>`;
+  } else {
+    code = `<p class="example-missing">код отсутствует</p>`;
+  }
   let out = "";
-  if (ex.output !== undefined && ex.output !== null && String(ex.output).length) {
+  if (ex && ex.output !== undefined && ex.output !== null && String(ex.output).length) {
     out = `<span class="example-output-label">Вывод</span><pre class="output"><code>${escapeHtml(ex.output)}</code></pre>`;
-  } else if (ex.output === "") {
+  } else if (ex && ex.output === "") {
     out = `<span class="example-output-label">Вывод</span><pre class="output"><code>(пусто)</code></pre>`;
   }
-  const stdin = ex.stdin ? `<p class="example-explain"><strong>Ввод:</strong> ${escapeHtml(ex.stdin)}</p>` : "";
-  const explain = ex.explain
+  const stdin = ex && ex.stdin
+    ? `<p class="example-explain"><strong>Ввод:</strong> ${escapeHtml(ex.stdin)}</p>`
+    : "";
+  const explain = ex && ex.explain
     ? `<span class="example-explain-label">Что тут произошло</span><p class="example-explain">${escapeHtml(ex.explain)}</p>`
     : "";
-  return `<div class="example-block">${intro}${code}${stdin}${out}${explain}</div>`;
+  return `<div class="example-block">${head}${intro}${code}${stdin}${out}${explain}</div>`;
+}
+function deepParasHtml(paras) {
+  return (paras || []).map((p) => `<p>${escapeHtml(p)}</p>`).join("");
+}
+function deepChapterAlways(title, bodyHtml) {
+  return `<section class="chapter-section"><h4 class="chapter-h">${escapeHtml(title)}</h4><div class="chapter-body">${bodyHtml}</div></section>`;
+}
+function deepChapterFold(title, bodyHtml, open) {
+  const op = open ? " open" : "";
+  return `<details class="fold-item chapter-fold"${op}><summary><span class="fold-arrow" aria-hidden="true"></span><span class="fold-title">${escapeHtml(title)}</span></summary><div class="fold-body">${bodyHtml}</div></details>`;
+}
+function deepTabById(module, id) {
+  return (module.tabs || []).find((t) => t.id === id) || null;
+}
+function deepExamplesBody(tab) {
+  if (!tab) return `<p class="example-missing">примеры отсутствуют</p>`;
+  const paras = tab.paragraphs || [];
+  // Не оставляем один абзац-обещание без кода: короткий лид допустим, boilerplate режем в данных.
+  const lead = deepParasHtml(paras);
+  let blocks = "";
+  if (Array.isArray(tab.examples) && tab.examples.length) {
+    blocks = tab.examples.map((ex, i) => deepExampleHtml(ex, i)).join("");
+  } else if (tab.code) {
+    blocks = deepExampleHtml({
+      code: tab.code,
+      output: tab.output,
+      explain: tab.explain,
+      intro: tab.intro,
+      stdin: tab.stdin
+    }, 0);
+  } else if (!paras.length) {
+    blocks = `<p class="example-missing">код отсутствует</p>`;
+  }
+  return `${lead}${blocks}`;
 }
 function deepTabHtml(tab) {
-  const paras = (tab.paragraphs || []).map((p) => `<p>${escapeHtml(p)}</p>`).join("");
+  // Обратная совместимость: неизвестная вкладка как свёртка.
+  const paras = deepParasHtml(tab.paragraphs);
   let examples = "";
   if (Array.isArray(tab.examples) && tab.examples.length) {
-    examples = tab.examples.map(deepExampleHtml).join("");
+    examples = tab.examples.map((ex, i) => deepExampleHtml(ex, i)).join("");
   } else if (tab.code) {
-    // Старый формат курсов 2 и 3: один code без output.
-    examples = deepExampleHtml({ code: tab.code, output: tab.output, explain: tab.explain, intro: tab.intro });
+    examples = deepExampleHtml({
+      code: tab.code,
+      output: tab.output,
+      explain: tab.explain,
+      intro: tab.intro,
+      stdin: tab.stdin
+    }, 0);
   }
-  return `<details class="fold-item"><summary><span class="fold-arrow" aria-hidden="true"></span><span class="fold-title">${escapeHtml(tab.title || "")}</span></summary><div class="fold-body">${paras}${examples}</div></details>`;
+  return deepChapterFold(tab.title || "Раздел", `${paras}${examples}`, false);
 }
 function deepLessonLinks(pathCourse, num) {
   const glossary = `<a href="slovar-python.html">словарь python</a>`;
@@ -582,14 +635,64 @@ function deepLessonLinks(pathCourse, num) {
   if (!bits.length) return `<p class="lesson-note">Отдельных сводок по этому модулю ещё нет. Термины: ${glossary}.</p>`;
   return `<p class="lesson-note">Уже написанные уроки: ${bits.join(" · ")}. Термины: ${glossary}.</p>`;
 }
+function deepModuleSectionsHtml(module, pathCourse) {
+  // Новый формат sections[] — если появится.
+  if (Array.isArray(module.sections) && module.sections.length) {
+    return module.sections.map((sec, i) => {
+      const title = sec.title || `Раздел ${i + 1}`;
+      let body = deepParasHtml(sec.paragraphs);
+      if (sec.kind === "examples" || Array.isArray(sec.examples) || sec.code) {
+        body = deepExamplesBody(sec);
+      }
+      const always = sec.kind === "goal" || sec.kind === "examples" || sec.always;
+      const open = sec.open !== false;
+      return always
+        ? deepChapterAlways(title, body)
+        : deepChapterFold(title, body, open);
+    }).join("") + deepLessonLinks(pathCourse, module.num);
+  }
+
+  const chew = deepTabById(module, "chew");
+  const analogy = deepTabById(module, "analogy");
+  const examples = deepTabById(module, "examples");
+  const confuse = deepTabById(module, "confuse");
+  const known = new Set(["chew", "analogy", "examples", "confuse"]);
+
+  const goalParas = Array.isArray(module.goal) && module.goal.length
+    ? module.goal
+    : [
+        module.summary || "",
+        "Читайте главу сверху вниз: разбор, примеры с выводом, аналогия и список того, с чем тему не путать."
+      ].filter(Boolean);
+
+  const parts = [];
+  parts.push(deepChapterAlways("1. Что изучаем", deepParasHtml(goalParas)));
+  if (chew) {
+    parts.push(deepChapterFold("2. Разбор", deepParasHtml(chew.paragraphs), true));
+  }
+  if (examples) {
+    parts.push(deepChapterAlways("3. Примеры", deepExamplesBody(examples)));
+  }
+  if (analogy) {
+    parts.push(deepChapterFold("4. Аналогия", deepParasHtml(analogy.paragraphs), true));
+  }
+  if (confuse) {
+    parts.push(deepChapterFold("5. Не путать", deepParasHtml(confuse.paragraphs), true));
+  }
+  (module.tabs || []).forEach((tab) => {
+    if (!known.has(tab.id)) parts.push(deepTabHtml(tab));
+  });
+  parts.push(`<section class="chapter-section chapter-links"><h4 class="chapter-h">6. Уроки и словарь</h4><div class="chapter-body">${deepLessonLinks(pathCourse, module.num)}</div></section>`);
+  return parts.join("");
+}
 function deepCourseHtml(course, pathCourse) {
   const open = course.open ? " open" : "";
   const later = course.later ? " later" : "";
   const jumps = (course.modules || []).map((m) => `<a href="#deep-${escapeHtml(course.id)}-m${Number(m.num)}">${Number(m.num)}. ${escapeHtml(m.title)}</a>`).join("");
   const modules = (course.modules || []).map((m) => {
-    const tabs = (m.tabs || []).map(deepTabHtml).join("");
     const id = `deep-${escapeHtml(course.id)}-m${Number(m.num)}`;
-    return `<div class="module" id="${id}"><h3>Модуль ${Number(m.num)}. ${escapeHtml(m.title)}</h3><p class="lesson-note">${escapeHtml(m.summary || "")}</p><div class="fold-list">${tabs}</div>${deepLessonLinks(pathCourse, m.num)}</div>`;
+    const chapter = deepModuleSectionsHtml(m, pathCourse);
+    return `<div class="module" id="${id}"><h3>Модуль ${Number(m.num)}. ${escapeHtml(m.title)}</h3><div class="chapter">${chapter}</div></div>`;
   }).join("");
   const blurb = course.blurb ? `<p class="course-aside">${escapeHtml(course.blurb)}</p>` : "";
   return `<details class="course-block${later}" id="deep-${escapeHtml(course.id)}"${open}><summary><span class="badge">${escapeHtml(course.badge || "")}</span><h2>${escapeHtml(course.title)}</h2><p>${escapeHtml(course.meta || "")}</p></summary><div class="course-body">${blurb}<nav class="deep-jumps" aria-label="Модули">${jumps}</nav>${modules}</div></details>`;
