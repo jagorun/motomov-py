@@ -22,6 +22,10 @@
 Детали: `brief.html?id=yt-…&kind=youtube`.
 Архив: `data/youtube-archive.json` (тот же формат). Все сводки сохраняем; при росте ленты **>~40** — перенос старых в архив, на ленте остаются свежие.
 
+Каналы (6): `@nullzcode`, `@setkaproject`, `@vladilenminin`, `@neuropros`, `@prodadvice`, `@edvardgrishin` — таблица в `docs/YOUTUBE_PUBLISH.md`.
+
 Новую запись **всегда prepend** в начало массива. Не truncate / replace файла одной записью. Чужие склады (`briefs.json`, `novosti.json`, `kb.json`) не трогать.
+
+В каждом `body` обязателен блок **`## Оценка Motomov`** (польза / хайп / слабые места / можно ли опираться).
 
 Правила публикации: `docs/YOUTUBE_PUBLISH.md`.
