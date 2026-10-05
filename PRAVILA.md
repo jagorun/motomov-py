@@ -20,6 +20,7 @@
 
 Склад: `data/youtube.json`. Страница: `youtube.html` → https://py.motomov.ru/youtube  
 Детали: `brief.html?id=yt-…&kind=youtube`.
+Архив: `data/youtube-archive.json` (тот же формат). Все сводки сохраняем; при росте ленты **>~40** — перенос старых в архив, на ленте остаются свежие.
 
 Новую запись **всегда prepend** в начало массива. Не truncate / replace файла одной записью. Чужие склады (`briefs.json`, `novosti.json`, `kb.json`) не трогать.
 
