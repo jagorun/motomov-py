@@ -1,0 +1,26 @@
+{
+  "id": "2026-09-30-ai",
+  "kind": "ai",
+  "date": "2026-09-30",
+  "dateLabel": "30.09.2026, среда",
+  "topic": "GPT-6.1 Sol, Dots и containment агентов",
+  "title": "Утренняя сводка · 30.09.2026",
+  "summary": "На DevDay OpenAI выпустила GPT-6.1 Sol и always-on агентов Dots, не выпустив GPT-6.1 Astra. NVIDIA открыла runtime-containment агентов; Anthropic описала киберспособности открытой GLM-5.3.",
+  "body": [
+    "# Утренняя сводка · 30.09.2026",
+    "OpenAI на DevDay вывела в продукт дешёвый near-frontier слой и always-on агентов, а не новую флагманскую модель: GPT-6.1 Astra так и не вышла.",
+    "## 1. Модели и агенты · что появилось",
+    "### GPT-6.1 Sol",
+    "OpenAI выпустила GPT-6.1 Sol — апгрейд рабочей линейки Sol, а не флагмана. Компания заявляет почти уровень GPT-6 Astra на agentic coding, computer use и офисных циклах при стандартной цене $2/$10 за миллион input/output токенов (Аstra — $10/$50) и cached input $0.10. Модель доступна в API, ChatGPT Work и Codex. [релиз]",
+    "### Dots",
+    "Always-on агенты на GPT-6 Astra со своим cloud computer. Pro/Business/Enterprise; вне EEA/UK/CH. [продукт]",
+    "### GPT-6.1 Astra снята",
+    "Отмена после внутренних safety-тестов. [слухи — низкая уверенность по деталям тестов]",
+    "### Claude Sonnet 5.5",
+    "$2/$10, первый Sonnet с кибер-safeguard уровня Opus. [релиз]",
+    "### NVIDIA Open Agent Safety Platform",
+    "OpenShell + Sentry на BlueField-4. [релиз]",
+    "### GLM-5.3",
+    "Anthropic: 50/410 ExploitBench, слабые открытые safeguard. [исследование]"
+  ]
+}

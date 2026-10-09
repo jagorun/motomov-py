@@ -342,6 +342,16 @@ async function fetchJson(url) {
     return [];
   }
 }
+async function loadAiItem(id) {
+  try {
+    const r = await fetch("data/novosti/items/" + encodeURIComponent(id) + ".json", { cache: "no-store" });
+    if (!r.ok) return null;
+    const data = await r.json();
+    return data && data.id ? data : null;
+  } catch (e) {
+    return null;
+  }
+}
 async function loadNews() {
   const list = document.getElementById("news-list");
   const items = (await fetchJson("data/briefs.json")).filter((it) => it.kind !== "ai");
@@ -456,7 +466,11 @@ async function loadBrief(id, kind) {
     }
   }
   const i = id ? pool.findIndex((it) => it.id === id) : -1;
-  const brief = i >= 0 ? pool[i] : null;
+  let brief = i >= 0 ? pool[i] : null;
+  if (brief && brief.kind === "ai" && !Array.isArray(brief.body)) {
+    const full = await loadAiItem(brief.id);
+    if (full) brief = full;
+  }
   if (!brief) { root.innerHTML = `<div class="empty">Сводка не найдена${id ? " («" + escapeHtml(id) + "»)" : ""}. <a href="archive.html">К архиву</a> · <a href="news.html">К python</a> · <a href="youtube.html">К YouTube</a></div>`; return; }
   document.title = brief.title + " \u00b7 py.motomov.ru";
   const same = pool.filter((it) => it.kind === brief.kind);
