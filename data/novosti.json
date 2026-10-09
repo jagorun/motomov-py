@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-10-09-vecher",
+    "kind": "ai",
+    "date": "2026-10-09",
+    "dateLabel": "09.10.2026, пятница",
+    "topic": "Срок выхода Gemini agent, где вышли иранские фейковые статьи, $150 млн Anthropic на Genesis Mission, захват агентов AWS AgentCore, $200 млн Arena, мониторы Goodfire, Saluki 27B, тесты Gemini 4 Argon",
+    "title": "Новости ИИ · 09.10.2026 (вечер) · Gemini agent выйдет к концу октября, одно сообщение захватило всех агентов в регионе AWS, Arena получила $200 млн на проверку агентов",
+    "summary": "Google ожидает общий выход Gemini agent к концу октября и добавила лимиты расходов. Статьи иранской операции нашлись во флоридской газете и Middle East Monitor (21 статья). Anthropic обещала $150 млн за три года на Genesis Mission. Zenity Labs одним сообщением захватила всех агентов Bedrock AgentCore в регионе. Плюс: Arena Intelligence — $200 млн при оценке $3,1 млрд, зонды Goodfire, Saluki 27B на 7,89 ГБ, у Gemini 4 Argon 15% выдуманных ответов против 51% у GPT-6 Astra."
+  },
+  {
     "id": "2026-10-09-utro",
     "kind": "ai",
     "date": "2026-10-09",
