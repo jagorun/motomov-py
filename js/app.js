@@ -210,13 +210,158 @@ function slovarRowHtml(it) {
   }
   return `<details class="fold-item"><summary><span class="fold-arrow" aria-hidden="true"></span><span class="fold-title">${title}</span><span class="badge">${badge}</span></summary><div class="fold-body">${body}${meta}</div></details>`;
 }
+const RU_MONTHS_GEN = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+const RU_WEEKDAYS = ["воскресенье","понедельник","вторник","среда","четверг","пятница","суббота"];
+function newsSlot(it) {
+  const id = String(it.id || "");
+  const label = String(it.dateLabel || "") + " " + String(it.title || "");
+  if (/-ai$/.test(id)) return { key: "extra", label: "выпуск" };
+  if (/-utro$/.test(id) || /утр/i.test(label.slice(0, 60))) return { key: "utro", label: "утро" };
+  if (/-vecher$/.test(id) || /вечер/i.test(label.slice(0, 60))) return { key: "vecher", label: "вечер" };
+  return { key: "extra", label: "выпуск" };
+}
+function newsHeadline(it) {
+  // "Вечерняя сводка · 12.10.2026 · Заголовок" -> "Заголовок"
+  const t = String(it.title || "");
+  const parts = t.split(" \u00b7 ");
+  if (parts.length >= 3 && /\d{2}\.\d{2}\.\d{4}/.test(parts[1])) return parts.slice(2).join(" \u00b7 ");
+  return t;
+}
+function dayLabel(date) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(date || ""));
+  if (!m) return String(date || "");
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const diff = Math.round((today - d) / 86400000);
+  const base = Number(m[3]) + " " + RU_MONTHS_GEN[Number(m[2]) - 1];
+  if (diff === 0) return "Сегодня, " + base;
+  if (diff === 1) return "Вчера, " + base;
+  return base + ", " + RU_WEEKDAYS[d.getDay()];
+}
 function novostiRowHtml(it) {
-  const date = escapeHtml(it.dateLabel || "");
-  const title = escapeHtml(it.title || "");
-  const summary = escapeHtml(it.summary || "");
-  const href = briefHref(it);
-  const topic = it.topic ? `<div class="meta">${escapeHtml(it.topic)}</div>` : "";
-  return `<details class="fold-item"><summary><span class="fold-arrow" aria-hidden="true"></span><span class="fold-date">${date}</span><span class="fold-title">${title}</span></summary><div class="fold-body"><p>${summary}</p>${topic}<div class="meta"><a href="${href}">читать целиком →</a></div></div></details>`;
+  const slot = newsSlot(it);
+  const gist = it.topic || it.summary || "";
+  return `<a class="news-card" href="${briefHref(it)}"><span class="news-slot slot-${slot.key}">${slot.label}</span><span class="news-text"><span class="news-head">${escapeHtml(newsHeadline(it))}</span><span class="news-gist">${escapeHtml(gist)}</span></span><span class="news-go" aria-hidden="true">\u203a</span></a>`;
+}
+function renderNewsDays(list, items) {
+  list.innerHTML = "";
+  list.classList.remove("fold-list");
+  list.classList.add("news-days");
+  let cur = null, box = null;
+  items.forEach((it) => {
+    const d = it.date || String(it.id || "").slice(0, 10);
+    if (d !== cur) {
+      cur = d;
+      const day = el(`<section class="news-day"><h3 class="news-day-title">${escapeHtml(dayLabel(d))}</h3><div class="news-day-list"></div></section>`);
+      list.appendChild(day);
+      box = day.querySelector(".news-day-list");
+    }
+    box.appendChild(el(novostiRowHtml(it)));
+  });
+}
+// ---- one AI issue: sections, numbered items, collapsible glossary ----
+function linkifyText(text) {
+  const re = /(https?:\/\/[^\s<>()]+[^\s<>().,;:!?»"'])/g;
+  let out = "", last = 0, m;
+  while ((m = re.exec(text))) {
+    out += escapeHtml(text.slice(last, m.index));
+    let host = m[1];
+    try { host = new URL(m[1]).hostname.replace(/^www\./, ""); } catch (e) {}
+    out += `<a class="src-link" href="${escapeHtml(m[1])}" target="_blank" rel="noopener">${escapeHtml(host)}</a>`;
+    last = m.index + m[1].length;
+  }
+  out += escapeHtml(text.slice(last));
+  return out
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/^(Что это|Зачем сегодня|Зачем|Не путать с|Источник):/, "<strong>$1:</strong>");
+}
+function paraHtml(line) {
+  const t = line.replace(/Источник:\s*/g, "Источник: ");
+  if (/^[-*]\s+/.test(t)) return null;
+  return `<p>${linkifyText(t)}</p>`;
+}
+function linesHtml(lines) {
+  let html = "", ul = [];
+  const flush = () => { if (ul.length) { html += "<ul>" + ul.map((x) => `<li>${linkifyText(x)}</li>`).join("") + "</ul>"; ul = []; } };
+  lines.forEach((ln) => {
+    if (!ln.trim()) return;
+    if (ln.startsWith("```")) { flush(); html += renderBody([ln]); return; }
+    if (/^[-*]\s+/.test(ln)) { ul.push(ln.replace(/^[-*]\s+/, "")); return; }
+    flush();
+    html += paraHtml(ln);
+  });
+  flush();
+  return html;
+}
+function splitSections(body) {
+  const secs = [];
+  let cur = { title: "", lines: [] };
+  body.forEach((raw) => {
+    const ln = String(raw);
+    if (/^# /.test(ln)) return;
+    if (/^## /.test(ln)) { secs.push(cur); cur = { title: ln.slice(3).trim(), lines: [] }; return; }
+    cur.lines.push(ln);
+  });
+  secs.push(cur);
+  return secs.filter((s) => s.title || s.lines.some((l) => l.trim()));
+}
+function splitItems(lines) {
+  const items = []; let pre = []; let cur = null;
+  lines.forEach((ln) => {
+    if (/^### /.test(ln)) { cur = { title: ln.slice(4).trim(), lines: [] }; items.push(cur); return; }
+    (cur ? cur.lines : pre).push(ln);
+  });
+  return { pre, items };
+}
+function itemTitleHtml(title) {
+  const tags = [];
+  const clean = title.replace(/\s*\[([^\]]+)\]/g, (_, t) => { tags.push(t); return ""; }).trim();
+  return { title: escapeHtml(clean), tags: tags.map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("") };
+}
+function sectionKind(title) {
+  const t = title.toLowerCase();
+  if (/коротко|главное|итог дня|суть/.test(t)) return "lead";
+  if (/словар/.test(t)) return "glossary";
+  if (/подписк|акци|триал/.test(t)) return "promo";
+  return "normal";
+}
+function renderAiIssue(brief) {
+  const secs = splitSections(brief.body || []);
+  if (!secs.length) return null;
+  let toc = [], html = "", n = 0;
+  secs.forEach((sec, si) => {
+    const kind = sectionKind(sec.title);
+    const anchor = "s" + (si + 1);
+    const { pre, items } = splitItems(sec.lines);
+    if (kind === "lead") {
+      html += `<section class="issue-lead" id="${anchor}"><h2>${escapeHtml(sec.title || "Коротко")}</h2>${linesHtml(sec.lines)}</section>`;
+      return;
+    }
+    if (kind === "glossary") {
+      const cards = items.map((it) => `<details class="gl-item"><summary>${escapeHtml(it.title)}</summary><div class="gl-body">${linesHtml(it.lines)}</div></details>`).join("");
+      toc.push([anchor, "Словарь"]);
+      html += `<section class="issue-sec issue-glossary" id="${anchor}"><h2>${escapeHtml(sec.title)} <span class="count">${items.length}</span></h2>${linesHtml(pre)}<div class="gl-list">${cards}</div></section>`;
+      return;
+    }
+    if (kind === "promo") {
+      const text = sec.lines.filter((l) => l.trim());
+      const short = text.length <= 1 && items.length === 0;
+      html += `<section class="issue-sec${short ? " issue-note" : ""}" id="${anchor}"><h2>${escapeHtml(sec.title)}</h2>${linesHtml(sec.lines.filter((l) => !/^### /.test(l)))}${items.map((it) => `<h3>${escapeHtml(it.title)}</h3>${linesHtml(it.lines)}`).join("")}</section>`;
+      return;
+    }
+    if (sec.title) toc.push([anchor, sec.title.replace(/ к вечеру| за ночь/i, "")]);
+    let inner = linesHtml(pre);
+    if (items.length) {
+      inner += `<ol class="issue-items">` + items.map((it) => {
+        n += 1;
+        const t = itemTitleHtml(it.title);
+        return `<li class="issue-item" id="n${n}"><span class="num">${n}</span><div class="issue-item-body"><h3>${t.title}</h3>${t.tags ? `<div class="tags">${t.tags}</div>` : ""}${linesHtml(it.lines)}</div></li>`;
+      }).join("") + `</ol>`;
+    }
+    html += `<section class="issue-sec" id="${anchor}">${sec.title ? `<h2>${escapeHtml(sec.title)}</h2>` : ""}${inner}</section>`;
+  });
+  const tocHtml = toc.length > 1 ? `<nav class="issue-toc" aria-label="Разделы выпуска">${toc.map(([a, t]) => `<a href="#${a}">${escapeHtml(t)}</a>`).join("")}</nav>` : "";
+  return { tocHtml, html };
 }
 async function loadKb() {
   const list = document.getElementById("kb-list");
@@ -393,8 +538,7 @@ async function loadNovosti() {
     list.innerHTML = '<div class="empty">Новостей пока нет. Утренняя сводка придёт в 07:00 по Москве.</div>';
     return;
   }
-  list.classList.add("fold-list");
-  items.slice(0, NOVOSTI_RECENT_LIMIT).forEach((it) => list.appendChild(el(novostiRowHtml(it))));
+  renderNewsDays(list, items.slice(0, NOVOSTI_RECENT_LIMIT));
 }
 async function loadArchive(monthParam) {
   const list = document.getElementById("archive-list");
@@ -413,8 +557,7 @@ async function loadArchive(monthParam) {
       list.innerHTML = '<div class="empty">За этот месяц записей нет.</div>';
       return;
     }
-    list.classList.add("fold-list");
-    shown.forEach((it) => list.appendChild(el(novostiRowHtml(it))));
+    renderNewsDays(list, shown);
     const url = new URL(location.href);
     if (active) url.searchParams.set("month", active);
     else url.searchParams.delete("month");
@@ -481,6 +624,18 @@ async function loadBrief(id, kind) {
   let backLabel = "К ленте python";
   if (brief.kind === "ai") { backHref = "archive.html"; backLabel = "К архиву"; }
   if (brief.kind === "youtube") { backHref = "youtube.html"; backLabel = "К YouTube"; }
+  if (brief.kind === "ai") {
+    const issue = renderAiIssue(brief);
+    const newer = same[si - 1];
+    const older = same[si + 1];
+    const slot = newsSlot(brief);
+    const navBtn = (it, dir) => it
+      ? `<a class="issue-nav-btn ${dir}" href="${briefHref(it)}"><small>${dir === "older" ? "← раньше" : "позже →"}</small><span>${escapeHtml(dayLabel(it.date).replace(/^(Сегодня|Вчера), /, "$1, ") + " · " + newsSlot(it).label)}</span></a>`
+      : `<span class="issue-nav-btn ${dir} disabled"><small>${dir === "older" ? "← раньше" : "позже →"}</small><span>нет</span></span>`;
+    const pager = `<div class="issue-nav">${navBtn(older, "older")}${navBtn(newer, "newer")}</div>`;
+    root.innerHTML = `<a class="back-link" href="novosti.html">← Все новости</a><header class="issue-head"><div class="issue-meta"><span class="news-slot slot-${slot.key}">${slot.label}</span> ${escapeHtml(dayLabel(brief.date))}</div><h1>${escapeHtml(newsHeadline(brief))}</h1>${issue ? "" : `<p class="issue-summary">${escapeHtml(brief.summary || "")}</p>`}</header>${issue ? issue.tocHtml + `<article class="issue">${issue.html}</article>` : `<article class="article">${renderBody(brief.body || [])}</article>`}${pager}`;
+    return;
+  }
   root.innerHTML = `<span class="badge">${kindLabel(brief.kind)} \u00b7 ${escapeHtml(brief.dateLabel)} \u00b7 ${escapeHtml(brief.topic || "")}</span><h1>${escapeHtml(brief.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(brief.summary)}</p><article class="article">${renderBody(brief.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="${briefHref(prev)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel}</a>`}${next ? `<a class="ghost-btn" href="${briefHref(next)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel} →</a>`}</div>`;
 }
 
