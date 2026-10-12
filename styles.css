@@ -366,3 +366,16 @@ html{scroll-padding-top:7rem}
   .issue-item{padding:.85rem .8rem;gap:.6rem}
   .issue-item .num{flex-basis:1.6rem;height:1.6rem;font-size:.82rem}
 }
+
+/* ---- Код: светлый, спокойный, читаемый (общий для всего сайта) ---- */
+:root{--code-bg:#f6f8fa;--code-fg:#1f2328;--code-line:#d8dee4;--inl-bg:#eef1f4;
+  --hl-kw:#8a2a4b;--hl-str:#0a5a2c;--hl-com:#59636e;--hl-num:#0b4f8a;--hl-fn:#6a3d00;--hl-bi:#5a3a9a}
+pre{background:var(--code-bg);color:var(--code-fg);border:1px solid var(--code-line);border-left:1px solid var(--code-line);
+  border-radius:.6rem;padding:.9rem 1rem;font-size:15px;line-height:1.55;margin:.8rem 0 1.1rem;
+  white-space:pre;overflow-x:auto;overflow-wrap:normal;word-break:normal;-webkit-overflow-scrolling:touch;tab-size:4}
+pre code,.m-body pre code{color:inherit;background:none;padding:0;font-size:inherit;white-space:pre}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+:not(pre)>code{color:var(--code-fg);background:var(--inl-bg);border:1px solid var(--code-line);padding:.05em .35em;border-radius:.35rem;font-size:.92em}
+.hl-kw{color:var(--hl-kw);font-weight:600}.hl-str{color:var(--hl-str)}.hl-com{color:var(--hl-com);font-style:italic}
+.hl-num{color:var(--hl-num)}.hl-fn{color:var(--hl-fn)}.hl-bi{color:var(--hl-bi)}
+@media (max-width:600px){pre{font-size:14.5px;padding:.8rem .85rem;margin-left:-.2rem;margin-right:-.2rem}}

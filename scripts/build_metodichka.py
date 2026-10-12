@@ -106,7 +106,7 @@ def main():
         cid = "ch-" + p.name[:2]
         title, body, toc = md_to_html(lines, cid, used)
         chapters.append((cid, title or p.stem, body, toc))
-    ver = css_ver()
+    ver = css_ver() + "-code2"
     stamp = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
     toc_html = "".join(
         f'<li><a href="#{c}" data-ch="{c}">{inline(t)}</a>' + (f'<ol>{"".join(f"<li><a href=\"#{a}\" data-ch=\"{c}\">{inline(x)}</a></li>" for a, x in toc)}</ol>' if toc else "") + "</li>"
@@ -138,8 +138,6 @@ def main():
   .m-chapter h2{{margin:0;font-size:1.12rem;line-height:1.3}}
   .m-body{{padding:0 1.1rem 1rem;font-size:1.04rem;line-height:1.7;max-width:46rem;overflow-wrap:anywhere}}
   .m-body h3{{font-size:1.1rem;margin:1.6rem 0 .5rem;scroll-margin-top:7rem}} .m-body h4,.m-body h5{{font-size:1rem;margin:1.2rem 0 .4rem;scroll-margin-top:7rem}}
-  .m-body pre{{background:#1f2620;color:#eef2ea;padding:.8rem 1rem;border-radius:.7rem;overflow-x:auto;font-size:.86rem;line-height:1.5}}
-  .m-body code{{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em}} .m-body :not(pre)>code{{background:var(--accent-soft);padding:.05rem .3rem;border-radius:.3rem}}
   .m-body blockquote{{margin:1rem 0;padding:.4rem 1rem;border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 .6rem .6rem 0}}
   .md-table{{overflow-x:auto}} .m-body table{{border-collapse:collapse;font-size:.92rem;margin:.8rem 0}} .m-body th,.m-body td{{border:1px solid var(--line);padding:.35rem .55rem;text-align:left;vertical-align:top}}
   .m-up{{font-size:.88rem;text-align:right}} .m-up a{{color:var(--muted)}}

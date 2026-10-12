@@ -932,3 +932,28 @@ async function loadPythonDeep() {
   const act = document.querySelector(".site-header .nav a.active");
   if (act && act.parentElement.scrollWidth > act.parentElement.clientWidth) act.parentElement.scrollLeft = act.getBoundingClientRect().left - act.parentElement.getBoundingClientRect().left - 16;
 })();
+// Лёгкая подсветка Python в блоках кода (без внешних библиотек)
+(function () {
+  const KW = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case".split(" "));
+  const BI = new Set("print len range int str float bool list dict set tuple open isinstance enumerate zip sorted min max sum any all type super self Exception ValueError KeyError TypeError".split(" "));
+  const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const re = /(#[^\n]*)|([rbfu]{0,2}(?:"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'))|(\b\d[\d_]*(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_]*)(\s*\()?/g;
+  document.querySelectorAll("pre > code").forEach((el) => {
+    if (el.dataset.hl || el.children.length) return;
+    const src = el.textContent, cls = el.className || "";
+    if (/lang-(?!py|python)\w/.test(cls)) return;
+    if (!/lang-py/.test(cls) && !/\b(def|import|print|return|for|if)\b|=/.test(src)) return;
+    let out = "", last = 0, m;
+    while ((m = re.exec(src))) {
+      out += esc(src.slice(last, m.index)); last = re.lastIndex;
+      if (m[1]) out += `<span class="hl-com">${esc(m[1])}</span>`;
+      else if (m[2]) out += `<span class="hl-str">${esc(m[2])}</span>`;
+      else if (m[3]) out += `<span class="hl-num">${m[3]}</span>`;
+      else {
+        const w = m[4], k = KW.has(w) ? "kw" : BI.has(w) ? "bi" : m[5] ? "fn" : "";
+        out += (k ? `<span class="hl-${k}">${w}</span>` : w) + (m[5] || "");
+      }
+    }
+    el.innerHTML = out + esc(src.slice(last)); el.dataset.hl = "1";
+  });
+})();
