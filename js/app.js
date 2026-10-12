@@ -917,3 +917,18 @@ async function loadPythonDeep() {
     box.innerHTML = '<div class="empty">Не удалось загрузить разбор.</div>';
   }
 }
+
+// Ссылка «Методичка» в шапке для страниц, где её нет в статичном HTML (дорожки put-*.html)
+(function () {
+  const nav = document.querySelector(".site-header .nav");
+  if (!nav || nav.querySelector('a[href="metodichka.html"]')) return;
+  const a = document.createElement("a");
+  a.href = "metodichka.html"; a.textContent = "Методичка";
+  const arch = nav.querySelector('a[href="archive.html"]');
+  arch ? arch.after(a) : nav.appendChild(a);
+})();
+// На телефоне прокрутить полосу разделов к активному пункту
+(function () {
+  const act = document.querySelector(".site-header .nav a.active");
+  if (act && act.parentElement.scrollWidth > act.parentElement.clientWidth) act.parentElement.scrollLeft = act.getBoundingClientRect().left - act.parentElement.getBoundingClientRect().left - 16;
+})();
