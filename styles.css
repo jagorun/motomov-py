@@ -397,3 +397,23 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",mo
 .m-panel a{display:block;padding:.35rem .4rem;border-radius:.5rem;color:var(--text);text-decoration:none}
 .m-panel a.cur{background:var(--accent);color:#f7f4ea;font-weight:600}
 body:has(.m-fab:not([hidden])) footer.site{padding-bottom:4.5rem}
+
+/* ---- Справочник Python ---- */
+.sp-search{position:sticky;top:6.6rem;z-index:20;display:flex;align-items:center;gap:.6rem;margin:0 0 .9rem;padding:.4rem 0;background:var(--bg,#f3efe6)}
+.sp-search input{flex:1;font:inherit;font-size:16px;padding:.7rem .95rem;border-radius:999px;border:1px solid var(--line);background:#fffcf6;min-height:44px}
+.sp-search span{font-size:.85rem;color:var(--muted);white-space:nowrap}
+.sp-group{scroll-margin-top:10rem;margin:0 0 1.4rem}.sp-group h2{font-size:1.2rem;margin:.6rem 0 .1rem}.sp-hint{margin:0 0 .6rem;color:var(--muted);font-size:.9rem}
+.sp-item{border:1px solid var(--line);border-radius:.8rem;background:#fffcf6;margin:0 0 .45rem;scroll-margin-top:10rem}
+.sp-item>summary{list-style:none;cursor:pointer;padding:.7rem .9rem;display:flex;flex-direction:column;gap:.15rem;min-height:44px}
+.sp-item>summary::-webkit-details-marker{display:none}
+.sp-item .sp-name{background:none;border:0;padding:0;font-weight:700;font-size:1rem;color:var(--accent)}
+.sp-short{font-size:.9rem;color:var(--muted);line-height:1.4}
+.sp-item[open]>summary .sp-short{display:none}
+.sp-body{padding:0 .9rem .8rem;line-height:1.6;font-size:1rem}.sp-body p{margin:.5rem 0}
+.sp-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:.7rem 0 -.4rem}
+pre.sp-sig{background:#eef3ee;font-weight:600}pre.sp-out{background:#fbfaf6;border-style:dashed}
+.sp-note{background:#fff4dc;border-left:3px solid #c98a12;padding:.45rem .7rem;border-radius:0 .5rem .5rem 0}
+.sp-doc a{font-size:.9rem}
+@media (max-width:600px){.sp-search{top:6.1rem}}
+.sp-group~.x{}#m-toc.m-toc{background:#fffcf6;border:1px solid var(--line);border-radius:1rem;padding:.8rem 1rem;margin:0 0 1.1rem}
+.m-toc summary{cursor:pointer;font-weight:600}.m-toc ol{margin:.5rem 0 0;padding-left:1.2rem;line-height:1.7}.m-toc a{color:var(--text);text-decoration:none}

@@ -1,0 +1,1453 @@
+{
+ "python": "3.14",
+ "checked_with": "3.13.5",
+ "groups": [
+  {
+   "id": "builtins",
+   "title": "Встроенные функции",
+   "hint": "Работают сразу, без import."
+  },
+  {
+   "id": "types",
+   "title": "Типы и преобразования",
+   "hint": "Создают значения нужного типа или проверяют тип."
+  },
+  {
+   "id": "str",
+   "title": "Методы строк (str)",
+   "hint": "Строка неизменяема: метод возвращает новую строку."
+  },
+  {
+   "id": "list",
+   "title": "Методы списков (list)",
+   "hint": "Список изменяемый: большинство методов меняют его на месте и возвращают None."
+  },
+  {
+   "id": "tuple",
+   "title": "Методы кортежей (tuple)",
+   "hint": "Кортеж неизменяем, методов всего два."
+  },
+  {
+   "id": "dict",
+   "title": "Методы словарей (dict)",
+   "hint": "Пары «ключ: значение»."
+  },
+  {
+   "id": "set",
+   "title": "Методы множеств (set)",
+   "hint": "Набор уникальных значений без порядка."
+  },
+  {
+   "id": "file",
+   "title": "Работа с файлами",
+   "hint": "Объект файла, который возвращает open()."
+  },
+  {
+   "id": "math",
+   "title": "Модуль math",
+   "hint": "import math"
+  },
+  {
+   "id": "random",
+   "title": "Модуль random",
+   "hint": "import random"
+  },
+  {
+   "id": "datetime",
+   "title": "Модуль datetime",
+   "hint": "from datetime import date, datetime, timedelta"
+  },
+  {
+   "id": "pathlib",
+   "title": "Модули os и pathlib",
+   "hint": "Пути и папки."
+  },
+  {
+   "id": "json",
+   "title": "Модуль json",
+   "hint": "import json"
+  }
+ ],
+ "entries": [
+  {
+   "group": "builtins",
+   "name": "print",
+   "sig": "print(*objects, sep=' ', end='\\n', file=None, flush=False)",
+   "text": "Выводит значения на экран через пробел и переводит строку. sep задаёт разделитель, end — что поставить в конце.",
+   "code": "print(\"Привет\", \"мир\")\nprint(1, 2, 3, sep=\"-\")\nprint(\"без перевода строки\", end=\"!\\n\")",
+   "note": "print ничего не возвращает (None). Чтобы получить строку, используйте f-строку или str().",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#print",
+   "out": "Привет мир\n1-2-3\nбез перевода строки!"
+  },
+  {
+   "group": "builtins",
+   "name": "len",
+   "sig": "len(object, /)",
+   "text": "Возвращает длину: число символов строки, элементов списка, ключей словаря.",
+   "code": "print(len(\"кот\"))\nprint(len([10, 20, 30, 40]))\nprint(len({\"a\": 1, \"b\": 2}))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#len",
+   "out": "3\n4\n2"
+  },
+  {
+   "group": "builtins",
+   "name": "range",
+   "sig": "range(stop)\nrange(start, stop, step=1)",
+   "text": "Последовательность целых чисел от start до stop, не включая stop. Чаще всего нужна в цикле for.",
+   "code": "print(list(range(5)))\nprint(list(range(2, 10, 3)))\nprint(list(range(5, 0, -1)))",
+   "note": "stop не входит в результат: range(5) — это 0…4.",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#range",
+   "out": "[0, 1, 2, 3, 4]\n[2, 5, 8]\n[5, 4, 3, 2, 1]"
+  },
+  {
+   "group": "builtins",
+   "name": "enumerate",
+   "sig": "enumerate(iterable, start=0)",
+   "text": "Даёт пары (номер, элемент). Удобно, когда в цикле нужен и номер, и значение.",
+   "code": "for i, fruit in enumerate([\"яблоко\", \"груша\"], start=1):\n    print(i, fruit)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#enumerate",
+   "out": "1 яблоко\n2 груша"
+  },
+  {
+   "group": "builtins",
+   "name": "zip",
+   "sig": "zip(*iterables, strict=False)",
+   "text": "Склеивает несколько последовательностей попарно. Останавливается на самой короткой (с strict=True — ошибка при разной длине).",
+   "code": "names = [\"Аня\", \"Боря\"]\nages = [30, 25]\nprint(list(zip(names, ages)))\nprint(dict(zip(names, ages)))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#zip",
+   "out": "[('Аня', 30), ('Боря', 25)]\n{'Аня': 30, 'Боря': 25}"
+  },
+  {
+   "group": "builtins",
+   "name": "map",
+   "sig": "map(function, iterable, /, *iterables, strict=False)",
+   "text": "Применяет функцию к каждому элементу. Возвращает «ленивый» объект — оберните в list(), чтобы увидеть.",
+   "code": "print(list(map(int, [\"1\", \"2\", \"3\"])))\nprint(list(map(str.upper, [\"a\", \"b\"])))",
+   "note": "Часто понятнее списковое включение: [int(x) for x in items].",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#map",
+   "out": "[1, 2, 3]\n['A', 'B']"
+  },
+  {
+   "group": "builtins",
+   "name": "filter",
+   "sig": "filter(function, iterable, /)",
+   "text": "Оставляет элементы, для которых функция вернула истину. Если function=None, убирает «ложные» значения (0, '', None).",
+   "code": "print(list(filter(lambda x: x > 2, [1, 2, 3, 4])))\nprint(list(filter(None, [0, 1, \"\", \"a\", None])))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#filter",
+   "out": "[3, 4]\n[1, 'a']"
+  },
+  {
+   "group": "builtins",
+   "name": "sorted",
+   "sig": "sorted(iterable, /, *, key=None, reverse=False)",
+   "text": "Возвращает новый отсортированный список, исходный не меняется. key — функция, по которой сравнивать.",
+   "code": "words = [\"груша\", \"Яблоко\", \"банан\"]\nprint(sorted([3, 1, 2]))\nprint(sorted(words, key=len))\nprint(sorted([3, 1, 2], reverse=True))",
+   "note": "Не путать с list.sort(): тот меняет сам список и возвращает None.",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#sorted",
+   "out": "[1, 2, 3]\n['груша', 'банан', 'Яблоко']\n[3, 2, 1]"
+  },
+  {
+   "group": "builtins",
+   "name": "sum",
+   "sig": "sum(iterable, /, start=0)",
+   "text": "Складывает числа. start прибавляется к результату.",
+   "code": "print(sum([1, 2, 3]))\nprint(sum([0.5, 0.25], start=10))",
+   "note": "Строки так не склеить — для них ''.join(...).",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#sum",
+   "out": "6\n10.75"
+  },
+  {
+   "group": "builtins",
+   "name": "min / max",
+   "sig": "min(iterable, /, *, key=None)\nmin(iterable, /, *, default, key=None)\nmin(arg1, arg2, /, *args, key=None)",
+   "text": "Наименьшее (max — наибольшее) значение. default возвращается для пустой последовательности вместо ошибки.",
+   "code": "print(min(4, 2, 8))\nprint(max([\"кот\", \"слон\", \"ёж\"], key=len))\nprint(max([], default=0))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#min",
+   "out": "2\nслон\n0"
+  },
+  {
+   "group": "builtins",
+   "name": "abs",
+   "sig": "abs(number, /)",
+   "text": "Модуль числа: убирает минус.",
+   "code": "print(abs(-7))\nprint(abs(3.5))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#abs",
+   "out": "7\n3.5"
+  },
+  {
+   "group": "builtins",
+   "name": "round",
+   "sig": "round(number, ndigits=None)",
+   "text": "Округляет. Без ndigits — до целого (int), с ndigits — до стольких знаков после запятой.",
+   "code": "print(round(3.7))\nprint(round(3.14159, 2))\nprint(round(2.5), round(3.5))",
+   "note": "Половины округляются к чётному: round(2.5) == 2. Это «банковское» округление.",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#round",
+   "out": "4\n3.14\n2 4"
+  },
+  {
+   "group": "builtins",
+   "name": "divmod",
+   "sig": "divmod(a, b, /)",
+   "text": "Сразу целая часть и остаток от деления — как (a // b, a % b).",
+   "code": "print(divmod(17, 5))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#divmod",
+   "out": "(3, 2)"
+  },
+  {
+   "group": "builtins",
+   "name": "pow",
+   "sig": "pow(base, exp, mod=None)",
+   "text": "Возведение в степень, как base ** exp. С mod — остаток от деления результата.",
+   "code": "print(pow(2, 10))\nprint(pow(2, 10, 7))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#pow",
+   "out": "1024\n2"
+  },
+  {
+   "group": "builtins",
+   "name": "input",
+   "sig": "input()\ninput(prompt, /)",
+   "text": "Ждёт, пока пользователь введёт строку и нажмёт Enter. Всегда возвращает str.",
+   "code": "# age = input(\"Сколько лет? \")   # ввели 30\nage = \"30\"\nprint(int(age) + 1)",
+   "note": "Результат — строка: для арифметики сначала int() или float().",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#input",
+   "out": "31"
+  },
+  {
+   "group": "builtins",
+   "name": "type",
+   "sig": "type(object, /)",
+   "text": "Показывает тип значения.",
+   "code": "print(type(5))\nprint(type(\"5\"))\nprint(type([1]) is list)",
+   "note": "Для проверки типа лучше isinstance(): он учитывает наследование.",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#type",
+   "out": "<class 'int'>\n<class 'str'>\nTrue"
+  },
+  {
+   "group": "builtins",
+   "name": "isinstance",
+   "sig": "isinstance(object, classinfo, /)",
+   "text": "Проверяет, относится ли значение к типу (или к одному из типов в кортеже).",
+   "code": "print(isinstance(5, int))\nprint(isinstance(5.0, (int, float)))\nprint(isinstance(\"5\", int))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#isinstance",
+   "out": "True\nTrue\nFalse"
+  },
+  {
+   "group": "builtins",
+   "name": "any / all",
+   "sig": "any(iterable, /)\nall(iterable, /)",
+   "text": "any — есть ли хоть одно истинное значение; all — все ли истинны. all([]) == True.",
+   "code": "nums = [3, 0, 7]\nprint(any(n > 5 for n in nums))\nprint(all(n > 0 for n in nums))\nprint(all([]))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#any",
+   "out": "True\nFalse\nTrue"
+  },
+  {
+   "group": "builtins",
+   "name": "reversed",
+   "sig": "reversed(object, /)",
+   "text": "Перебирает последовательность с конца. Возвращает итератор, исходник не меняется.",
+   "code": "print(list(reversed([1, 2, 3])))\nprint(\"\".join(reversed(\"кот\")))",
+   "note": "Не путать с list.reverse(): тот переворачивает сам список.",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#reversed",
+   "out": "[3, 2, 1]\nток"
+  },
+  {
+   "group": "builtins",
+   "name": "open",
+   "sig": "open(file, mode='r', buffering=-1, encoding=None, errors=None, newline=None, closefd=True, opener=None)",
+   "text": "Открывает файл. mode: 'r' — читать, 'w' — записать заново, 'a' — дописать, 'b' — двоичный. Для текста всегда указывайте encoding='utf-8'.",
+   "code": "with open(\"заметка.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"первая строка\\n\")\nwith open(\"заметка.txt\", encoding=\"utf-8\") as f:\n    print(f.read())",
+   "note": "'w' стирает файл, если он был. Чтобы дописать — 'a'. with сам закроет файл.",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#open",
+   "out": "первая строка"
+  },
+  {
+   "group": "builtins",
+   "name": "id",
+   "sig": "id(object, /)",
+   "text": "Уникальный номер объекта, пока он существует. Помогает понять, один это объект или копия.",
+   "code": "a = [1]\nb = a\nc = [1]\nprint(id(a) == id(b), id(a) == id(c))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#id",
+   "out": "True False"
+  },
+  {
+   "group": "builtins",
+   "name": "dir",
+   "sig": "dir()\ndir(object, /)",
+   "text": "Список имён (методов и атрибутов) объекта. Удобно, чтобы узнать, что умеет значение.",
+   "code": "print([m for m in dir(\"\") if m.startswith(\"st\")])",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#dir",
+   "out": "['startswith', 'strip']"
+  },
+  {
+   "group": "builtins",
+   "name": "help",
+   "sig": "help()\nhelp(request)",
+   "text": "Показывает встроенную справку по функции или типу (в интерактивном режиме).",
+   "code": "# help(len)\nprint(len.__doc__.splitlines()[0])",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#help",
+   "out": "Return the number of items in a container."
+  },
+  {
+   "group": "builtins",
+   "name": "chr / ord",
+   "sig": "chr(codepoint, /)\nord(character, /)",
+   "text": "ord — код символа, chr — символ по коду (Unicode).",
+   "code": "print(ord(\"A\"), chr(65))\nprint(ord(\"я\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#ord",
+   "out": "65 A\n1103"
+  },
+  {
+   "group": "builtins",
+   "name": "hash",
+   "sig": "hash(object, /)",
+   "text": "Число-отпечаток значения; используется словарями и множествами. Есть только у неизменяемых объектов.",
+   "code": "print(hash(42))\ntry:\n    hash([1, 2])\nexcept TypeError as err:\n    print(err)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#hash",
+   "out": "42\nunhashable type: 'list'"
+  },
+  {
+   "group": "builtins",
+   "name": "iter / next",
+   "sig": "iter(iterable, /)\nnext(iterator, /)\nnext(iterator, default, /)",
+   "text": "iter делает итератор, next берёт из него следующий элемент. default — что вернуть, когда элементы кончились.",
+   "code": "it = iter([1, 2])\nprint(next(it), next(it), next(it, \"конец\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#next",
+   "out": "1 2 конец"
+  },
+  {
+   "group": "builtins",
+   "name": "getattr / hasattr / setattr",
+   "sig": "getattr(object, name, /)\ngetattr(object, name, default, /)\nhasattr(object, name, /)\nsetattr(object, name, value, /)",
+   "text": "Читают, проверяют и задают атрибут по имени-строке.",
+   "code": "class Box: pass\nb = Box()\nsetattr(b, \"size\", 3)\nprint(hasattr(b, \"size\"), getattr(b, \"color\", \"нет\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#getattr",
+   "out": "True нет"
+  },
+  {
+   "group": "builtins",
+   "name": "eval",
+   "sig": "eval(source, /, globals=None, locals=None)",
+   "text": "Вычисляет строку как выражение Python.",
+   "code": "print(eval(\"2 + 3 * 4\"))",
+   "note": "Никогда не передавайте в eval ввод пользователя — это дыра в безопасности. Для чисел — int()/float(), для данных — json.loads.",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#eval",
+   "out": "14"
+  },
+  {
+   "group": "types",
+   "name": "int",
+   "sig": "int(number=0, /)\nint(string, /, base=10)",
+   "text": "Целое число. Из строки — только если там цифры; из float — отбрасывает дробную часть.",
+   "code": "print(int(\"42\") + 1)\nprint(int(3.9))\nprint(int(\"ff\", 16))",
+   "note": "int(3.9) == 3 — это отбрасывание, не округление. Округление — round().",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#int",
+   "out": "43\n3\n255"
+  },
+  {
+   "group": "types",
+   "name": "float",
+   "sig": "float(number=0.0, /)",
+   "text": "Дробное число.",
+   "code": "print(float(\"3.5\"))\nprint(0.1 + 0.2)",
+   "note": "0.1 + 0.2 не равно точно 0.3 — так устроены дробные числа в компьютере. Сравнивайте через math.isclose.",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#float",
+   "out": "3.5\n0.30000000000000004"
+  },
+  {
+   "group": "types",
+   "name": "str",
+   "sig": "str(object='')",
+   "text": "Строковое представление значения.",
+   "code": "print(str(42) + \"!\")\nprint(str([1, 2]))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#func-str",
+   "out": "42!\n[1, 2]"
+  },
+  {
+   "group": "types",
+   "name": "bool",
+   "sig": "bool(object=False, /)",
+   "text": "Истинность значения. Ложны: 0, 0.0, '', [], {}, set(), None, False. Всё остальное истинно.",
+   "code": "print(bool(0), bool(\"\"), bool([]))\nprint(bool(\"0\"), bool([0]))",
+   "note": "Строка \"0\" и список [0] — истинны: они не пустые.",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#bool",
+   "out": "False False False\nTrue True"
+  },
+  {
+   "group": "types",
+   "name": "list",
+   "sig": "list(iterable=())",
+   "text": "Список — изменяемая последовательность.",
+   "code": "print(list(\"кот\"))\nprint(list(range(3)))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#func-list",
+   "out": "['к', 'о', 'т']\n[0, 1, 2]"
+  },
+  {
+   "group": "types",
+   "name": "tuple",
+   "sig": "tuple(iterable=())",
+   "text": "Кортеж — неизменяемая последовательность. Хорош как ключ словаря и для «пачки» значений.",
+   "code": "t = tuple([1, 2])\nprint(t)\nprint((5,))   # кортеж из одного элемента — с запятой",
+   "note": "(5) — это просто число 5, кортеж — (5,).",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#func-tuple",
+   "out": "(1, 2)\n(5,)"
+  },
+  {
+   "group": "types",
+   "name": "dict",
+   "sig": "dict(**kwargs)\ndict(mapping, **kwargs)\ndict(iterable, **kwargs)",
+   "text": "Словарь из пар или именованных аргументов.",
+   "code": "print(dict(a=1, b=2))\nprint(dict([(\"x\", 10), (\"y\", 20)]))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#func-dict",
+   "out": "{'a': 1, 'b': 2}\n{'x': 10, 'y': 20}"
+  },
+  {
+   "group": "types",
+   "name": "set",
+   "sig": "set(iterable=())",
+   "text": "Множество: убирает повторы.",
+   "code": "print(sorted(set([3, 1, 3, 2, 1])))\nprint(set())   # пустое множество",
+   "note": "{} — это пустой словарь, не множество. Пустое множество — только set().",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#func-set",
+   "out": "[1, 2, 3]\nset()"
+  },
+  {
+   "group": "types",
+   "name": "frozenset",
+   "sig": "frozenset(iterable=())",
+   "text": "Неизменяемое множество; может быть ключом словаря.",
+   "code": "fs = frozenset([1, 2])\nprint(2 in fs)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#func-frozenset",
+   "out": "True"
+  },
+  {
+   "group": "str",
+   "name": "str.upper",
+   "sig": "str.upper()",
+   "text": "Все буквы — заглавные.",
+   "code": "print(\"Привет\".upper())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.upper",
+   "out": "ПРИВЕТ"
+  },
+  {
+   "group": "str",
+   "name": "str.lower",
+   "sig": "str.lower()",
+   "text": "Все буквы — строчные. Удобно для сравнения без учёта регистра.",
+   "code": "print(\"ПрИвЕт\".lower())",
+   "note": "Для сравнения разных языков надёжнее casefold().",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.lower",
+   "out": "привет"
+  },
+  {
+   "group": "str",
+   "name": "str.casefold",
+   "sig": "str.casefold()",
+   "text": "Как lower, но агрессивнее; лучший способ сравнивать без учёта регистра.",
+   "code": "print(\"Straße\".casefold() == \"STRASSE\".casefold())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.casefold",
+   "out": "True"
+  },
+  {
+   "group": "str",
+   "name": "str.capitalize",
+   "sig": "str.capitalize()",
+   "text": "Первая буква заглавная, остальные строчные.",
+   "code": "print(\"пРИВЕТ мир\".capitalize())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.capitalize",
+   "out": "Привет мир"
+  },
+  {
+   "group": "str",
+   "name": "str.title",
+   "sig": "str.title()",
+   "text": "Каждое слово с заглавной.",
+   "code": "print(\"иван петров\".title())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.title",
+   "out": "Иван Петров"
+  },
+  {
+   "group": "str",
+   "name": "str.strip",
+   "sig": "str.strip(chars=None, /)",
+   "text": "Убирает пробелы (или символы из chars) с обоих краёв. lstrip — слева, rstrip — справа.",
+   "code": "print(\"[\" + \"  текст \\n\".strip() + \"]\")\nprint(\"--привет--\".strip(\"-\"))",
+   "note": "chars — набор символов, а не подстрока. Чтобы убрать конкретное окончание, используйте removesuffix().",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.strip",
+   "out": "[текст]\nпривет"
+  },
+  {
+   "group": "str",
+   "name": "str.removeprefix",
+   "sig": "str.removeprefix(prefix, /)",
+   "text": "Убирает приставку, если строка с неё начинается.",
+   "code": "print(\"report_2026.txt\".removeprefix(\"report_\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.removeprefix",
+   "out": "2026.txt"
+  },
+  {
+   "group": "str",
+   "name": "str.removesuffix",
+   "sig": "str.removesuffix(suffix, /)",
+   "text": "Убирает окончание, если строка им заканчивается.",
+   "code": "print(\"text.txt\".removesuffix(\".txt\"))\nprint(\"text.txt\".rstrip(\".txt\"))",
+   "note": "Сравните: rstrip(\".txt\") удаляет любые из символов . t x — получилось \"te\".",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.removesuffix",
+   "out": "text\nte"
+  },
+  {
+   "group": "str",
+   "name": "str.split",
+   "sig": "str.split(sep=None, maxsplit=-1)",
+   "text": "Режет строку на список. Без sep — по любым пробелам, лишние пробелы игнорируются.",
+   "code": "print(\"a  b c\".split())\nprint(\"2026-10-12\".split(\"-\"))\nprint(\"a,b,c\".split(\",\", maxsplit=1))",
+   "note": "Обратная операция — \",\".join(список).",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.split",
+   "out": "['a', 'b', 'c']\n['2026', '10', '12']\n['a', 'b,c']"
+  },
+  {
+   "group": "str",
+   "name": "str.rsplit",
+   "sig": "str.rsplit(sep=None, maxsplit=-1)",
+   "text": "Как split, но режет справа — важно вместе с maxsplit.",
+   "code": "print(\"архив.tar.gz\".rsplit(\".\", maxsplit=1))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.rsplit",
+   "out": "['архив.tar', 'gz']"
+  },
+  {
+   "group": "str",
+   "name": "str.splitlines",
+   "sig": "str.splitlines(keepends=False)",
+   "text": "Режет текст на строки по переводам строк.",
+   "code": "print(\"первая\\nвторая\\n\".splitlines())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.splitlines",
+   "out": "['первая', 'вторая']"
+  },
+  {
+   "group": "str",
+   "name": "str.join",
+   "sig": "str.join(iterable, /)",
+   "text": "Склеивает список строк, вставляя между ними саму строку.",
+   "code": "print(\", \".join([\"кот\", \"пёс\"]))\nprint(\"\".join([\"a\", \"b\", \"c\"]))",
+   "note": "Все элементы должны быть строками: \", \".join(map(str, [1, 2])).",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.join",
+   "out": "кот, пёс\nabc"
+  },
+  {
+   "group": "str",
+   "name": "str.replace",
+   "sig": "str.replace(old, new, /, count=-1)",
+   "text": "Заменяет подстроку. count — сколько замен максимум.",
+   "code": "print(\"2026.10.12\".replace(\".\", \"-\"))\nprint(\"ааа\".replace(\"а\", \"б\", 2))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.replace",
+   "out": "2026-10-12\nбба"
+  },
+  {
+   "group": "str",
+   "name": "str.find",
+   "sig": "str.find(sub[, start[, end]])",
+   "text": "Индекс первого вхождения или -1, если не найдено. rfind ищет с конца.",
+   "code": "print(\"молоко\".find(\"ок\"))\nprint(\"молоко\".find(\"я\"))",
+   "note": "Чтобы просто проверить наличие, используйте in: \"ок\" in \"молоко\".",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.find",
+   "out": "3\n-1"
+  },
+  {
+   "group": "str",
+   "name": "str.index",
+   "sig": "str.index(sub[, start[, end]])",
+   "text": "Как find, но если не нашёл — ошибка ValueError.",
+   "code": "print(\"молоко\".index(\"л\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.index",
+   "out": "2"
+  },
+  {
+   "group": "str",
+   "name": "str.count",
+   "sig": "str.count(sub[, start[, end]])",
+   "text": "Сколько раз подстрока встречается (без перекрытий).",
+   "code": "print(\"банан\".count(\"а\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.count",
+   "out": "2"
+  },
+  {
+   "group": "str",
+   "name": "str.startswith",
+   "sig": "str.startswith(prefix[, start[, end]])",
+   "text": "Начинается ли строка с prefix (можно кортеж вариантов). endswith — заканчивается ли.",
+   "code": "print(\"photo.jpg\".endswith((\".jpg\", \".png\")))\nprint(\"Привет\".startswith(\"При\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.startswith",
+   "out": "True\nTrue"
+  },
+  {
+   "group": "str",
+   "name": "str.isdigit",
+   "sig": "str.isdigit()",
+   "text": "Состоит ли строка только из цифр (и не пустая). Удобно перед int().",
+   "code": "print(\"123\".isdigit(), \"12.5\".isdigit(), \"-5\".isdigit())",
+   "note": "Минус и точка — не цифры: для таких чисел надёжнее try: float(s).",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.isdigit",
+   "out": "True False False"
+  },
+  {
+   "group": "str",
+   "name": "str.isalpha",
+   "sig": "str.isalpha()",
+   "text": "Только буквы, не пустая строка.",
+   "code": "print(\"кот\".isalpha(), \"кот1\".isalpha())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.isalpha",
+   "out": "True False"
+  },
+  {
+   "group": "str",
+   "name": "str.isspace",
+   "sig": "str.isspace()",
+   "text": "Только пробельные символы.",
+   "code": "print(\"  \\t\".isspace(), \"\".isspace())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.isspace",
+   "out": "True False"
+  },
+  {
+   "group": "str",
+   "name": "str.format",
+   "sig": "str.format(*args, **kwargs)",
+   "text": "Подставляет значения в {}. В новом коде обычно удобнее f-строки.",
+   "code": "print(\"{} + {} = {}\".format(2, 3, 5))\nx = 3.14159\nprint(f\"{x:.2f}\")",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.format",
+   "out": "2 + 3 = 5\n3.14"
+  },
+  {
+   "group": "str",
+   "name": "str.center",
+   "sig": "str.center(width, fillchar=' ', /)",
+   "text": "Выравнивает по центру в поле ширины width. ljust/rjust — по левому/правому краю.",
+   "code": "print(\"[\" + \"кот\".center(9, \"*\") + \"]\")\nprint(\"7\".rjust(3, \"0\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.center",
+   "out": "[***кот***]\n007"
+  },
+  {
+   "group": "str",
+   "name": "str.zfill",
+   "sig": "str.zfill(width, /)",
+   "text": "Дополняет число нулями слева до ширины.",
+   "code": "print(\"42\".zfill(5))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.zfill",
+   "out": "00042"
+  },
+  {
+   "group": "str",
+   "name": "str.partition",
+   "sig": "str.partition(sep, /)",
+   "text": "Делит на три части: до разделителя, сам разделитель, после.",
+   "code": "print(\"ключ=значение=ещё\".partition(\"=\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.partition",
+   "out": "('ключ', '=', 'значение=ещё')"
+  },
+  {
+   "group": "str",
+   "name": "str.encode",
+   "sig": "str.encode(encoding='utf-8', errors='strict')",
+   "text": "Превращает строку в байты.",
+   "code": "print(\"Я\".encode(\"utf-8\"))",
+   "note": "Обратно — bytes.decode(\"utf-8\").",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.encode",
+   "out": "b'\\xd0\\xaf'"
+  },
+  {
+   "group": "list",
+   "name": "list.append",
+   "sig": "list.append(x)",
+   "text": "Добавляет один элемент в конец.",
+   "code": "a = [1, 2]\na.append(3)\nprint(a)",
+   "note": "append([4, 5]) добавит один элемент-список. Чтобы добавить много — extend.",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.append",
+   "out": "[1, 2, 3]"
+  },
+  {
+   "group": "list",
+   "name": "list.extend",
+   "sig": "list.extend(iterable)",
+   "text": "Добавляет все элементы из другой последовательности.",
+   "code": "a = [1, 2]\na.extend([3, 4])\nprint(a)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.extend",
+   "out": "[1, 2, 3, 4]"
+  },
+  {
+   "group": "list",
+   "name": "list.insert",
+   "sig": "list.insert(i, x)",
+   "text": "Вставляет элемент перед позицией i.",
+   "code": "a = [\"a\", \"c\"]\na.insert(1, \"b\")\nprint(a)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.insert",
+   "out": "['a', 'b', 'c']"
+  },
+  {
+   "group": "list",
+   "name": "list.remove",
+   "sig": "list.remove(x)",
+   "text": "Удаляет первый элемент, равный x. Если нет — ValueError.",
+   "code": "a = [1, 2, 1]\na.remove(1)\nprint(a)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.remove",
+   "out": "[2, 1]"
+  },
+  {
+   "group": "list",
+   "name": "list.pop",
+   "sig": "list.pop(i=-1)",
+   "text": "Удаляет и возвращает элемент (по умолчанию последний).",
+   "code": "a = [10, 20, 30]\nprint(a.pop())\nprint(a.pop(0), a)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.pop",
+   "out": "30\n10 [20]"
+  },
+  {
+   "group": "list",
+   "name": "list.clear",
+   "sig": "list.clear()",
+   "text": "Удаляет все элементы.",
+   "code": "a = [1, 2]\na.clear()\nprint(a)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.clear",
+   "out": "[]"
+  },
+  {
+   "group": "list",
+   "name": "list.index",
+   "sig": "list.index(x[, start[, end]])",
+   "text": "Позиция первого элемента, равного x. Если нет — ValueError.",
+   "code": "print([\"a\", \"b\", \"c\"].index(\"b\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.index",
+   "out": "1"
+  },
+  {
+   "group": "list",
+   "name": "list.count",
+   "sig": "list.count(x)",
+   "text": "Сколько раз x встречается.",
+   "code": "print([1, 2, 1, 1].count(1))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.index",
+   "out": "3"
+  },
+  {
+   "group": "list",
+   "name": "list.sort",
+   "sig": "list.sort(*, key=None, reverse=False)",
+   "text": "Сортирует сам список на месте и возвращает None.",
+   "code": "a = [3, 1, 2]\na.sort()\nprint(a)\nprint(a.sort())",
+   "note": "Частая ошибка: a = a.sort() превращает a в None. Новый список даёт sorted(a).",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.sort",
+   "out": "[1, 2, 3]\nNone"
+  },
+  {
+   "group": "list",
+   "name": "list.reverse",
+   "sig": "list.reverse()",
+   "text": "Переворачивает сам список на месте.",
+   "code": "a = [1, 2, 3]\na.reverse()\nprint(a)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.reverse",
+   "out": "[3, 2, 1]"
+  },
+  {
+   "group": "list",
+   "name": "list.copy",
+   "sig": "list.copy()",
+   "text": "Поверхностная копия списка (то же, что a[:]).",
+   "code": "a = [1, 2]\nb = a.copy()\nb.append(3)\nprint(a, b)",
+   "note": "b = a — это не копия, а второе имя того же списка.",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#list.copy",
+   "out": "[1, 2] [1, 2, 3]"
+  },
+  {
+   "group": "list",
+   "name": "Срезы a[start:stop:step]",
+   "sig": "seq[i:j:k]",
+   "text": "Берёт часть последовательности; работает для списков, строк и кортежей. stop не входит.",
+   "code": "a = [0, 1, 2, 3, 4, 5]\nprint(a[1:4], a[:2], a[-2:])\nprint(a[::2], a[::-1])",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#common-sequence-operations",
+   "out": "[1, 2, 3] [0, 1] [4, 5]\n[0, 2, 4] [5, 4, 3, 2, 1, 0]"
+  },
+  {
+   "group": "tuple",
+   "name": "tuple.count",
+   "sig": "tuple.count(x)",
+   "text": "Сколько раз x встречается в кортеже.",
+   "code": "print((1, 2, 2).count(2))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#common-sequence-operations",
+   "out": "2"
+  },
+  {
+   "group": "tuple",
+   "name": "tuple.index",
+   "sig": "tuple.index(x[, start[, end]])",
+   "text": "Позиция первого x.",
+   "code": "print((\"a\", \"b\").index(\"b\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#common-sequence-operations",
+   "out": "1"
+  },
+  {
+   "group": "tuple",
+   "name": "Распаковка",
+   "sig": "a, b = (1, 2)",
+   "text": "Раскладывает кортеж (или список) по переменным; * собирает «остаток».",
+   "code": "x, y = (3, 4)\nfirst, *rest = [1, 2, 3, 4]\nprint(x, y, first, rest)\na, b = 1, 2\na, b = b, a\nprint(a, b)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/tutorial/datastructures.html#tuples-and-sequences",
+   "out": "3 4 1 [2, 3, 4]\n2 1"
+  },
+  {
+   "group": "dict",
+   "name": "dict.get",
+   "sig": "dict.get(key, default=None, /)",
+   "text": "Значение по ключу; если ключа нет — default вместо ошибки.",
+   "code": "d = {\"a\": 1}\nprint(d.get(\"a\"), d.get(\"b\"), d.get(\"b\", 0))",
+   "note": "d[\"b\"] при отсутствии ключа вызывает KeyError, а get — нет.",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.get",
+   "out": "1 None 0"
+  },
+  {
+   "group": "dict",
+   "name": "dict.keys",
+   "sig": "dict.keys()",
+   "text": "Все ключи (живое «представление» словаря).",
+   "code": "d = {\"a\": 1, \"b\": 2}\nprint(list(d.keys()))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.keys",
+   "out": "['a', 'b']"
+  },
+  {
+   "group": "dict",
+   "name": "dict.values",
+   "sig": "dict.values()",
+   "text": "Все значения.",
+   "code": "print(list({\"a\": 1, \"b\": 2}.values()))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.values",
+   "out": "[1, 2]"
+  },
+  {
+   "group": "dict",
+   "name": "dict.items",
+   "sig": "dict.items()",
+   "text": "Пары (ключ, значение) — удобно в цикле.",
+   "code": "for k, v in {\"a\": 1, \"b\": 2}.items():\n    print(k, v)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.items",
+   "out": "a 1\nb 2"
+  },
+  {
+   "group": "dict",
+   "name": "dict.update",
+   "sig": "dict.update([other], **kwargs)",
+   "text": "Добавляет/перезаписывает пары из другого словаря.",
+   "code": "d = {\"a\": 1}\nd.update({\"a\": 10, \"b\": 2})\nprint(d)\nprint({\"x\": 1} | {\"y\": 2})",
+   "note": "Оператор | (Python 3.9+) делает новый объединённый словарь.",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.update",
+   "out": "{'a': 10, 'b': 2}\n{'x': 1, 'y': 2}"
+  },
+  {
+   "group": "dict",
+   "name": "dict.pop",
+   "sig": "dict.pop(key, /)\ndict.pop(key, default, /)",
+   "text": "Удаляет ключ и возвращает значение. Без default и без ключа — KeyError.",
+   "code": "d = {\"a\": 1, \"b\": 2}\nprint(d.pop(\"a\"), d)\nprint(d.pop(\"z\", \"нет\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.pop",
+   "out": "1 {'b': 2}\nнет"
+  },
+  {
+   "group": "dict",
+   "name": "dict.popitem",
+   "sig": "dict.popitem()",
+   "text": "Удаляет и возвращает последнюю добавленную пару.",
+   "code": "d = {\"a\": 1, \"b\": 2}\nprint(d.popitem(), d)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.popitem",
+   "out": "('b', 2) {'a': 1}"
+  },
+  {
+   "group": "dict",
+   "name": "dict.setdefault",
+   "sig": "dict.setdefault(key, default=None, /)",
+   "text": "Если ключа нет — кладёт default и возвращает его; если есть — возвращает текущее значение.",
+   "code": "groups = {}\ngroups.setdefault(\"фрукты\", []).append(\"яблоко\")\nprint(groups)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.setdefault",
+   "out": "{'фрукты': ['яблоко']}"
+  },
+  {
+   "group": "dict",
+   "name": "dict.fromkeys",
+   "sig": "dict.fromkeys(iterable, value=None, /)",
+   "text": "Новый словарь с заданными ключами и одним значением.",
+   "code": "print(dict.fromkeys([\"a\", \"b\"], 0))",
+   "note": "Не передавайте изменяемое значение ([]): оно будет одно на все ключи.",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.fromkeys",
+   "out": "{'a': 0, 'b': 0}"
+  },
+  {
+   "group": "dict",
+   "name": "dict.clear",
+   "sig": "dict.clear()",
+   "text": "Удаляет все пары.",
+   "code": "d = {\"a\": 1}\nd.clear()\nprint(d)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.clear",
+   "out": "{}"
+  },
+  {
+   "group": "dict",
+   "name": "dict.copy",
+   "sig": "dict.copy()",
+   "text": "Поверхностная копия.",
+   "code": "d = {\"a\": 1}\nc = d.copy()\nc[\"a\"] = 2\nprint(d, c)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#dict.copy",
+   "out": "{'a': 1} {'a': 2}"
+  },
+  {
+   "group": "dict",
+   "name": "in (проверка ключа)",
+   "sig": "key in d",
+   "text": "Проверяет наличие ключа (не значения!).",
+   "code": "d = {\"a\": 1}\nprint(\"a\" in d, 1 in d)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#mapping-types-dict",
+   "out": "True False"
+  },
+  {
+   "group": "set",
+   "name": "set.add",
+   "sig": "set.add(elem, /)",
+   "text": "Добавляет элемент (если уже есть — ничего не меняется).",
+   "code": "s = {1, 2}\ns.add(2); s.add(3)\nprint(sorted(s))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#set.add",
+   "out": "[1, 2, 3]"
+  },
+  {
+   "group": "set",
+   "name": "set.remove",
+   "sig": "set.remove(elem, /)",
+   "text": "Удаляет элемент; если его нет — KeyError.",
+   "code": "s = {1, 2}\ns.remove(1)\nprint(s)",
+   "note": "discard делает то же, но без ошибки.",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#set.remove",
+   "out": "{2}"
+  },
+  {
+   "group": "set",
+   "name": "set.discard",
+   "sig": "set.discard(elem, /)",
+   "text": "Удаляет элемент, если он есть; ошибок не бывает.",
+   "code": "s = {1, 2}\ns.discard(5)\nprint(s)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#set.discard",
+   "out": "{1, 2}"
+  },
+  {
+   "group": "set",
+   "name": "set.pop",
+   "sig": "set.pop()",
+   "text": "Удаляет и возвращает какой-то элемент (какой — не гарантируется).",
+   "code": "s = {7}\nprint(s.pop(), s)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#set.pop",
+   "out": "7 set()"
+  },
+  {
+   "group": "set",
+   "name": "set.union",
+   "sig": "set.union(*others)",
+   "text": "Объединение: все элементы из обоих. То же — оператор |.",
+   "code": "a, b = {1, 2}, {2, 3}\nprint(sorted(a.union(b)), sorted(a | b))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#frozenset.union",
+   "out": "[1, 2, 3] [1, 2, 3]"
+  },
+  {
+   "group": "set",
+   "name": "set.intersection",
+   "sig": "set.intersection(*others)",
+   "text": "Пересечение: только общие. Оператор &.",
+   "code": "print({1, 2, 3} & {2, 3, 4})",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#frozenset.intersection",
+   "out": "{2, 3}"
+  },
+  {
+   "group": "set",
+   "name": "set.difference",
+   "sig": "set.difference(*others)",
+   "text": "Разность: есть в первом, нет во втором. Оператор -.",
+   "code": "print({1, 2, 3} - {2})",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#frozenset.difference",
+   "out": "{1, 3}"
+  },
+  {
+   "group": "set",
+   "name": "set.symmetric_difference",
+   "sig": "set.symmetric_difference(other, /)",
+   "text": "Есть ровно в одном из двух. Оператор ^.",
+   "code": "print(sorted({1, 2} ^ {2, 3}))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#frozenset.symmetric_difference",
+   "out": "[1, 3]"
+  },
+  {
+   "group": "set",
+   "name": "set.issubset",
+   "sig": "set.issubset(other, /)",
+   "text": "Все ли элементы входят в other (оператор <=). issuperset — наоборот.",
+   "code": "print({1, 2}.issubset({1, 2, 3}))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#frozenset.issubset",
+   "out": "True"
+  },
+  {
+   "group": "set",
+   "name": "set.update",
+   "sig": "set.update(*others)",
+   "text": "Добавляет элементы из других наборов на месте.",
+   "code": "s = {1}\ns.update([2, 3], {4})\nprint(sorted(s))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#set.update",
+   "out": "[1, 2, 3, 4]"
+  },
+  {
+   "group": "file",
+   "name": "file.read",
+   "sig": "f.read(size=-1)",
+   "text": "Читает весь файл (или size символов) в одну строку.",
+   "code": "with open(\"t.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.write(\"раз\\nдва\\n\")\nwith open(\"t.txt\", encoding=\"utf-8\") as f:\n    print(repr(f.read()))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/io.html#io.TextIOBase.read",
+   "out": "'раз\\nдва\\n'"
+  },
+  {
+   "group": "file",
+   "name": "file.readline",
+   "sig": "f.readline(size=-1)",
+   "text": "Читает одну строку вместе с \\n. В конце файла — пустая строка.",
+   "code": "with open(\"t.txt\", encoding=\"utf-8\") as f:\n    print(repr(f.readline()))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/io.html#io.TextIOBase.readline",
+   "out": "'раз\\n'"
+  },
+  {
+   "group": "file",
+   "name": "file.readlines",
+   "sig": "f.readlines(hint=-1)",
+   "text": "Список всех строк файла.",
+   "code": "with open(\"t.txt\", encoding=\"utf-8\") as f:\n    print(f.readlines())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/io.html#io.IOBase.readlines",
+   "out": "['раз\\n', 'два\\n']"
+  },
+  {
+   "group": "file",
+   "name": "for line in f",
+   "sig": "for line in f: …",
+   "text": "Самый удобный способ читать файл построчно, не загружая его целиком.",
+   "code": "with open(\"t.txt\", encoding=\"utf-8\") as f:\n    for line in f:\n        print(line.strip())",
+   "note": "В строке остаётся \\n — уберите strip() или rstrip(\"\\n\").",
+   "url": "https://docs.python.org/ru/3.14/library/io.html#io.IOBase",
+   "out": "раз\nдва"
+  },
+  {
+   "group": "file",
+   "name": "file.write",
+   "sig": "f.write(s)",
+   "text": "Пишет строку в файл и возвращает число записанных символов. Перевод строки сам не добавляет.",
+   "code": "with open(\"t2.txt\", \"w\", encoding=\"utf-8\") as f:\n    n = f.write(\"привет\\n\")\nprint(n)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/io.html#io.TextIOBase.write",
+   "out": "7"
+  },
+  {
+   "group": "file",
+   "name": "file.writelines",
+   "sig": "f.writelines(lines)",
+   "text": "Пишет список строк подряд; \\n не добавляет.",
+   "code": "with open(\"t2.txt\", \"w\", encoding=\"utf-8\") as f:\n    f.writelines([\"a\\n\", \"b\\n\"])\nprint(open(\"t2.txt\", encoding=\"utf-8\").read().split())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/io.html#io.IOBase.writelines",
+   "out": "['a', 'b']"
+  },
+  {
+   "group": "file",
+   "name": "with",
+   "sig": "with open(...) as f: …",
+   "text": "Гарантирует, что файл закроется, даже если внутри произошла ошибка.",
+   "code": "with open(\"t.txt\", encoding=\"utf-8\") as f:\n    pass\nprint(f.closed)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/reference/compound_stmts.html#the-with-statement",
+   "out": "True"
+  },
+  {
+   "group": "math",
+   "name": "math.sqrt",
+   "sig": "math.sqrt(x)",
+   "text": "Квадратный корень (float).",
+   "code": "import math\nprint(math.sqrt(16))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.sqrt",
+   "out": "4.0"
+  },
+  {
+   "group": "math",
+   "name": "math.floor",
+   "sig": "math.floor(x)",
+   "text": "Округление вниз до целого.",
+   "code": "import math\nprint(math.floor(3.7), math.floor(-3.2))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.floor",
+   "out": "3 -4"
+  },
+  {
+   "group": "math",
+   "name": "math.ceil",
+   "sig": "math.ceil(x)",
+   "text": "Округление вверх до целого.",
+   "code": "import math\nprint(math.ceil(3.2), math.ceil(-3.7))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.ceil",
+   "out": "4 -3"
+  },
+  {
+   "group": "math",
+   "name": "math.pi",
+   "sig": "math.pi",
+   "text": "Число π.",
+   "code": "import math\nprint(round(math.pi, 5))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.pi",
+   "out": "3.14159"
+  },
+  {
+   "group": "math",
+   "name": "math.isclose",
+   "sig": "math.isclose(a, b, *, rel_tol=1e-09, abs_tol=0.0)",
+   "text": "Приблизительное равенство дробных чисел.",
+   "code": "import math\nprint(0.1 + 0.2 == 0.3, math.isclose(0.1 + 0.2, 0.3))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.isclose",
+   "out": "False True"
+  },
+  {
+   "group": "math",
+   "name": "math.prod",
+   "sig": "math.prod(iterable, *, start=1)",
+   "text": "Произведение всех элементов.",
+   "code": "import math\nprint(math.prod([2, 3, 4]))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.prod",
+   "out": "24"
+  },
+  {
+   "group": "math",
+   "name": "math.gcd",
+   "sig": "math.gcd(*integers)",
+   "text": "Наибольший общий делитель.",
+   "code": "import math\nprint(math.gcd(12, 18))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.gcd",
+   "out": "6"
+  },
+  {
+   "group": "math",
+   "name": "math.log",
+   "sig": "math.log(x[, base])",
+   "text": "Логарифм (по умолчанию натуральный).",
+   "code": "import math\nprint(math.log(100, 10), math.log2(8))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.log",
+   "out": "2.0 3.0"
+  },
+  {
+   "group": "random",
+   "name": "random.seed",
+   "sig": "random.seed(a=None, version=2)",
+   "text": "Фиксирует «зерно», чтобы случайные числа повторялись — удобно для тестов.",
+   "code": "import random\nrandom.seed(1); a = random.random()\nrandom.seed(1); b = random.random()\nprint(a == b)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/random.html#random.seed",
+   "out": "True"
+  },
+  {
+   "group": "random",
+   "name": "random.random",
+   "sig": "random.random()",
+   "text": "Случайное дробное число от 0.0 (включительно) до 1.0 (не включая).",
+   "code": "import random\nx = random.random()\nprint(0 <= x < 1)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/random.html#random.random",
+   "out": "True"
+  },
+  {
+   "group": "random",
+   "name": "random.randint",
+   "sig": "random.randint(a, b)",
+   "text": "Случайное целое от a до b, оба конца включены.",
+   "code": "import random\nn = random.randint(1, 6)\nprint(1 <= n <= 6)",
+   "note": "В отличие от range, b здесь входит.",
+   "url": "https://docs.python.org/ru/3.14/library/random.html#random.randint",
+   "out": "True"
+  },
+  {
+   "group": "random",
+   "name": "random.choice",
+   "sig": "random.choice(seq)",
+   "text": "Случайный элемент последовательности.",
+   "code": "import random\nprint(random.choice([\"орёл\", \"решка\"]) in (\"орёл\", \"решка\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/random.html#random.choice",
+   "out": "True"
+  },
+  {
+   "group": "random",
+   "name": "random.sample",
+   "sig": "random.sample(population, k, *, counts=None)",
+   "text": "k разных случайных элементов (без повторов), новый список.",
+   "code": "import random\nprint(len(random.sample(range(100), 3)))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/random.html#random.sample",
+   "out": "3"
+  },
+  {
+   "group": "random",
+   "name": "random.shuffle",
+   "sig": "random.shuffle(x)",
+   "text": "Перемешивает список на месте, возвращает None.",
+   "code": "import random\na = [1, 2, 3]\nrandom.shuffle(a)\nprint(sorted(a))",
+   "note": "Для шифров и паролей — модуль secrets, а не random.",
+   "url": "https://docs.python.org/ru/3.14/library/random.html#random.shuffle",
+   "out": "[1, 2, 3]"
+  },
+  {
+   "group": "datetime",
+   "name": "date",
+   "sig": "datetime.date(year, month, day)",
+   "text": "Дата без времени. date.today() — сегодня.",
+   "code": "from datetime import date\nd = date(2026, 10, 12)\nprint(d, d.year, d.weekday())",
+   "note": "weekday(): понедельник = 0.",
+   "url": "https://docs.python.org/ru/3.14/library/datetime.html#datetime.date",
+   "out": "2026-10-12 2026 0"
+  },
+  {
+   "group": "datetime",
+   "name": "datetime",
+   "sig": "datetime.datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)",
+   "text": "Дата и время. datetime.now() — сейчас.",
+   "code": "from datetime import datetime\nt = datetime(2026, 10, 12, 20, 30)\nprint(t)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/datetime.html#datetime.datetime",
+   "out": "2026-10-12 20:30:00"
+  },
+  {
+   "group": "datetime",
+   "name": "timedelta",
+   "sig": "datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)",
+   "text": "Промежуток времени; можно прибавлять к датам и получать как разность дат.",
+   "code": "from datetime import date, timedelta\nd = date(2026, 10, 12)\nprint(d + timedelta(days=30))\nprint(date(2026, 12, 31) - d)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/datetime.html#datetime.timedelta",
+   "out": "2026-11-11\n80 days, 0:00:00"
+  },
+  {
+   "group": "datetime",
+   "name": "strftime",
+   "sig": "datetime.strftime(format)",
+   "text": "Дата → строка по шаблону: %d день, %m месяц, %Y год, %H:%M часы и минуты.",
+   "code": "from datetime import datetime\nt = datetime(2026, 10, 12, 20, 30)\nprint(t.strftime(\"%d.%m.%Y %H:%M\"))",
+   "note": "Обратное — strptime.",
+   "url": "https://docs.python.org/ru/3.14/library/datetime.html#datetime.datetime.strftime",
+   "out": "12.10.2026 20:30"
+  },
+  {
+   "group": "datetime",
+   "name": "strptime",
+   "sig": "datetime.strptime(date_string, format)",
+   "text": "Строка → datetime по шаблону.",
+   "code": "from datetime import datetime\nt = datetime.strptime(\"12.10.2026\", \"%d.%m.%Y\")\nprint(t.date())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/datetime.html#datetime.datetime.strptime",
+   "out": "2026-10-12"
+  },
+  {
+   "group": "datetime",
+   "name": "isoformat / fromisoformat",
+   "sig": "date.isoformat()\ndate.fromisoformat(date_string)",
+   "text": "Стандартный вид ГГГГ-ММ-ДД, удобный для JSON и имён файлов.",
+   "code": "from datetime import date\nd = date.fromisoformat(\"2026-10-12\")\nprint(d.isoformat(), d.month)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/datetime.html#datetime.date.fromisoformat",
+   "out": "2026-10-12 10"
+  },
+  {
+   "group": "pathlib",
+   "name": "Path",
+   "sig": "pathlib.Path(*pathsegments)",
+   "text": "Путь к файлу как объект. Оператор / склеивает части пути.",
+   "code": "from pathlib import Path\np = Path(\"data\") / \"report.txt\"\nprint(p.name, p.stem, p.suffix, p.parent)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/pathlib.html#pathlib.Path",
+   "out": "report.txt report .txt data"
+  },
+  {
+   "group": "pathlib",
+   "name": "Path.exists",
+   "sig": "Path.exists(*, follow_symlinks=True)",
+   "text": "Существует ли файл или папка. is_file()/is_dir() уточняют, что это.",
+   "code": "from pathlib import Path\nprint(Path(\"t.txt\").exists(), Path(\"t.txt\").is_file())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/pathlib.html#pathlib.Path.exists",
+   "out": "True True"
+  },
+  {
+   "group": "pathlib",
+   "name": "Path.read_text / write_text",
+   "sig": "Path.read_text(encoding=None, errors=None, newline=None)\nPath.write_text(data, encoding=None, errors=None, newline=None)",
+   "text": "Прочитать или записать файл одной строкой кода.",
+   "code": "from pathlib import Path\np = Path(\"t3.txt\")\np.write_text(\"привет\", encoding=\"utf-8\")\nprint(p.read_text(encoding=\"utf-8\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/pathlib.html#pathlib.Path.read_text",
+   "out": "привет"
+  },
+  {
+   "group": "pathlib",
+   "name": "Path.glob",
+   "sig": "Path.glob(pattern, *, case_sensitive=None, recurse_symlinks=False)",
+   "text": "Ищет файлы по шаблону: *.txt — в папке, **/*.txt — во всех подпапках.",
+   "code": "from pathlib import Path\nprint(sorted(p.name for p in Path(\".\").glob(\"t*.txt\")))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/pathlib.html#pathlib.Path.glob",
+   "out": "['t.txt', 't2.txt', 't3.txt']"
+  },
+  {
+   "group": "pathlib",
+   "name": "Path.mkdir",
+   "sig": "Path.mkdir(mode=0o777, parents=False, exist_ok=False)",
+   "text": "Создаёт папку. parents=True — с промежуточными, exist_ok=True — без ошибки, если уже есть.",
+   "code": "from pathlib import Path\nPath(\"out/2026\").mkdir(parents=True, exist_ok=True)\nprint(Path(\"out/2026\").is_dir())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/pathlib.html#pathlib.Path.mkdir",
+   "out": "True"
+  },
+  {
+   "group": "pathlib",
+   "name": "os.listdir",
+   "sig": "os.listdir(path='.')",
+   "text": "Список имён в папке (без пути).",
+   "code": "import os\nos.makedirs(\"box\", exist_ok=True)\nopen(\"box/a.txt\", \"w\").close()\nprint(os.listdir(\"box\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/os.html#os.listdir",
+   "out": "['a.txt']"
+  },
+  {
+   "group": "pathlib",
+   "name": "os.getcwd",
+   "sig": "os.getcwd()",
+   "text": "Текущая рабочая папка — от неё считаются относительные пути.",
+   "code": "import os\nprint(os.path.isabs(os.getcwd()))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/os.html#os.getcwd",
+   "out": "True"
+  },
+  {
+   "group": "pathlib",
+   "name": "os.environ",
+   "sig": "os.environ",
+   "text": "Переменные окружения как словарь. Так читают ключи API, не вписывая их в код.",
+   "code": "import os\nkey = os.environ.get(\"MY_API_KEY\", \"не задан\")\nprint(key)",
+   "note": "Используйте .get(), чтобы не получить KeyError.",
+   "url": "https://docs.python.org/ru/3.14/library/os.html#os.environ",
+   "out": "не задан"
+  },
+  {
+   "group": "pathlib",
+   "name": "os.path.join",
+   "sig": "os.path.join(path, *paths)",
+   "text": "Склеивает части пути правильным разделителем (старый способ; новый — Path и /).",
+   "code": "import os\nprint(os.path.join(\"data\", \"report.txt\"))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/os.path.html#os.path.join",
+   "out": "data/report.txt"
+  },
+  {
+   "group": "json",
+   "name": "json.dumps",
+   "sig": "json.dumps(obj, *, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, default=None, sort_keys=False, **kw)",
+   "text": "Python-объект → JSON-строка. Для русского текста ставьте ensure_ascii=False, для читаемости indent=2.",
+   "code": "import json\nd = {\"имя\": \"Аня\", \"оценки\": [5, 4]}\nprint(json.dumps(d))\nprint(json.dumps(d, ensure_ascii=False))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/json.html#json.dumps",
+   "out": "{\"\\u0438\\u043c\\u044f\": \"\\u0410\\u043d\\u044f\", \"\\u043e\\u0446\\u0435\\u043d\\u043a\\u0438\": [5, 4]}\n{\"имя\": \"Аня\", \"оценки\": [5, 4]}"
+  },
+  {
+   "group": "json",
+   "name": "json.loads",
+   "sig": "json.loads(s, *, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, **kw)",
+   "text": "JSON-строка → Python (dict, list, str, int, float, bool, None).",
+   "code": "import json\nd = json.loads('{\"ok\": true, \"n\": null}')\nprint(d)",
+   "note": "В JSON true/false/null, в Python True/False/None.",
+   "url": "https://docs.python.org/ru/3.14/library/json.html#json.loads",
+   "out": "{'ok': True, 'n': None}"
+  },
+  {
+   "group": "json",
+   "name": "json.dump / json.load",
+   "sig": "json.dump(obj, fp, …)\njson.load(fp, …)",
+   "text": "То же, но сразу в файл / из файла.",
+   "code": "import json\nwith open(\"d.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump({\"a\": 1}, f)\nwith open(\"d.json\", encoding=\"utf-8\") as f:\n    print(json.load(f))",
+   "note": "Без s — работа с файлом; с s (dumps/loads) — со строкой.",
+   "url": "https://docs.python.org/ru/3.14/library/json.html#json.dump",
+   "out": "{'a': 1}"
+  }
+ ]
+}

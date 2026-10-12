@@ -938,7 +938,7 @@ async function loadPythonDeep() {
   const BI = new Set("print len range int str float bool list dict set tuple open isinstance enumerate zip sorted min max sum any all type super self Exception ValueError KeyError TypeError".split(" "));
   const esc = (t) => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const re = /(#[^\n]*)|([rbfu]{0,2}(?:"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'))|(\b\d[\d_]*(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_]*)(\s*\()?/g;
-  document.querySelectorAll("pre > code").forEach((el) => {
+  const run = (root) => (root || document).querySelectorAll("pre > code").forEach((el) => {
     if (el.dataset.hl || el.children.length) return;
     const src = el.textContent, cls = el.className || "";
     if (/lang-(?!py|python)\w/.test(cls)) return;
@@ -956,4 +956,13 @@ async function loadPythonDeep() {
     }
     el.innerHTML = out + esc(src.slice(last)); el.dataset.hl = "1";
   });
+  window.motoHighlight = run; run();
+})();
+
+// «Справочник» в меню «Ещё» для страниц, где его нет в статичном HTML
+(function () {
+  const list = document.querySelector(".site-header .nav-more-list");
+  if (!list || list.querySelector('a[href="spravochnik.html"]')) return;
+  const a = document.createElement("a"); a.href = "spravochnik.html"; a.textContent = "Справочник Python";
+  list.prepend(a);
 })();
