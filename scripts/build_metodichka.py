@@ -106,13 +106,17 @@ def main():
         cid = "ch-" + p.name[:2]
         title, body, toc = md_to_html(lines, cid, used)
         chapters.append((cid, title or p.stem, body, toc))
-    ver = css_ver() + "-code2"
+    ver = css_ver() + "-nav3"
     stamp = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
     toc_html = "".join(
         f'<li><a href="#{c}" data-ch="{c}">{inline(t)}</a>' + (f'<ol>{"".join(f"<li><a href=\"#{a}\" data-ch=\"{c}\">{inline(x)}</a></li>" for a, x in toc)}</ol>' if toc else "") + "</li>"
         for c, t, _, toc in chapters)
+    def pn(k):
+        prv = f'<a class="m-prev" href="#{chapters[k-1][0]}">← {inline(chapters[k-1][1])}</a>' if k else '<span></span>'
+        nxt = f'<a class="m-next" href="#{chapters[k+1][0]}">{inline(chapters[k+1][1])} →</a>' if k + 1 < len(chapters) else '<span></span>'
+        return f'<nav class="m-pn" aria-label="Соседние главы">{prv}<a class="m-totoc" href="#m-toc">↑ Содержание</a>{nxt}</nav>'
     chs = "\n".join(
-        f'<details class="m-chapter" id="{c}"{" open" if k == 0 else ""}><summary><h2>{inline(t)}</h2></summary><div class="m-body">{b}<p class="m-up"><a href="#m-toc">↑ К оглавлению</a></p></div></details>'
+        f'<details class="m-chapter" id="{c}"{" open" if k == 0 else ""}><summary><h2>{inline(t)}</h2></summary><div class="m-body">{b}{pn(k)}</div></details>'
         for k, (c, t, b, _) in enumerate(chapters))
     page = f'''<!DOCTYPE html>
 <html lang="ru">
@@ -155,6 +159,8 @@ def main():
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol>{toc_html}</ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
     {chs}
+    <div class="m-fab" id="m-fab" hidden><button type="button" id="m-top" aria-label="Наверх, к содержанию">↑ Содержание</button><button type="button" id="m-sec" aria-expanded="false" aria-controls="m-panel">☰ Разделы</button></div>
+    <div class="m-panel" id="m-panel" hidden role="dialog" aria-label="Разделы методички"><div class="m-panel-head"><b>Разделы</b><button type="button" id="m-pclose" aria-label="Закрыть">✕</button></div><ol>{toc_html}</ol></div>
     <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
   </div>
   <script src="js/app.js?v={ver}" defer></script>
@@ -165,7 +171,18 @@ def main():
     window.addEventListener('hashchange',reveal);document.addEventListener('DOMContentLoaded',reveal);reveal();
     document.getElementById('m-open').onclick=function(){{all().forEach(function(d){{d.open=true;}});}};
     document.getElementById('m-close').onclick=function(){{all().forEach(function(d){{d.open=false;}});}};
-    document.querySelectorAll('.m-toc a').forEach(function(a){{a.addEventListener('click',function(){{var d=document.getElementById(a.dataset.ch);if(d)d.open=true;}});}});
+    var fab=document.getElementById('m-fab'),panel=document.getElementById('m-panel'),sec=document.getElementById('m-sec');
+  function setPanel(o){{panel.hidden=!o;sec.setAttribute('aria-expanded',o);if(o){{var c=panel.querySelector('a.cur');if(c)c.scrollIntoView({{block:'center'}});}}}}
+  sec.onclick=function(){{setPanel(panel.hidden);}};document.getElementById('m-pclose').onclick=function(){{setPanel(false);}};
+  document.getElementById('m-top').onclick=function(){{setPanel(false);var t=document.getElementById('m-toc');t.open=true;t.scrollIntoView({{behavior:'smooth'}});}};
+  document.addEventListener('keydown',function(e){{if(e.key==='Escape')setPanel(false);}});
+  panel.querySelectorAll('a').forEach(function(a){{a.addEventListener('click',function(){{var d=document.getElementById(a.dataset.ch);if(d)d.open=true;setPanel(false);}});}});
+  document.querySelectorAll('.m-pn a').forEach(function(a){{a.addEventListener('click',function(){{var d=document.querySelector(a.getAttribute('href'));if(d&&d.tagName==='DETAILS')d.open=true;}});}});
+  var heads=[].slice.call(document.querySelectorAll('.m-chapter, .m-body h3'));
+  function onScroll(){{fab.hidden=scrollY<600;var cur=null;for(var i=0;i<heads.length;i++){{var h=heads[i];if(h.tagName==='H3'&&!h.closest('.m-chapter').open)continue;if(h.getBoundingClientRect().top<140)cur=h.id;else break;}}
+    panel.querySelectorAll('a').forEach(function(a){{a.classList.toggle('cur',a.getAttribute('href')==='#'+cur);}});}}
+  addEventListener('scroll',onScroll,{{passive:true}});onScroll();
+  document.querySelectorAll('.m-toc a').forEach(function(a){{a.addEventListener('click',function(){{var d=document.getElementById(a.dataset.ch);if(d)d.open=true;}});}});
   }})();
   </script>
 </body>

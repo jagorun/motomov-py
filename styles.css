@@ -379,3 +379,21 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",mo
 .hl-kw{color:var(--hl-kw);font-weight:600}.hl-str{color:var(--hl-str)}.hl-com{color:var(--hl-com);font-style:italic}
 .hl-num{color:var(--hl-num)}.hl-fn{color:var(--hl-fn)}.hl-bi{color:var(--hl-bi)}
 @media (max-width:600px){pre{font-size:14.5px;padding:.8rem .85rem;margin-left:-.2rem;margin-right:-.2rem}}
+
+/* ---- Методичка: навигация по разделам на телефоне ---- */
+.m-chapter,.m-body h3,.m-body h4,.m-body h5,#m-toc{scroll-margin-top:7.5rem}
+.m-pn{display:grid;grid-template-columns:1fr auto 1fr;gap:.5rem;align-items:center;margin:1.4rem 0 .2rem;padding-top:.8rem;border-top:1px solid var(--line);font-size:.9rem}
+.m-pn a{color:var(--accent);text-decoration:none;padding:.5rem .2rem;line-height:1.3}
+.m-pn .m-next{text-align:right}.m-pn .m-totoc{color:var(--muted);white-space:nowrap}
+.m-fab{position:fixed;right:max(.8rem,env(safe-area-inset-right));bottom:calc(.9rem + env(safe-area-inset-bottom));z-index:60;display:flex;gap:.5rem}
+.m-fab[hidden],.m-panel[hidden]{display:none}
+.m-fab button{font:inherit;font-size:.95rem;min-height:44px;padding:.55rem 1rem;border-radius:999px;border:1px solid var(--line);background:#fffcf6;color:var(--text);box-shadow:0 6px 18px rgba(30,40,30,.18);cursor:pointer}
+.m-fab #m-sec{background:var(--accent);color:#f7f4ea;border-color:var(--accent);font-weight:600}
+.m-panel{position:fixed;left:.6rem;right:.6rem;bottom:calc(4.4rem + env(safe-area-inset-bottom));max-height:65vh;overflow:auto;z-index:61;background:#fffcf6;border:1px solid var(--line);border-radius:1rem;box-shadow:0 14px 40px rgba(30,40,30,.25);padding:.4rem .9rem .8rem}
+@media (min-width:700px){.m-panel{left:auto;width:24rem}}
+.m-panel-head{position:sticky;top:-.4rem;background:#fffcf6;display:flex;justify-content:space-between;align-items:center;padding:.5rem 0}
+.m-panel-head button{font:inherit;min-width:44px;min-height:44px;border:0;background:none;font-size:1.1rem;cursor:pointer}
+.m-panel ol{margin:0;padding-left:1.2rem;line-height:1.45}.m-panel ol ol{font-size:.9rem;margin:.15rem 0 .4rem}
+.m-panel a{display:block;padding:.35rem .4rem;border-radius:.5rem;color:var(--text);text-decoration:none}
+.m-panel a.cur{background:var(--accent);color:#f7f4ea;font-weight:600}
+body:has(.m-fab:not([hidden])) footer.site{padding-bottom:4.5rem}
