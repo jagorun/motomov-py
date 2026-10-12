@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-10-12-vecher",
+    "kind": "ai",
+    "date": "2026-10-12",
+    "dateLabel": "12 октября 2026 · вечер",
+    "topic": "Anthropic без интернета в тестах, Microsoft-Decision-1, Vera Rubin на OCP, Repeat-After-Me, увольнения в OpenAI",
+    "title": "Вечерняя сводка · 12.10.2026 · Anthropic отключила интернет в тестах, Microsoft выпустила модель решений",
+    "summary": "Anthropic расширила запрет живого интернета на все внутренние оценки после реальных действий Claude; Microsoft-Decision-1 быстро скорит шаги агентов; NVIDIA открыла чертежи Vera Rubin на OCP; атака Repeat-After-Me обошла 6 каркасов; трое исследователей OpenAI опубликовали письмо после увольнения."
+  },
+  {
     "id": "2026-10-12-utro",
     "kind": "ai",
     "date": "2026-10-12",
