@@ -8,7 +8,7 @@
   <meta name="theme-color" content="#f3efe6">
   <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
   <link rel="canonical" href="https://py.motomov.ru/metodichka">
-  <link rel="stylesheet" href="styles.css?v=ui20261012-nav3">
+  <link rel="stylesheet" href="styles.css?v=ui20261013-nav3">
   <style>
   .m-toc{background:#fffcf6;border:1px solid var(--line);border-radius:1rem;padding:.9rem 1.1rem;margin:0 0 1.2rem}
   .m-toc summary{cursor:pointer;font-weight:600}
@@ -46,7 +46,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 13.10.2026 07:59 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 13.10.2026 21:12 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -748,7 +748,88 @@ for scene in scenes:
 
 print(messages)
 # ожидаем: [&#x27;S1: все дубли сняты&#x27;, &#x27;S2: стоп на D2&#x27;, &#x27;S3: все дубли сняты&#x27;]</code></pre>
-<p><code>for ... else</code> здесь как раз про «брака не было»: <code>else</code> внешнего по смыслу срабатывает, когда внутренний закончился без <code>break</code>.<br>&lt;/details&gt;</p>
+<p><code>for ... else</code> здесь как раз про «брака не было»: <code>else</code> относится к внутреннему <code>for</code> (по дублям) и срабатывает, когда тот закончился без <code>break</code>.<br>&lt;/details&gt;</p>
+<h5 id="ch-01-закрепление-очередь-дублей-с-ретраями-и-общий-стоп">Закрепление: очередь дублей с ретраями и общий стоп</h5>
+<p>Вечернее упражнение собирает в одну задачу всё утреннее: очередь <code>deque</code> + <code>while queue</code>, повтор в конец очереди вместо вставки в середину и остановку <strong>всех</strong> уровней по одному событию.</p>
+<p><strong>Условие.</strong> Есть план съёмки и «плейбэк» — что покажет каждая попытка дубля:</p>
+<pre><code class="lang-python">from collections import deque
+
+playback = {
+    &quot;S1&quot;: [&quot;ок&quot;],
+    &quot;S2&quot;: [&quot;брак&quot;, &quot;брак&quot;],
+    &quot;S3&quot;: [&quot;брак&quot;, &quot;батарея&quot;],
+    &quot;S4&quot;: [&quot;брак&quot;, &quot;ок&quot;],
+    &quot;S5&quot;: [&quot;ок&quot;],
+}
+MAX_TRIES = 2</code></pre>
+<p>Напиши цикл, который:</p>
+<ol>
+<li>кладёт в очередь пары <code>(сцена, номер_попытки)</code>, начиная с попытки 1 для каждой сцены по порядку;</li>
+<li>берёт пару из <strong>начала</strong> очереди и смотрит результат <code>playback[сцена][попытка - 1]</code>;</li>
+<li>на <code>&quot;ок&quot;</code> пишет в список <code>accepted</code> строку вида <code>&quot;S1 (попытка 1)&quot;</code>;</li>
+<li>на <code>&quot;брак&quot;</code> — если попыток ещё не <code>MAX_TRIES</code>, кладёт <code>(сцена, попытка + 1)</code> в <strong>конец</strong> очереди, иначе пишет сцену в список <code>moved</code> (перенос на другой день);</li>
+<li>на <code>&quot;батарея&quot;</code> — останавливает всю смену сразу: пишет <code>&quot;стоп: батарея на S3&quot;</code> и больше ничего из очереди не берёт;</li>
+<li>если очередь разобрана без стопа — печатает <code>&quot;смена закончена штатно&quot;</code>;</li>
+<li>в конце печатает <code>accepted</code>, <code>moved</code> и список сцен, которые остались в очереди неснятыми.</li>
+</ol>
+<p>Ожидаемый вывод:</p>
+<pre><code class="lang-text">стоп: батарея на S3
+принято: [&#x27;S1 (попытка 1)&#x27;, &#x27;S5 (попытка 1)&#x27;]
+перенос: [&#x27;S2&#x27;]
+не снято: [&#x27;S4&#x27;]</code></pre>
+<p><strong>Подсказка.</strong> Очередь создаётся одним выражением: <code>deque((scene, 1) for scene in playback)</code>. Для п. 5 хватит обычного <code>break</code> — цикл тут один, <code>while</code>, а внутри только <code>if/elif</code>. Для п. 6 вспомни, что у <code>while</code>, как и у <code>for</code>, бывает <code>else</code>: он срабатывает, только если цикл закончился сам, без <code>break</code>. Неснятые сцены после цикла — это то, что лежит в <code>queue</code>.</p>
+<p><strong>Вопрос на понимание.</strong> Почему нельзя было написать <code>for scene, attempt in queue:</code> и внутри делать <code>queue.append(...)</code>? Попробуй и посмотри, что скажет Python.</p>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">from collections import deque
+
+playback = {
+    &quot;S1&quot;: [&quot;ок&quot;],
+    &quot;S2&quot;: [&quot;брак&quot;, &quot;брак&quot;],
+    &quot;S3&quot;: [&quot;брак&quot;, &quot;батарея&quot;],
+    &quot;S4&quot;: [&quot;брак&quot;, &quot;ок&quot;],
+    &quot;S5&quot;: [&quot;ок&quot;],
+}
+MAX_TRIES = 2
+
+queue: deque[tuple[str, int]] = deque((scene, 1) for scene in playback)
+accepted: list[str] = []
+moved: list[str] = []
+
+while queue:
+    scene, attempt = queue.popleft()
+    result = playback[scene][attempt - 1]
+    if result == &quot;ок&quot;:
+        accepted.append(f&quot;{scene} (попытка {attempt})&quot;)
+    elif result == &quot;брак&quot;:
+        if attempt &lt; MAX_TRIES:
+            queue.append((scene, attempt + 1))   # повтор — в конец очереди
+        else:
+            moved.append(scene)                  # попытки кончились — перенос
+    elif result == &quot;батарея&quot;:
+        print(f&quot;стоп: батарея на {scene}&quot;)
+        break                                    # стоп всей смены, очередь не трогаем
+else:
+    print(&quot;смена закончена штатно&quot;)              # сюда попадём только без break
+
+print(&quot;принято:&quot;, accepted)
+print(&quot;перенос:&quot;, moved)
+print(&quot;не снято:&quot;, [scene for scene, _ in queue])
+# ожидаем: стоп: батарея на S3
+# ожидаем: принято: [&#x27;S1 (попытка 1)&#x27;, &#x27;S5 (попытка 1)&#x27;]
+# ожидаем: перенос: [&#x27;S2&#x27;]
+# ожидаем: не снято: [&#x27;S4&#x27;]</code></pre>
+<p>Как это шло по шагам: первый проход — S1 принят, S2, S3 и S4 дали брак и ушли в конец очереди со второй попыткой, S5 принят. Второй проход — S2 снова брак, попытки кончились, перенос; на S3 села батарея, <code>break</code>, и S4 так и остался в очереди со второй попыткой. Поэтому <code>else</code> у <code>while</code> не сработал. Поменяй в <code>playback</code> значение <code>&quot;батарея&quot;</code> на <code>&quot;ок&quot;</code> — увидишь <code>смена закончена штатно</code>, S3 и S4 в <code>accepted</code>, а пустой список <code>не снято</code>.</p>
+<p><strong>Ответ на вопрос.</strong> Очередь, по которой идёт <code>for</code>, нельзя менять на ходу: на первом же <code>append</code> Python остановит цикл с ошибкой <code>RuntimeError: deque mutated during iteration</code>. Это та же ошибка №3 из утреннего разбора: снаружи — очередь, которую разбирают через <code>while queue</code> и <code>popleft()</code>, а не <code>for</code> по коллекции, которая растёт.</p>
+<pre><code class="lang-python">from collections import deque
+
+queue = deque([(&quot;S1&quot;, 1)])
+try:
+    for scene, attempt in queue:
+        queue.append((scene, attempt + 1))
+except RuntimeError as e:
+    print(e)
+# ожидаем: deque mutated during iteration</code></pre>
+<p><strong>Связь с оркестратором.</strong> Это почти дословно цикл ретраев вызова модели: очередь задач, повтор с увеличенным счётчиком в конец, потолок попыток на задачу (<code>MAX_TRIES</code>) и аварийный стоп всей сессии (кончился бюджет, упал провайдер), после которого в отчёт честно попадает то, что <strong>не сделано</strong>, а не только то, что получилось.<br>&lt;/details&gt;</p>
 <h4 id="ch-01-доработка-if-и-for-порядок-веток-enumerate-zip-и-ранни">Доработка: <code>if</code> и <code>for</code> — порядок веток, <code>enumerate</code>, <code>zip</code> и ранний выход</h4>
 <p>Про <code>while</code> выше уже есть большой разбор. Здесь — то, что не хватает про <code>if</code> и <code>for</code>.</p>
 <p><strong>1. Порядок <code>elif</code> — это логика, а не оформление.</strong> Python проверяет ветки сверху вниз и останавливается на <strong>первой</strong> истинной. Широкое условие наверху «съедает» узкие.</p>
@@ -7226,7 +7307,7 @@ print(&quot;итоговый код:&quot;, main([&quot;stats.py&quot;, &quot;ok
     <div class="m-panel" id="m-panel" hidden role="dialog" aria-label="Разделы методички"><div class="m-panel-head"><b>Разделы</b><button type="button" id="m-pclose" aria-label="Закрыть">✕</button></div><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></div>
     <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
   </div>
-  <script src="js/app.js?v=ui20261012-nav3" defer></script>
+  <script src="js/app.js?v=ui20261013-nav3" defer></script>
   <script>
   (function(){
     var all=function(){return document.querySelectorAll('.m-chapter');};
