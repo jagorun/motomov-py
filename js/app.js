@@ -1,1 +1,1 @@
-PLACEHOLDER_FOR_FULL_JS
+$(cat /tmp/app.js)
