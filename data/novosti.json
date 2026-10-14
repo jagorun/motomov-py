@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-10-14-utro",
+    "kind": "ai",
+    "date": "2026-10-14",
+    "dateLabel": "14.10.2026, среда",
+    "topic": "Gemini 4 Argon в GitHub Copilot, NVIDIA Run:ai open source, британский парламент про обязательные правила, Workday+Anthropic Sana, JPMorgan блокирует внешних агентов",
+    "title": "Утренняя сводка · 14.10.2026 · Argon в Copilot, открытый Run:ai, правила в парламенте UK, агенты Workday и банк JPMorgan",
+    "summary": "Gemini 4 Argon подключили к GitHub Copilot; NVIDIA открыла код диспетчера видеокарт Run:ai. В британском парламенте OpenAI и Anthropic попросили обязательные законы по безопасности ИИ, Google и Meta отказались. Workday связала агентов Sana с Claude и покупает C1.ai для доступа агентов; JPMorgan запретил внешним агентам действовать в счетах клиентов."
+  },
+  {
     "id": "2026-10-13-vecher",
     "kind": "ai",
     "date": "2026-10-13",
