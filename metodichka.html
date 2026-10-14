@@ -46,7 +46,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 13.10.2026 21:12 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 14.10.2026 12:56 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -244,7 +244,7 @@ print(len(p.read_text(encoding=&quot;utf-8&quot;).splitlines()))
 <details class="m-chapter" id="ch-01"><summary><h2>01. Основы Python — Ступень 1. Порядок мысли</h2></summary><div class="m-body"><p><strong>Курс:</strong> Stepik 58852 «Поколение Python: курс для начинающих».<br><strong>Где ты сейчас:</strong> примерно модуль ввода-вывода / циклы (<code>while</code>).<br><strong>Цель ступени:</strong> научиться ясно говорить: что было на входе, какая ветка выбрана, где ход кончается. Без этого схему системы не прочитать, даже если код писал не ты.</p>
 <p>Эта часть объясняет каждый базовый термин максимально подробно. Не «запомни синтаксис», а «пойми, зачем это существует и как это помогает оркестратору».</p>
 <p><strong>Карта: что из этой ступени понадобится дальше.</strong> Ступень 1 — фундамент для всего остального. Если какая-то строка в файлах 04–06 кажется непонятной, почти всегда ответ здесь:</p>
-<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
+<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
 <hr>
 <h3 id="ch-01-1-1-переменные-и-типы-данных">1.1. Переменные и типы данных</h3>
 <h4 id="ch-01-что-такое-переменная">Что такое переменная</h4>
@@ -1327,6 +1327,439 @@ print([f(10) for f in [lambda x: x * k for k in (1, 2, 3)]])
 # ожидаем: [True, True, False]
 # ожидаем: [30, 30, 30]</code></pre>
 <p>В третьем случае все три <code>lambda</code> видят одну переменную <code>k</code>, которая после цикла равна 3, — поздняя привязка. Исправление: <code>lambda x, k=k: x * k</code>. Второе упражнение — «замыкание-версия» класса <code>Budget</code> из файла 05: для одного числа замыкания хватает, а когда полей и методов много, класс читается лучше (1.8).<br>&lt;/details&gt;</p>
+<h4 id="ch-01-глубже-генераторы-и-yield-поток-без-полного-списка">Глубже: генераторы и yield — поток без полного списка</h4>
+<p><strong>Интуиция.</strong> Обычная функция работает до <code>return</code> и отдаёт результат <strong>целиком</strong>: если это список из тысячи файлов, все тысяча будут прочитаны, прежде чем ты увидишь первый. Функция, в теле которой есть слово <code>yield</code>, ведёт себя иначе: при вызове она <strong>ничего не выполняет</strong>, а возвращает объект-<strong>генератор</strong>. Генератор — это «кран»: каждый раз, когда ты просишь следующее значение, функция просыпается, доходит до очередного <code>yield</code>, отдаёт одно значение и <strong>засыпает на этом месте</strong>, помня все свои переменные. Значения появляются <strong>по требованию</strong> — это называют <strong>ленивостью</strong>. Генератор — частный случай <strong>итератора</strong>: объекта, у которого можно попросить «следующий» (<code>next</code>), пока он не скажет «всё».</p>
+<p>Зачем это оркестратору: ответ модели приходит кусками (поток), папка с документами может быть огромной, а конвейер «найти → почистить → отфильтровать → уложиться в бюджет» часто можно остановить на третьем элементе. Генератор позволяет не строить полный список там, где он не нужен, и не делать работу, которая не понадобится.</p>
+<blockquote><p>Здесь встречаются <code>try/except</code> (подробно — 1.7) и чтение файлов (1.6). Если ещё не дошёл до них, читай <code>try/except</code> как «попробуй, а если вот такая ошибка — сделай вот это», а <code>read_text</code> — как «прочитай файл целиком в строку».</p></blockquote>
+<pre><code class="lang-python">def takes():
+    print(&quot;(готовлю дубль 1)&quot;)
+    yield &quot;дубль 1&quot;
+    print(&quot;(готовлю дубль 2)&quot;)
+    yield &quot;дубль 2&quot;
+
+g = takes()                       # тело ещё НЕ выполнялось: ни одного «готовлю»
+print(type(g).__name__)
+for t in g:
+    print(&quot;смотрю&quot;, t)
+# ожидаем: generator
+# ожидаем: (готовлю дубль 1)
+# ожидаем: смотрю дубль 1
+# ожидаем: (готовлю дубль 2)
+# ожидаем: смотрю дубль 2</code></pre>
+<p>Обрати внимание на порядок: «готовлю» и «смотрю» <strong>чередуются</strong>. Функция и цикл <code>for</code> работают по очереди, передавая друг другу ход: функция отдала дубль — цикл его посмотрел — функция проснулась и готовит следующий.</p>
+<p><strong>Шаг 1. Список против генератора: кто и когда работает.</strong> Одна и та же задача двумя способами:</p>
+<pre><code class="lang-python">def make_list():
+    result = []
+    for n in (1, 2, 3):
+        print(&quot;делаю&quot;, n)
+        result.append(n)
+    return result                 # отдаём всё сразу
+
+def make_gen():
+    for n in (1, 2, 3):
+        print(&quot;делаю&quot;, n)
+        yield n                   # отдаём по одному
+
+for x in make_list():
+    print(&quot;беру&quot;, x)
+print(&quot;---&quot;)
+for x in make_gen():
+    print(&quot;беру&quot;, x)
+# ожидаем: делаю 1
+# ожидаем: делаю 2
+# ожидаем: делаю 3
+# ожидаем: беру 1
+# ожидаем: беру 2
+# ожидаем: беру 3
+# ожидаем: ---
+# ожидаем: делаю 1
+# ожидаем: беру 1
+# ожидаем: делаю 2
+# ожидаем: беру 2
+# ожидаем: делаю 3
+# ожидаем: беру 3</code></pre>
+<p>Со списком первое «беру» случается только после <strong>всех</strong> «делаю». С генератором первое значение готово сразу. Если «делаю» — это запрос к модели за 3 секунды, разница между «ждать 9 секунд до первого результата» и «первый результат через 3» — это разница, которую видит пользователь.</p>
+<p><strong>Шаг 2. Память: полка против крана.</strong> Список хранит <strong>все</strong> элементы одновременно. Генератор хранит только своё «место в коде» и текущие переменные — его размер не зависит от того, сколько значений он отдаст.</p>
+<pre><code class="lang-python">import sys
+
+big_list = [n * 2 for n in range(1_000_000)]
+big_gen = (n * 2 for n in range(1_000_000))
+print(sys.getsizeof(big_list) &gt; 1_000_000)   # больше мегабайта — и это только «полка» ссылок
+print(sys.getsizeof(big_gen) &lt; 1_000)        # генератор — пара сотен байт
+print(sum(big_gen) == sum(big_list))         # а результат тот же
+# ожидаем: True
+# ожидаем: True
+# ожидаем: True</code></pre>
+<p>Точные числа зависят от версии Python, поэтому печатаем сравнение, а не байты. Важно соотношение: список на миллион элементов весит мегабайты, генератор — сотни байт.</p>
+<p>Цена экономии — <strong>одноразовость</strong>. Список можно обойти сколько угодно раз. Генератор отдаёт каждое значение один раз и после конца остаётся пустым — подробно в «Типичных ошибках» ниже.</p>
+<p><strong>Шаг 3. Механика: <code>next()</code>, <code>StopIteration</code> и что на самом деле делает <code>for</code>.</strong> Попросить у генератора следующее значение вручную можно функцией <code>next()</code>. Когда значения кончились, генератор сообщает об этом исключением <code>StopIteration</code>.</p>
+<pre><code class="lang-python">def three_steps():
+    yield &quot;поиск&quot;
+    yield &quot;ответ&quot;
+    yield &quot;проверка&quot;
+
+g = three_steps()
+print(next(g))
+print(next(g))
+print(next(g))
+try:
+    next(g)
+except StopIteration:
+    print(&quot;StopIteration — плёнка кончилась&quot;)
+print(next(g, &quot;пусто&quot;))          # с запасным значением исключения нет
+# ожидаем: поиск
+# ожидаем: ответ
+# ожидаем: проверка
+# ожидаем: StopIteration — плёнка кончилась
+# ожидаем: пусто</code></pre>
+<p>Цикл <code>for</code> — это просто вежливая обёртка над <code>next</code>. Вот что он делает «под капотом» — тот самый <code>while</code> с выходом, который ты сейчас учишь:</p>
+<pre><code class="lang-python">def three_steps():
+    yield &quot;поиск&quot;
+    yield &quot;ответ&quot;
+    yield &quot;проверка&quot;
+
+g = three_steps()
+while True:                       # так устроен for x in g:
+    try:
+        step = next(g)
+    except StopIteration:
+        break                     # значения кончились — выходим из цикла
+    print(&quot;шаг:&quot;, step)
+# ожидаем: шаг: поиск
+# ожидаем: шаг: ответ
+# ожидаем: шаг: проверка</code></pre>
+<p><strong>Шаг 4. Итерируемое против итератора: почему список можно обойти дважды, а генератор — нет.</strong> Список — <strong>итерируемый</strong> объект (iterable): каждый <code>for</code> просит у него <strong>новый</strong> итератор через <code>iter()</code> и начинает с начала. Генератор — <strong>сам себе итератор</strong>: <code>iter(g)</code> возвращает тот же самый <code>g</code> с тем же «местом в коде».</p>
+<pre><code class="lang-python">lst = [&quot;a.md&quot;, &quot;b.md&quot;]
+gen = (x for x in lst)
+print(iter(lst) is lst)          # у списка каждый раз новый «курсор»
+print(iter(gen) is gen)          # генератор и есть курсор
+it = iter(lst)
+print(next(it), next(it))
+print(list(lst), list(lst))      # список — сколько угодно раз
+print(list(gen), list(gen))      # генератор — один раз
+# ожидаем: False
+# ожидаем: True
+# ожидаем: a.md b.md
+# ожидаем: [&#x27;a.md&#x27;, &#x27;b.md&#x27;] [&#x27;a.md&#x27;, &#x27;b.md&#x27;]
+# ожидаем: [&#x27;a.md&#x27;, &#x27;b.md&#x27;] []</code></pre>
+<p><strong>Шаг 5. Генераторное выражение <code>( )</code> против включения <code>[ ]</code>.</strong> В разделе 1.4 (Comprehensions и «Глубже: включения…», шаг 4) ты встретишь включения <code>[... for ... in ...]</code> и «генератор» внутри <code>any</code>/<code>all</code>/<code>sum</code>. Это одно и то же семейство: квадратные скобки строят <strong>список сразу</strong>, круглые — <strong>генератор</strong>, который выдаёт те же значения по одному.</p>
+<pre><code class="lang-python">names = [&quot;a.md&quot;, &quot;b.txt&quot;, &quot;c.md&quot;]
+as_list = [n.upper() for n in names if n.endswith(&quot;.md&quot;)]
+as_gen = (n.upper() for n in names if n.endswith(&quot;.md&quot;))
+print(as_list)
+print(type(as_gen).__name__)
+print(list(as_gen))
+print(sum(len(n) for n in names))                        # внутри вызова вторые скобки не нужны
+print(next((n for n in names if n.endswith(&quot;.txt&quot;)), None))   # «первый подходящий или None»
+# ожидаем: [&#x27;A.MD&#x27;, &#x27;C.MD&#x27;]
+# ожидаем: generator
+# ожидаем: [&#x27;A.MD&#x27;, &#x27;C.MD&#x27;]
+# ожидаем: 13
+# ожидаем: b.txt</code></pre>
+<p>Правило выбора простое. Нужен результат, чтобы его хранить, печатать, обходить дважды, узнать <code>len</code> — <code>[ ]</code>. Нужно один раз «прогнать» значения через <code>sum</code>, <code>any</code>, <code>all</code>, <code>max</code>, <code>next</code>, <code>&quot;&quot;.join</code> — <code>( )</code>. А <code>next((... for ...), None)</code> — это короткая форма поиска с <code>for ... break ... else</code> из доработки к 1.2: генератор остановится на первой находке и дальше не пойдёт.</p>
+<p><strong>Шаг 6. Пример оркестратора: поток кусков ответа модели.</strong> Многие API моделей умеют отдавать ответ не целиком, а <strong>потоком</strong> — кусочками по мере генерации. В коде это выглядит ровно как генератор: ты обходишь куски в <code>for</code>, можешь показывать их пользователю сразу и можешь <strong>оборвать</strong> поток, если сработал потолок. Пока — заглушка без сети:</p>
+<pre><code class="lang-python">def fake_stream(reply: str, piece: int = 6):
+    &quot;&quot;&quot;Заглушка потокового ответа модели: отдаёт текст кусками.&quot;&quot;&quot;
+    for i in range(0, len(reply), piece):
+        print(f&quot;(сеть: кусок {i // piece + 1})&quot;)
+        yield reply[i:i + piece]
+
+received = []
+for part in fake_stream(&quot;Аккумулятор держит 90 минут.&quot;):
+    received.append(part)
+    if len(&quot;&quot;.join(received)) &gt;= 12:          # потолок символов
+        print(&quot;потолок — обрываем поток&quot;)
+        break
+print(repr(&quot;&quot;.join(received)))
+print(repr(&quot;&quot;.join(fake_stream(&quot;ок, принято&quot;, piece=4))))   # без потолка — собрать целиком
+# ожидаем: (сеть: кусок 1)
+# ожидаем: (сеть: кусок 2)
+# ожидаем: потолок — обрываем поток
+# ожидаем: &#x27;Аккумулятор &#x27;
+# ожидаем: (сеть: кусок 1)
+# ожидаем: (сеть: кусок 2)
+# ожидаем: (сеть: кусок 3)
+# ожидаем: &#x27;ок, принято&#x27;</code></pre>
+<p>Куска 3 первого ответа <strong>не было вовсе</strong>: после <code>break</code> генератор больше никто не будил, и он не «сходил в сеть». С настоящим API это значит: меньше ожидания и (при обрыве соединения) меньше потраченных токенов. Склейка <code>&quot;&quot;.join(...)</code> — стандартный способ получить из потока итоговый текст.</p>
+<p><strong>Шаг 7. Пример оркестратора: ленивый обход файлов.</strong> Ищем первый документ, где упомянут аккумулятор. Генератор открывает файлы по одному — и, найдя ответ, остальные не трогает.</p>
+<pre><code class="lang-python">import tempfile
+from pathlib import Path
+
+def iter_md(folder: Path):
+    for p in sorted(folder.glob(&quot;*.md&quot;)):      # sorted — чтобы порядок был предсказуемым
+        print(&quot;открываю&quot;, p.name)
+        yield p.name, p.read_text(encoding=&quot;utf-8&quot;)
+
+with tempfile.TemporaryDirectory() as tmp:     # временная папка, исчезнет сама
+    folder = Path(tmp)
+    (folder / &quot;a.md&quot;).write_text(&quot;штатив и свет&quot;, encoding=&quot;utf-8&quot;)
+    (folder / &quot;b.md&quot;).write_text(&quot;аккумулятор держит 90 минут&quot;, encoding=&quot;utf-8&quot;)
+    (folder / &quot;c.md&quot;).write_text(&quot;микрофон-петличка&quot;, encoding=&quot;utf-8&quot;)
+
+    hit = next((name for name, text in iter_md(folder) if &quot;аккумулятор&quot; in text), None)
+    print(&quot;нашёл:&quot;, hit)
+    miss = next((name for name, text in iter_md(folder) if &quot;дрон&quot; in text), None)
+    print(&quot;нашёл:&quot;, miss)
+# ожидаем: открываю a.md
+# ожидаем: открываю b.md
+# ожидаем: нашёл: b.md
+# ожидаем: открываю a.md
+# ожидаем: открываю b.md
+# ожидаем: открываю c.md
+# ожидаем: нашёл: None</code></pre>
+<p><code>c.md</code> в первом поиске даже не открывался. На трёх файлах это незаметно, на трёх тысячах — это минуты и гигабайты. Во втором поиске генератор честно прошёл всё и, не найдя, отдал запасное <code>None</code> — то самое «не знаю», которое оркестратор обязан уметь сказать. И заметь: для второго поиска мы <strong>вызвали <code>iter_md(folder)</code> заново</strong> — старый генератор уже был бы частично израсходован.</p>
+<p><strong>Шаг 8. Пример оркестратора: конвейер шагов с ранней остановкой.</strong> Генераторы можно вставлять друг в друга: каждый берёт значения у предыдущего и отдаёт следующему. Получается конвейер, где <strong>ни на одном этапе</strong> не строится полный список, а остановка в конце останавливает всех.</p>
+<pre><code class="lang-python">def read_lines(lines):
+    for line in lines:
+        print(&quot;читаю:&quot;, repr(line))
+        yield line
+
+def clean(stream):
+    for line in stream:
+        line = line.strip()
+        if line:                       # пустые строки выбрасываем
+            yield line
+
+def only_facts(stream):
+    for line in stream:
+        if not line.startswith(&quot;#&quot;):   # заголовки заметок — не факты
+            yield line
+
+def within_budget(stream, max_chars: int):
+    spent = 0
+    for line in stream:
+        if spent + len(line) &gt; max_chars:
+            print(&quot;бюджет исчерпан — стоп&quot;)
+            return                     # return в генераторе = конец потока
+        spent += len(line)
+        yield line
+
+raw = [&quot;# заметки&quot;, &quot;  держит 90 минут &quot;, &quot;&quot;, &quot;заряд 2 часа&quot;, &quot;вес 1.2 кг&quot;, &quot;цена 300&quot;]
+pipeline = within_budget(only_facts(clean(read_lines(raw))), max_chars=30)
+print(&quot;конвейер собран, но ещё ничего не читал&quot;)
+print(list(pipeline))
+# ожидаем: конвейер собран, но ещё ничего не читал
+# ожидаем: читаю: &#x27;# заметки&#x27;
+# ожидаем: читаю: &#x27;  держит 90 минут &#x27;
+# ожидаем: читаю: &#x27;&#x27;
+# ожидаем: читаю: &#x27;заряд 2 часа&#x27;
+# ожидаем: читаю: &#x27;вес 1.2 кг&#x27;
+# ожидаем: бюджет исчерпан — стоп
+# ожидаем: [&#x27;держит 90 минут&#x27;, &#x27;заряд 2 часа&#x27;]</code></pre>
+<p>Разбери по шагам. Строка «конвейер собран» печатается <strong>первой</strong>: создание четырёх генераторов ничего не читает. <code>list(...)</code> начинает тянуть значения с конца: <code>within_budget</code> просит у <code>only_facts</code>, тот у <code>clean</code>, тот у <code>read_lines</code>. Строка <code>&quot;вес 1.2 кг&quot;</code> прочитана, прошла фильтры, но не влезла в бюджет (15 + 12 + 10 &gt; 30), и <code>within_budget</code> закончил поток. <code>&quot;цена 300&quot;</code> <strong>не прочитана никогда</strong>. Каждый этап — маленькая функция, которую легко проверить отдельно, — тот же принцип «один узел — одно дело», что и в схемах файла 04.</p>
+<p><strong>Шаг 9. <code>yield from</code> — «отдай всё, что отдаст он».</strong> Если генератор хочет передать наружу все значения другого генератора, вместо цикла <code>for x in other(): yield x</code> пишут одну строку <code>yield from other()</code>.</p>
+<pre><code class="lang-python">def scene_takes(scene: str, count: int):
+    for n in range(1, count + 1):
+        yield f&quot;{scene}-D{n}&quot;
+
+def all_takes(plan: dict[str, int]):
+    for scene, count in plan.items():
+        yield from scene_takes(scene, count)     # то же, что: for t in ...: yield t
+
+print(list(all_takes({&quot;S1&quot;: 2, &quot;S2&quot;: 3})))
+
+def walk(node):
+    &quot;&quot;&quot;Разворачивает вложенные списки любой глубины: папка в папке в папке.&quot;&quot;&quot;
+    if isinstance(node, list):
+        for child in node:
+            yield from walk(child)               # рекурсия: генератор зовёт сам себя
+    else:
+        yield node
+
+print(list(walk([&quot;a.md&quot;, [&quot;b.md&quot;, [&quot;c.md&quot;]], &quot;d.md&quot;])))
+# ожидаем: [&#x27;S1-D1&#x27;, &#x27;S1-D2&#x27;, &#x27;S2-D1&#x27;, &#x27;S2-D2&#x27;, &#x27;S2-D3&#x27;]
+# ожидаем: [&#x27;a.md&#x27;, &#x27;b.md&#x27;, &#x27;c.md&#x27;, &#x27;d.md&#x27;]</code></pre>
+<p><code>yield from</code> работает с любым итерируемым: <code>yield from [&quot;x&quot;, &quot;y&quot;]</code> тоже отдаст два значения. На уровне чтения чужого кода достаточно помнить: «здесь генератор передаёт слово другому, пока тот не кончится».</p>
+<p><strong>Шаг 10. <code>return</code> внутри генератора.</strong> В генераторе <code>return</code> означает «поток окончен» — ты это уже видел в <code>within_budget</code>. Если написать <code>return значение</code>, оно <strong>не попадёт</strong> в <code>for</code> и в <code>list()</code>: его можно достать только из исключения <code>StopIteration</code> (атрибут <code>.value</code>). В обычном коде так почти не делают — запомни лишь, что «вернуть результат» из генератора через <code>return</code> не получится.</p>
+<pre><code class="lang-python">def checked_takes(takes):
+    for t in takes:
+        if t == &quot;брак&quot;:
+            return &quot;остановлено на браке&quot;    # это значение НЕ попадёт в for
+        yield t
+
+print(list(checked_takes([&quot;D1&quot;, &quot;D2&quot;, &quot;брак&quot;, &quot;D4&quot;])))
+g = checked_takes([&quot;брак&quot;])
+try:
+    next(g)
+except StopIteration as e:
+    print(&quot;значение return:&quot;, e.value)
+# ожидаем: [&#x27;D1&#x27;, &#x27;D2&#x27;]
+# ожидаем: значение return: остановлено на браке</code></pre>
+<p><strong>Типичные ошибки:</strong></p>
+<ol>
+<li><strong>Генератор израсходован, а ты обходишь его ещё раз.</strong> Второй проход ничего не находит — и не падает. Хуже того, генератор <strong>всегда истинен</strong> в <code>if</code>, даже если пуст: проверка «нашлось ли что-нибудь» молча врёт.</li>
+</ol>
+<pre><code class="lang-python">def found(files):
+    for f in files:
+        if f.endswith(&quot;.md&quot;):
+            yield f
+
+hits = found([&quot;a.txt&quot;, &quot;b.txt&quot;])
+if hits:                                   # генератор всегда «истинный»!
+    print(&quot;что-то нашли?&quot;)
+print(list(hits))
+hits = found([&quot;a.md&quot;, &quot;b.md&quot;])
+print(len(list(hits)), list(hits))         # первый list израсходовал всё
+hits = list(found([&quot;a.md&quot;, &quot;b.md&quot;]))       # ИСПРАВЛЕНО: нужен дважды — сразу в список
+print(len(hits), hits)
+# ожидаем: что-то нашли?
+# ожидаем: []
+# ожидаем: 2 []
+# ожидаем: 2 [&#x27;a.md&#x27;, &#x27;b.md&#x27;]</code></pre>
+<p>Та же ловушка с генераторным выражением: <code>g = (x for x in costs)</code>, потом <code>max(g)</code> и <code>min(g)</code> — <code>min</code> получит пустоту и упадёт с <code>ValueError</code>. Для оркестратора опасность в том, что пустой второй проход выглядит как честное «источников нет».</p>
+<ol>
+<li><strong><code>return</code> со значением и <code>yield</code> в одной функции.</strong> Достаточно <strong>одного</strong> <code>yield</code> где угодно в теле — и вся функция становится генератором, а её <code>return</code> с результатом перестаёт работать как раньше. Классика: в обычную функцию «на минутку» вставили <code>yield</code> для отладки.</li>
+</ol>
+<pre><code class="lang-python">def collect(files):
+    result = [f for f in files if f.endswith(&quot;.md&quot;)]
+    yield &quot;отладка: собрал&quot;        # строку вставили «на время»
+    return result                  # список теперь потерян
+
+out = collect([&quot;a.md&quot;, &quot;b.txt&quot;])
+print(type(out).__name__)
+print(list(out))
+
+def load_names(fail: bool):
+    if fail:
+        return []                  # хотели «вернуть пустой список» — получим пустой генератор
+    for n in (&quot;a.md&quot;, &quot;b.md&quot;):
+        yield n
+
+r = load_names(fail=True)
+print(type(r).__name__, list(r))
+# ожидаем: generator
+# ожидаем: [&#x27;отладка: собрал&#x27;]
+# ожидаем: generator []</code></pre>
+<p>Правило: функция либо <strong>возвращает</strong> (<code>return результат</code>), либо <strong>выдаёт</strong> (<code>yield</code> по одному). Не смешивай. В генераторе используй голый <code>return</code>, когда поток надо закончить.</p>
+<ol>
+<li><strong>Индекс и <code>len</code> у генератора.</strong> У крана нет «пятого стакана» и нет «сколько всего» — значения ещё не существуют.</li>
+</ol>
+<pre><code class="lang-python">import itertools
+
+g = (n * 10 for n in range(5))
+try:
+    g[0]
+except TypeError as e:
+    print(&quot;TypeError:&quot;, e)
+try:
+    len(g)
+except TypeError as e:
+    print(&quot;TypeError:&quot;, e)
+print(list(itertools.islice(g, 2)))   # «первые два» — без построения всего списка
+print(next(g))                         # продолжает с того места, где остановились
+# ожидаем: TypeError: &#x27;generator&#x27; object is not subscriptable
+# ожидаем: TypeError: object of type &#x27;generator&#x27; has no len()
+# ожидаем: [0, 10]
+# ожидаем: 20</code></pre>
+<p>Нужен индекс или длина — сделай <code>list(g)</code> (если данных немного). Нужны «первые N» — <code>itertools.islice(g, N)</code> (подробнее в 02, 2.3). Нужен первый — <code>next(g, None)</code>.</p>
+<ol>
+<li><strong>Побочные эффекты и ошибки случаются только при обходе.</strong> Вызов генераторной функции ничего не делает: ни записи в журнал, ни проверки аргументов. Если генератор никто не обошёл — работа <strong>не выполнена</strong>, и ошибки нет. А проверка аргумента внутри генератора «выстрелит» не там, где передали плохое значение, а там, где начали читать.</li>
+</ol>
+<pre><code class="lang-python">def save_all(takes, saved):
+    for t in takes:
+        saved.append(t)                   # «побочный эффект»: запись в журнал / на диск
+        yield t
+
+saved = []
+save_all([&quot;D1&quot;, &quot;D2&quot;], saved)             # вызвали — и ничего не произошло
+print(saved)
+for _ in save_all([&quot;D1&quot;, &quot;D2&quot;], saved):   # обошли — теперь записалось
+    pass
+print(saved)
+
+def chunks(text, size):
+    if size &lt;= 0:
+        raise ValueError(&quot;size должен быть &gt; 0&quot;)
+    for i in range(0, len(text), size):
+        yield text[i:i + size]
+
+g = chunks(&quot;абв&quot;, 0)                      # ошибки ещё нет!
+print(&quot;генератор создан&quot;)
+try:
+    next(g)
+except ValueError as e:
+    print(&quot;упало только сейчас:&quot;, e)
+
+def _chunks(text, size):
+    for i in range(0, len(text), size):
+        yield text[i:i + size]
+
+def chunks_checked(text, size):            # ИСПРАВЛЕНО: проверка в обычной функции,
+    if size &lt;= 0:                          # поток — во внутреннем генераторе
+        raise ValueError(&quot;size должен быть &gt; 0&quot;)
+    return _chunks(text, size)
+
+try:
+    chunks_checked(&quot;абв&quot;, 0)
+except ValueError as e:
+    print(&quot;упало сразу:&quot;, e)
+print(list(chunks_checked(&quot;абвгд&quot;, 2)))
+# ожидаем: []
+# ожидаем: [&#x27;D1&#x27;, &#x27;D2&#x27;]
+# ожидаем: генератор создан
+# ожидаем: упало только сейчас: size должен быть &gt; 0
+# ожидаем: упало сразу: size должен быть &gt; 0
+# ожидаем: [&#x27;аб&#x27;, &#x27;вг&#x27;, &#x27;д&#x27;]</code></pre>
+<p>Если генератор что-то <strong>делает</strong> (пишет файл, шлёт запрос, тратит бюджет), а не только <strong>отдаёт</strong>, убедись, что его кто-то обходит до конца. Иначе это функция, которая «вроде бы вызвана», но не сработала.</p>
+<p><strong>Где это встретится дальше:</strong></p>
+<ul>
+<li><strong>1.4, «Глубже: включения…», шаг 4</strong> — <code>any</code>, <code>all</code>, <code>sum</code>, <code>max</code> с генераторным выражением; <code>any</code> останавливается на первой находке ровно потому, что генератор ленивый. В «Глубже: вложенные структуры» — <code>next(генератор, None)</code> как «первый подходящий или <code>None</code>».</li>
+<li><strong>1.6, файлы</strong> — открытый файл сам является ленивым итератором: <code>for line in f:</code> читает построчно, не загружая весь файл в память. Это тот же принцип, что в шаге 7.</li>
+<li><strong>02, 2.3 «Генераторы и итераторы»</strong> — <code>iter_files</code>, <code>iter_chunks</code> с перекрытием, <code>itertools.islice</code> как потолок на бесконечном потоке; там же снова про одноразовость.</li>
+<li><strong>03, 3.3</strong> — <code>load_chunks</code> собирает все куски в список: для маленькой папки нормально, для большого корпуса документов его переписывают генератором, как в шаге 7–8.</li>
+<li><strong>03, 3.2</strong> — HTTP-запрос к модели: там ответ приходит целиком, но у многих API есть потоковый режим, и его разбор устроен как шаг 6 — <code>for</code> по кускам и склейка <code>&quot;&quot;.join(...)</code>. <strong>05, 5.2</strong> — отдельно разобрано, что при потоковой передаче <code>usage</code> может не прийти и его нельзя молча считать нулём.</li>
+</ul>
+<p><strong>Аналогия из жизни техника/документалиста.</strong> Список — это когда после смены ты сначала <strong>сливаешь все карточки со всех камер на диск</strong>: час копирования, полтерабайта места, и только потом начинаешь отсматривать. Генератор — это отсмотр <strong>прямо с карты через монитор</strong>: плеер отдаёт дубль, ты смотришь, плеер ждёт, пока ты не нажмёшь «следующий» — это и есть <code>next()</code>. Нашёл нужный дубль на третьей минуте — остальное не копировал вовсе (ранняя остановка). Табло «конец карты» — это <code>StopIteration</code>. Одноразовость — как прямой эфир с камеры: прошло — назад не отмотаешь; хочешь посмотреть снова — либо пиши на диск (<code>list(...)</code>), либо включай воспроизведение сначала (вызови генераторную функцию заново). Конвейер из шага 8 — цепочка в эфирной аппаратной: камера → конвертер → шумодав → фильтр брака → «хронометраж не больше 30 секунд»; каждый блок берёт кадр у предыдущего только тогда, когда сам готов, и когда хронометраж кончился, вся цепочка встаёт. А <code>yield from</code> — режиссёр переключает эфир на вторую камеру: «пока говорит она — гоним её сигнал целиком, потом вернёмся».</p>
+<p><strong>Упражнения.</strong></p>
+<ol>
+<li>Напиши генератор <code>countdown(n)</code>, который на <code>while</code> отдаёт <code>n, n-1, …, 1</code>, а в конце — строку <code>&quot;Мотор!&quot;</code> (вспомни упражнение про обратный отсчёт в разделе о <code>while</code>). Проверь: <code>list(countdown(3))</code>.</li>
+<li>Напиши генератор <code>take_until(stream, max_chars)</code>: отдаёт куски из <code>stream</code>, пока их общая длина не превысит <code>max_chars</code>; кусок, который не влезает, не отдаёт и заканчивает поток. Проверь на источнике, который записывает в список <code>pulled</code> каждый выданный кусок: куски <code>&quot;Аккум&quot;</code>, <code>&quot;улятор &quot;</code>, <code>&quot;держит &quot;</code>, <code>&quot;90 минут&quot;</code>, потолок 15. Что получится в склейке и сколько кусков окажется в <code>pulled</code>? Почему не 2?</li>
+<li>Есть план съёмки <code>plan = {&quot;S1&quot;: [&quot;ок&quot;, &quot;ок&quot;], &quot;S2&quot;: [&quot;ок&quot;, &quot;брак&quot;, &quot;ок&quot;]}</code>. Напиши генератор <code>scene_rows(scene, statuses)</code>, который отдаёт строки вида <code>&quot;S2-D2: брак&quot;</code>, и генератор <code>iter_takes(plan)</code>, который через <code>yield from</code> отдаёт строки всех сцен. Найди одной строкой первый брак (<code>next</code> + генераторное выражение). И предскажи, что напечатает <code>g = iter_takes({&quot;S1&quot;: [&quot;ок&quot;]}); print(list(g), list(g))</code>.</li>
+</ol>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">def countdown(n: int):
+    while n &gt; 0:
+        yield n
+        n -= 1                     # не забудь сдвинуть счётчик — иначе бесконечный поток
+    yield &quot;Мотор!&quot;
+
+print(list(countdown(3)))
+
+pulled = []
+def source():
+    for piece in [&quot;Аккум&quot;, &quot;улятор &quot;, &quot;держит &quot;, &quot;90 минут&quot;]:
+        pulled.append(piece)
+        yield piece
+
+def take_until(stream, max_chars: int):
+    total = 0
+    for piece in stream:
+        if total + len(piece) &gt; max_chars:
+            return
+        total += len(piece)
+        yield piece
+
+print(repr(&quot;&quot;.join(take_until(source(), 15))))
+print(len(pulled))
+
+def scene_rows(scene: str, statuses: list[str]):
+    for n, status in enumerate(statuses, start=1):
+        yield f&quot;{scene}-D{n}: {status}&quot;
+
+def iter_takes(plan: dict[str, list[str]]):
+    for scene, statuses in plan.items():
+        yield from scene_rows(scene, statuses)
+
+plan = {&quot;S1&quot;: [&quot;ок&quot;, &quot;ок&quot;], &quot;S2&quot;: [&quot;ок&quot;, &quot;брак&quot;, &quot;ок&quot;]}
+print(next((r for r in iter_takes(plan) if r.endswith(&quot;брак&quot;)), None))
+g = iter_takes({&quot;S1&quot;: [&quot;ок&quot;]})
+print(list(g), list(g))
+# ожидаем: [3, 2, 1, &#x27;Мотор!&#x27;]
+# ожидаем: &#x27;Аккумулятор &#x27;
+# ожидаем: 3
+# ожидаем: S2-D2: брак
+# ожидаем: [&#x27;S1-D1: ок&#x27;] []</code></pre>
+<p>Во втором упражнении <code>pulled</code> равен 3, а не 2: чтобы <strong>узнать</strong>, что третий кусок <code>&quot;держит &quot;</code> не влезает (5 + 7 + 7 = 19 &gt; 15), его пришлось <strong>взять</strong> у источника. Генератор-источник отдал его, а <code>take_until</code> отказался и закончил поток. С настоящим потоком модели это значит: потолок срабатывает «на один кусок позже» — запас под это закладывают заранее (так же, как в 05 бюджет проверяют <strong>до</strong> вызова, а не после). В третьем упражнении <code>next(...)</code> остановился на <code>S2-D2</code> и <code>S2-D3</code> даже не построил; второй <code>list(g)</code> пуст — генератор одноразовый.<br>&lt;/details&gt;</p>
 <hr>
 <h3 id="ch-01-1-4-коллекции-узлы-системы">1.4. Коллекции — узлы системы</h3>
 <h4 id="ch-01-список-list">Список (<code>list</code>)</h4>
