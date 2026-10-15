@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-10-15-vecher",
+    "kind": "ai",
+    "date": "2026-10-15",
+    "dateLabel": "15.10.2026, четверг · вечер",
+    "topic": "FSB триггеры одобрения агентов, HKMA ART, FTC запросы к OpenAI и Anthropic, GPT-4o/4.1 уходят из API, Muse Spark Open на Mac",
+    "title": "Вечерняя сводка · 15.10.2026 · FSB и HKMA про агентов, FTC к OpenAI и Anthropic, GPT-4o уходит из API, Muse Spark Open",
+    "summary": "К вечеру четверга: FSB выпустил финальные практики ИИ с триггерами человеческого одобрения для агентов; HKMA объявила рамку ART для банков; FTC направила гражданские запросы OpenAI и Anthropic; OpenAI отключает GPT-4o и GPT-4.1 в API с 14 января 2027; Meta выложила Muse Spark Open под Mac Studio."
+  },
+  {
     "id": "2026-10-15-utro",
     "kind": "ai",
     "date": "2026-10-15",
