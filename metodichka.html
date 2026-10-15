@@ -46,7 +46,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 15.10.2026 01:59 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 15.10.2026 07:58 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -244,7 +244,7 @@ print(len(p.read_text(encoding=&quot;utf-8&quot;).splitlines()))
 <details class="m-chapter" id="ch-01"><summary><h2>01. Основы Python — Ступень 1. Порядок мысли</h2></summary><div class="m-body"><p><strong>Курс:</strong> Stepik 58852 «Поколение Python: курс для начинающих».<br><strong>Где ты сейчас:</strong> примерно модуль ввода-вывода / циклы (<code>while</code>).<br><strong>Цель ступени:</strong> научиться ясно говорить: что было на входе, какая ветка выбрана, где ход кончается. Без этого схему системы не прочитать, даже если код писал не ты.</p>
 <p>Эта часть объясняет каждый базовый термин максимально подробно. Не «запомни синтаксис», а «пойми, зачем это существует и как это помогает оркестратору».</p>
 <p><strong>Карта: что из этой ступени понадобится дальше.</strong> Ступень 1 — фундамент для всего остального. Если какая-то строка в файлах 04–06 кажется непонятной, почти всегда ответ здесь:</p>
-<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
+<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
 <hr>
 <h3 id="ch-01-1-1-переменные-и-типы-данных">1.1. Переменные и типы данных</h3>
 <h4 id="ch-01-что-такое-переменная">Что такое переменная</h4>
@@ -2178,6 +2178,292 @@ if (m := re.search(r&quot;\d+&quot;, text)):
 # ожидаем: [&#x27;a.md&#x27;, &#x27;z.md&#x27;] {&#x27;z.md&#x27;} False
 # ожидаем: 90</code></pre>
 <p><code>bool(unique) and not invented</code> — та же проверка, что <code>if not sources or invented</code> в файле 03 (доработка 3.4), только записанная «в положительную сторону».<br>&lt;/details&gt;</p>
+<h4 id="ch-01-глубже-распаковка-обход-словаря-defaultdict-и-counter-">Глубже: распаковка, обход словаря, <code>defaultdict</code> и <code>Counter</code> — журнал дублей по полочкам</h4>
+<p>В разделах выше словарь был «паспортом» состояния: читаем поле, пишем поле. Но оркестратор постоянно делает с коллекциями ещё три вещи: <strong>разбирает пары и записи</strong> (имя и оценка, узел и статус), <strong>обходит</strong> словарь целиком (каждый узел, каждый источник) и <strong>раскладывает журнал по группам</strong> (сколько отказов по каждому узлу, какие файлы цитировал каждый шаг). Ниже — механика этих трёх движений и ловушки, на которых спотыкаются чаще всего.</p>
+<p><strong>Аналогия из жизни техника/документалиста.</strong> В конце смены у тебя куча карточек с дублями: «сцена 2, дубль 3, брак». Распаковка — это когда ты берёшь карточку и сразу читаешь её поля по местам: сцена — сюда, дубль — сюда, статус — сюда. Обход словаря — пройти по всем ящикам монтажного стола и заглянуть в каждый. <code>defaultdict</code> — ящики, которые сами появляются, когда кладёшь первую карточку новой сцены. <code>Counter</code> — табло-счётчик «ок/брак» на стене аппаратной. Ниже каждая из этих вещей разобрана в коде.</p>
+<p><strong>Шаг 1. Распаковка: разложить запись по переменным.</strong> Если справа стоит последовательность (кортеж, список, строка), а слева несколько имён через запятую, Python раскладывает элементы по местам — <strong>слева направо, строго по количеству</strong>:</p>
+<pre><code class="lang-python">take = (&quot;S2&quot;, 3, &quot;брак&quot;)
+scene, number, status = take          # три имени — три элемента
+print(scene, number, status)
+
+a, b = 1, 2
+a, b = b, a                           # обмен без временной переменной
+print(a, b)
+
+hits = [(&quot;a.md&quot;, 0.4), (&quot;b.md&quot;, 0.9)]
+for name, score in hits:              # распаковка прямо в заголовке for
+    print(f&quot;{name}: {score}&quot;)
+# ожидаем: S2 3 брак
+# ожидаем: 2 1
+# ожидаем: a.md: 0.4
+# ожидаем: b.md: 0.9</code></pre>
+<p><code>a, b = b, a</code> работает потому, что справа <strong>сначала</strong> целиком собирается кортеж <code>(2, 1)</code>, и только потом он раскладывается налево. Это тот же порядок «вычислили правую часть — записали в левую», что и в <code>x = x + 1</code>.</p>
+<p><strong>Шаг 2. Звёздочка: «первый, последний и всё остальное».</strong> Одно имя слева можно пометить <code>*</code> — оно заберёт всё, что не досталось другим, и <strong>всегда станет списком</strong> (даже пустым):</p>
+<pre><code class="lang-python">steps = [&quot;старт&quot;, &quot;поиск&quot;, &quot;ответ&quot;, &quot;проверка&quot;, &quot;финиш&quot;]
+first, *middle, last = steps
+print(first, middle, last)
+
+head, *rest = [&quot;только старт&quot;]
+print(head, rest)
+
+node, _, status = (&quot;search&quot;, 120, &quot;ok&quot;)   # _ — «это поле мне не нужно»
+print(node, status)
+# ожидаем: старт [&#x27;поиск&#x27;, &#x27;ответ&#x27;, &#x27;проверка&#x27;] финиш
+# ожидаем: только старт []
+# ожидаем: search ok</code></pre>
+<p><code>_</code> — обычное имя переменной, просто договорённость: «значение есть, но я им не пользуюсь». Читающий код сразу видит, что поле пропущено нарочно, а не забыто.</p>
+<p><strong>Шаг 3. Самая частая ошибка распаковки — не совпало количество.</strong> Сообщение об ошибке подсказывает, в какую сторону промах:</p>
+<pre><code class="lang-python">def unpack(row):
+    try:
+        node, status = row
+        return f&quot;{node}={status}&quot;
+    except ValueError as e:
+        return f&quot;ValueError: {e}&quot;
+
+print(unpack((&quot;search&quot;, &quot;ok&quot;)))
+print(unpack((&quot;search&quot;, &quot;ok&quot;, 120)))     # лишний элемент
+print(unpack((&quot;search&quot;,)))               # не хватает
+print(unpack(&quot;ok&quot;))                      # строка — тоже последовательность!
+# ожидаем: search=ok
+# ожидаем: ValueError: too many values to unpack (expected 2)
+# ожидаем: ValueError: not enough values to unpack (expected 2, got 1)
+# ожидаем: o=k</code></pre>
+<p>Последняя строка — коварный случай: строка <code>&quot;ok&quot;</code> из двух букв «успешно» распаковалась в <code>node=&quot;o&quot;</code>, <code>status=&quot;k&quot;</code>. Ошибки нет, а смысл потерян. Так бывает, когда функция обещала вернуть пару <code>(узел, статус)</code>, а в одной ветке вернула просто строку. Лечится контрактом из 1.3: у каждой ветки один и тот же тип ответа.</p>
+<p><strong>Шаг 4. Обход словаря: ключи, значения, пары.</strong> <code>for k in d</code> идёт <strong>по ключам</strong>. Чтобы получить и ключ, и значение, нужен <code>.items()</code> — он отдаёт пары <code>(ключ, значение)</code>, которые тут же распаковываются (шаг 1). Порядок обхода — порядок добавления ключей (так в Python с версии 3.7):</p>
+<pre><code class="lang-python">usage = {&quot;search&quot;: 120, &quot;answer&quot;: 900, &quot;check&quot;: 60}
+
+print(list(usage))                  # по ключам
+print(list(usage.values()))
+print(sum(usage.values()))
+
+for node, tokens in usage.items():
+    if tokens &gt; 500:
+        print(f&quot;дорогой узел: {node} ({tokens})&quot;)
+
+worst = max(usage.items(), key=lambda kv: kv[1])
+print(worst)
+# ожидаем: [&#x27;search&#x27;, &#x27;answer&#x27;, &#x27;check&#x27;]
+# ожидаем: [120, 900, 60]
+# ожидаем: 1080
+# ожидаем: дорогой узел: answer (900)
+# ожидаем: (&#x27;answer&#x27;, 900)</code></pre>
+<p><code>max(usage.items(), key=...)</code> — тот же приём <code>key=</code>, что в сортировке из «Глубже: включения…»: сравниваем пары по второму элементу, а получаем всю пару целиком, то есть и узел, и цифру.</p>
+<p><strong>Шаг 5. <code>keys()</code>, <code>values()</code>, <code>items()</code> — это окна, а не снимки.</strong> Они не копируют данные, а смотрят в живой словарь. Изменился словарь — изменилось и то, что видно в окно:</p>
+<pre><code class="lang-python">state = {&quot;step&quot;: 1}
+keys = state.keys()
+print(list(keys))
+state[&quot;log&quot;] = []
+print(list(keys))                    # окно видит новый ключ
+
+snapshot = list(state.keys())        # а это уже снимок
+state[&quot;sources&quot;] = []
+print(snapshot, len(state))
+# ожидаем: [&#x27;step&#x27;]
+# ожидаем: [&#x27;step&#x27;, &#x27;log&#x27;]
+# ожидаем: [&#x27;step&#x27;, &#x27;log&#x27;] 3</code></pre>
+<p><strong>Шаг 6. Главная ловушка: менять размер словаря прямо во время обхода.</strong> Это родственник ошибки «удаляю из списка, по которому иду» из разбора <code>while</code>, только словарь не молчит, а падает:</p>
+<pre><code class="lang-python">cache = {&quot;a.md&quot;: &quot;ок&quot;, &quot;b.md&quot;: None, &quot;c.md&quot;: None, &quot;d.md&quot;: &quot;ок&quot;}
+
+try:
+    for name, text in cache.items():          # ПЛОХО
+        if text is None:
+            del cache[name]
+except RuntimeError as e:
+    print(&quot;RuntimeError:&quot;, e)
+
+cache = {&quot;a.md&quot;: &quot;ок&quot;, &quot;b.md&quot;: None, &quot;c.md&quot;: None, &quot;d.md&quot;: &quot;ок&quot;}
+for name in list(cache):                      # ИСПРАВЛЕНО (вариант 1): обходим снимок ключей
+    if cache[name] is None:
+        del cache[name]
+print(cache)
+
+cache = {&quot;a.md&quot;: &quot;ок&quot;, &quot;b.md&quot;: None, &quot;c.md&quot;: None, &quot;d.md&quot;: &quot;ок&quot;}
+clean = {k: v for k, v in cache.items() if v is not None}   # ИСПРАВЛЕНО (вариант 2): новый словарь
+print(clean, len(cache))
+# ожидаем: RuntimeError: dictionary changed size during iteration
+# ожидаем: {&#x27;a.md&#x27;: &#x27;ок&#x27;, &#x27;d.md&#x27;: &#x27;ок&#x27;}
+# ожидаем: {&#x27;a.md&#x27;: &#x27;ок&#x27;, &#x27;d.md&#x27;: &#x27;ок&#x27;} 4</code></pre>
+<p>Тонкость: <strong>менять значения</strong> существующих ключей во время обхода можно (<code>cache[name] = &quot;проверено&quot;</code> — размер не меняется). Падает только добавление и удаление ключей. Вариант 2 обычно лучше: исходное состояние не тронуто, а это ровно то правило «узел возвращает обновление, а не портит общий словарь», которое встретится в 04, 4.3.</p>
+<p><strong>Шаг 7. Группировка вручную: «если ящика нет — заведи».</strong> Задача, которая возникает в каждом журнале: разложить записи по ключу. Сначала — честно, без библиотек, чтобы была видна механика:</p>
+<pre><code class="lang-python">log = [(&quot;search&quot;, &quot;ok&quot;), (&quot;answer&quot;, &quot;отказ&quot;), (&quot;search&quot;, &quot;ok&quot;),
+       (&quot;check&quot;, &quot;ok&quot;), (&quot;answer&quot;, &quot;ok&quot;)]
+
+by_node = {}
+for node, status in log:
+    if node not in by_node:
+        by_node[node] = []          # ящика нет — заводим
+    by_node[node].append(status)
+print(by_node)
+
+by_node2 = {}
+for node, status in log:
+    by_node2.setdefault(node, []).append(status)   # то же одной строкой (setdefault из «Доработки»)
+print(by_node == by_node2)
+# ожидаем: {&#x27;search&#x27;: [&#x27;ok&#x27;, &#x27;ok&#x27;], &#x27;answer&#x27;: [&#x27;отказ&#x27;, &#x27;ok&#x27;], &#x27;check&#x27;: [&#x27;ok&#x27;]}
+# ожидаем: True</code></pre>
+<p><strong>Шаг 8. <code>defaultdict</code>: ящики, которые появляются сами.</strong> <code>collections.defaultdict(list)</code> — словарь, который при обращении к <strong>несуществующему</strong> ключу сам вызывает <code>list()</code>, кладёт результат (пустой список) под этот ключ и отдаёт его тебе. В скобках передаётся не значение, а <strong>функция-фабрика</strong> (вспомни «функции как значения» из 1.3): <code>list</code>, <code>int</code>, <code>set</code> или своя <code>lambda</code>:</p>
+<pre><code class="lang-python">from collections import defaultdict
+
+log = [(&quot;search&quot;, &quot;ok&quot;), (&quot;answer&quot;, &quot;отказ&quot;), (&quot;search&quot;, &quot;ok&quot;),
+       (&quot;check&quot;, &quot;ok&quot;), (&quot;answer&quot;, &quot;ok&quot;)]
+
+by_node = defaultdict(list)
+for node, status in log:
+    by_node[node].append(status)        # ни if, ни setdefault
+print(dict(by_node))
+
+fails = defaultdict(int)                # int() == 0 — удобно для счётчиков
+for node, status in log:
+    if status != &quot;ok&quot;:
+        fails[node] += 1
+print(dict(fails))
+
+seen = defaultdict(set)
+seen[&quot;S1&quot;].add(&quot;D1&quot;); seen[&quot;S1&quot;].add(&quot;D1&quot;); seen[&quot;S2&quot;].add(&quot;D3&quot;)
+print(dict(seen))
+# ожидаем: {&#x27;search&#x27;: [&#x27;ok&#x27;, &#x27;ok&#x27;], &#x27;answer&#x27;: [&#x27;отказ&#x27;, &#x27;ok&#x27;], &#x27;check&#x27;: [&#x27;ok&#x27;]}
+# ожидаем: {&#x27;answer&#x27;: 1}
+# ожидаем: {&#x27;S1&#x27;: {&#x27;D1&#x27;}, &#x27;S2&#x27;: {&#x27;D3&#x27;}}</code></pre>
+<p><code>dict(by_node)</code> в <code>print</code> — только ради читаемого вывода: сам <code>defaultdict</code> печатается как <code>defaultdict(&lt;class &#x27;list&#x27;&gt;, {...})</code>. Ведёт он себя как обычный словарь: <code>.items()</code>, <code>in</code>, <code>len</code> работают так же.</p>
+<p><strong>Шаг 9. Ловушка <code>defaultdict</code>: даже чтение создаёт ключ.</strong> Это прямое следствие шага 8 и самая частая ошибка с ним:</p>
+<pre><code class="lang-python">from collections import defaultdict
+
+fails = defaultdict(int)
+fails[&quot;answer&quot;] += 1
+
+if fails[&quot;search&quot;] == 0:                 # ПЛОХО: «просто посмотрел» — и создал ключ
+    print(&quot;search без отказов&quot;)
+print(dict(fails), len(fails))
+
+fails2 = defaultdict(int)
+fails2[&quot;answer&quot;] += 1
+print(&quot;search&quot; in fails2, fails2.get(&quot;search&quot;, 0), len(fails2))   # ИСПРАВЛЕНО: in и get ничего не создают
+
+import json
+print(json.dumps(fails))                 # лишний ключ уехал в отчёт
+# ожидаем: search без отказов
+# ожидаем: {&#x27;answer&#x27;: 1, &#x27;search&#x27;: 0} 2
+# ожидаем: False 0 1
+# ожидаем: {&quot;answer&quot;: 1, &quot;search&quot;: 0}</code></pre>
+<p>Чем это грозит оркестратору: проверка «был ли узел» через <code>fails[node]</code> молча дописывает в журнал узлы, которых не было, и отчёт начинает врать, что в графе был шаг <code>search</code>. Правило: <strong>писать</strong> в <code>defaultdict</code> через <code>[]</code>, <strong>читать</strong> через <code>in</code> и <code>.get()</code>.</p>
+<p><strong>Шаг 10. <code>Counter</code>: табло «ок/брак».</strong> <code>collections.Counter</code> — словарь «элемент → сколько раз», заточенный под подсчёт. Отсутствующий ключ даёт <code>0</code> и, в отличие от <code>defaultdict</code>, <strong>не создаётся</strong> при чтении:</p>
+<pre><code class="lang-python">from collections import Counter
+
+statuses = [&quot;ok&quot;, &quot;отказ&quot;, &quot;ok&quot;, &quot;ok&quot;, &quot;таймаут&quot;, &quot;отказ&quot;]
+c = Counter(statuses)
+print(c[&quot;ok&quot;], c[&quot;брак&quot;], len(c))          # &#x27;брак&#x27; не появился
+print(c.most_common(2))                     # два самых частых
+
+c.update([&quot;ok&quot;, &quot;таймаут&quot;])                 # добавить к счёту, а не заменить
+print(c[&quot;ok&quot;], c[&quot;таймаут&quot;])
+
+words = Counter(&quot;аккумулятор держит 90 минут, аккумулятор лёгкий&quot;.replace(&quot;,&quot;, &quot;&quot;).split())
+print(words.most_common(1))
+
+morning = Counter({&quot;ok&quot;: 5, &quot;отказ&quot;: 1})
+evening = Counter({&quot;ok&quot;: 3, &quot;отказ&quot;: 2})
+print(dict(morning + evening))
+print(sum((morning + evening).values()))
+# ожидаем: 3 0 3
+# ожидаем: [(&#x27;ok&#x27;, 3), (&#x27;отказ&#x27;, 2)]
+# ожидаем: 4 2
+# ожидаем: [(&#x27;аккумулятор&#x27;, 2)]
+# ожидаем: {&#x27;ok&#x27;: 8, &#x27;отказ&#x27;: 3}
+# ожидаем: 11</code></pre>
+<p><code>most_common</code> при равных счётах сохраняет порядок первого появления. <code>Counter + Counter</code> складывает счета по ключам: так сводятся утренний и вечерний прогон, или расход токенов по двум моделям.</p>
+<p><strong>Шаг 11. Кортеж как составной ключ.</strong> Когда запись определяют <strong>два</strong> признака сразу (сцена и дубль, узел и номер шага), ключом делают кортеж. Список так не подойдёт (<code>TypeError: unhashable type: &#x27;list&#x27;</code> — см. словарь сообщений в 1.10), а кортеж неизменяем и годится:</p>
+<pre><code class="lang-python">takes = {}
+takes[(&quot;S1&quot;, 1)] = &quot;брак&quot;
+takes[(&quot;S1&quot;, 2)] = &quot;ок&quot;
+takes[(&quot;S2&quot;, 1)] = &quot;ок&quot;
+
+print(takes[(&quot;S1&quot;, 2)])
+print(takes.get((&quot;S3&quot;, 1), &quot;не снимали&quot;))
+
+for (scene, number), status in takes.items():     # распаковка вложенной пары
+    if status == &quot;брак&quot;:
+        print(f&quot;{scene}-D{number}: переснять&quot;)
+
+ok_by_scene = {}
+for (scene, _), status in takes.items():
+    ok_by_scene[scene] = ok_by_scene.get(scene, 0) + (status == &quot;ок&quot;)
+print(ok_by_scene)
+# ожидаем: ок
+# ожидаем: не снимали
+# ожидаем: S1-D1: переснять
+# ожидаем: {&#x27;S1&#x27;: 1, &#x27;S2&#x27;: 1}</code></pre>
+<p><code>(status == &quot;ок&quot;)</code> — это <code>True</code> или <code>False</code>, а при сложении с числом <code>True</code> считается как <code>1</code>, <code>False</code> как <code>0</code>. Удобно для счётчиков, но если сомневаешься, пиши явный <code>1 if status == &quot;ок&quot; else 0</code>.</p>
+<p>Заголовок <code>for (scene, number), status in takes.items()</code> разбирает <strong>вложенную</strong> структуру за один шаг: <code>.items()</code> отдаёт <code>((&quot;S1&quot;, 1), &quot;брак&quot;)</code>, внешние скобки — пара «ключ, значение», внутренние — сам ключ.</p>
+<p><strong>Связь с работой оркестратора.</strong> Почти любой разбор журнала прогона собирается из этих четырёх деталей:</p>
+<ul>
+<li><strong>распаковка</strong>: <code>for node, status in log</code>, <code>name, score = hit</code>, <code>first, *rest = steps</code>;</li>
+<li><strong><code>.items()</code></strong>: пройти по всем узлам или источникам и сравнить с потолком;</li>
+<li><strong><code>defaultdict(list)</code> / <code>Counter</code></strong>: отказы по узлам, источники по шагам, частота статусов;</li>
+<li><strong>кортеж-ключ</strong>: «узел + шаг», «запрос + модель» (в 05, 5.3 ключ кэша — строка вопроса, а в доработке там же разобрано, почему в ключ должны входить ещё модель и версия промпта; кортеж <code>(model, prompt_version, query)</code> — прямой способ это записать).</li>
+</ul>
+<p>Короткий пример «сводка прогона» — то, что ты будешь печатать в конце каждой отладки графа:</p>
+<pre><code class="lang-python">from collections import Counter, defaultdict
+
+run = [
+    {&quot;step&quot;: 1, &quot;node&quot;: &quot;search&quot;, &quot;status&quot;: &quot;ok&quot;,    &quot;tokens&quot;: 120},
+    {&quot;step&quot;: 2, &quot;node&quot;: &quot;answer&quot;, &quot;status&quot;: &quot;отказ&quot;, &quot;tokens&quot;: 900},
+    {&quot;step&quot;: 3, &quot;node&quot;: &quot;search&quot;, &quot;status&quot;: &quot;ok&quot;,    &quot;tokens&quot;: 110},
+    {&quot;step&quot;: 4, &quot;node&quot;: &quot;answer&quot;, &quot;status&quot;: &quot;ok&quot;,    &quot;tokens&quot;: 950},
+    {&quot;step&quot;: 5, &quot;node&quot;: &quot;check&quot;,  &quot;status&quot;: &quot;ok&quot;,    &quot;tokens&quot;: 60},
+]
+
+def summarize(run, ceiling=2000):
+    statuses = Counter(r[&quot;status&quot;] for r in run)
+    tokens = defaultdict(int)
+    for r in run:
+        tokens[r[&quot;node&quot;]] += r[&quot;tokens&quot;]
+    total = sum(tokens.values())
+    node, most = max(tokens.items(), key=lambda kv: kv[1])
+    verdict = &quot;в пределах потолка&quot; if total &lt;= ceiling else &quot;ПОТОЛОК ПРЕВЫШЕН&quot;
+    return f&quot;шагов {len(run)} | {dict(statuses)} | токенов {total} ({verdict}) | дороже всех: {node} ({most})&quot;
+
+print(summarize(run))
+print(summarize(run, ceiling=2500))
+# ожидаем: шагов 5 | {&#x27;ok&#x27;: 4, &#x27;отказ&#x27;: 1} | токенов 2140 (ПОТОЛОК ПРЕВЫШЕН) | дороже всех: answer (1850)
+# ожидаем: шагов 5 | {&#x27;ok&#x27;: 4, &#x27;отказ&#x27;: 1} | токенов 2140 (в пределах потолка) | дороже всех: answer (1850)</code></pre>
+<p>Заметь: при потолке 2000 прогон его превысил, и сводка сразу показывает виновника. Это повод для вопроса оркестратора: «почему <code>answer</code> съел 1850 токенов за два захода, и нужен ли был повтор после отказа?». Поднять потолок до 2500 — тоже решение, но осознанное, а не «само прошло». Сводка не решает за тебя, она показывает, куда смотреть.</p>
+<p><strong>Типичные ошибки — коротко.</strong></p>
+<div class="md-table"><table><thead><tr><th>Симптом</th><th>Причина</th><th>Лечение</th></tr></thead><tbody><tr><td><code>ValueError: too many values to unpack</code></td><td>в записи больше полей, чем имён слева</td><td>проверь форму данных; лишнее забери в <code>*rest</code> или <code>_</code></td></tr><tr><td>распаковка «сработала», но значения бессмысленные (<code>o</code>, <code>k</code>)</td><td>вместо пары пришла строка</td><td>у функции один тип ответа во всех ветках</td></tr><tr><td><code>for x in d</code> даёт только ключи</td><td>так устроен обход словаря</td><td><code>.items()</code> для пар, <code>.values()</code> для значений</td></tr><tr><td><code>RuntimeError: dictionary changed size during iteration</code></td><td><code>del</code> или новый ключ внутри обхода</td><td>обходи <code>list(d)</code> или строй новый словарь</td></tr><tr><td>в отчёте появились узлы, которых не было</td><td>чтение <code>defaultdict</code> через <code>[]</code> создало ключи</td><td>читать через <code>in</code> и <code>.get()</code></td></tr><tr><td><code>defaultdict([])</code> → <code>TypeError</code></td><td>передали значение вместо фабрики</td><td><code>defaultdict(list)</code>, без скобок у <code>list</code></td></tr><tr><td><code>TypeError: unhashable type: &#x27;list&#x27;</code> у ключа</td><td>список как ключ</td><td>кортеж (порядок важен) или <code>frozenset</code> (не важен)</td></tr></tbody></table></div>
+<p><strong>Сделай сам.</strong></p>
+<ol>
+<li>Дан журнал <code>log = [(&quot;S1&quot;, &quot;ок&quot;), (&quot;S2&quot;, &quot;брак&quot;), (&quot;S1&quot;, &quot;брак&quot;), (&quot;S2&quot;, &quot;брак&quot;), (&quot;S3&quot;, &quot;ок&quot;)]</code>. Через <code>defaultdict(list)</code> разложи статусы по сценам, затем выведи сцены, где <strong>все</strong> дубли — брак (вспомни <code>all</code> из «Глубже: включения…»).</li>
+<li>Из того же журнала через <code>Counter</code> получи общее число браков и самый частый статус. Убедись, что проверка <code>c[&quot;переснято&quot;]</code> не добавила ключ (сравни <code>len(c)</code> до и после).</li>
+<li>Почини функцию, не меняя её смысла («убрать узлы без токенов»):<br>```<br>def drop_empty(usage):<br>for node, tokens in usage.items():<br>if tokens == 0:<br>del usage[node]<br>return usage<br>```<br>Сделай так, чтобы исходный словарь не менялся, а функция возвращала новый.</li>
+</ol>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">from collections import Counter, defaultdict
+
+log = [(&quot;S1&quot;, &quot;ок&quot;), (&quot;S2&quot;, &quot;брак&quot;), (&quot;S1&quot;, &quot;брак&quot;), (&quot;S2&quot;, &quot;брак&quot;), (&quot;S3&quot;, &quot;ок&quot;)]
+
+# 1
+by_scene = defaultdict(list)
+for scene, status in log:
+    by_scene[scene].append(status)
+print(dict(by_scene))
+print([s for s, sts in by_scene.items() if all(x == &quot;брак&quot; for x in sts)])
+
+# 2
+c = Counter(status for _, status in log)
+before = len(c)
+print(c[&quot;брак&quot;], c.most_common(1)[0][0], c[&quot;переснято&quot;], len(c) == before)
+
+# 3
+def drop_empty(usage):
+    return {node: tokens for node, tokens in usage.items() if tokens != 0}
+
+usage = {&quot;search&quot;: 120, &quot;cache&quot;: 0, &quot;answer&quot;: 900}
+print(drop_empty(usage), usage)
+# ожидаем: {&#x27;S1&#x27;: [&#x27;ок&#x27;, &#x27;брак&#x27;], &#x27;S2&#x27;: [&#x27;брак&#x27;, &#x27;брак&#x27;], &#x27;S3&#x27;: [&#x27;ок&#x27;]}
+# ожидаем: [&#x27;S2&#x27;]
+# ожидаем: 3 брак 0 True
+# ожидаем: {&#x27;search&#x27;: 120, &#x27;answer&#x27;: 900} {&#x27;search&#x27;: 120, &#x27;cache&#x27;: 0, &#x27;answer&#x27;: 900}</code></pre>
+<p>В задаче 2 <code>c[&quot;переснято&quot;]</code> вернул <code>0</code>, но <code>len(c)</code> не изменился: у <code>Counter</code> чтение не создаёт ключ, в отличие от <code>defaultdict</code> из шага 9. В задаче 3 исходная версия упала бы с <code>RuntimeError</code> на первом же нуле; новый словарь заодно оставляет нетронутым входное состояние.<br>&lt;/details&gt;</p>
+<p><strong>Где это встретится дальше:</strong> 02 — <code>for name, hint in hints.items()</code>, <code>for key, value in update.items()</code> при слиянии обновлений состояния; 03 — фильтр окружения <code>{k: v for k, v in os.environ.items() if ...}</code>; 04 — журнал узлов в состоянии агента и его разбор после прогона; 05 — расход по узлам против потолка денег и ключ кэша (5.3); 06 — сводка, в которую скрипт пишет ошибки, прежде чем вернуть код выхода.</p>
 <hr>
 <h3 id="ch-01-1-5-строки">1.5. Строки</h3>
 <p>Строка — неизменяемая последовательность символов.</p>
