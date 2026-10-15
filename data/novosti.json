@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-10-15-utro",
+    "kind": "ai",
+    "date": "2026-10-15",
+    "dateLabel": "15.10.2026, четверг",
+    "topic": "Anthropic $16,8 млрд и скорректированная прибыль, иски восьми штатов к OpenAI, HydraFusion Max, меры Claude перед midterms",
+    "title": "Утренняя сводка · 15.10.2026 · Anthropic $16,8 млрд перед IPO, иски штатов к OpenAI, HydraFusion Max, меры Claude перед midterms",
+    "summary": "Anthropic назвала инвесторам выручку III квартала $16,8 млрд и скорректированную прибыль перед IPO. Восемь штатов США подали иски к OpenAI из‑за безопасности ChatGPT для детей. GitHub обновил HydraFusion в Copilot и выпустил HydraFusion Max. Anthropic усилила меры Claude перед промежуточными выборами США 2026."
+  },
+  {
     "id": "2026-10-14-vecher",
     "kind": "ai",
     "date": "2026-10-14",
