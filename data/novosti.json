@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-10-16-vecher",
+    "kind": "ai",
+    "date": "2026-10-16",
+    "dateLabel": "16.10.2026, пятница · вечер",
+    "topic": "Reflection Beam, Harness², ChatGPT во вкладках Chrome, трейсы агентов Claude, Deep Review, оценка Anthropic $1,5 трлн, $15 млн на проверку математики ИИ",
+    "title": "Вечерняя сводка · 16.10.2026 · открытая Beam, самоулучшение обвязки, агенты в Chrome и под наблюдением",
+    "summary": "К вечеру пятницы: лаборатория Reflection выложила открытую модель Beam на 501 млрд параметров под Apache 2.0, Google Research открыла код Harness² для улучшения агентов без переобучения модели, ChatGPT в Chrome научился работать с открытыми вкладками. Claude Platform получила трейсы OpenTelemetry, Google открыла всем Deep Review, а инвесторы, по данным Reuters, обсуждают оценку Anthropic около $1,5 трлн вместо $2 трлн."
+  },
+  {
     "id": "2026-10-16-utro",
     "kind": "ai",
     "date": "2026-10-16",
