@@ -46,7 +46,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 15.10.2026 20:54 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 16.10.2026 07:56 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -244,7 +244,7 @@ print(len(p.read_text(encoding=&quot;utf-8&quot;).splitlines()))
 <details class="m-chapter" id="ch-01"><summary><h2>01. Основы Python — Ступень 1. Порядок мысли</h2></summary><div class="m-body"><p><strong>Курс:</strong> Stepik 58852 «Поколение Python: курс для начинающих».<br><strong>Где ты сейчас:</strong> примерно модуль ввода-вывода / циклы (<code>while</code>).<br><strong>Цель ступени:</strong> научиться ясно говорить: что было на входе, какая ветка выбрана, где ход кончается. Без этого схему системы не прочитать, даже если код писал не ты.</p>
 <p>Эта часть объясняет каждый базовый термин максимально подробно. Не «запомни синтаксис», а «пойми, зачем это существует и как это помогает оркестратору».</p>
 <p><strong>Карта: что из этой ступени понадобится дальше.</strong> Ступень 1 — фундамент для всего остального. Если какая-то строка в файлах 04–06 кажется непонятной, почти всегда ответ здесь:</p>
-<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
+<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
 <hr>
 <h3 id="ch-01-1-1-переменные-и-типы-данных">1.1. Переменные и типы данных</h3>
 <h4 id="ch-01-что-такое-переменная">Что такое переменная</h4>
@@ -2622,6 +2622,222 @@ def count_word(text: str, word: str) -&gt; int:
 
 print(count_word(&quot;Кот, кот! Который кот?&quot;, &quot;кот&quot;))
 # ожидаем: 3</code></pre>
+<p>&lt;/details&gt;</p>
+<h4 id="ch-01-глубже-f-строки-срезы-partition-и-разбор-ответа-модели">Глубже: f-строки, срезы, <code>partition</code> и разбор ответа модели по кускам</h4>
+<p>В «Доработке» выше строка уже нормализуется, слово ищется целиком, ответ модели разбирается по префиксу. Здесь — другой слой: <strong>взять кусок</strong>, <strong>разрезать по метке</strong>, <strong>отклеить ярлык</strong> и <strong>подписать кадр</strong>. Оркестратору это нужно каждый день: разбор ответа модели по контракту, короткий след шага, усечение логов под потолок токенов и символов.</p>
+<p><strong>Интуиция.</strong> Строка — как плёнка с таймкодом. Срез — вырезать кадры с 10-й по 40-ю секунду. <code>partition</code> — разрезать ленту по первой метке «ОТВЕТ:». <code>removeprefix</code> — снять наклейку «СКЕМА: » с кассеты, не стирая буквы с названия. f-строка — подписать кадр на монтажном листе: сцена, дубль, статус. Ниже каждый приём — отдельно, с ловушками и связью с целью, которую можно провалить.</p>
+<p><strong>Шаг 1. Срезы <code>[start:stop:step]</code>.</strong> Индексы считают символы слева направо с нуля. <code>stop</code> <strong>не входит</strong> в результат. Отрицательные индексы считают с конца: <code>-1</code> — последний символ. Если границы «мимо» строки, Python не падает — отдаёт пустую или укороченную строку:</p>
+<pre><code class="lang-python">s = &quot;ОТВЕТ: 90 минут&quot;
+print(s[0:5])          # первые пять символов
+print(s[7:])           # с индекса 7 до конца
+print(s[:6])           # с начала до 6 (не включая)
+print(s[-5:])          # последние пять («минут»)
+print(repr(s[100:200]))  # за пределами — пусто, без ошибки
+print(s[::-1])             # разворот
+# ожидаем: ОТВЕТ
+# ожидаем: 90 минут
+# ожидаем: ОТВЕТ:
+# ожидаем: минут
+# ожидаем: &#x27;&#x27;
+# ожидаем: туним 09 :ТЕВТО</code></pre>
+<p>Усечение длинного текста для следа — типичная задача оркестратора (файлы 04–06: лог шага не должен съесть весь потолок):</p>
+<pre><code class="lang-python">def clip(text: str, limit: int = 40) -&gt; str:
+    if len(text) &lt;= limit:
+        return text
+    return text[: limit - 1] + &quot;…&quot;
+
+long = &quot;поиск → ответ → проверка источников → финиш&quot;
+print(clip(long, 25))
+print(len(clip(long, 25)))
+# ожидаем: поиск → ответ → проверка…
+# ожидаем: 25</code></pre>
+<p><code>text[:limit - 1]</code> оставляет место под одну точку <code>…</code> (один символ Unicode), чтобы итоговая длина не превысила <code>limit</code>. Это потолок на уровне строки — тот же смысл, что бюджет токенов в файле 05, только проще.</p>
+<p><strong>Шаг 2. f-строки глубже.</strong> Внутри <code>{}</code> можно не только имя переменной, но и выражение. Формат после <code>:</code> задаёт вид числа и выравнивание:</p>
+<pre><code class="lang-python">node, tokens, ok = &quot;search&quot;, 1284.567, True
+print(f&quot;{node}: {tokens:.2f} ток., ok={ok}&quot;)
+print(f&quot;|{node:&gt;8}|&quot;)          # вправо, ширина 8
+print(f&quot;|{node:&lt;8}|&quot;)          # влево
+print(f&quot;{3:0&gt;3}&quot;)              # ведущие нули: 003
+# ожидаем: search: 1284.57 ток., ok=True
+# ожидаем: |  search|
+# ожидаем: |search  |
+# ожидаем: 003</code></pre>
+<p>Фигурные скобки в самом тексте экранируют удвоением — удобно для шаблонов JSON-подобных строк без настоящего <code>json.dumps</code>:</p>
+<pre><code class="lang-python">key, value = &quot;status&quot;, &quot;ok&quot;
+template = f&#x27;{{&quot;{key}&quot;: &quot;{value}&quot;}}&#x27;
+print(template)
+# ожидаем: {&quot;status&quot;: &quot;ok&quot;}</code></pre>
+<p><strong>Ловушка.</strong> Тяжёлый вызов внутри f-строки выполняется при каждой подстановке. Для следа лучше вычислить заранее и подставить готовое значение:</p>
+<pre><code class="lang-python">def expensive():
+    print(&quot;считаю…&quot;)
+    return 42
+
+# плохо для отладки: side-effect спрятан внутри формата
+_ = f&quot;n={expensive()}&quot;
+
+# лучше: сначала посчитать, потом подписать кадр
+n = expensive()
+print(f&quot;n={n}&quot;)
+# ожидаем: считаю…
+# ожидаем: считаю…
+# ожидаем: n=42</code></pre>
+<p>Связь со следом шага: <code>f&quot;{node} [{ms} мс]: {clip(detail, 80)}&quot;</code> — одна читаемая строка в журнале, без сюрпризов от вызовов внутри <code>{}</code>.</p>
+<p><strong>Шаг 3. <code>partition</code> / <code>rpartition</code> — разрезать по метке.</strong> Метод всегда возвращает <strong>тройку</strong> <code>(до, разделитель, после)</code>. Если разделителя нет — пустые строки встают в нужные места, а вся исходная строка остаётся в «до» (для <code>partition</code>) или в «после» (для <code>rpartition</code>):</p>
+<pre><code class="lang-python">raw = &quot;ОТВЕТ: 90 минут&quot;
+before, sep, after = raw.partition(&quot;: &quot;)
+print(repr(before), repr(sep), repr(after))
+
+missing = &quot;просто текст&quot;
+b, s, a = missing.partition(&quot;: &quot;)
+print(repr(b), repr(s), repr(a))
+
+tail = &quot;лог: узел: search&quot;
+print(tail.rpartition(&quot;: &quot;))   # режет по последнему вхождению
+# ожидаем: &#x27;ОТВЕТ&#x27; &#x27;: &#x27; &#x27;90 минут&#x27;
+# ожидаем: &#x27;просто текст&#x27; &#x27;&#x27; &#x27;&#x27;
+# ожидаем: (&#x27;лог: узел&#x27;, &#x27;: &#x27;, &#x27;search&#x27;)</code></pre>
+<p>Сравнение с <code>.split(&quot;:&quot;, 1)</code>: <code>split</code> с <code>maxsplit=1</code> тоже даёт две части, но <strong>список</strong> из одного или двух элементов — и разделитель выбрасывается. У <code>partition</code> разделитель всегда на виду, и длина результата всегда три. Для контракта «метка + тело» это удобнее:</p>
+<pre><code class="lang-python">def parse_tagged(raw: str) -&gt; tuple[str, str]:
+    &quot;&quot;&quot;Контракт: &#x27;ОТВЕТ: текст&#x27; → (&#x27;ok&#x27;, текст);
+    &#x27;НЕ ЗНАЮ: причина&#x27; → (&#x27;unknown&#x27;, причина);
+    иначе → (&#x27;broken&#x27;, исходная строка).&quot;&quot;&quot;
+    s = raw.strip()
+    tag, sep, body = s.partition(&quot;: &quot;)
+    if not sep:
+        # нет &quot;: &quot; — возможно голое «НЕ ЗНАЮ»
+        if s.upper() == &quot;НЕ ЗНАЮ&quot;:
+            return (&quot;unknown&quot;, &quot;&quot;)
+        return (&quot;broken&quot;, s)
+    head = tag.upper()
+    if head == &quot;ОТВЕТ&quot;:
+        return (&quot;ok&quot;, body.strip()) if body.strip() else (&quot;broken&quot;, s)
+    if head == &quot;НЕ ЗНАЮ&quot;:
+        return (&quot;unknown&quot;, body.strip())
+    return (&quot;broken&quot;, s)
+
+for raw in [
+    &quot;  ответ: 90 минут &quot;,
+    &quot;Не знаю: нет в базе&quot;,
+    &quot;Не знаю&quot;,
+    &quot;Конечно! Вот ответ: 90&quot;,
+    &quot;ОТВЕТ:   &quot;,
+]:
+    print(parse_tagged(raw))
+# ожидаем: (&#x27;ok&#x27;, &#x27;90 минут&#x27;)
+# ожидаем: (&#x27;unknown&#x27;, &#x27;нет в базе&#x27;)
+# ожидаем: (&#x27;unknown&#x27;, &#x27;&#x27;)
+# ожидаем: (&#x27;broken&#x27;, &#x27;Конечно! Вот ответ: 90&#x27;)
+# ожидаем: (&#x27;broken&#x27;, &#x27;ОТВЕТ:&#x27;)</code></pre>
+<p>Рядом с <code>parse_reply</code> из «Доработки» идея та же (контракт, отказ при broken), но резать по <code>&quot;: &quot;</code> через <code>partition</code> надёжнее, чем <code>startswith</code> + срез по <code>len(&quot;ОТВЕТ:&quot;)</code>: длина метки не зашита в арифметику индексов, и «НЕ ЗНАЮ: причина» отдаёт причину, а не выбрасывает её. Цель «разобрать ответ» проваливается честно — статус <code>broken</code>, а не тихий мусор в теле.</p>
+<p><strong>Шаг 4. <code>removeprefix</code> / <code>removesuffix</code> и проверка нескольких окончаний.</strong> Снять ярлык целиком, если он есть; если нет — вернуть строку как была. <code>startswith</code> / <code>endswith</code> принимают <strong>кортеж</strong> допустимых вариантов:</p>
+<pre><code class="lang-python">label = &quot;СКЕМА: поиск → ответ&quot;
+print(label.removeprefix(&quot;СКЕМА: &quot;))
+print(label.removeprefix(&quot;ПЛАН: &quot;))      # ярлыка нет — без изменений
+
+url = &quot;http://example.com/a.md&quot;
+print(url.removeprefix(&quot;https://&quot;).removeprefix(&quot;http://&quot;))
+
+name = &quot;notes.md&quot;
+print(name.endswith((&quot;.md&quot;, &quot;.txt&quot;, &quot;.rst&quot;)))
+print(name.removesuffix(&quot;.md&quot;))
+# ожидаем: поиск → ответ
+# ожидаем: СКЕМА: поиск → ответ
+# ожидаем: example.com/a.md
+# ожидаем: True
+# ожидаем: notes</code></pre>
+<p><strong>Типичная ошибка: <code>lstrip</code> вместо <code>removeprefix</code>.</strong> <code>lstrip</code> снимает <strong>множество символов</strong> с края, а не подстроку целиком. Буквы из «СКЕМА: » будут съедать и начало полезного текста:</p>
+<pre><code class="lang-python">bad = &quot;СКЕМА: Сцена 2&quot;
+print(bad.lstrip(&quot;СКЕМА: &quot;))           # съел и «С» у «Сцена»!
+print(bad.removeprefix(&quot;СКЕМА: &quot;))     # снял только ярлык
+# ожидаем: цена 2
+# ожидаем: Сцена 2</code></pre>
+<p>Аналогия: <code>lstrip</code> — как стереть с кассеты все буквы из набора «С, К, Е, М, А, :, пробел», пока они встречаются с края. <code>removeprefix</code> — отклеить одну наклейку целиком или не трогать ничего.</p>
+<p><strong>Шаг 5. Практика оркестратора: потолок следа и разбор метки.</strong> Две функции, которые встречаются в файлах 03–06: усечь журнал под лимит символов (целыми строками) и разобрать размеченный ответ. Цель «уложиться в потолок» и цель «принять только валидный формат» — обе можно провалить и зафиксировать:</p>
+<pre><code class="lang-python">def clip_trace(lines: list[str], max_chars: int) -&gt; str:
+    &quot;&quot;&quot;Целые строки с начала, пока влезают; иначе хвост «… усечено».&quot;&quot;&quot;
+    marker = &quot;… усечено&quot;
+    out: list[str] = []
+    used = 0
+    for line in lines:
+        need = len(line) + (1 if out else 0)   # +1 за перевод строки
+        if used + need &lt;= max_chars:
+            out.append(line)
+            used += need
+        else:
+            break
+    else:
+        return &quot;\n&quot;.join(out)                 # все строки влезли
+
+    # не влезло — добавляем маркер, при необходимости отдаём строки
+    while True:
+        body = &quot;\n&quot;.join(out)
+        candidate = (body + &quot;\n&quot; + marker) if body else marker
+        if len(candidate) &lt;= max_chars:
+            return candidate
+        if not out:
+            return marker[: max_chars - 1] + &quot;…&quot; if max_chars else &quot;&quot;
+        out.pop()
+
+log = [
+    &quot;start: ok&quot;,
+    &quot;search: 3 файла&quot;,
+    &quot;answer: 90 минут по контракту&quot;,
+    &quot;check: sources ok&quot;,
+]
+print(clip_trace(log, 45))
+print(&quot;---&quot;)
+print(clip_trace(log, 10))
+# ожидаем: start: ok
+# ожидаем: search: 3 файла
+# ожидаем: … усечено
+# ожидаем: ---
+# ожидаем: … усечено</code></pre>
+<p>Разбор через <code>partition</code> уже был в шаге 3 (<code>parse_tagged</code>). Вместе: сначала проверить контракт ответа, потом положить в след усечённую копию сырого текста — дыра «модель ответила кашей» видна в статусе <code>broken</code>, а не теряется в километровом логе.</p>
+<p><strong>Типичные ошибки</strong></p>
+<div class="md-table"><table><thead><tr><th>Симптом</th><th>Причина</th><th>Лечение</th></tr></thead><tbody><tr><td><code>s[0:5]</code> обрезало слово посередине</td><td>считали символы, а нужен был разделитель</td><td><code>partition</code> / <code>split</code>, не магическая длина</td></tr><tr><td><code>lstrip(&quot;ОТВЕТ: &quot;)</code> испортил тело</td><td><code>lstrip</code> — множество символов, не префикс</td><td><code>removeprefix</code> / <code>partition</code></td></tr><tr><td>f-строка печатает лишнее / тормозит</td><td>тяжёлый вызов спрятан в <code>{}</code></td><td>вычислить заранее, подставить значение</td></tr><tr><td><code>clip</code> длиннее лимита на 1</td><td>забыли место под <code>…</code></td><td><code>text[:limit-1] + &quot;…&quot;</code></td></tr><tr><td><code>partition</code> «не нашёл», а метка есть</td><td>другой разделитель (<code>:</code> без пробела)</td><td>сначала <code>strip</code>, явно выбрать <code>&quot;: &quot;</code> или <code>&quot;:&quot;</code></td></tr><tr><td><code>endswith(&quot;.md&quot;)</code> пропустил <code>.MD</code></td><td>регистр</td><td><code>.lower()</code> перед проверкой или кортеж вариантов</td></tr></tbody></table></div>
+<p><strong>Сделай сам</strong></p>
+<ol>
+<li>Напиши <code>short_id(path: str) -&gt; str</code>: снять префиксы <code>&quot;http://&quot;</code> и <code>&quot;https://&quot;</code> (по очереди через <code>removeprefix</code>), затем вернуть <strong>последние</strong> 20 символов пути (срез с конца). Для <code>&quot;https://cdn.example.com/docs/very/long/name.md&quot;</code> ожидай <code>&quot;cs/very/long/name.md&quot;</code> (ровно 20 символов).</li>
+<li>Напиши <code>fmt_step(i: int, name: str, ms: float) -&gt; str</code> через f-строку: номер шага с ведущими нулями ширины 2 (<code>01</code>, <code>02</code>), имя как есть, время с одним знаком после запятой. Пример: <code>fmt_step(3, &quot;search&quot;, 12.34)</code> → <code>&quot;03 search 12.3 мс&quot;</code>.</li>
+<li>Дан сырой ответ модели. Через <code>partition</code> разбери строки вида <code>&quot;ОК: текст&quot;</code> / <code>&quot;ОТКАЗ: причина&quot;</code> / всё остальное → <code>(&quot;ok&quot;, ...)</code>, <code>(&quot;reject&quot;, ...)</code>, <code>(&quot;broken&quot;, исходная)</code>. Пустое тело после метки — тоже <code>broken</code>.</li>
+</ol>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">def short_id(path: str) -&gt; str:
+    p = path.removeprefix(&quot;https://&quot;).removeprefix(&quot;http://&quot;)
+    return p[-20:] if len(p) &gt;= 20 else p
+
+print(short_id(&quot;https://cdn.example.com/docs/very/long/name.md&quot;))
+print(len(short_id(&quot;https://cdn.example.com/docs/very/long/name.md&quot;)))
+# ожидаем: cs/very/long/name.md
+# ожидаем: 20
+
+def fmt_step(i: int, name: str, ms: float) -&gt; str:
+    return f&quot;{i:0&gt;2} {name} {ms:.1f} мс&quot;
+
+print(fmt_step(3, &quot;search&quot;, 12.34))
+# ожидаем: 03 search 12.3 мс
+
+def parse_status(raw: str) -&gt; tuple[str, str]:
+    s = raw.strip()
+    tag, sep, body = s.partition(&quot;: &quot;)
+    if not sep:
+        return (&quot;broken&quot;, s)
+    body = body.strip()
+    if not body:
+        return (&quot;broken&quot;, s)
+    head = tag.upper()
+    if head == &quot;ОК&quot;:
+        return (&quot;ok&quot;, body)
+    if head == &quot;ОТКАЗ&quot;:
+        return (&quot;reject&quot;, body)
+    return (&quot;broken&quot;, s)
+
+for raw in [&quot;ок: найдено&quot;, &quot;ОТКАЗ: нет прав&quot;, &quot;ОК:  &quot;, &quot;просто текст&quot;]:
+    print(parse_status(raw))
+# ожидаем: (&#x27;ok&#x27;, &#x27;найдено&#x27;)
+# ожидаем: (&#x27;reject&#x27;, &#x27;нет прав&#x27;)
+# ожидаем: (&#x27;broken&#x27;, &#x27;ОК:&#x27;)
+# ожидаем: (&#x27;broken&#x27;, &#x27;просто текст&#x27;)</code></pre>
 <p>&lt;/details&gt;</p>
 <hr>
 <h3 id="ch-01-1-6-файлы-и-json">1.6. Файлы и JSON</h3>
