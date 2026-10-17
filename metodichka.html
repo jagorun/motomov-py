@@ -46,7 +46,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 17.10.2026 07:54 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 17.10.2026 20:51 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -3406,6 +3406,134 @@ with tempfile.TemporaryDirectory() as tmp:
 # ожидаем: TypeError
 # ожидаем: {&#x27;.&#x27;: 2, &#x27;kino&#x27;: 1, &#x27;kino/svet&#x27;: 1}</code></pre>
 <p>Как это считалось. В пункте 1 пустая строка, массив <code>[1, 2]</code> и оборванная последняя строка отброшены; из целых событий 1, 2, 3 <code>deque(maxlen=2)</code> оставила последние два. В пункте 2 множество стало отсортированным списком, путь — строкой <code>docs/a.md</code>, ключ <code>1</code> — строкой <code>&quot;1&quot;</code> (лучше заметить это при записи, чем получить <code>KeyError</code> при чтении); <code>sort_keys</code> поставил ключи по алфавиту, и цифра <code>&quot;1&quot;</code> идёт раньше букв. <code>NaN</code> дал <code>ValueError</code> из-за <code>allow_nan=False</code>, а <code>object()</code> прошёл через <code>_plain</code> без изменений и уронил <code>json.dumps</code> с <code>TypeError</code>: неизвестное не записывается молча. В пункте 3 <code>.draft.md</code> и <code>e.txt</code> не посчитаны; <code>B.MD</code> посчитан благодаря <code>suffix.lower()</code>; файлы в корне легли под ключ <code>&quot;.&quot;</code>, потому что <code>root.relative_to(root)</code> даёт <code>Path(&quot;.&quot;)</code>.</p>
+<p>&lt;/details&gt;</p>
+<h5 id="ch-01-закрепление-журнал-смены-после-обрыва-x-ремонт-хвоста-">Закрепление: журнал смены после обрыва — <code>&quot;x&quot;</code>, ремонт хвоста и догоняющий обход</h5>
+<p>Вечернее упражнение собирает утреннее про файлы в одну задачу, которую оркестратор встречает в первый же день: прогон упал посреди записи, и его надо <strong>продолжить</strong>, а не начать заново. Понадобятся режим <code>&quot;x&quot;</code>, дописывание в <code>.jsonl</code>, построчное чтение с пропуском битых строк, подмена файла через <code>.tmp</code> и обход папки с <code>sorted</code>.</p>
+<p><strong>Аналогия из жизни техника/документалиста.</strong> Ночью отключили свет, пока ты переписывал журнал смены. Утром в тетради целые записи про первую кассету и оборванная на полуслове строка про вторую. Плохих решений три. Завести журнал заново и потерять вчерашнее. Дописать новую запись прямо после обрывка, и она склеится с ним в одну нечитаемую строку. Переписать все кассеты с нуля, хотя первая уже готова. Хорошее решение одно: аккуратно зачеркнуть обрывок, посмотреть по журналу, какие кассеты уже сделаны, и доделать только остальные.</p>
+<p><strong>Условие.</strong> Есть папка базы и журнал смены:</p>
+<pre><code class="lang-text">base/a.md        «аккумулятор держит 90 минут»
+base/b.md        «штатив до 5 кг»
+base/sub/c.md    «петличка»
+base/.draft.md   черновик, в обход не берём
+shift.jsonl      журнал смены, одна строка — одно событие</code></pre>
+<p>Функция для записи события та же, что утром:</p>
+<pre><code class="lang-python">def append_event(path: Path, event: dict) -&gt; None:
+    with open(path, &quot;a&quot;, encoding=&quot;utf-8&quot;) as f:
+        f.write(json.dumps(event, ensure_ascii=False, sort_keys=True) + &quot;\n&quot;)</code></pre>
+<p>Сделай четыре вещи:</p>
+<ol>
+<li><code>open_shift(path, shift) -&gt; bool</code>: создать журнал с первым событием <code>{&quot;event&quot;: &quot;start&quot;, &quot;shift&quot;: shift}</code> <strong>только если журнала ещё нет</strong>. Вернуть <code>True</code>, если создали, и <code>False</code>, если журнал уже был. Существующий журнал не должен пострадать ни на байт.</li>
+<li><code>done_files(path) -&gt; set[str]</code>: множество файлов, у которых в журнале есть событие со статусом <code>&quot;ok&quot;</code>. Пустые и битые строки пропускать, событие <code>start</code> без поля <code>status</code> не должно ронять функцию.</li>
+<li><code>repair_tail(path) -&gt; int</code>: если файл не кончается на <code>&quot;\n&quot;</code>, отрезать всё после последнего <code>&quot;\n&quot;</code> (это недописанное событие) и вернуть число отрезанных символов. Если хвост целый, ничего не менять и вернуть <code>0</code>. Записывать через временный файл и <code>replace</code>, как <code>save_json</code> выше.</li>
+<li><code>resume_scan(root, trace) -&gt; list[str]</code>: обойти <code>.md</code>-файлы базы (любой регистр расширения, без скрытых, в порядке <code>sorted</code>), пропустить те, что уже есть в <code>done_files</code>, на каждый новый дописать событие <code>{&quot;file&quot;: rel, &quot;status&quot;: &quot;ok&quot;, &quot;chars&quot;: len(text)}</code> и вернуть список обработанных путей относительно <code>root</code>.</li>
+</ol>
+<p>Сценарий проверки: создать журнал дважды (смены <code>&quot;17.10&quot;</code> и <code>&quot;18.10&quot;</code>), дописать событие про <code>a.md</code>, сымитировать обрыв строкой <code>&#x27;{&quot;file&quot;: &quot;b.md&quot;, &quot;sta&#x27;</code> без перевода строки. Затем показать ловушку: в <strong>копии</strong> журнала дописать событие про <code>b.md</code> прямо поверх обрыва и напечатать <code>sorted(done_files(...))</code>. После этого дважды вызвать <code>repair_tail</code>, дважды <code>resume_scan</code> и напечатать итог: отсортированный список сделанных файлов и число строк в журнале.</p>
+<p>Ожидаемый вывод:</p>
+<pre><code class="lang-text">True False
+[&#x27;a.md&#x27;]
+21 0
+[&#x27;b.md&#x27;, &#x27;sub/c.md&#x27;]
+[]
+[&#x27;a.md&#x27;, &#x27;b.md&#x27;, &#x27;sub/c.md&#x27;] 4</code></pre>
+<p><strong>Подсказка.</strong> В пункте 1 режим <code>&quot;x&quot;</code> сам бросает <code>FileExistsError</code>, если файл есть; проверять <code>exists()</code> заранее не нужно. В пункте 2 <code>obj.get(&quot;status&quot;)</code> не падает там, где поля нет, а <code>json.loads(&quot;\n&quot;)</code> бросает <code>JSONDecodeError</code>, так что пустые строки ловятся тем же <code>except</code>. В пункте 3 <code>text.rfind(&quot;\n&quot;)</code> даёт индекс последнего перевода строки или <code>-1</code>, если его нет совсем; срез <code>text[: idx + 1]</code> оставляет всё до него включительно и в обоих случаях работает без отдельной ветки. В пункте 4 сначала собери <code>done</code> один раз, а не перечитывай журнал на каждом файле.</p>
+<p><strong>Вопрос на понимание.</strong> Почему в ловушке событие про <code>b.md</code> пропало, хотя <code>append_event</code> отработал без ошибок? И почему второй вызов <code>resume_scan</code> вернул пустой список: это сбой или так и задумано?</p>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">import json
+import tempfile
+from pathlib import Path
+
+def append_event(path: Path, event: dict) -&gt; None:
+    with open(path, &quot;a&quot;, encoding=&quot;utf-8&quot;) as f:
+        f.write(json.dumps(event, ensure_ascii=False, sort_keys=True) + &quot;\n&quot;)
+
+# 1. Новая смена только один раз: режим &quot;x&quot;
+def open_shift(path: Path, shift: str) -&gt; bool:
+    try:
+        with open(path, &quot;x&quot;, encoding=&quot;utf-8&quot;) as f:
+            f.write(json.dumps({&quot;event&quot;: &quot;start&quot;, &quot;shift&quot;: shift}, ensure_ascii=False) + &quot;\n&quot;)
+    except FileExistsError:
+        return False
+    return True
+
+# 2. Что уже сделано по журналу
+def done_files(path: Path) -&gt; set[str]:
+    done = set()
+    with open(path, encoding=&quot;utf-8&quot;) as f:
+        for line in f:
+            try:
+                obj = json.loads(line)
+            except json.JSONDecodeError:
+                continue                        # пустая или битая строка
+            if isinstance(obj, dict) and obj.get(&quot;status&quot;) == &quot;ok&quot;:
+                done.add(obj[&quot;file&quot;])
+    return done
+
+# 3. Отрезать недописанный хвост
+def repair_tail(path: Path) -&gt; int:
+    text = path.read_text(encoding=&quot;utf-8&quot;)
+    if text == &quot;&quot; or text.endswith(&quot;\n&quot;):
+        return 0
+    keep = text[: text.rfind(&quot;\n&quot;) + 1]        # нет ни одного &quot;\n&quot; → rfind = -1 → keep = &quot;&quot;
+    tmp = path.with_suffix(path.suffix + &quot;.tmp&quot;)
+    tmp.write_text(keep, encoding=&quot;utf-8&quot;)
+    tmp.replace(path)                          # как в save_json: подмена одним действием
+    return len(text) - len(keep)
+
+# 4. Догнать обход: только то, чего нет в журнале
+def resume_scan(root: Path, trace: Path) -&gt; list[str]:
+    done = done_files(trace)
+    processed = []
+    for p in sorted(root.rglob(&quot;*&quot;)):
+        if not (p.is_file() and p.suffix.lower() == &quot;.md&quot; and not p.name.startswith(&quot;.&quot;)):
+            continue
+        rel = p.relative_to(root).as_posix()
+        if rel in done:
+            continue
+        text = p.read_text(encoding=&quot;utf-8&quot;)
+        append_event(trace, {&quot;file&quot;: rel, &quot;status&quot;: &quot;ok&quot;, &quot;chars&quot;: len(text)})
+        processed.append(rel)
+    return processed
+
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp, &quot;base&quot;)
+    (root / &quot;sub&quot;).mkdir(parents=True)
+    (root / &quot;a.md&quot;).write_text(&quot;аккумулятор держит 90 минут&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;b.md&quot;).write_text(&quot;штатив до 5 кг&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;sub&quot; / &quot;c.md&quot;).write_text(&quot;петличка&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;.draft.md&quot;).write_text(&quot;черновик&quot;, encoding=&quot;utf-8&quot;)
+    trace = Path(tmp, &quot;shift.jsonl&quot;)
+
+    print(open_shift(trace, &quot;17.10&quot;), open_shift(trace, &quot;18.10&quot;))
+
+    append_event(trace, {&quot;file&quot;: &quot;a.md&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;chars&quot;: 27})
+    with open(trace, &quot;a&quot;, encoding=&quot;utf-8&quot;) as f:   # обрыв посреди записи
+        f.write(&#x27;{&quot;file&quot;: &quot;b.md&quot;, &quot;sta&#x27;)
+
+    trap = Path(tmp, &quot;trap.jsonl&quot;)                   # ловушка: дописать поверх обрыва
+    trap.write_text(trace.read_text(encoding=&quot;utf-8&quot;), encoding=&quot;utf-8&quot;)
+    append_event(trap, {&quot;file&quot;: &quot;b.md&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;chars&quot;: 14})
+    print(sorted(done_files(trap)))
+
+    print(repair_tail(trace), repair_tail(trace))
+    print(resume_scan(root, trace))
+    print(resume_scan(root, trace))
+    print(sorted(done_files(trace)), len(trace.read_text(encoding=&quot;utf-8&quot;).splitlines()))
+# ожидаем: True False
+# ожидаем: [&#x27;a.md&#x27;]
+# ожидаем: 21 0
+# ожидаем: [&#x27;b.md&#x27;, &#x27;sub/c.md&#x27;]
+# ожидаем: []
+# ожидаем: [&#x27;a.md&#x27;, &#x27;b.md&#x27;, &#x27;sub/c.md&#x27;] 4</code></pre>
+<p>Как это считалось. В пункте 1 первый вызов создал журнал, второй получил <code>FileExistsError</code> и вернул <code>False</code>, а строка <code>start</code> про смену <code>17.10</code> осталась на месте: <code>&quot;x&quot;</code> не открывает чужой файл вообще, в отличие от <code>&quot;w&quot;</code>, который стёр бы его в момент открытия. В ловушке новое событие легло на ту же физическую строку, что и обрывок: <code>{&quot;file&quot;: &quot;b.md&quot;, &quot;sta{&quot;chars&quot;: 14, ...}</code>. Такую строку <code>json.loads</code> не разбирает, <code>done_files</code> её пропускает, и сделанной осталась только <code>a.md</code>. Так один обрыв испортил <strong>и следующую</strong>, совершенно целую запись. <code>repair_tail</code> отрезал 21 символ, ровно длину <code>{&quot;file&quot;: &quot;b.md&quot;, &quot;sta</code>, а второй вызов вернул <code>0</code>: хвост уже кончается на <code>&quot;\n&quot;</code>, менять нечего. Первый <code>resume_scan</code> пропустил <code>a.md</code> (есть в журнале), не взял <code>.draft.md</code> (скрытый) и дописал <code>b.md</code> и <code>sub/c.md</code>. Второй вызов ничего не нашёл. В журнале 4 строки: <code>start</code>, <code>a.md</code>, <code>b.md</code>, <code>sub/c.md</code>.</p>
+<p><strong>Ответ на вопрос.</strong> <code>append_event</code> честно дописал строку в конец файла, но концом файла был обрывок без <code>&quot;\n&quot;</code>. Режим <code>&quot;a&quot;</code> не знает, где кончается «целое событие», он просто пишет после последнего байта. Поэтому перед продолжением прогона журнал сначала чинят, потом дописывают. Пустой список во втором вызове задуман: это <strong>идемпотентность</strong>, то есть повторный запуск того же шага ничего не портит и не делает работу дважды. Упал прогон на середине? Чинишь хвост и запускаешь снова, а он догоняет ровно недоделанное.</p>
+<p><strong>Типичные ошибки в этом упражнении.</strong></p>
+<ul>
+<li>Проверять <code>if path.exists()</code> и потом открывать в <code>&quot;w&quot;</code>. Между проверкой и открытием файл может появиться (второй запуск, соседний процесс), и <code>&quot;w&quot;</code> его сотрёт. <code>&quot;x&quot;</code> делает проверку и создание одним действием.</li>
+<li>Чинить хвост через <code>text.splitlines()[:-1]</code>. Если хвост целый, это отрежет последнее <strong>хорошее</strong> событие. Проверка <code>text.endswith(&quot;\n&quot;)</code> идёт первой.</li>
+<li>Писать починенный журнал прямо через <code>write_text(path)</code>. Если упасть в этот момент, пропадёт весь журнал, а не только хвост. Подмена через <code>.tmp</code> и <code>replace</code> оставляет либо старую, либо новую версию целиком.</li>
+<li>Считать сделанным любой файл, упомянутый в журнале. Событие <code>skipped_ceiling</code> или <code>not_utf8</code> из утреннего шага 6 значит «не сделано», поэтому в <code>done_files</code> попадает только <code>status == &quot;ok&quot;</code>.</li>
+</ul>
+<p><strong>Связь с оркестратором.</strong> Журнал <code>.jsonl</code> здесь — <strong>след</strong>, по которому прогон восстанавливается без памяти о прошлом запуске: всё, что надо знать, записано в файле. <code>done_files</code> превращает след обратно в состояние «что уже сделано». <code>repair_tail</code> — маленький <strong>контракт</strong> на формат журнала «каждое событие кончается переводом строки», и его проверяют до записи, а не после поломки. Идемпотентный <code>resume_scan</code> — то, что делает <strong>потолок</strong> безопасным: прогон, остановленный по <code>max_files</code> или по падению, просто запускают ещё раз, и он доделывает остаток. Ловушка с потерянной записью — пример <strong>улучшения по дыре</strong>: одна найденная дыра («после обрыва теряется следующая запись») даёт одно точечное исправление («сначала чинить хвост»), а не переписывание всего обхода. В 05 тот же принцип стоит за кэшем повторного вопроса (5.3): уже сделанное не делают и не оплачивают второй раз.</p>
 <p>&lt;/details&gt;</p>
 <hr>
 <h3 id="ch-01-1-7-исключения-маленький-тормоз">1.7. Исключения — маленький тормоз</h3>
