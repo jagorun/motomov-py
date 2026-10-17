@@ -46,7 +46,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 16.10.2026 20:51 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 17.10.2026 07:54 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -244,7 +244,7 @@ print(len(p.read_text(encoding=&quot;utf-8&quot;).splitlines()))
 <details class="m-chapter" id="ch-01"><summary><h2>01. Основы Python — Ступень 1. Порядок мысли</h2></summary><div class="m-body"><p><strong>Курс:</strong> Stepik 58852 «Поколение Python: курс для начинающих».<br><strong>Где ты сейчас:</strong> примерно модуль ввода-вывода / циклы (<code>while</code>).<br><strong>Цель ступени:</strong> научиться ясно говорить: что было на входе, какая ветка выбрана, где ход кончается. Без этого схему системы не прочитать, даже если код писал не ты.</p>
 <p>Эта часть объясняет каждый базовый термин максимально подробно. Не «запомни синтаксис», а «пойми, зачем это существует и как это помогает оркестратору».</p>
 <p><strong>Карта: что из этой ступени понадобится дальше.</strong> Ступень 1 — фундамент для всего остального. Если какая-то строка в файлах 04–06 кажется непонятной, почти всегда ответ здесь:</p>
-<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
+<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td><code>with open</code> и режимы <code>r/w/a/x</code>, чтение по строкам, JSON Lines, границы JSON, <code>glob</code>/<code>rglob</code></td><td>1.6, «Глубже: with open, режимы записи, JSON Lines…»</td><td>02: 2.5 след в <code>.jsonl</code> через <code>logging</code>; 03: 3.3 обход папки; 05: расход по <code>trace.jsonl</code>; 06: <code>sorted(folder.glob(&quot;*.md&quot;))</code> в скелете</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
 <hr>
 <h3 id="ch-01-1-1-переменные-и-типы-данных">1.1. Переменные и типы данных</h3>
 <h4 id="ch-01-что-такое-переменная">Что такое переменная</h4>
@@ -3053,6 +3053,360 @@ for n in [&quot;note.md&quot;, &quot;blank.md&quot;, &quot;missing.md&quot;]:
     print(n, &quot;-&gt;&quot;, md_stats(Path(n)))
 # ожидаем: note.md -&gt; строк: 2, символов: 18</code></pre>
 <p><code>splitlines()</code> не считает «пустую строку» после последнего <code>\n</code>, поэтому строк 2, а не 3. Символов 18: 11 в первой строке («#», пробел и 9 букв), 5 во второй и два <code>\n</code>.<br>&lt;/details&gt;</p>
+<h4 id="ch-01-глубже-with-open-режимы-записи-построчное-чтение-json-">Глубже: <code>with open</code>, режимы записи, построчное чтение, JSON Lines и обход папки</h4>
+<p>Выше файл читается и пишется <strong>целиком</strong>: <code>read_text</code> — всё в память, <code>write_text</code> — всё на диск, <code>save_json</code> — безопасная подмена. Для сводки или состояния этого хватает. Но у оркестратора есть второй тип файлов: <strong>журнал</strong>, который растёт по строке на событие, и <strong>папка</strong>, которую надо обойти файл за файлом. Здесь пять инструментов для этого: <code>with open</code> и режимы, чтение по строкам, формат JSON Lines, границы JSON и обход папки через <code>glob</code>.</p>
+<p><strong>Интуиция.</strong> Журнал смены на площадке ведут в тетради. Можно завести новую тетрадь, вырвав все старые листы (режим <code>&quot;w&quot;</code>). Можно дописать строку в конец (режим <code>&quot;a&quot;</code>). Можно завести тетрадь «только если такой ещё нет», чтобы случайно не затереть вчерашнюю (режим <code>&quot;x&quot;</code>). Читают журнал строка за строкой, а не пересказывают по памяти. А обход папки — это пройти по полке с кассетами слева направо, пропуская пустые коробки и чужие ярлыки.</p>
+<p><strong>Шаг 1. <code>with open(...)</code> — что такое менеджер контекста.</strong> <code>open()</code> возвращает <strong>файловый объект</strong>: через него читают и пишут. Пока файл открыт, программа держит его у операционной системы, а записанное может ещё сидеть в буфере, то есть в памяти, и не дойти до диска. <code>f.close()</code> сбрасывает буфер и отпускает файл. Блок <code>with</code> вызывает закрытие <strong>сам</strong>, даже если внутри случилось исключение:</p>
+<pre><code class="lang-python">from pathlib import Path
+
+p = Path(&quot;smena.txt&quot;)
+try:
+    with open(p, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+        f.write(&quot;дубль 1: ok\n&quot;)
+        raise RuntimeError(&quot;камера упала&quot;)
+except RuntimeError as e:
+    print(&quot;поймали:&quot;, e)
+
+print(&quot;файл закрыт:&quot;, f.closed)
+print(repr(p.read_text(encoding=&quot;utf-8&quot;)))
+# ожидаем: поймали: камера упала
+# ожидаем: файл закрыт: True
+# ожидаем: &#x27;дубль 1: ok\n&#x27;</code></pre>
+<p>Строка успела попасть на диск: при выходе из <code>with</code> файл закрылся и буфер сбросился. Без <code>with</code> и без <code>close()</code> при падении программы хвост записи может пропасть. <code>Path.read_text</code> и <code>Path.write_text</code> внутри устроены так же, поэтому для «прочитать или записать целиком» <code>with</code> не нужен. Он нужен, когда с открытым файлом делают несколько действий подряд: дописывают по строке, читают построчно.</p>
+<p><strong>Режимы открытия.</strong> Второй аргумент <code>open</code> — режим, то есть что ты собираешься делать с файлом:</p>
+<div class="md-table"><table><thead><tr><th>Режим</th><th>Что делает</th><th>Если файла нет</th><th>Если файл есть</th></tr></thead><tbody><tr><td><code>&quot;r&quot;</code> (по умолчанию)</td><td>читать</td><td><code>FileNotFoundError</code></td><td>читает с начала</td></tr><tr><td><code>&quot;w&quot;</code></td><td>писать заново</td><td>создаёт</td><td><strong>сразу стирает всё содержимое</strong></td></tr><tr><td><code>&quot;a&quot;</code></td><td>дописывать в конец</td><td>создаёт</td><td>старое не трогает, пишет после него</td></tr><tr><td><code>&quot;x&quot;</code></td><td>создать новый</td><td>создаёт</td><td><code>FileExistsError</code></td></tr><tr><td><code>&quot;rb&quot;</code>, <code>&quot;wb&quot;</code></td><td>то же, но байты</td><td></td><td><code>encoding</code> не указывают</td></tr></tbody></table></div>
+<p>Главная ловушка — <code>&quot;w&quot;</code> стирает файл <strong>в момент открытия</strong>, а не в момент записи. Даже если ты ничего не написал, старого журнала уже нет:</p>
+<pre><code class="lang-python">from pathlib import Path
+
+p = Path(&quot;smena.txt&quot;)
+p.write_text(&quot;дубль 1: ok\nдубль 2: брак\n&quot;, encoding=&quot;utf-8&quot;)
+
+with open(p, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+    pass                                  # ничего не пишем
+
+print(repr(p.read_text(encoding=&quot;utf-8&quot;)))
+
+with open(p, &quot;a&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;дубль 3: ok\n&quot;)
+with open(p, &quot;a&quot;, encoding=&quot;utf-8&quot;) as f:
+    f.write(&quot;дубль 4: ok\n&quot;)
+print(p.read_text(encoding=&quot;utf-8&quot;), end=&quot;&quot;)
+
+try:
+    with open(p, &quot;x&quot;, encoding=&quot;utf-8&quot;) as f:
+        f.write(&quot;новая смена\n&quot;)
+except FileExistsError:
+    print(&quot;x: файл уже есть, не трогаем&quot;)
+# ожидаем: &#x27;&#x27;
+# ожидаем: дубль 3: ok
+# ожидаем: дубль 4: ok
+# ожидаем: x: файл уже есть, не трогаем</code></pre>
+<p><code>f.write</code> <strong>не добавляет</strong> перевод строки сам, в отличие от <code>print</code>. Забыл <code>&quot;\n&quot;</code>, и все события слиплись в одну строку. Если удобнее <code>print</code>, его можно направить в файл: <code>print(&quot;дубль 5: ok&quot;, file=f)</code>. Он сам поставит <code>\n</code> в конце.</p>
+<p><strong>Шаг 2. Чтение по строкам.</strong> Файловый объект можно обходить в <code>for</code>: на каждом шаге приходит <strong>одна строка вместе с её <code>\n</code> на конце</strong>. Это ленивое чтение, как у генераторов из 1.3: в памяти одна строка, а не весь файл. Журнал на гигабайт так читается без проблем.</p>
+<pre><code class="lang-python">from pathlib import Path
+
+p = Path(&quot;log.txt&quot;)
+p.write_text(&quot;start: ok\n\n  search: 3 файла  \ncheck: ok&quot;, encoding=&quot;utf-8&quot;)
+
+with open(p, encoding=&quot;utf-8&quot;) as f:
+    for n, line in enumerate(f, start=1):
+        print(n, repr(line))
+
+print(&quot;---&quot;)
+with open(p, encoding=&quot;utf-8&quot;) as f:
+    for n, line in enumerate(f, start=1):
+        clean = line.rstrip(&quot;\n&quot;)
+        if not clean.strip():
+            continue                       # пустую строку пропускаем, но номер не теряем
+        print(f&quot;строка {n}: {clean.strip()}&quot;)
+# ожидаем: 1 &#x27;start: ok\n&#x27;
+# ожидаем: 2 &#x27;\n&#x27;
+# ожидаем: 3 &#x27;  search: 3 файла  \n&#x27;
+# ожидаем: 4 &#x27;check: ok&#x27;
+# ожидаем: ---
+# ожидаем: строка 1: start: ok
+# ожидаем: строка 3: search: 3 файла
+# ожидаем: строка 4: check: ok</code></pre>
+<p>Разбор деталей:</p>
+<ul>
+<li><strong>У последней строки <code>\n</code> может не быть.</strong> Поэтому не отрезай «последний символ» срезом <code>line[:-1]</code>: на строке <code>&#x27;check: ok&#x27;</code> он съест букву <code>k</code>. <code>rstrip(&quot;\n&quot;)</code> снимает перевод строки, только если он есть.</li>
+<li><strong><code>enumerate(f, start=1)</code></strong> даёт номер строки как в редакторе. Именно его пишут в сообщение об ошибке («битая запись: строка 3»), чтобы человек открыл файл и сразу нашёл место.</li>
+<li><strong>Пустые строки</strong> в журналах встречаются (лишний <code>\n</code>, ручная правка). Проверка <code>if not clean.strip(): continue</code> их пропускает, а номер всё равно считается честно.</li>
+<li><strong><code>f.readlines()</code></strong> читает все строки в список сразу. На маленьком файле разницы нет, на большом это лишняя память. По умолчанию — <code>for line in f</code>.</li>
+<li><strong>Файловый объект одноразовый</strong>, как генератор: второй <code>for</code> по тому же <code>f</code> ничего не выдаст, курсор уже в конце. Нужно ещё раз — открой файл заново.</li>
+</ul>
+<p><strong>Шаг 3. JSON Lines — журнал, который не ломается целиком.</strong> Обычный JSON-файл — это <strong>один</strong> объект или список. Чтобы добавить в него событие, нужно прочитать весь файл, разобрать, дописать в список и записать всё обратно. Если программа упадёт посреди записи, испорчен весь файл. Формат <strong>JSON Lines</strong> (расширение <code>.jsonl</code>) устроен иначе: <strong>одна строка — один JSON-объект</strong>. Дописать событие — значит дописать строку в режиме <code>&quot;a&quot;</code>. Упала программа — пострадала максимум последняя, недописанная строка, а всё до неё читается.</p>
+<pre><code class="lang-python">import json
+from pathlib import Path
+
+def append_event(path: Path, event: dict) -&gt; None:
+    line = json.dumps(event, ensure_ascii=False)   # без indent: строго одна строка
+    with open(path, &quot;a&quot;, encoding=&quot;utf-8&quot;) as f:
+        f.write(line + &quot;\n&quot;)
+
+def read_events(path: Path) -&gt; tuple[list[dict], list[str]]:
+    &quot;&quot;&quot;Возвращает (события, проблемы). Битая строка не роняет чтение, а попадает в проблемы.&quot;&quot;&quot;
+    events, problems = [], []
+    if not path.exists():
+        return events, [f&quot;нет журнала: {path}&quot;]
+    with open(path, encoding=&quot;utf-8&quot;) as f:
+        for n, line in enumerate(f, start=1):
+            if not line.strip():
+                continue
+            try:
+                obj = json.loads(line)
+            except json.JSONDecodeError:
+                problems.append(f&quot;строка {n}: битый JSON&quot;)
+                continue
+            if not isinstance(obj, dict):
+                problems.append(f&quot;строка {n}: не объект&quot;)
+                continue
+            events.append(obj)
+    return events, problems
+
+trace = Path(&quot;trace.jsonl&quot;)
+trace.unlink(missing_ok=True)                      # новый прогон — чистый журнал
+append_event(trace, {&quot;step&quot;: 1, &quot;node&quot;: &quot;search&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;found&quot;: 3})
+append_event(trace, {&quot;step&quot;: 2, &quot;node&quot;: &quot;answer&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;text&quot;: &quot;90 минут\nпо паспорту&quot;})
+with open(trace, &quot;a&quot;, encoding=&quot;utf-8&quot;) as f:     # имитация падения посреди записи
+    f.write(&#x27;{&quot;step&quot;: 3, &quot;node&quot;: &quot;che&#x27;)
+
+events, problems = read_events(trace)
+print(len(events), [e[&quot;node&quot;] for e in events])
+print(problems)
+print(events[1][&quot;text&quot;])
+print(trace.read_text(encoding=&quot;utf-8&quot;).count(&quot;\n&quot;))
+# ожидаем: 2 [&#x27;search&#x27;, &#x27;answer&#x27;]
+# ожидаем: [&#x27;строка 3: битый JSON&#x27;]
+# ожидаем: 90 минут
+# ожидаем: по паспорту
+# ожидаем: 2</code></pre>
+<p>Почему это работает и где тонко:</p>
+<ul>
+<li><strong>Перевод строки внутри текста не ломает формат.</strong> <code>json.dumps</code> записывает <code>\n</code> внутри строки как два символа <code>\</code> и <code>n</code>. В файле остаётся одна физическая строка на событие, а при <code>json.loads</code> перевод строки возвращается. Поэтому в файле ровно 2 настоящих <code>\n</code>: по одному после каждого целого события.</li>
+<li><strong><code>indent=2</code> здесь запрещён.</strong> С отступами один объект растянется на несколько строк, и построчное чтение развалится. <code>indent</code> — для файла, который читает человек (сводка, состояние). Для журнала, который читает программа, — одна строка.</li>
+<li><strong><code>unlink(missing_ok=True)</code></strong> удаляет старый журнал, если он есть, и молчит, если нет. Без этого второй запуск допишет события к первому, и в журнале смешаются два прогона. Другой вариант — новое имя файла на каждый прогон, например с номером или временем.</li>
+<li><strong>Битая строка — это след, а не повод упасть.</strong> Сообщение «строка 3: битый JSON» само говорит, что прогон оборвался на третьем событии. В 2.5 тот же формат пишет <code>logging</code>, а здесь ты видишь, что под капотом: <code>dumps</code>, <code>&quot;a&quot;</code>, <code>&quot;\n&quot;</code>.</li>
+</ul>
+<p><strong>Шаг 4. Что не влезает в JSON и что меняется по дороге.</strong> JSON знает только объект, массив, строку, число, <code>true/false</code> и <code>null</code>. Всё остальное <code>json.dumps</code> либо молча превращает, либо отказывается писать:</p>
+<pre><code class="lang-python">import json
+from pathlib import Path
+
+print(json.dumps({&quot;files&quot;: (&quot;a.md&quot;, &quot;b.md&quot;)}))     # кортеж молча станет списком
+
+for bad in [{&quot;seen&quot;: {&quot;a.md&quot;}}, {&quot;path&quot;: Path(&quot;docs/a.md&quot;)}]:
+    try:
+        json.dumps(bad)
+    except TypeError as e:
+        print(&quot;TypeError:&quot;, e)
+
+state = {1: &quot;поиск&quot;, 2: &quot;ответ&quot;}                  # ключи — целые числа
+back = json.loads(json.dumps(state, ensure_ascii=False))
+print(back, back == state)
+
+print(json.dumps({&quot;score&quot;: float(&quot;nan&quot;)}))          # Python пишет NaN, но это не JSON
+try:
+    json.dumps({&quot;score&quot;: float(&quot;nan&quot;)}, allow_nan=False)
+except ValueError:
+    print(&quot;ValueError: NaN не записан&quot;)
+
+print(json.dumps({&quot;path&quot;: Path(&quot;docs/a.md&quot;)}, default=str))
+print(json.dumps({&quot;b&quot;: 1, &quot;a&quot;: 2}, sort_keys=True))
+# ожидаем: {&quot;files&quot;: [&quot;a.md&quot;, &quot;b.md&quot;]}
+# ожидаем: TypeError: Object of type set is not JSON serializable
+# ожидаем: TypeError: Object of type PosixPath is not JSON serializable
+# ожидаем: {&#x27;1&#x27;: &#x27;поиск&#x27;, &#x27;2&#x27;: &#x27;ответ&#x27;} False
+# ожидаем: {&quot;score&quot;: NaN}
+# ожидаем: ValueError: NaN не записан
+# ожидаем: {&quot;path&quot;: &quot;docs/a.md&quot;}
+# ожидаем: {&quot;a&quot;: 2, &quot;b&quot;: 1}</code></pre>
+<p>(На Windows в сообщении будет <code>WindowsPath</code> вместо <code>PosixPath</code>, а <code>default=str</code> запишет путь с обратными слешами.)</p>
+<p>Что из этого следует:</p>
+<ul>
+<li><strong>Ключи-числа возвращаются строками.</strong> Записал <code>{1: &quot;поиск&quot;}</code>, прочитал <code>{&quot;1&quot;: &quot;поиск&quot;}</code>, и <code>state[1]</code> после загрузки даёт <code>KeyError</code>. Правило из «Глубже: вложенные структуры как состояние» (1.4) в действии: ключи состояния — сразу строки.</li>
+<li><strong><code>NaN</code> — тихая порча файла.</strong> Python его записывает, а строгий читатель на другом конце (сервис, браузер, другой язык) такой файл не примет. <code>allow_nan=False</code> превращает тихую порчу в громкую ошибку на твоей стороне, где её легко найти.</li>
+<li><strong><code>default=str</code> — запасной выход, а не привычка.</strong> Он превратит в строку что угодно, включая объект, который ты не собирался сохранять, и в файле появится бесполезное <code>&quot;&lt;object at 0x...&gt;&quot;</code>. Лучше заранее привести данные явно: <code>str(path)</code>, <code>sorted(seen)</code>.</li>
+<li><strong><code>sort_keys=True</code></strong> делает запись стабильной: один и тот же словарь всегда даёт одинаковый текст. Два прогона удобно сравнивать построчно, а одинаковое состояние даёт одинаковую строку (пригодится для ключа кэша в 05).</li>
+</ul>
+<p><strong>Шаг 5. Обход папки: <code>glob</code>, <code>rglob</code> и части пути.</strong> <code>folder.glob(&quot;*.md&quot;)</code> выдаёт пути к файлам, имя которых подходит под шаблон: <code>*</code> — любые символы, кроме <code>/</code>. <code>rglob(&quot;*.md&quot;)</code> ищет ещё и во всех вложенных папках. Оба <strong>ленивые</strong>, как генераторы, и оба <strong>не обещают порядок</strong>: на другом диске или в другой системе файлы придут в другой последовательности. Поэтому, когда важна повторяемость прогона, оборачивай в <code>sorted(...)</code>:</p>
+<pre><code class="lang-python">from pathlib import Path
+import tempfile
+
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp)
+    (root / &quot;sub&quot;).mkdir(parents=True, exist_ok=True)
+    (root / &quot;b.md&quot;).write_text(&quot;свет&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;a.md&quot;).write_text(&quot;штатив&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;C.MD&quot;).write_text(&quot;кофр&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;state.json.tmp&quot;).write_text(&quot;{}&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;.hidden.md&quot;).write_text(&quot;черновик&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;sub&quot; / &quot;d.md&quot;).write_text(&quot;петличка&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;folder.md&quot;).mkdir()                   # папка с «расширением» .md
+
+    print([p.name for p in sorted(root.glob(&quot;*.md&quot;))])
+    print([p.relative_to(root).as_posix() for p in sorted(root.rglob(&quot;*.md&quot;))])
+
+    def md_files(folder: Path) -&gt; list[Path]:
+        return sorted(
+            p for p in folder.rglob(&quot;*&quot;)
+            if p.is_file()
+            and p.suffix.lower() == &quot;.md&quot;
+            and not p.name.startswith(&quot;.&quot;)
+        )
+
+    print([p.relative_to(root).as_posix() for p in md_files(root)])
+
+    p = root / &quot;sub&quot; / &quot;d.md&quot;
+    print(p.name, p.stem, p.suffix, p.parent.name)
+# ожидаем: [&#x27;.hidden.md&#x27;, &#x27;a.md&#x27;, &#x27;b.md&#x27;, &#x27;folder.md&#x27;]
+# ожидаем: [&#x27;.hidden.md&#x27;, &#x27;a.md&#x27;, &#x27;b.md&#x27;, &#x27;folder.md&#x27;, &#x27;sub/d.md&#x27;]
+# ожидаем: [&#x27;C.MD&#x27;, &#x27;a.md&#x27;, &#x27;b.md&#x27;, &#x27;sub/d.md&#x27;]
+# ожидаем: d.md d .md sub</code></pre>
+<p>(Вывод показан для Linux. На Windows и macOS шаблон <code>*.md</code> обычно не различает регистр, и <code>C.MD</code> попал бы в первые две строки. Функция <code>md_files</code> даёт одинаковый результат везде, это и есть смысл явной проверки.)</p>
+<p>Разбор:</p>
+<ul>
+<li><strong>Шаблон смотрит только на имя.</strong> Папка <code>folder.md</code> прошла <code>glob(&quot;*.md&quot;)</code>, и <code>read_text</code> на ней упал бы с <code>IsADirectoryError</code>. Проверка <code>p.is_file()</code> отсекает папки.</li>
+<li><strong>Скрытые и временные файлы.</strong> <code>.hidden.md</code> — черновик или служебный файл редактора, <code>state.json.tmp</code> — недописанная копия из <code>save_json</code> выше. В обход по базе знаний они не должны попасть: первый отсекает <code>startswith(&quot;.&quot;)</code>, второй — проверка суффикса.</li>
+<li><strong>Регистр расширения.</strong> <code>p.suffix.lower() == &quot;.md&quot;</code> ловит и <code>.md</code>, и <code>.MD</code> на любой системе.</li>
+<li><strong><code>sorted</code> по путям</strong> ставит заглавные буквы раньше строчных (<code>C.MD</code> перед <code>a.md</code>): сравнение идёт по кодам символов. Для повторяемости этого достаточно. Для «как у человека» используй <code>key=lambda p: p.name.lower()</code>.</li>
+<li><strong>Части пути.</strong> <code>name</code> — имя с расширением, <code>stem</code> — без расширения, <code>suffix</code> — расширение с точкой, <code>parent</code> — папка выше. <code>relative_to(root)</code> даёт короткий путь от корня базы: <code>sub/d.md</code> вместо <code>/tmp/abc123/sub/d.md</code>. Именно его кладут в след и в <code>sources</code> ответа: короче, читаемо и не раскрывает чужие пути на диске. <code>as_posix()</code> пишет путь через <code>/</code> на любой системе.</li>
+<li><strong><code>mkdir(parents=True, exist_ok=True)</code></strong> создаёт папку вместе с недостающими родителями и не падает, если она уже есть. Без <code>exist_ok=True</code> второй запуск скрипта падает с <code>FileExistsError</code>.</li>
+</ul>
+<p><strong>Шаг 6. Практика оркестратора: обход базы с потолком и журналом.</strong> Собираем всё вместе. Функция обходит папку, на каждый файл пишет <strong>одно событие</strong> в <code>.jsonl</code> и останавливается на потолке числа файлов. Цель, которую можно провалить, здесь явная: «просмотреть всю базу». Если не уложились в потолок, это видно в итоге, а не теряется молча:</p>
+<pre><code class="lang-python">import json
+import tempfile
+from collections import Counter
+from pathlib import Path
+
+def append_event(path: Path, event: dict) -&gt; None:
+    with open(path, &quot;a&quot;, encoding=&quot;utf-8&quot;) as f:
+        f.write(json.dumps(event, ensure_ascii=False, sort_keys=True) + &quot;\n&quot;)
+
+def scan_base(root: Path, trace: Path, max_files: int) -&gt; dict:
+    trace.unlink(missing_ok=True)
+    files = sorted(
+        p for p in root.rglob(&quot;*&quot;)
+        if p.is_file() and p.suffix.lower() == &quot;.md&quot; and not p.name.startswith(&quot;.&quot;)
+    )
+    for i, p in enumerate(files):
+        rel = p.relative_to(root).as_posix()
+        if i &gt;= max_files:
+            append_event(trace, {&quot;file&quot;: rel, &quot;status&quot;: &quot;skipped_ceiling&quot;})
+            continue
+        try:
+            text = p.read_text(encoding=&quot;utf-8&quot;)
+        except UnicodeDecodeError:
+            append_event(trace, {&quot;file&quot;: rel, &quot;status&quot;: &quot;not_utf8&quot;})
+            continue
+        status = &quot;ok&quot; if text.strip() else &quot;empty&quot;
+        append_event(trace, {&quot;file&quot;: rel, &quot;status&quot;: status, &quot;chars&quot;: len(text)})
+
+    statuses = Counter()
+    with open(trace, encoding=&quot;utf-8&quot;) as f:
+        for line in f:
+            statuses[json.loads(line)[&quot;status&quot;]] += 1
+    return {
+        &quot;total&quot;: len(files),
+        &quot;statuses&quot;: dict(sorted(statuses.items())),
+        &quot;complete&quot;: statuses[&quot;skipped_ceiling&quot;] == 0,
+    }
+
+with tempfile.TemporaryDirectory() as tmp:
+    root = Path(tmp, &quot;base&quot;)
+    (root / &quot;sub&quot;).mkdir(parents=True)
+    (root / &quot;a.md&quot;).write_text(&quot;аккумулятор держит 90 минут&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;b.md&quot;).write_text(&quot;   \n&quot;, encoding=&quot;utf-8&quot;)
+    (root / &quot;c.md&quot;).write_bytes(&quot;штатив&quot;.encode(&quot;cp1251&quot;))
+    (root / &quot;sub&quot; / &quot;d.md&quot;).write_text(&quot;петличка&quot;, encoding=&quot;utf-8&quot;)
+    trace = Path(tmp, &quot;scan.jsonl&quot;)
+
+    print(scan_base(root, trace, max_files=10))
+    print(scan_base(root, trace, max_files=2))
+    print(trace.read_text(encoding=&quot;utf-8&quot;).splitlines()[-1])
+# ожидаем: {&#x27;total&#x27;: 4, &#x27;statuses&#x27;: {&#x27;empty&#x27;: 1, &#x27;not_utf8&#x27;: 1, &#x27;ok&#x27;: 2}, &#x27;complete&#x27;: True}
+# ожидаем: {&#x27;total&#x27;: 4, &#x27;statuses&#x27;: {&#x27;empty&#x27;: 1, &#x27;ok&#x27;: 1, &#x27;skipped_ceiling&#x27;: 2}, &#x27;complete&#x27;: False}
+# ожидаем: {&quot;file&quot;: &quot;sub/d.md&quot;, &quot;status&quot;: &quot;skipped_ceiling&quot;}</code></pre>
+<p>Обрати внимание на три решения. Пропущенные по потолку файлы <strong>тоже</strong> попадают в журнал со своим статусом: «не смотрели» и «смотрели, пусто» — разные факты, и сливать их нельзя. Итог считается <strong>по журналу</strong>, а не по переменным в памяти: если журнал и итог расходятся, значит в журнале дыра, и это видно сразу. Флаг <code>complete: False</code> — честный ответ на вопрос «уложились ли в цель». Следующий шаг после такого прогона — поднять потолок или разбить базу на части. Это «улучшение по дыре», а не по ощущению.</p>
+<p><strong>Типичные ошибки</strong></p>
+<div class="md-table"><table><thead><tr><th>Симптом</th><th>Причина</th><th>Лечение</th></tr></thead><tbody><tr><td>вчерашний журнал пропал, хотя ничего не записали</td><td><code>open(..., &quot;w&quot;)</code> стирает файл при открытии</td><td>для журнала <code>&quot;a&quot;</code>; для «только новый» <code>&quot;x&quot;</code></td></tr><tr><td>все события в журнале слиплись в одну строку</td><td><code>f.write</code> не ставит <code>\n</code></td><td><code>f.write(line + &quot;\n&quot;)</code> или <code>print(line, file=f)</code></td></tr><tr><td>у последней строки пропала буква</td><td><code>line[:-1]</code> вместо снятия <code>\n</code></td><td><code>line.rstrip(&quot;\n&quot;)</code></td></tr><tr><td>второй <code>for</code> по файлу ничего не выдал</td><td>файловый объект одноразовый, курсор в конце</td><td>открыть файл заново</td></tr><tr><td><code>.jsonl</code> не читается построчно</td><td><code>json.dumps(..., indent=2)</code> растянул объект на несколько строк</td><td>для журнала без <code>indent</code></td></tr><tr><td>после загрузки <code>state[1]</code> даёт <code>KeyError</code></td><td>JSON превратил ключ <code>1</code> в <code>&quot;1&quot;</code></td><td>ключи состояния сразу строками</td></tr><tr><td><code>TypeError: Object of type set is not JSON serializable</code></td><td>в данных множество, <code>Path</code> или <code>datetime</code></td><td>привести явно: <code>sorted(...)</code>, <code>str(...)</code></td></tr><tr><td>прогон на другой машине дал другой порядок файлов</td><td><code>glob</code>/<code>rglob</code> не обещают порядок</td><td><code>sorted(folder.glob(...))</code></td></tr><tr><td><code>IsADirectoryError</code> при обходе</td><td>под шаблон попала папка</td><td><code>if p.is_file()</code></td></tr><tr><td>в базу знаний попали <code>.tmp</code> и скрытые файлы</td><td>шаблон <code>rglob(&quot;*&quot;)</code> без фильтра</td><td>проверка <code>suffix.lower()</code> и <code>startswith(&quot;.&quot;)</code></td></tr><tr><td>второй запуск журнала смешал два прогона</td><td><code>&quot;a&quot;</code> дописал к старому файлу</td><td>в начале прогона <code>unlink(missing_ok=True)</code> или новое имя</td></tr></tbody></table></div>
+<p><strong>Связь с умениями оркестратора.</strong> Журнал <code>.jsonl</code> — это <strong>след</strong> в чистом виде: одно событие на строку, его можно прочитать программой и пересчитать. Номер строки в сообщении о битой записи — адрес дыры. <code>max_files</code> и статус <code>skipped_ceiling</code> — <strong>потолок</strong>, который не прячет недоделанное. Проверка <code>isinstance(obj, dict)</code> при чтении журнала и <code>allow_nan=False</code> при записи — маленький <strong>контракт</strong> на формат. <code>sorted(...)</code> при обходе — повторяемость, без которой два прогона нельзя сравнить, а значит, нельзя и проверить, помогло ли <strong>улучшение по дыре</strong>. В 2.5 тот же журнал пишет <code>logging</code>, в 05 из <code>trace.jsonl</code> считают расход, в 06 <code>sorted(folder.glob(&quot;*.md&quot;))</code> стоит в рабочем скелете.</p>
+<p><strong>Сделай сам</strong></p>
+<ol>
+<li>Напиши <code>tail_events(path: Path, n: int) -&gt; list[dict]</code>: вернуть последние <code>n</code> <strong>целых</strong> событий из <code>.jsonl</code>, пропуская пустые и битые строки. Подсказка: <code>collections.deque(maxlen=n)</code> из 1.2 держит только последние <code>n</code> элементов, даже если файл огромный.</li>
+<li>Напиши <code>safe_dump(data) -&gt; str</code>: <code>json.dumps</code> с <code>ensure_ascii=False</code>, <code>sort_keys=True</code>, <code>allow_nan=False</code>, который предварительно превращает множества в отсортированные списки, а <code>Path</code> — в строки через <code>as_posix()</code>, в том числе внутри вложенных словарей и списков. Если встретился другой неподдерживаемый тип, функция должна упасть с <code>TypeError</code>, а не молча записать <code>str(...)</code>.</li>
+<li>Напиши <code>count_by_folder(root: Path) -&gt; dict[str, int]</code>: сколько <code>.md</code>-файлов (с любым регистром расширения, без скрытых) лежит в каждой папке относительно <code>root</code>. Файлы прямо в <code>root</code> считай под ключом <code>&quot;.&quot;</code>. Ключи в результате отсортированы.</li>
+</ol>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">import json
+import tempfile
+from collections import defaultdict, deque
+from pathlib import Path
+
+# 1. Последние n целых событий
+def tail_events(path: Path, n: int) -&gt; list[dict]:
+    last = deque(maxlen=n)
+    with open(path, encoding=&quot;utf-8&quot;) as f:
+        for line in f:
+            if not line.strip():
+                continue
+            try:
+                obj = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(obj, dict):
+                last.append(obj)
+    return list(last)
+
+# 2. Явное приведение вместо default=str
+def _plain(x):
+    if isinstance(x, dict):
+        return {str(k): _plain(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_plain(v) for v in x]
+    if isinstance(x, (set, frozenset)):
+        return sorted(_plain(v) for v in x)
+    if isinstance(x, Path):
+        return x.as_posix()
+    return x                     # остальное пусть проверит сам json.dumps
+
+def safe_dump(data) -&gt; str:
+    return json.dumps(_plain(data), ensure_ascii=False, sort_keys=True, allow_nan=False)
+
+# 3. Счёт по папкам
+def count_by_folder(root: Path) -&gt; dict[str, int]:
+    counts = defaultdict(int)
+    for p in root.rglob(&quot;*&quot;):
+        if p.is_file() and p.suffix.lower() == &quot;.md&quot; and not p.name.startswith(&quot;.&quot;):
+            counts[p.parent.relative_to(root).as_posix()] += 1
+    return dict(sorted(counts.items()))
+
+with tempfile.TemporaryDirectory() as tmp:
+    t = Path(tmp, &quot;t.jsonl&quot;)
+    t.write_text(
+        &#x27;{&quot;step&quot;: 1}\n\n{&quot;step&quot;: 2}\n[1, 2]\n{&quot;step&quot;: 3}\n{&quot;step&quot;: 4, &quot;no&#x27;,
+        encoding=&quot;utf-8&quot;,
+    )
+    print(tail_events(t, 2))
+
+    print(safe_dump({&quot;seen&quot;: {&quot;b.md&quot;, &quot;a.md&quot;}, &quot;src&quot;: [Path(&quot;docs/a.md&quot;)], 1: &quot;поиск&quot;}))
+    for bad in [{&quot;x&quot;: float(&quot;nan&quot;)}, {&quot;x&quot;: object()}]:
+        try:
+            safe_dump(bad)
+        except (ValueError, TypeError) as e:
+            print(type(e).__name__)
+
+    root = Path(tmp, &quot;base&quot;)
+    (root / &quot;kino&quot; / &quot;svet&quot;).mkdir(parents=True)
+    for rel in [&quot;a.md&quot;, &quot;B.MD&quot;, &quot;.draft.md&quot;, &quot;kino/c.md&quot;, &quot;kino/svet/d.md&quot;, &quot;kino/svet/e.txt&quot;]:
+        (root / rel).write_text(&quot;x&quot;, encoding=&quot;utf-8&quot;)
+    print(count_by_folder(root))
+# ожидаем: [{&#x27;step&#x27;: 2}, {&#x27;step&#x27;: 3}]
+# ожидаем: {&quot;1&quot;: &quot;поиск&quot;, &quot;seen&quot;: [&quot;a.md&quot;, &quot;b.md&quot;], &quot;src&quot;: [&quot;docs/a.md&quot;]}
+# ожидаем: ValueError
+# ожидаем: TypeError
+# ожидаем: {&#x27;.&#x27;: 2, &#x27;kino&#x27;: 1, &#x27;kino/svet&#x27;: 1}</code></pre>
+<p>Как это считалось. В пункте 1 пустая строка, массив <code>[1, 2]</code> и оборванная последняя строка отброшены; из целых событий 1, 2, 3 <code>deque(maxlen=2)</code> оставила последние два. В пункте 2 множество стало отсортированным списком, путь — строкой <code>docs/a.md</code>, ключ <code>1</code> — строкой <code>&quot;1&quot;</code> (лучше заметить это при записи, чем получить <code>KeyError</code> при чтении); <code>sort_keys</code> поставил ключи по алфавиту, и цифра <code>&quot;1&quot;</code> идёт раньше букв. <code>NaN</code> дал <code>ValueError</code> из-за <code>allow_nan=False</code>, а <code>object()</code> прошёл через <code>_plain</code> без изменений и уронил <code>json.dumps</code> с <code>TypeError</code>: неизвестное не записывается молча. В пункте 3 <code>.draft.md</code> и <code>e.txt</code> не посчитаны; <code>B.MD</code> посчитан благодаря <code>suffix.lower()</code>; файлы в корне легли под ключ <code>&quot;.&quot;</code>, потому что <code>root.relative_to(root)</code> даёт <code>Path(&quot;.&quot;)</code>.</p>
+<p>&lt;/details&gt;</p>
 <hr>
 <h3 id="ch-01-1-7-исключения-маленький-тормоз">1.7. Исключения — маленький тормоз</h3>
 <p>Исключение — сигнал, что что-то пошло не так.<br><strong>Аналогия:</strong> красная лампочка. Можно проигнорировать (плохо) или обработать.</p>
