@@ -46,7 +46,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 18.10.2026 07:54 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 18.10.2026 20:57 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -4102,6 +4102,151 @@ print(dump_card([&quot;C001&quot;, &quot;C002&quot;, &quot;C003&quot;, &quot;C00
 # ожидаем: не наше семейство, вылетело сразу: сеть моргнула
 # ожидаем: {&#x27;copied&#x27;: [&#x27;C001&#x27;, &#x27;C002&#x27;, &#x27;C004&#x27;], &#x27;missing&#x27;: [&#x27;C003&#x27;], &#x27;stopped&#x27;: &#x27;C005: диск полон&#x27;}</code></pre>
 <p>Как это считалось. В пункте 1 <code>return &quot;дубль готов&quot;</code> вычислил значение, но перед выходом из функции выполнился <code>finally</code>, поэтому «сматываю кабель» напечатано <strong>раньше</strong>, чем результат, который печатает уже внешний <code>print</code>. В пункте 2 <code>except retry_on</code> принимает кортеж типов так же, как <code>except (KeyError, TypeError)</code> из шага 2 «Глубже: иерархия исключений». Первая попытка упала с <code>ConnectionError</code>, был один сон на <code>1.0</code>, вторая попытка вернула ответ. Со значением по умолчанию <code>ConnectionError</code> не входит в семейство и вылетает сразу, без единой паузы. В пункте 3 порядок решает всё: <code>FileNotFoundError</code> пойман <strong>внутри</strong> цикла, поэтому <code>C003</code> попал в <code>missing</code>, а цикл пошёл к <code>C004</code>. Любой другой <code>OSError</code> внутренний <code>except</code> не ловит, ошибка вылетает из цикла к внешнему <code>except OSError</code>, и <code>C006</code> уже не копируется. Если поменять уровни местами и поставить <code>except OSError</code> внутрь, «диск полон» тоже стал бы браком одного клипа, и прогон дальше бился бы в полный диск на каждом клипе. Переменная <code>name</code> после выхода из <code>for</code> по исключению хранит последний клип, на котором встали, поэтому её можно использовать в <code>stopped</code>.<br>&lt;/details&gt;</p>
+<h5 id="ch-01-закрепление-смена-дублей-повтор-с-потолком-внутри-парт">Закрепление: смена дублей — повтор с потолком внутри партии и общий бюджет вызовов</h5>
+<p>Вечернее упражнение собирает три утренних шаблона в один цикл, как это и бывает в настоящем прогоне. Каждому клипу положено несколько попыток (повтор с потолком), брак одного клипа не останавливает остальные (партия), а общий счётчик вызовов на всю смену останавливает всё (общий тормоз). Плюс <code>finally</code>, который пишет след даже тогда, когда прогон встал.</p>
+<p><strong>Аналогия из жизни техника/документалиста.</strong> Ты переснимаешь пять коротких планов, у тебя лимит три дубля на план и всего восемь дублей на смену, потому что арендованный свет оплачен до шести. Если в кадр влез шум, снимаешь ещё дубль. Если актёр перепутал реквизит («битый кадр»), повторять бесполезно: план записывают в брак и идут к следующему. Если три дубля подряд испорчены шумом, план записывают в «не вышло» с причиной. А когда кончается оплаченный свет, встаёт вся площадка, даже посреди плана. И в любом случае помощник отмечает в листе, до какого плана дошли.</p>
+<p><strong>Условие.</strong> Камера-заглушка уже готова: по сценарию на каждый вызов она либо падает с таймаутом, либо выдаёт брак, либо возвращает ответ.</p>
+<pre><code class="lang-python">class TemporaryError(Exception):
+    &quot;&quot;&quot;Временный сбой: повтор может помочь.&quot;&quot;&quot;
+
+class BudgetExceeded(Exception):
+    &quot;&quot;&quot;Потолок смены: дальше не идём вообще.&quot;&quot;&quot;
+
+def make_camera(script: dict[str, list[str]]):
+    left = {name: list(outcomes) for name, outcomes in script.items()}   # копия: сценарий не портим
+    def call(name: str) -&gt; str:
+        outcome = left[name].pop(0)
+        if outcome == &quot;t&quot;:
+            raise TemporaryError(&quot;таймаут&quot;)
+        if outcome == &quot;bad&quot;:
+            raise ValueError(&quot;битый кадр&quot;)
+        return outcome
+    return call
+
+script = {
+    &quot;C1&quot;: [&quot;90 минут&quot;],
+    &quot;C2&quot;: [&quot;t&quot;, &quot;t&quot;, &quot;2 часа&quot;],
+    &quot;C3&quot;: [&quot;bad&quot;],
+    &quot;C4&quot;: [&quot;t&quot;, &quot;t&quot;, &quot;t&quot;],
+    &quot;C5&quot;: [&quot;45 минут&quot;],
+}
+clips = [&quot;C1&quot;, &quot;C2&quot;, &quot;C3&quot;, &quot;C4&quot;, &quot;C5&quot;]</code></pre>
+<p>Напиши <code>process_shift(clips, call, *, max_attempts=3, max_calls=8, sleep=time.sleep) -&gt; dict</code>, которая возвращает отчёт с ключами:</p>
+<ul>
+<li><code>&quot;ok&quot;</code>: словарь «клип → ответ» для удавшихся;</li>
+<li><code>&quot;failed&quot;</code>: словарь «клип → строка вида <code>попыток: 3, последняя причина: таймаут</code>» для тех, у кого кончились попытки;</li>
+<li><code>&quot;rejected&quot;</code>: список клипов с браком (<code>ValueError</code>), такие <strong>не повторяются</strong>;</li>
+<li><code>&quot;stopped&quot;</code>: <code>None</code> или строка <code>потолок 6 вызовов, стоп на C4</code>, если кончился общий бюджет;</li>
+<li><code>&quot;calls&quot;</code>: сколько вызовов камеры сделано всего;</li>
+<li><code>&quot;trace&quot;</code>: список клипов, <strong>до которых дошли</strong>, в том числе того, на котором встали.</li>
+</ul>
+<p>Правила: перед каждым вызовом проверяй бюджет и, если он исчерпан, бросай <code>BudgetExceeded</code>; пауза между попытками <code>2 ** (attempt - 1)</code>, после последней попытки клипа не спать.</p>
+<p>Проверка: прогони смену дважды, с <code>max_calls=20</code> и с <code>max_calls=6</code>, каждый раз со свежей камерой и пустым списком пауз <code>sleep=pauses.append</code>. Ожидаемый вывод:</p>
+<pre><code class="lang-text">{&#x27;C1&#x27;: &#x27;90 минут&#x27;, &#x27;C2&#x27;: &#x27;2 часа&#x27;, &#x27;C5&#x27;: &#x27;45 минут&#x27;}
+{&#x27;C4&#x27;: &#x27;попыток: 3, последняя причина: таймаут&#x27;} [&#x27;C3&#x27;]
+None 9 [1, 2, 1, 2]
+{&#x27;C1&#x27;: &#x27;90 минут&#x27;, &#x27;C2&#x27;: &#x27;2 часа&#x27;} {} [&#x27;C3&#x27;]
+потолок 6 вызовов, стоп на C4 6 [&#x27;C1&#x27;, &#x27;C2&#x27;, &#x27;C3&#x27;, &#x27;C4&#x27;] [1, 2, 1]</code></pre>
+<p><strong>Подсказка.</strong> Тебе понадобятся три <code>try</code> на трёх уровнях, и место каждого решает, что делает цикл. Самый внутренний ловит только <code>TemporaryError</code> вокруг одного вызова. Средний стоит вокруг всей обработки одного клипа и ловит <code>ValueError</code>, а его <code>finally</code> пишет клип в <code>trace</code>. Внешний стоит вокруг всего <code>for</code> и ловит <code>BudgetExceeded</code>. Для «кончились попытки» удобно взять <code>while ... else</code> из 1.2: ветка <code>else</code> выполняется, только если цикл закончился без <code>break</code>. И не забудь ловушку Б: причину надо сохранить в <code>last_error</code>, иначе после <code>except</code> её уже нет.</p>
+<p><strong>Вопросы на понимание.</strong></p>
+<ol>
+<li>Во втором прогоне <code>C4</code> есть в <code>trace</code>, но его нет ни в <code>ok</code>, ни в <code>failed</code>, ни в <code>rejected</code>. Почему так получилось и почему это правильно?</li>
+<li>Что сломается, если <code>report[&quot;calls&quot;] += 1</code> поставить не перед вызовом, а в ветку успеха (<code>else</code> внутреннего <code>try</code>)?</li>
+<li>Что изменится, если <code>except ValueError</code> перенести внутрь <code>while</code>, рядом с <code>except TemporaryError</code>, и там тоже продолжать попытки?</li>
+</ol>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">import time
+
+class TemporaryError(Exception):
+    &quot;&quot;&quot;Временный сбой: повтор может помочь.&quot;&quot;&quot;
+
+class BudgetExceeded(Exception):
+    &quot;&quot;&quot;Потолок смены: дальше не идём вообще.&quot;&quot;&quot;
+
+def make_camera(script: dict[str, list[str]]):
+    left = {name: list(outcomes) for name, outcomes in script.items()}
+    def call(name: str) -&gt; str:
+        outcome = left[name].pop(0)
+        if outcome == &quot;t&quot;:
+            raise TemporaryError(&quot;таймаут&quot;)
+        if outcome == &quot;bad&quot;:
+            raise ValueError(&quot;битый кадр&quot;)
+        return outcome
+    return call
+
+def process_shift(clips: list[str], call, *, max_attempts: int = 3,
+                  max_calls: int = 8, sleep=time.sleep) -&gt; dict:
+    report = {&quot;ok&quot;: {}, &quot;failed&quot;: {}, &quot;rejected&quot;: [], &quot;stopped&quot;: None,
+              &quot;calls&quot;: 0, &quot;trace&quot;: []}
+    try:                                                  # уровень 3: тормоз всей смены
+        for name in clips:
+            try:                                          # уровень 2: один клип
+                attempt = 0
+                last_error = None
+                while attempt &lt; max_attempts:
+                    attempt += 1
+                    if report[&quot;calls&quot;] &gt;= max_calls:      # бюджет проверяем ДО вызова
+                        raise BudgetExceeded(f&quot;потолок {max_calls} вызовов, стоп на {name}&quot;)
+                    report[&quot;calls&quot;] += 1
+                    try:                                  # уровень 1: одна попытка
+                        result = call(name)
+                    except TemporaryError as e:
+                        last_error = e                    # e исчезнет после блока
+                        if attempt &lt; max_attempts:
+                            sleep(2 ** (attempt - 1))
+                    else:
+                        report[&quot;ok&quot;][name] = result
+                        break
+                else:                                     # цикл кончился без break
+                    report[&quot;failed&quot;][name] = f&quot;попыток: {attempt}, последняя причина: {last_error}&quot;
+            except ValueError:
+                report[&quot;rejected&quot;].append(name)           # брак: не повторяем, идём дальше
+            finally:
+                report[&quot;trace&quot;].append(name)              # выполнится и при BudgetExceeded
+    except BudgetExceeded as e:
+        report[&quot;stopped&quot;] = str(e)
+    return report
+
+script = {
+    &quot;C1&quot;: [&quot;90 минут&quot;],
+    &quot;C2&quot;: [&quot;t&quot;, &quot;t&quot;, &quot;2 часа&quot;],
+    &quot;C3&quot;: [&quot;bad&quot;],
+    &quot;C4&quot;: [&quot;t&quot;, &quot;t&quot;, &quot;t&quot;],
+    &quot;C5&quot;: [&quot;45 минут&quot;],
+}
+clips = [&quot;C1&quot;, &quot;C2&quot;, &quot;C3&quot;, &quot;C4&quot;, &quot;C5&quot;]
+
+pauses = []
+full = process_shift(clips, make_camera(script), max_calls=20, sleep=pauses.append)
+print(full[&quot;ok&quot;])
+print(full[&quot;failed&quot;], full[&quot;rejected&quot;])
+print(full[&quot;stopped&quot;], full[&quot;calls&quot;], pauses)
+
+pauses = []
+short = process_shift(clips, make_camera(script), max_calls=6, sleep=pauses.append)
+print(short[&quot;ok&quot;], short[&quot;failed&quot;], short[&quot;rejected&quot;])
+print(short[&quot;stopped&quot;], short[&quot;calls&quot;], short[&quot;trace&quot;], pauses)
+# ожидаем: {&#x27;C1&#x27;: &#x27;90 минут&#x27;, &#x27;C2&#x27;: &#x27;2 часа&#x27;, &#x27;C5&#x27;: &#x27;45 минут&#x27;}
+# ожидаем: {&#x27;C4&#x27;: &#x27;попыток: 3, последняя причина: таймаут&#x27;} [&#x27;C3&#x27;]
+# ожидаем: None 9 [1, 2, 1, 2]
+# ожидаем: {&#x27;C1&#x27;: &#x27;90 минут&#x27;, &#x27;C2&#x27;: &#x27;2 часа&#x27;} {} [&#x27;C3&#x27;]
+# ожидаем: потолок 6 вызовов, стоп на C4 6 [&#x27;C1&#x27;, &#x27;C2&#x27;, &#x27;C3&#x27;, &#x27;C4&#x27;] [1, 2, 1]</code></pre>
+<p>Как это считалось. В первом прогоне <code>C1</code> взял один вызов, <code>C2</code> три (две паузы: <code>1</code> и <code>2</code>), <code>C3</code> один, после него брак и никаких повторов, <code>C4</code> три вызова и ещё две паузы, после третьей неудачи сна нет, и <code>while</code> закончился без <code>break</code>, поэтому сработал его <code>else</code>. <code>C5</code> взял один вызов. Всего <code>1 + 3 + 1 + 3 + 1 = 9</code>. Во втором прогоне к началу <code>C4</code> потрачено <code>1 + 3 + 1 = 5</code> вызовов. Первая попытка <code>C4</code> стала шестой (таймаут, пауза <code>1</code>), а перед второй проверка увидела <code>6 &gt;= 6</code> и бросила <code>BudgetExceeded</code>. Средний <code>try</code> эту ошибку не ловит, поэтому она пролетает наружу, но по пути выполняется <code>finally</code>, и <code>C4</code> попадает в <code>trace</code>. <code>C5</code> уже не трогали.</p>
+<p><strong>Ответы на вопросы.</strong></p>
+<ol>
+<li><code>C4</code> не удался и не провалился: его <strong>прервали</strong>. Записать его в <code>failed</code> значило бы соврать в следе, будто три попытки были истрачены, хотя была одна. А <code>trace</code> отвечает на другой вопрос: «до какого клипа дошли», и для этого как раз нужен <code>finally</code>, который выполняется при любом исходе. Вместе с <code>stopped</code> это честный частичный отчёт: видно, где встали и почему, а <code>C5</code> по <code>trace</code> очевидно не начат. Такой отчёт можно продолжить следующим запуском, как журнал смены из закрепления 1.6.</li>
+<li>Неудачные вызовы перестанут считаться. Клип, который падает по таймауту бесконечно, никогда не сдвинет счётчик, и общий потолок не сработает именно тогда, когда он нужнее всего: при упавшем сервисе. Платишь ты за каждый вызов, а не только за удачный, поэтому и считать надо каждый, до вызова. Это та же ошибка 3 из утреннего разбора, только с бюджетом вместо счётчика попыток.</li>
+<li>Брак начнёт повторяться: <code>C3</code> получит три попытки вместо одной, а заглушка на второй попытке вообще упадёт с <code>IndexError</code>, потому что сценарий для <code>C3</code> кончился. В жизни это значит три оплаченных вызова на заведомо неисправимую ошибку и три одинаковые строки в следе вместо одной. Решение «повторять или нет» принимает тип исключения, и каждый тип ловится на своём уровне.</li>
+</ol>
+<p><strong>Типичные ошибки в этом упражнении.</strong></p>
+<ul>
+<li>Ставить <code>last_error = None</code> один раз перед <code>for</code>. Тогда в <code>failed</code> может попасть причина от <strong>предыдущего</strong> клипа. Сброс счётчика и причины идёт в начале обработки каждого клипа.</li>
+<li>Ловить <code>BudgetExceeded</code> в среднем <code>try</code> вместе с <code>ValueError</code>. Тогда потолок превращается в брак одного клипа, и смена продолжает тратить бюджет на следующих.</li>
+<li>Писать <code>trace.append(name)</code> в конце тела <code>for</code>, а не в <code>finally</code>. При остановке клип, на котором встали, пропадает из следа, и уже не понять, начинали его или нет.</li>
+<li>Проверять бюджет после вызова, по принципу «потратил, потом посмотрел». Тогда вызов сверх потолка уже ушёл и оплачен, и только после этого прогон встаёт. Потолок проверяют до траты, так же как утренний <code>spend</code> стоит перед работой с элементом.</li>
+</ul>
+<p><strong>Связь с оркестратором.</strong> Здесь в одном цикле живут два <strong>потолка</strong> разного масштаба: <code>max_attempts</code> на один шаг и <code>max_calls</code> на весь прогон, и это ровно то устройство, которое в 05 станет бюджетом (5.1) поверх повтора вызова модели (03, 3.5). Тип исключения — <strong>контракт</strong>: <code>TemporaryError</code> повторяем, <code>ValueError</code> бракуем, <code>BudgetExceeded</code> останавливает. <code>report</code> — <strong>след</strong>, по которому видно, сколько стоила смена и где она встала. <strong>Цель, которую можно провалить</strong>, тут измерима: «снять пять планов не больше чем за восемь вызовов», и по отчёту видно, выполнена она или нет. А вопрос 2 — готовое <strong>улучшение по дыре</strong>: нашёл, что бюджет не видит неудачных вызовов, переносишь одну строку, а не переписываешь цикл.</p>
+<p>&lt;/details&gt;</p>
 <hr>
 <h3 id="ch-01-1-8-основы-объектно-ориентированного-программирования-">1.8. Основы объектно-ориентированного программирования (ООП)</h3>
 <p>Класс — чертёж объекта. Объект — конкретный экземпляр с состоянием и поведением.</p>
