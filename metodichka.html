@@ -46,7 +46,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 17.10.2026 20:51 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 18.10.2026 07:54 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -244,7 +244,7 @@ print(len(p.read_text(encoding=&quot;utf-8&quot;).splitlines()))
 <details class="m-chapter" id="ch-01"><summary><h2>01. Основы Python — Ступень 1. Порядок мысли</h2></summary><div class="m-body"><p><strong>Курс:</strong> Stepik 58852 «Поколение Python: курс для начинающих».<br><strong>Где ты сейчас:</strong> примерно модуль ввода-вывода / циклы (<code>while</code>).<br><strong>Цель ступени:</strong> научиться ясно говорить: что было на входе, какая ветка выбрана, где ход кончается. Без этого схему системы не прочитать, даже если код писал не ты.</p>
 <p>Эта часть объясняет каждый базовый термин максимально подробно. Не «запомни синтаксис», а «пойми, зачем это существует и как это помогает оркестратору».</p>
 <p><strong>Карта: что из этой ступени понадобится дальше.</strong> Ступень 1 — фундамент для всего остального. Если какая-то строка в файлах 04–06 кажется непонятной, почти всегда ответ здесь:</p>
-<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td><code>with open</code> и режимы <code>r/w/a/x</code>, чтение по строкам, JSON Lines, границы JSON, <code>glob</code>/<code>rglob</code></td><td>1.6, «Глубже: with open, режимы записи, JSON Lines…»</td><td>02: 2.5 след в <code>.jsonl</code> через <code>logging</code>; 03: 3.3 обход папки; 05: расход по <code>trace.jsonl</code>; 06: <code>sorted(folder.glob(&quot;*.md&quot;))</code> в скелете</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
+<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td><code>with open</code> и режимы <code>r/w/a/x</code>, чтение по строкам, JSON Lines, границы JSON, <code>glob</code>/<code>rglob</code></td><td>1.6, «Глубже: with open, режимы записи, JSON Lines…»</td><td>02: 2.5 след в <code>.jsonl</code> через <code>logging</code>; 03: 3.3 обход папки; 05: расход по <code>trace.jsonl</code>; 06: <code>sorted(folder.glob(&quot;*.md&quot;))</code> в скелете</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>исключения в цикле: повтор с потолком, партия без обрыва, общий тормоз, порядок <code>try/except/else/finally</code></td><td>1.7, «Глубже: исключения внутри цикла»</td><td>02: 2.4 безопасный <code>retry</code>; 03: 3.5 повтор вызова модели; 05: 5.4 предохранитель поверх <code>call_with_retry</code>, 5.1 отказ по бюджету</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
 <hr>
 <h3 id="ch-01-1-1-переменные-и-типы-данных">1.1. Переменные и типы данных</h3>
 <h4 id="ch-01-что-такое-переменная">Что такое переменная</h4>
@@ -3767,6 +3767,341 @@ except KonturError as e:
 # ожидаем: [&#x27;LookupError&#x27;, &#x27;ValueError&#x27;, &#x27;OSError&#x27;]
 # ожидаем: InventedSource [&#x27;z.md&#x27;]</code></pre>
 <p><code>PermissionError</code> — потомок <code>OSError</code>. Обработчик <code>KonturError</code> поймал <code>InventedSource</code> как потомка, а <code>e.files</code> доступны, потому что объект — именно <code>InventedSource</code>.<br>&lt;/details&gt;</p>
+<h4 id="ch-01-глубже-исключения-внутри-цикла-повтор-с-потолком-один-">Глубже: исключения внутри цикла — повтор с потолком, «один брак не валит смену» и полный порядок <code>try/except/else/finally</code></h4>
+<p><strong>Интуиция.</strong> До сих пор <code>try</code> стоял вокруг одного действия: прочитать файл, разобрать JSON. В контуре оркестратора действия почти всегда идут <strong>в цикле</strong>: попытки вызова модели, обход папки, шаги графа. И главный вопрос здесь не «как поймать ошибку», а <strong>что после неё делает цикл</strong>. Вариантов ровно три, и каждый надо выбирать сознательно:</p>
+<div class="md-table"><table><thead><tr><th>Что случилось</th><th>Что делает цикл</th><th>Пример</th></tr></thead><tbody><tr><td>временный сбой одного действия</td><td><strong>повторить</strong> то же действие, но с потолком попыток</td><td>таймаут модели, сеть моргнула</td></tr><tr><td>брак одного элемента партии</td><td><strong>записать и идти дальше</strong> к следующему элементу</td><td>один битый файл из сотни</td></tr><tr><td>нарушен общий потолок или конфигурация</td><td><strong>остановить весь прогон</strong></td><td>кончился бюджет, нет ключа API</td></tr></tbody></table></div>
+<p>Ошибка новичка в том, что он выбирает вариант случайно, просто по тому, где оказался <code>try</code>. Ниже разберём, как устроен порядок выполнения, и по шаблону на каждый вариант.</p>
+<p><strong>Шаг 1. Полный порядок <code>try / except / else / finally</code>.</strong> В доработке выше блоки показаны по одному. Теперь все четыре вместе, со следом, чтобы было видно, какой путь прошёл код.</p>
+<pre><code class="lang-python">def run(kind: str, trace: list) -&gt; str:
+    try:
+        trace.append(&quot;try&quot;)
+        if kind == &quot;temp&quot;:
+            raise TimeoutError(&quot;камера не ответила&quot;)
+        if kind == &quot;bug&quot;:
+            raise KeyError(&quot;anwser&quot;)
+        trace.append(&quot;try: дошли до конца&quot;)
+    except TimeoutError:
+        trace.append(&quot;except&quot;)
+        return &quot;отказ&quot;
+    else:
+        trace.append(&quot;else&quot;)
+        return &quot;ok&quot;
+    finally:
+        trace.append(&quot;finally&quot;)
+
+for kind in [&quot;ok&quot;, &quot;temp&quot;, &quot;bug&quot;]:
+    trace = []
+    try:
+        result = run(kind, trace)
+    except KeyError as e:
+        result = f&quot;упало наружу: {e!r}&quot;
+    print(kind, &quot;|&quot;, &quot; → &quot;.join(trace), &quot;|&quot;, result)
+# ожидаем: ok | try → try: дошли до конца → else → finally | ok
+# ожидаем: temp | try → except → finally | отказ
+# ожидаем: bug | try → finally | упало наружу: KeyError(&#x27;anwser&#x27;)</code></pre>
+<p>Три пути, три правила:</p>
+<ul>
+<li><strong>Без ошибки:</strong> <code>try</code> целиком → <code>else</code> → <code>finally</code>. <code>except</code> пропущен.</li>
+<li><strong>Ошибка, которую ловим:</strong> <code>try</code> до места ошибки → подходящий <code>except</code> → <code>finally</code>. <code>else</code> пропущен: он только для успеха.</li>
+<li><strong>Ошибка, которую не ловим:</strong> <code>try</code> до места ошибки → <code>finally</code> → ошибка летит дальше, к вызывающему. <code>finally</code> выполнился, но <strong>ничего не исправил</strong>: он не ловит, он только «убирает за собой».</li>
+</ul>
+<p>Отдельно о <code>return</code>: в <code>except</code> и <code>else</code> стоит <code>return</code>, но <code>finally</code> всё равно выполнился <strong>до</strong> выхода из функции. Значение <code>&quot;отказ&quot;</code> или <code>&quot;ok&quot;</code> уже вычислено и ждёт, пока <code>finally</code> закончит.</p>
+<p><strong>Шаг 2. Две ловушки, которые незаметны, пока не укусят.</strong></p>
+<p><em>Ловушка А: <code>return</code> внутри <code>finally</code> глотает ошибку.</em></p>
+<pre><code class="lang-python">def bad() -&gt; str:
+    try:
+        raise KeyError(&quot;anwser&quot;)
+    finally:
+        return &quot;всё хорошо&quot;     # ПЛОХО: этот return отменяет летящую ошибку
+
+print(bad())
+# ожидаем: всё хорошо</code></pre>
+<p>Ошибка была, а снаружи её не видно совсем: ни в следе, ни в traceback. Это молчаливое глотание исключения, худший случай из правила оркестратора в начале раздела. Правило: в <code>finally</code> только уборка (записать «шаг закончен», закрыть, освободить), <strong>никогда</strong> <code>return</code>, <code>break</code> или <code>continue</code>. С Python 3.14 интерпретатор выдаёт на такой код <code>SyntaxWarning</code>, но на 3.13 и раньше он молчит.</p>
+<p><em>Ловушка Б: переменная <code>e</code> исчезает после <code>except</code>.</em></p>
+<pre><code class="lang-python">try:
+    int(&quot;пять&quot;)
+except ValueError as e:
+    pass
+
+try:
+    print(e)
+except NameError as err:
+    print(&quot;NameError:&quot;, err)
+# ожидаем: NameError: name &#x27;e&#x27; is not defined</code></pre>
+<p>Python сам удаляет имя из <code>as e</code> в конце блока <code>except</code>. Так устроено нарочно: объект ошибки держит ссылку на весь traceback со всеми переменными, и если бы он жил дальше, память бы не освобождалась. Для цикла это важно: если ошибка нужна <strong>после</strong> цикла (например, чтобы сказать «последняя причина была такая»), её надо явно сохранить в другую переменную: <code>last_error = e</code>.</p>
+<p><strong>Шаг 3. Шаблон «повтор с потолком»: <code>while</code>, счётчик и узкий <code>except</code>.</strong> Это прямое продолжение <code>while</code> из 1.2 и «дублей с лимитом»: снимаем, пока не получилось, но не больше N раз.</p>
+<pre><code class="lang-python">import time
+
+class TemporaryError(Exception):
+    &quot;&quot;&quot;Временный сбой: повтор может помочь.&quot;&quot;&quot;
+
+def call_with_retry(call, *, max_attempts: int = 3, pause: float = 1.0,
+                    sleep=time.sleep, log: list | None = None):
+    if log is None:
+        log = []
+    attempt = 0
+    last_error = None
+    while attempt &lt; max_attempts:
+        attempt += 1                                  # счётчик первой строкой, до любых веток
+        try:
+            result = call()
+        except TemporaryError as e:                   # повторяем ТОЛЬКО временное
+            last_error = e                            # e исчезнет после блока, сохраняем
+            log.append(f&quot;попытка {attempt}: {e}&quot;)
+            if attempt &lt; max_attempts:                # после последней попытки не спим
+                sleep(pause * 2 ** (attempt - 1))     # 1, 2, 4 … — пауза растёт
+        else:
+            log.append(f&quot;попытка {attempt}: ok&quot;)
+            return result
+    raise RuntimeError(f&quot;не вышло, попыток: {max_attempts}&quot;) from last_error
+
+def flaky(fails: int):
+    &quot;&quot;&quot;Заглушка: первые fails вызовов падают с таймаутом, потом отвечают.&quot;&quot;&quot;
+    left = fails
+    def call() -&gt; str:
+        nonlocal left
+        if left &gt; 0:
+            left -= 1
+            raise TemporaryError(&quot;таймаут&quot;)
+        return &quot;90 минут&quot;
+    return call
+
+pauses, log = [], []
+print(call_with_retry(flaky(2), sleep=pauses.append, log=log))
+print(log, pauses)
+
+pauses, log = [], []
+try:
+    call_with_retry(flaky(5), sleep=pauses.append, log=log)
+except RuntimeError as e:
+    print(e, &quot;| причина:&quot;, repr(e.__cause__))
+print(log, pauses)
+
+log = []
+try:
+    call_with_retry(lambda: {&quot;a&quot;: 1}[&quot;b&quot;], sleep=pauses.append, log=log)
+except KeyError as e:
+    print(&quot;баг вылетел с первой попытки:&quot;, repr(e), log)
+# ожидаем: 90 минут
+# ожидаем: [&#x27;попытка 1: таймаут&#x27;, &#x27;попытка 2: таймаут&#x27;, &#x27;попытка 3: ok&#x27;] [1.0, 2.0]
+# ожидаем: не вышло, попыток: 3 | причина: TemporaryError(&#x27;таймаут&#x27;)
+# ожидаем: [&#x27;попытка 1: таймаут&#x27;, &#x27;попытка 2: таймаут&#x27;, &#x27;попытка 3: таймаут&#x27;] [1.0, 2.0]
+# ожидаем: баг вылетел с первой попытки: KeyError(&#x27;b&#x27;) []</code></pre>
+<p>Разберём по строкам, потому что здесь сходится почти вся Ступень 1:</p>
+<ul>
+<li><code>while attempt &lt; max_attempts</code> — <strong>потолок</strong>. Условие обязательно меняется: <code>attempt += 1</code> стоит первой строкой тела, поэтому никакая ветка его не перепрыгнет (ошибка 3 из разбора <code>while</code> в 1.2).</li>
+<li><code>except TemporaryError</code> — <strong>контракт</strong>: «временным» считается только то, что так помечено. <code>KeyError</code> из третьего примера не пойман, вылетел сразу, и след пуст: ни одной лишней попытки на баг.</li>
+<li><code>else: return result</code> — успех уходит из функции немедленно. Цикл не надо «ломать» <code>break</code>: <code>return</code> выходит и из <code>while</code>, и из функции.</li>
+<li><code>sleep=time.sleep</code> — внедрение зависимости из 1.3 («Шаг 6»). В примере вместо сна <code>pauses.append</code>, поэтому видно, сколько бы спали: <code>[1.0, 2.0]</code>, а после третьей неудачной попытки сна нет.</li>
+<li><code>pause * 2 ** (attempt - 1)</code> — <strong>экспоненциальный откат</strong> (backoff): каждая следующая пауза вдвое длиннее. Смысл: если сервис перегружен, частые повторы его только добивают. В боевых клиентах паузу ещё ограничивают сверху, например <code>min(..., 30)</code>, чтобы на десятой попытке не ждать 8 минут.</li>
+<li><code>raise RuntimeError(...) from last_error</code> — после цикла попытки кончились. Сообщаем об этом <strong>своей</strong> ошибкой, а настоящую причину сохраняем в <code>__cause__</code> (механизм <code>raise ... from e</code> из доработки выше). Без <code>last_error = e</code> на этой строке была бы <code>NameError</code>, см. ловушку Б.</li>
+<li><code>flaky</code> — замыкание с <code>nonlocal</code> из 1.3: функция помнит, сколько раз ей ещё «падать».</li>
+</ul>
+<p><strong>Шаг 4. Шаблон «партия»: один брак не валит смену.</strong> Где стоит <code>try</code>, внутри цикла или снаружи, — это и есть выбор между «идти дальше» и «встать».</p>
+<pre><code class="lang-python">import json
+
+raws = {
+    &quot;a.json&quot;: &#x27;{&quot;text&quot;: &quot;90 минут&quot;}&#x27;,
+    &quot;b.json&quot;: &quot;{oops&quot;,
+    &quot;c.json&quot;: &#x27;{&quot;txt&quot;: 1}&#x27;,
+    &quot;d.json&quot;: &#x27;{&quot;text&quot;: &quot;2 часа&quot;}&#x27;,
+}
+
+def load_batch_bad(raws: dict[str, str]) -&gt; dict:
+    good = {}
+    try:                                              # ПЛОХО: try снаружи цикла
+        for name, raw in raws.items():
+            good[name] = json.loads(raw)[&quot;text&quot;]
+    except (json.JSONDecodeError, KeyError):
+        pass
+    return good
+
+def load_batch(raws: dict[str, str]) -&gt; tuple[dict, list]:
+    good, errors = {}, []
+    for name, raw in raws.items():
+        try:                                          # ИСПРАВЛЕНО: try на каждый элемент
+            data = json.loads(raw)
+        except json.JSONDecodeError as e:
+            errors.append((name, &quot;битый JSON&quot;, e.pos))
+            continue
+        if &quot;text&quot; not in data:
+            errors.append((name, &quot;нет поля text&quot;, None))
+            continue
+        good[name] = data[&quot;text&quot;]
+    return good, errors
+
+print(load_batch_bad(raws))
+good, errors = load_batch(raws)
+print(good)
+print(errors)
+# ожидаем: {&#x27;a.json&#x27;: &#x27;90 минут&#x27;}
+# ожидаем: {&#x27;a.json&#x27;: &#x27;90 минут&#x27;, &#x27;d.json&#x27;: &#x27;2 часа&#x27;}
+# ожидаем: [(&#x27;b.json&#x27;, &#x27;битый JSON&#x27;, 1), (&#x27;c.json&#x27;, &#x27;нет поля text&#x27;, None)]</code></pre>
+<p>В плохой версии первый же битый файл выбросил управление <strong>из цикла целиком</strong>: <code>d.json</code>, совершенно целый, не прочитан, и никто об этом не узнал, потому что <code>pass</code>. В исправленной версии каждый элемент обрабатывается сам по себе: брак попал в <code>errors</code> с причиной, а цикл пошёл дальше через <code>continue</code>. Обрати внимание: отсутствие поля проверено обычным <code>if</code>, без <code>try</code>. Это ожидаемая форма отказа, а не «исключительная» ситуация, и так <code>try</code> остаётся минимальным: в нём только <code>json.loads</code>.</p>
+<p><code>e.pos</code> — поле <code>JSONDecodeError</code>: номер символа, где разбор споткнулся. Это данные для следа, без разбора текста сообщения (типичная ошибка 3 из «Глубже: иерархия исключений»).</p>
+<p><strong>Шаг 5. Шаблон «общий тормоз»: брак элемента — дальше, потолок — стоп всего.</strong> Оба механизма часто живут в одном цикле. Внутренний <code>try</code> ловит брак одного элемента, а исключение потолка он <strong>не ловит</strong> и пропускает наружу, к внешнему <code>try</code>.</p>
+<pre><code class="lang-python">class BudgetExceeded(Exception):
+    &quot;&quot;&quot;Потолок прогона: дальше не идём вообще.&quot;&quot;&quot;
+
+def spend(budget: dict, name: str) -&gt; None:
+    budget[&quot;used&quot;] += 1
+    if budget[&quot;used&quot;] &gt; budget[&quot;cap&quot;]:
+        raise BudgetExceeded(f&quot;потолок {budget[&#x27;cap&#x27;]} шагов, стоп на {name}&quot;)
+
+def check_batteries(readings: dict[str, str], *, max_steps: int) -&gt; dict:
+    report = {&quot;ok&quot;: {}, &quot;skipped&quot;: [], &quot;stopped&quot;: None}
+    budget = {&quot;used&quot;: 0, &quot;cap&quot;: max_steps}
+    try:
+        for name, raw in readings.items():
+            spend(budget, name)                       # может бросить BudgetExceeded
+            try:
+                report[&quot;ok&quot;][name] = int(raw)
+            except ValueError:
+                report[&quot;skipped&quot;].append(name)        # брак одного — идём дальше
+    except BudgetExceeded as e:
+        report[&quot;stopped&quot;] = str(e)                    # тормоз всего прогона
+    return report
+
+readings = {&quot;A&quot;: &quot;90&quot;, &quot;B&quot;: &quot;сел&quot;, &quot;C&quot;: &quot;120&quot;, &quot;D&quot;: &quot;75&quot;}
+print(check_batteries(readings, max_steps=10))
+print(check_batteries(readings, max_steps=3))
+# ожидаем: {&#x27;ok&#x27;: {&#x27;A&#x27;: 90, &#x27;C&#x27;: 120, &#x27;D&#x27;: 75}, &#x27;skipped&#x27;: [&#x27;B&#x27;], &#x27;stopped&#x27;: None}
+# ожидаем: {&#x27;ok&#x27;: {&#x27;A&#x27;: 90, &#x27;C&#x27;: 120}, &#x27;skipped&#x27;: [&#x27;B&#x27;], &#x27;stopped&#x27;: &#x27;потолок 3 шагов, стоп на D&#x27;}</code></pre>
+<p>Почему здесь исключение, а не <code>break</code>? Проверка потолка вынесена в отдельную функцию <code>spend</code>, а <code>break</code> из функции наружу, в чужой цикл, не работает. Исключение пролетает сквозь любое число уровней вызова, пока его не поймают (таблица «Исключение или значение отказа?» выше, вторая строка). И важная деталь: отчёт при остановке <strong>не пустой</strong>. Всё, что успели, лежит в <code>ok</code> и <code>skipped</code>, а в <code>stopped</code> написано, где и почему встали. Это честный частичный результат, а не «упало и всё пропало».</p>
+<p><strong>Шаг 6. Ловушка: голый <code>except</code> в цикле повтора ловит Ctrl+C.</strong></p>
+<pre><code class="lang-python">def stubborn(call, max_attempts: int = 3):
+    for attempt in range(1, max_attempts + 1):
+        try:
+            return call()
+        except:                                       # ПЛОХО: голый except
+            print(f&quot;попытка {attempt}: сбой, пробую снова&quot;)
+    return None
+
+def user_pressed_ctrl_c():
+    raise KeyboardInterrupt                           # так Python сообщает о Ctrl+C
+
+print(stubborn(user_pressed_ctrl_c))
+# ожидаем: попытка 1: сбой, пробую снова
+# ожидаем: попытка 2: сбой, пробую снова
+# ожидаем: попытка 3: сбой, пробую снова
+# ожидаем: None</code></pre>
+<p>Человек нажал Ctrl+C, чтобы остановить зависший прогон, а цикл решил, что это «сбой», и пошёл на следующую попытку, да ещё с паузой. Голый <code>except:</code> ловит всё, включая <code>BaseException</code> с его <code>KeyboardInterrupt</code> и <code>SystemExit</code> (см. типичную ошибку 1 из «Глубже: иерархия исключений»). <code>except Exception</code> уже пропустил бы Ctrl+C, но правильный ответ тот же, что в шаге 3: повторять <strong>только своё временное семейство</strong>.</p>
+<p><strong>Типичные ошибки.</strong></p>
+<ol>
+<li><strong>Повторять всё подряд.</strong> <code>except Exception</code> в цикле повтора трижды «лечит» опечатку в ключе или неверный ключ API. Время и деньги потрачены, причина размыта тремя одинаковыми строками следа.</li>
+<li><strong><code>while True</code> без потолка.</strong> «Пока не получится» при упавшем сервисе значит «навсегда». Повтор всегда считается и всегда ограничен.</li>
+<li><strong>Счётчик растёт только в ветке успеха или после <code>continue</code>.</strong> Если <code>attempt += 1</code> стоит в <code>else</code>, при постоянной ошибке счётчик не растёт: вечный цикл. Это та же ошибка 3 из разбора <code>while</code>, только <code>continue</code> спрятан в <code>except</code>.</li>
+<li><strong>Сон после последней попытки.</strong> Лишние секунды ожидания перед тем, как всё равно сдаться. Проверка <code>if attempt &lt; max_attempts</code> перед <code>sleep</code>.</li>
+<li><strong><code>try</code> не на том уровне.</strong> Снаружи цикла один брак останавливает партию, внутри цикла общий потолок не может остановить прогон. Сначала реши, какой из трёх вариантов из таблицы нужен, потом ставь <code>try</code>.</li>
+<li><strong>Потерянная причина.</strong> После цикла сказали «не вышло», но не сказали почему: нет <code>last_error</code> или нет <code>from</code>. В следе тогда видно, <em>что</em> сломалось, но не видно <em>отчего</em>.</li>
+</ol>
+<p><strong>Аналогия из жизни техника/документалиста.</strong> Повтор — это дубль. Если в кадр влез шум ветра, снимаем ещё раз, но у режиссёра есть лимит дублей, и между ними даём ветру утихнуть, причём каждый раз чуть дольше. Если же в камере нет карты памяти, второй дубль ничего не изменит: это не «временный сбой», а ошибка подготовки, и повторять бессмысленно. Партия — это сброс карты после смены: один битый клип не повод бросать копирование остальных, его записывают в рапорт и идут дальше. А вот если кончилось место на диске, копирование останавливают целиком, и в рапорте пишут, на каком клипе встали. Хороший техник различает эти три ситуации не задумываясь, и код должен различать их так же явно.</p>
+<p><strong>Связь с умениями оркестратора.</strong></p>
+<ul>
+<li><strong>Потолок:</strong> <code>max_attempts</code> и <code>BudgetExceeded</code>. У повтора свой потолок, у прогона свой, и оба срабатывают, даже когда всё идёт плохо.</li>
+<li><strong>Контракт:</strong> что считается временным (<code>TemporaryError</code>), а что баг. Это решение записано в коде типом исключения, а не в голове.</li>
+<li><strong>След:</strong> <code>log</code> с каждой попыткой, <code>errors</code> с причиной и <code>e.pos</code>, <code>stopped</code> с местом остановки. По следу видно, сколько стоил ответ и почему партия неполная.</li>
+<li><strong>Цель, которую можно провалить:</strong> «прочитать партию» без <code>errors</code> провалить нельзя, всё тихо проходит как успех. С <code>errors</code> и <code>stopped</code> провал виден и измерим.</li>
+<li><strong>Улучшение по дыре:</strong> нашли, что повтор лечит опечатки? Исправление точечное: сузить <code>except</code> до <code>TemporaryError</code>, а весь цикл не переписывать.</li>
+</ul>
+<p><strong>Где это встретится дальше:</strong> 02, 2.4 — декоратор <code>retry(on=(TemporaryError,))</code> и его доработка, где разобраны те же дыры (повтор всего подряд, сон после последней попытки); 03, 3.5 — повтор вызова модели при таймауте и 429; 05, 5.4 — предохранитель поверх <code>call_with_retry</code>: одна запись по итогу всех попыток, а не по каждой; 05, 5.1 — отказ по бюджету как остановка всего прогона.</p>
+<p><strong>Сделай сам.</strong></p>
+<ol>
+<li>Не запуская, скажи, что напечатает код ниже и в каком порядке. Потом проверь.</li>
+</ol>
+<pre><code class="lang-python">   def f() -&gt; str:
+       try:
+           print(&quot;снимаю&quot;)
+           return &quot;дубль готов&quot;
+       finally:
+           print(&quot;сматываю кабель&quot;)
+
+   print(f())</code></pre>
+<ol>
+<li>Доработай <code>call_with_retry</code>: добавь параметр <code>retry_on: tuple = (TemporaryError,)</code>, чтобы повторяемые ошибки задавал вызывающий, и верни пару <code>(result, attempt)</code>, чтобы в следе было видно, с какой попытки получилось. Проверь, что с <code>retry_on=(TemporaryError, ConnectionError)</code> заглушка, падающая один раз с <code>ConnectionError</code>, даёт <code>(&#x27;90 минут&#x27;, 2)</code>, а с настройкой по умолчанию та же заглушка роняет <code>ConnectionError</code> сразу.</li>
+</ol>
+<ol>
+<li>Напиши <code>dump_card(clips: list[str], copy) -&gt; dict</code> для сброса карты. <code>copy(name)</code> копирует клип и может бросить <code>FileNotFoundError</code> (клипа нет, записать в <code>missing</code> и идти дальше) или другой <code>OSError</code> (например, «диск полон», остановить всё и записать причину в <code>stopped</code>). Подсказка: <code>FileNotFoundError</code> — потомок <code>OSError</code>, поэтому подумай, какой <code>except</code> где стоит.</li>
+</ol>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">import time
+
+# 1. finally выполняется до выхода из функции, return уже вычислен
+def f() -&gt; str:
+    try:
+        print(&quot;снимаю&quot;)
+        return &quot;дубль готов&quot;
+    finally:
+        print(&quot;сматываю кабель&quot;)
+
+print(f())
+
+# 2. Повтор с настраиваемым семейством ошибок и номером попытки
+class TemporaryError(Exception):
+    pass
+
+def call_with_retry(call, *, max_attempts: int = 3, pause: float = 1.0,
+                    retry_on: tuple = (TemporaryError,), sleep=time.sleep):
+    attempt = 0
+    last_error = None
+    while attempt &lt; max_attempts:
+        attempt += 1
+        try:
+            result = call()
+        except retry_on as e:                         # кортеж типов работает в except
+            last_error = e
+            if attempt &lt; max_attempts:
+                sleep(pause * 2 ** (attempt - 1))
+        else:
+            return result, attempt
+    raise RuntimeError(f&quot;не вышло, попыток: {max_attempts}&quot;) from last_error
+
+def drops_once():
+    calls = 0
+    def call() -&gt; str:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise ConnectionError(&quot;сеть моргнула&quot;)
+        return &quot;90 минут&quot;
+    return call
+
+pauses = []
+print(call_with_retry(drops_once(), retry_on=(TemporaryError, ConnectionError), sleep=pauses.append), pauses)
+try:
+    call_with_retry(drops_once(), sleep=pauses.append)
+except ConnectionError as e:
+    print(&quot;не наше семейство, вылетело сразу:&quot;, e)
+
+# 3. Сброс карты: брак клипа — дальше, беда с диском — стоп
+def dump_card(clips: list[str], copy) -&gt; dict:
+    report = {&quot;copied&quot;: [], &quot;missing&quot;: [], &quot;stopped&quot;: None}
+    try:
+        for name in clips:
+            try:
+                copy(name)
+            except FileNotFoundError:                 # узкий потомок ловится внутри
+                report[&quot;missing&quot;].append(name)
+                continue
+            report[&quot;copied&quot;].append(name)
+    except OSError as e:                              # всё остальное семейство — снаружи
+        report[&quot;stopped&quot;] = f&quot;{name}: {e}&quot;
+    return report
+
+def fake_copy(name: str) -&gt; None:
+    if name == &quot;C003&quot;:
+        raise FileNotFoundError(name)
+    if name == &quot;C005&quot;:
+        raise OSError(&quot;диск полон&quot;)
+
+print(dump_card([&quot;C001&quot;, &quot;C002&quot;, &quot;C003&quot;, &quot;C004&quot;, &quot;C005&quot;, &quot;C006&quot;], fake_copy))
+# ожидаем: снимаю
+# ожидаем: сматываю кабель
+# ожидаем: дубль готов
+# ожидаем: (&#x27;90 минут&#x27;, 2) [1.0]
+# ожидаем: не наше семейство, вылетело сразу: сеть моргнула
+# ожидаем: {&#x27;copied&#x27;: [&#x27;C001&#x27;, &#x27;C002&#x27;, &#x27;C004&#x27;], &#x27;missing&#x27;: [&#x27;C003&#x27;], &#x27;stopped&#x27;: &#x27;C005: диск полон&#x27;}</code></pre>
+<p>Как это считалось. В пункте 1 <code>return &quot;дубль готов&quot;</code> вычислил значение, но перед выходом из функции выполнился <code>finally</code>, поэтому «сматываю кабель» напечатано <strong>раньше</strong>, чем результат, который печатает уже внешний <code>print</code>. В пункте 2 <code>except retry_on</code> принимает кортеж типов так же, как <code>except (KeyError, TypeError)</code> из шага 2 «Глубже: иерархия исключений». Первая попытка упала с <code>ConnectionError</code>, был один сон на <code>1.0</code>, вторая попытка вернула ответ. Со значением по умолчанию <code>ConnectionError</code> не входит в семейство и вылетает сразу, без единой паузы. В пункте 3 порядок решает всё: <code>FileNotFoundError</code> пойман <strong>внутри</strong> цикла, поэтому <code>C003</code> попал в <code>missing</code>, а цикл пошёл к <code>C004</code>. Любой другой <code>OSError</code> внутренний <code>except</code> не ловит, ошибка вылетает из цикла к внешнему <code>except OSError</code>, и <code>C006</code> уже не копируется. Если поменять уровни местами и поставить <code>except OSError</code> внутрь, «диск полон» тоже стал бы браком одного клипа, и прогон дальше бился бы в полный диск на каждом клипе. Переменная <code>name</code> после выхода из <code>for</code> по исключению хранит последний клип, на котором встали, поэтому её можно использовать в <code>stopped</code>.<br>&lt;/details&gt;</p>
 <hr>
 <h3 id="ch-01-1-8-основы-объектно-ориентированного-программирования-">1.8. Основы объектно-ориентированного программирования (ООП)</h3>
 <p>Класс — чертёж объекта. Объект — конкретный экземпляр с состоянием и поведением.</p>
