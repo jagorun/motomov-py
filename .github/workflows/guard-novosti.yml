@@ -1,0 +1,57 @@
+name: guard-novosti
+# Сторож ленты новостей: если data/novosti.json затёрли, урезали или добавили
+# мусорную карточку «YYYY-MM-DD-ai», восстанавливает ленту из git-истории.
+# Логика — scripts/guard_novosti.py. Пуши через GITHUB_TOKEN новых запусков
+# не вызывают, а при отсутствии изменений коммита нет — петли не будет.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/novosti.json'
+  schedule:
+    - cron: '*/20 4-5 * * *'   # окно внешнего писателя (~04:15 UTC = 07:15 МСК)
+    - cron: '40 * * * *'       # раз в час остальное время
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: guard-novosti
+  cancel-in-progress: false
+jobs:
+  guard:
+    if: ${{ !startsWith(github.event.head_commit.message || '', 'guard:') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Guard and push
+        run: |
+          set -e
+          # Автор коммита — владелец репозитория (иначе Vercel Hobby не задеплоит
+          # коммит от бота), коммиттер — github-actions[bot].
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 scripts/guard_novosti.py | tee /tmp/guard.log
+            if git diff --quiet -- data/novosti.json; then
+              echo "лента в порядке, коммитить нечего"
+              exit 0
+            fi
+            N=$(python3 -c "import json; print(len(json.load(open('data/novosti.json', encoding='utf-8'))))")
+            git add data/novosti.json
+            git commit --author="jagorun <jagorun@users.noreply.github.com>" \
+              -m "guard: восстановлена лента novosti.json ($N карточек)" \
+              -m "$(cat /tmp/guard.log)"
+            if git push origin HEAD:main; then
+              echo "pushed $(git rev-parse --short HEAD)"
+              exit 0
+            fi
+            echo "push отклонён (параллельный коммит), повтор $attempt"
+            sleep 5
+          done
+          exit 1
