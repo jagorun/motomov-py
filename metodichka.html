@@ -46,7 +46,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 18.10.2026 20:57 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 19.10.2026 07:58 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -244,7 +244,7 @@ print(len(p.read_text(encoding=&quot;utf-8&quot;).splitlines()))
 <details class="m-chapter" id="ch-01"><summary><h2>01. Основы Python — Ступень 1. Порядок мысли</h2></summary><div class="m-body"><p><strong>Курс:</strong> Stepik 58852 «Поколение Python: курс для начинающих».<br><strong>Где ты сейчас:</strong> примерно модуль ввода-вывода / циклы (<code>while</code>).<br><strong>Цель ступени:</strong> научиться ясно говорить: что было на входе, какая ветка выбрана, где ход кончается. Без этого схему системы не прочитать, даже если код писал не ты.</p>
 <p>Эта часть объясняет каждый базовый термин максимально подробно. Не «запомни синтаксис», а «пойми, зачем это существует и как это помогает оркестратору».</p>
 <p><strong>Карта: что из этой ступени понадобится дальше.</strong> Ступень 1 — фундамент для всего остального. Если какая-то строка в файлах 04–06 кажется непонятной, почти всегда ответ здесь:</p>
-<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td><code>with open</code> и режимы <code>r/w/a/x</code>, чтение по строкам, JSON Lines, границы JSON, <code>glob</code>/<code>rglob</code></td><td>1.6, «Глубже: with open, режимы записи, JSON Lines…»</td><td>02: 2.5 след в <code>.jsonl</code> через <code>logging</code>; 03: 3.3 обход папки; 05: расход по <code>trace.jsonl</code>; 06: <code>sorted(folder.glob(&quot;*.md&quot;))</code> в скелете</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>исключения в цикле: повтор с потолком, партия без обрыва, общий тормоз, порядок <code>try/except/else/finally</code></td><td>1.7, «Глубже: исключения внутри цикла»</td><td>02: 2.4 безопасный <code>retry</code>; 03: 3.5 повтор вызова модели; 05: 5.4 предохранитель поверх <code>call_with_retry</code>, 5.1 отказ по бюджету</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
+<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td><code>with open</code> и режимы <code>r/w/a/x</code>, чтение по строкам, JSON Lines, границы JSON, <code>glob</code>/<code>rglob</code></td><td>1.6, «Глубже: with open, режимы записи, JSON Lines…»</td><td>02: 2.5 след в <code>.jsonl</code> через <code>logging</code>; 03: 3.3 обход папки; 05: расход по <code>trace.jsonl</code>; 06: <code>sorted(folder.glob(&quot;*.md&quot;))</code> в скелете</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>исключения в цикле: повтор с потолком, партия без обрыва, общий тормоз, порядок <code>try/except/else/finally</code></td><td>1.7, «Глубже: исключения внутри цикла»</td><td>02: 2.4 безопасный <code>retry</code>; 03: 3.5 повтор вызова модели; 05: 5.4 предохранитель поверх <code>call_with_retry</code>, 5.1 отказ по бюджету</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>раскладка пакета, <code>python -m</code>, относительные импорты, dotenv/секреты, точка входа <code>модуль:объект</code></td><td>1.9, «Глубже: раскладка пакета, относительные импорты, dotenv…»</td><td>02: импорт в тестах; 03: <code>load_dotenv</code> и ключ API; 05: <code>uvicorn main:app</code>, <code>.dockerignore</code>; 06: тонкий вход скрипта</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr></tbody></table></div>
 <hr>
 <h3 id="ch-01-1-1-переменные-и-типы-данных">1.1. Переменные и типы данных</h3>
 <h4 id="ch-01-что-такое-переменная">Что такое переменная</h4>
@@ -4639,6 +4639,310 @@ with tempfile.TemporaryDirectory() as d:
 # ожидаем: {&#x27;query&#x27;: &#x27;тест&#x27;, &#x27;step&#x27;: 0, &#x27;log&#x27;: []}
 # ожидаем: [&#x27;helper&#x27;, &#x27;1&#x27;]</code></pre>
 <p><code>python -m kontur.run</code> запускает модуль <strong>как часть пакета</strong>: в <code>sys.path</code> попадает текущая папка <code>d</code>, и <code>from kontur.state import ...</code> находится. При запуске <code>python kontur/run.py</code> в <code>sys.path</code> попала бы папка <code>kontur</code>, а не <code>d</code>, и импорт <code>kontur.state</code> не нашёлся бы. Во втором упражнении <code>helper</code> печатается один раз: модуль выполняется только при первом импорте.<br>&lt;/details&gt;</p>
+<h4 id="ch-01-глубже-раскладка-пакета-относительные-импорты-dotenv-и">Глубже: раскладка пакета, относительные импорты, dotenv и секреты, точка входа</h4>
+<p><strong>Интуиция.</strong> Раздел выше уже показал: <code>import</code> выполняет файл, <code>python -m</code> запускает модуль как часть пакета, а <code>venv</code> держит зависимости отдельно. На практике оркестратор раскладывается <strong>несколькими файлами</strong> в одной папке-пакете, секреты лежат <strong>не в коде</strong>, а точка входа — это строка вида <code>модуль:объект</code> (как <code>uvicorn main:app</code> в 05). Ниже — раскладка, относительные импорты, dotenv и то, как Python находит объект по строке.</p>
+<p><strong>Аналогия из жизни техника.</strong> Съёмка на объекте — это не одна камера в рюкзаке. Есть <strong>кейс оборудования</strong> (<code>kontur/</code>): камеры, микрофоны, кабели — каждый в своём отсеке, на кейсе наклейка «комплект готов» (<code>__init__.py</code>). Рядом — <strong>отдельная коробка проверок</strong> (<code>tests/</code>): туда не кладут рабочие камеры, только контрольные ролики. <strong>Опись кейса</strong> (<code>requirements.txt</code>) едет с проектом; сами камеры чужой фирмы (библиотеки) в git не кладут — их берут по описи на новой площадке. <strong>Паспорт с PIN от кейса</strong> (<code>.env</code>) никогда не кладут в общий ящик с описью: PIN на наклейке снаружи — это уже не режим, а инцидент. А запуск «через меню пульта» (<code>python -m kontur.run</code>) и «открыл крышку и ткнул в один блок напрямую» (<code>python kontur/run.py</code>) — разные жесты: во втором пульт не знает, что блок часть комплекта.</p>
+<p><strong>Шаг 1. Раскладка проекта оркестратора.</strong> Минимальный каркас, к которому потом добавятся 02–06:</p>
+<pre><code class="lang-text">проект/
+├── kontur/                 # пакет: рабочий код
+│   ├── __init__.py         # помечает папку как пакет (может быть пустым)
+│   ├── state.py            # состояние, new_state
+│   ├── errors.py           # свои ошибки (ConfigError, BudgetExceeded)
+│   ├── tools/
+│   │   ├── __init__.py
+│   │   └── search.py       # инструменты
+│   └── run.py              # сборка и запуск контура
+├── tests/                  # отдельно от пакета
+│   └── test_state.py
+├── main.py                 # тонкая точка входа для uvicorn (05)
+├── requirements.txt        # точные версии зависимостей
+├── .env                    # секреты; НЕ в git
+└── .gitignore              # .venv/, .env, __pycache__/</code></pre>
+<p>Правила раскладки:</p>
+<ul>
+<li><strong>Пакет отдельно от тестов.</strong> <code>from kontur.state import ...</code> в тестах и в <code>run.py</code> — один и тот же контракт. Тесты не живут внутри <code>kontur/</code>, чтобы случайно не уехать в Docker-образ как «рабочий код».</li>
+<li><strong><code>__init__.py</code> нужен</strong>, пока ты не уверен, что проект на «namespace packages». Для ступени 1 и файлов 02–06 достаточно пустого файла: он говорит Python «это пакет».</li>
+<li><strong><code>.env</code> в <code>.gitignore</code></strong>, <code>.venv/</code> тоже. В git едут <code>requirements.txt</code> и код; секреты и окружение — нет.</li>
+<li>Имя пакета (<code>kontur</code> или <code>agent</code>) выбирай одно и держись его: от него зависят импорты и строка <code>uvicorn</code>.</li>
+</ul>
+<p><strong>Шаг 2. <code>python -m пакет.модуль</code> против <code>python файл.py</code>.</strong> В решении упражнений 1.9 это уже намекнуто. Развернём: при двух способах запуска в <code>sys.path</code> попадает <strong>разная</strong> первая папка — и от этого ломается <code>import kontur...</code>.</p>
+<pre><code class="lang-python">import subprocess, sys, tempfile, textwrap
+from pathlib import Path
+
+with tempfile.TemporaryDirectory() as d:
+    pkg = Path(d, &quot;kontur&quot;)
+    pkg.mkdir()
+    (pkg / &quot;__init__.py&quot;).write_text(&quot;&quot;, encoding=&quot;utf-8&quot;)
+    (pkg / &quot;state.py&quot;).write_text(
+        &quot;def new_state(q):\n    return {&#x27;query&#x27;: q, &#x27;step&#x27;: 0}\n&quot;,
+        encoding=&quot;utf-8&quot;,
+    )
+    (pkg / &quot;run.py&quot;).write_text(textwrap.dedent(&quot;&quot;&quot;
+        import sys
+        from pathlib import Path
+        from kontur.state import new_state
+        p0 = Path(sys.path[0]).resolve()
+        print(&quot;path0_is_project_root=&quot;, p0 == Path(&quot;.&quot;).resolve())
+        print(new_state(&quot;тест&quot;))
+    &quot;&quot;&quot;), encoding=&quot;utf-8&quot;)
+
+    via_m = subprocess.run(
+        [sys.executable, &quot;-m&quot;, &quot;kontur.run&quot;],
+        cwd=d, capture_output=True, text=True, timeout=10,
+    )
+    print(&quot;--- python -m kontur.run&quot;)
+    print(via_m.stdout.strip())
+
+    (pkg / &quot;probe.py&quot;).write_text(textwrap.dedent(&quot;&quot;&quot;
+        import sys
+        from pathlib import Path
+        p0 = Path(sys.path[0]).resolve()
+        print(&quot;path0_is_kontur_folder=&quot;, p0.name == &quot;kontur&quot;)
+        try:
+            from kontur.state import new_state
+            print(new_state(&quot;тест&quot;))
+        except ModuleNotFoundError as e:
+            print(f&quot;{type(e).__name__}: {e}&quot;)
+    &quot;&quot;&quot;), encoding=&quot;utf-8&quot;)
+    direct = subprocess.run(
+        [sys.executable, &quot;kontur/probe.py&quot;],
+        cwd=d, capture_output=True, text=True, timeout=10,
+    )
+    print(&quot;--- python kontur/probe.py&quot;)
+    print(direct.stdout.strip())
+# ожидаем: --- python -m kontur.run
+# ожидаем: path0_is_project_root= True
+# ожидаем: {&#x27;query&#x27;: &#x27;тест&#x27;, &#x27;step&#x27;: 0}
+# ожидаем: --- python kontur/probe.py
+# ожидаем: path0_is_kontur_folder= True
+# ожидаем: ModuleNotFoundError: No module named &#x27;kontur&#x27;</code></pre>
+<p>Что произошло:</p>
+<ul>
+<li><code>python -m kontur.run</code> кладёт в начало <code>sys.path</code> <strong>корень проекта</strong> (папку, из которой запустили). <code>path0_is_project_root= True</code> — пакет <code>kontur</code> находится рядом, импорт работает.</li>
+<li><code>python kontur/probe.py</code> (как и <code>python kontur/run.py</code>) кладёт в <code>sys.path</code> папку <strong>самого файла</strong>, то есть <code>kontur/</code>. <code>path0_is_kontur_folder= True</code>. Внутри неё нет вложенного <code>kontur/</code>, поэтому <code>from kontur.state import ...</code> падает с <code>ModuleNotFoundError</code>.</li>
+</ul>
+<p>Правило оркестратора: пакетный код запускай через <code>python -m ...</code> (или через точку входа вроде <code>uvicorn</code> / <code>pytest</code>, которые сами импортируют пакет правильно). Прямой <code>python путь/к/файлу.py</code> оставляй для одиночных утилит без пакетных импортов.</p>
+<p><strong>Шаг 3. Относительные импорты: <code>from .state</code> и <code>from ..errors</code>.</strong> Когда модуль <strong>знает</strong>, что он внутри пакета, он может импортировать соседей относительно себя: одна точка — текущий пакет, две — на уровень вверх.</p>
+<pre><code class="lang-python">import subprocess, sys, tempfile, textwrap
+from pathlib import Path
+
+with tempfile.TemporaryDirectory() as d:
+    kontur = Path(d, &quot;kontur&quot;)
+    (kontur / &quot;tools&quot;).mkdir(parents=True)
+    (kontur / &quot;__init__.py&quot;).write_text(&quot;&quot;, encoding=&quot;utf-8&quot;)
+    (kontur / &quot;tools&quot; / &quot;__init__.py&quot;).write_text(&quot;&quot;, encoding=&quot;utf-8&quot;)
+    (kontur / &quot;errors.py&quot;).write_text(
+        &quot;class ConfigError(Exception):\n    pass\n&quot;, encoding=&quot;utf-8&quot;,
+    )
+    (kontur / &quot;state.py&quot;).write_text(
+        &quot;def new_state(q):\n    return {&#x27;query&#x27;: q, &#x27;step&#x27;: 0}\n&quot;,
+        encoding=&quot;utf-8&quot;,
+    )
+    (kontur / &quot;tools&quot; / &quot;search.py&quot;).write_text(textwrap.dedent(&quot;&quot;&quot;
+        from ..errors import ConfigError
+        from ..state import new_state
+
+        def find(q: str) -&gt; dict:
+            if not q.strip():
+                raise ConfigError(&quot;пустой запрос&quot;)
+            return new_state(q)
+    &quot;&quot;&quot;), encoding=&quot;utf-8&quot;)
+    (kontur / &quot;run.py&quot;).write_text(textwrap.dedent(&quot;&quot;&quot;
+        from kontur.tools.search import find
+        print(find(&quot;90 минут&quot;))
+        try:
+            find(&quot;  &quot;)
+        except Exception as e:
+            print(type(e).__name__ + &quot;:&quot;, e)
+    &quot;&quot;&quot;), encoding=&quot;utf-8&quot;)
+
+    ok = subprocess.run(
+        [sys.executable, &quot;-m&quot;, &quot;kontur.run&quot;],
+        cwd=d, capture_output=True, text=True, timeout=10,
+    )
+    print(ok.stdout.strip())
+
+    bad = subprocess.run(
+        [sys.executable, str(kontur / &quot;tools&quot; / &quot;search.py&quot;)],
+        cwd=d, capture_output=True, text=True, timeout=10,
+    )
+    print(bad.stderr.strip().splitlines()[-1])
+# ожидаем: {&#x27;query&#x27;: &#x27;90 минут&#x27;, &#x27;step&#x27;: 0}
+# ожидаем: ConfigError: пустой запрос
+# ожидаем: ImportError: attempted relative import with no known parent package</code></pre>
+<p>Когда файл запускают напрямую, у него <code>__name__ == &quot;__main__&quot;</code> и <strong>нет родительского пакета</strong> — относительный импорт не к чему привязать. Отсюда классическая ошибка <code>ImportError: attempted relative import with no known parent package</code>. Лечение то же: запускать через <code>-m</code> или импортировать абсолютным путём <code>from kontur.state import ...</code> снаружи пакета (в <code>run.py</code>, в тестах, в <code>main.py</code>).</p>
+<p>Относительные импорты удобны <strong>внутри</strong> пакета: переименовал <code>kontur</code> → <code>agent</code> — внутренние <code>.</code> / <code>..</code> не трогаешь. Снаружи пакета (тесты, точка входа) пиши абсолютные: <code>from kontur.tools.search import find</code>.</p>
+<p><strong>Шаг 4. Секреты через dotenv.</strong> В 03 появится ключ API. Его <strong>нельзя</strong> писать в <code>.py</code> и нельзя коммитить. Схема: файл <code>.env</code> рядом с проектом → <code>load_dotenv()</code> кладёт значения в <code>os.environ</code> → код читает окружение.</p>
+<pre><code class="lang-python">import os, subprocess, sys, tempfile, textwrap
+from pathlib import Path
+
+with tempfile.TemporaryDirectory() as d:
+    Path(d, &quot;.env&quot;).write_text(
+        &quot;KONTUR_API_KEY=demo-not-real\nKONTUR_BASE_URL=https://example.test\n&quot;,
+        encoding=&quot;utf-8&quot;,
+    )
+    Path(d, &quot;.gitignore&quot;).write_text(&quot;.env\n.venv/\n&quot;, encoding=&quot;utf-8&quot;)
+    Path(d, &quot;cfg.py&quot;).write_text(textwrap.dedent(&quot;&quot;&quot;
+        import os
+        from pathlib import Path
+        from dotenv import load_dotenv
+
+        load_dotenv(Path(__file__).resolve().parent / &quot;.env&quot;)
+        key = os.environ.get(&quot;KONTUR_API_KEY&quot;)
+        if not key:
+            raise RuntimeError(&quot;нет KONTUR_API_KEY — проверь .env&quot;)
+        # в след пишем только факт наличия и длину, не сам ключ
+        print(&quot;ключ есть:&quot;, True, &quot;длина:&quot;, len(key))
+        print(&quot;url:&quot;, os.environ.get(&quot;KONTUR_BASE_URL&quot;))
+        ignored = Path(&quot;.gitignore&quot;).read_text(encoding=&quot;utf-8&quot;)
+        print(&quot;.env в gitignore:&quot;, &quot;.env&quot; in ignored.splitlines())
+    &quot;&quot;&quot;), encoding=&quot;utf-8&quot;)
+
+    env = {k: v for k, v in os.environ.items() if k != &quot;KONTUR_API_KEY&quot;}
+    r = subprocess.run(
+        [sys.executable, &quot;cfg.py&quot;], cwd=d, capture_output=True, text=True,
+        timeout=10, env=env,
+    )
+    print(r.stdout.strip() or r.stderr)
+# ожидаем: ключ есть: True длина: 13
+# ожидаем: url: https://example.test
+# ожидаем: .env в gitignore: True</code></pre>
+<p>Правила секретов (связь с 03):</p>
+<ol>
+<li>В коде — только <code>os.environ.get(&quot;...&quot;)</code>, никогда <code>API_KEY = &quot;sk-...&quot;</code>.</li>
+<li><code>.env</code> — в <code>.gitignore</code> (и в <code>.dockerignore</code> из 05). В репозиторий кладут <code>.env.example</code> с пустыми именами переменных, без значений.</li>
+<li>В след и логи — «ключ есть / длины N», не сам ключ. Утечка ключа в <code>trace.jsonl</code> хуже, чем упавший прогон.</li>
+<li>Ставится пакет <code>python-dotenv</code>, импортируется модуль <code>dotenv</code> — имена разные, как уже сказано в разделе про <code>pip</code>.</li>
+</ol>
+<p><strong>Шаг 5. Точка входа и строка <code>uvicorn main:app</code>.</strong> В 05 сервис поднимают командой вроде <code>uvicorn main:app</code>. Это не магия: слева — <strong>имя модуля</strong>, справа — <strong>имя объекта</strong> в этом модуле. Python импортирует модуль и делает <code>getattr(module, &quot;app&quot;)</code>.</p>
+<pre><code class="lang-python">import importlib, subprocess, sys, tempfile, textwrap
+from pathlib import Path
+
+with tempfile.TemporaryDirectory() as d:
+    Path(d, &quot;main.py&quot;).write_text(textwrap.dedent(&quot;&quot;&quot;
+        def build_app():
+            return {&quot;name&quot;: &quot;kontur&quot;, &quot;routes&quot;: [&quot;/ask&quot;]}
+
+        app = build_app()
+    &quot;&quot;&quot;), encoding=&quot;utf-8&quot;)
+    Path(d, &quot;boot.py&quot;).write_text(textwrap.dedent(&quot;&quot;&quot;
+        import importlib
+
+        def load_target(target: str):
+            mod_name, obj_name = target.split(&quot;:&quot;, 1)
+            mod = importlib.import_module(mod_name)
+            return getattr(mod, obj_name)
+
+        app = load_target(&quot;main:app&quot;)
+        print(app[&quot;name&quot;], app[&quot;routes&quot;])
+    &quot;&quot;&quot;), encoding=&quot;utf-8&quot;)
+    r = subprocess.run(
+        [sys.executable, &quot;boot.py&quot;], cwd=d, capture_output=True, text=True, timeout=10,
+    )
+    print(r.stdout.strip())
+# ожидаем: kontur [&#x27;/ask&#x27;]</code></pre>
+<p>Так же устроены <code>gunicorn module:app</code>, многие CLI и сам pytest, когда подтягивает тестовые модули. Для оркестратора важно: <code>main.py</code> остаётся <strong>тонким</strong> — собрал <code>app</code> из пакета <code>kontur</code> и отдал наружу. Толстая логика живёт в пакете, а не в файле точки входа. Связь с 06: скрипт с <code>if __name__ == &quot;__main__&quot;:</code> — другой вид точки входа (код выхода, аргументы); <code>модуль:объект</code> — вид для сервера.</p>
+<p><strong>Шаг 6. Типичные ошибки и связь с умениями оркестратора.</strong></p>
+<div class="md-table"><table><thead><tr><th>Ошибка</th><th>Почему</th><th>Что делать</th></tr></thead><tbody><tr><td><code>ModuleNotFoundError: No module named &#x27;kontur&#x27;</code> при <code>python kontur/run.py</code></td><td>в <code>sys.path</code> попала папка пакета, а не корень проекта</td><td>запускать <code>python -m kontur.run</code> из корня</td></tr><tr><td><code>ImportError: attempted relative import with no known parent package</code></td><td>файл с <code>from .x</code> запустили напрямую</td><td><code>-m</code> или абсолютный импорт снаружи</td></tr><tr><td>Ключ API в <code>.py</code> или в git</td><td>секрет уехал в историю репозитория</td><td><code>.env</code> + dotenv + <code>.gitignore</code>; ключ перевыпустить</td></tr><tr><td><code>uvicorn: error ... Could not import module</code> / <code>AttributeError</code></td><td>в строке <code>main:app</code> нет модуля или нет объекта <code>app</code></td><td>проверить имя файла и <code>app = ...</code> внутри</td></tr><tr><td>Разные версии в <code>.venv</code> и в Docker</td><td>«у меня работает» ≠ воспроизводимый контур</td><td>один <code>requirements.txt</code>, установка через <code>python -m pip</code></td></tr></tbody></table></div>
+<p>Для оркестратора это три практических умения:</p>
+<ol>
+<li><strong>Контракт модулей</strong> — кто импортирует кого, где <code>state</code> / <code>errors</code> / <code>tools</code>, без циклов (см. раздел выше).</li>
+<li><strong>След</strong> — при старте писать, из какого модуля собрали <code>app</code> и есть ли ключ (без значения); при падении импорта — читать нижнюю строку traceback (1.10).</li>
+<li><strong>Потолок зависимостей</strong> — версии зафиксированы в <code>requirements.txt</code>; новый пакет не ставится «просто так», а попадает в опись. Иначе 04/05 внезапно ломаются из‑за смены API LangGraph.</li>
+</ol>
+<h4 id="ch-01-упражнения-сделай-сам">Упражнения «сделай сам»</h4>
+<ol>
+<li>Во временной папке собери пакет <code>kontur/</code> с <code>errors.py</code> (<code>ConfigError</code>), <code>state.py</code> (<code>new_state</code>) и <code>tools/search.py</code>, который через относительные импорты использует оба. Запусти проверку через <code>python -m kontur.tools.search</code> так, чтобы при пустом запросе печаталось имя ошибки, при нормальном — словарь состояния. Прямой запуск <code>python kontur/tools/search.py</code> должен дать <code>ImportError</code> про relative import.</li>
+<li>Напиши <code>load_secret(name: str, env_file: Path) -&gt; str</code>: вызывает <code>load_dotenv(env_file)</code>, читает переменную, при отсутствии поднимает <code>RuntimeError</code> с именем переменной (без значения). Проверь на временном <code>.env</code>.</li>
+<li>Реализуй <code>resolve(target: str)</code> — разбор строки <code>модуль:объект</code> через <code>importlib</code> + <code>getattr</code>. Для <code>main:app</code> верни сам объект <code>app</code>.</li>
+</ol>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">import importlib, os, subprocess, sys, tempfile, textwrap
+from pathlib import Path
+from dotenv import load_dotenv
+
+with tempfile.TemporaryDirectory() as d:
+    kontur = Path(d, &quot;kontur&quot;)
+    (kontur / &quot;tools&quot;).mkdir(parents=True)
+    (kontur / &quot;__init__.py&quot;).write_text(&quot;&quot;, encoding=&quot;utf-8&quot;)
+    (kontur / &quot;tools&quot; / &quot;__init__.py&quot;).write_text(&quot;&quot;, encoding=&quot;utf-8&quot;)
+    (kontur / &quot;errors.py&quot;).write_text(
+        &quot;class ConfigError(Exception):\n    pass\n&quot;, encoding=&quot;utf-8&quot;,
+    )
+    (kontur / &quot;state.py&quot;).write_text(
+        &quot;def new_state(q):\n    return {&#x27;query&#x27;: q, &#x27;step&#x27;: 0}\n&quot;,
+        encoding=&quot;utf-8&quot;,
+    )
+    (kontur / &quot;tools&quot; / &quot;search.py&quot;).write_text(textwrap.dedent(&quot;&quot;&quot;
+        from ..errors import ConfigError
+        from ..state import new_state
+
+        def find(q: str) -&gt; dict:
+            if not q.strip():
+                raise ConfigError(&quot;пустой запрос&quot;)
+            return new_state(q)
+
+        if __name__ == &quot;__main__&quot;:
+            try:
+                print(find(&quot;90&quot;))
+                find(&quot;&quot;)
+            except Exception as e:
+                print(type(e).__name__)
+    &quot;&quot;&quot;), encoding=&quot;utf-8&quot;)
+
+    via_m = subprocess.run(
+        [sys.executable, &quot;-m&quot;, &quot;kontur.tools.search&quot;],
+        cwd=d, capture_output=True, text=True, timeout=10,
+    )
+    print(via_m.stdout.strip())
+    direct = subprocess.run(
+        [sys.executable, str(kontur / &quot;tools&quot; / &quot;search.py&quot;)],
+        cwd=d, capture_output=True, text=True, timeout=10,
+    )
+    print(direct.stderr.strip().splitlines()[-1])
+
+# --- упражнение 2 ---
+def load_secret(name: str, env_file: Path) -&gt; str:
+    load_dotenv(env_file)
+    value = os.environ.get(name)
+    if not value:
+        raise RuntimeError(f&quot;нет переменной {name}&quot;)
+    return value
+
+with tempfile.TemporaryDirectory() as d:
+    env_path = Path(d, &quot;.env&quot;)
+    env_path.write_text(&quot;DEMO_KEY=abc123\n&quot;, encoding=&quot;utf-8&quot;)
+    # чистим возможный хвост от прошлых запусков
+    os.environ.pop(&quot;DEMO_KEY&quot;, None)
+    print(load_secret(&quot;DEMO_KEY&quot;, env_path))
+    os.environ.pop(&quot;DEMO_KEY&quot;, None)
+    try:
+        load_secret(&quot;MISSING_KEY&quot;, env_path)
+    except RuntimeError as e:
+        print(e)
+
+# --- упражнение 3 ---
+def resolve(target: str):
+    mod_name, obj_name = target.split(&quot;:&quot;, 1)
+    return getattr(importlib.import_module(mod_name), obj_name)
+
+with tempfile.TemporaryDirectory() as d:
+    Path(d, &quot;main.py&quot;).write_text(&quot;app = {&#x27;ok&#x27;: True}\n&quot;, encoding=&quot;utf-8&quot;)
+    sys.path.insert(0, d)
+    try:
+        # если main уже импортировали раньше — сбросить кэш
+        sys.modules.pop(&quot;main&quot;, None)
+        print(resolve(&quot;main:app&quot;))
+    finally:
+        sys.path.remove(d)
+        sys.modules.pop(&quot;main&quot;, None)
+# ожидаем: {&#x27;query&#x27;: &#x27;90&#x27;, &#x27;step&#x27;: 0}
+# ожидаем: ConfigError
+# ожидаем: ImportError: attempted relative import with no known parent package
+# ожидаем: abc123
+# ожидаем: нет переменной MISSING_KEY
+# ожидаем: {&#x27;ok&#x27;: True}</code></pre>
+<p>Как это считалось. В пункте 1 <code>python -m kontur.tools.search</code> поднимает пакет целиком: относительные <code>from ..errors</code> и <code>from ..state</code> находят родителей, печатается состояние и имя <code>ConfigError</code>. Тот же файл, запущенный напрямую, не знает родителя — отсюда <code>ImportError</code> про relative import. В пункте 2 <code>load_dotenv</code> читает файл в окружение; отсутствие переменной — это <code>RuntimeError</code> с <strong>именем</strong>, не с секретом. В пункте 3 строка <code>main:app</code> режется по <code>:</code>, модуль импортируется, объект достаётся через <code>getattr</code> — ровно тот механизм, которым <code>uvicorn</code> находит приложение в 05.<br>&lt;/details&gt;</p>
 <hr>
 <h3 id="ch-01-1-10-чтение-traceback-и-отладка">1.10. Чтение traceback и отладка</h3>
 <p>Каждый упавший пример, тест или граф заканчивается <strong>traceback</strong> — отчётом о падении. Новички пугаются его длины и читают сверху. Читать надо <strong>снизу</strong>.</p>
