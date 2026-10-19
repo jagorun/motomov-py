@@ -94,7 +94,7 @@ def header():
     h = re.search(r"<header class=\"site-header\">.*?</header>", src, re.S).group(0)
     h = h.replace(' class="active" aria-current="page"', "")
     if "metodichka.html" not in h:
-        h = h.replace('<a href="archive.html">Архив</a>', '<a href="archive.html">Архив</a><a href="metodichka.html">Методичка</a>')
+        h = h.replace('<a href="novosti.html">Новости</a>', '<a href="novosti.html">Новости</a><a href="metodichka.html">Методичка</a>')
     return h.replace('<a href="metodichka.html">', '<a class="active" aria-current="page" href="metodichka.html">')
 
 def main():

@@ -828,8 +828,8 @@ async function loadAiItem(id) {
   if (!nav || nav.querySelector('a[href="metodichka.html"]')) return;
   const a = document.createElement("a");
   a.href = "metodichka.html"; a.textContent = "Методичка";
-  const arch = nav.querySelector('a[href="archive.html"]');
-  arch ? arch.after(a) : nav.appendChild(a);
+  const news = nav.querySelector('a[href="novosti.html"]');
+  news ? news.after(a) : nav.prepend(a);
 })();
 (function () {
   const act = document.querySelector(".site-header .nav a.active");
