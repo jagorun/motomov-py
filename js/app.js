@@ -865,4 +865,284 @@ async function loadAiItem(id) {
   if (!list || list.querySelector('a[href="spravochnik.html"]')) return;
   const a = document.createElement("a"); a.href = "spravochnik.html"; a.textContent = "Справочник Python";
   list.prepend(a);
+})();/* ===== UX 2026-10-19: анимации, удобство чтения, работа с материалом (только localStorage) ===== */
+(function () {
+  const root = document.documentElement;
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const raw = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } };
+  const setRaw = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+  const getJ = (k, d) => { try { return JSON.parse(raw(k, "")) || d; } catch (e) { return d; } };
+  const setJ = (k, v) => setRaw(k, JSON.stringify(v));
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const txt = (n) => (n ? n.textContent.replace(/\s+/g, " ").trim() : "");
+  const mk = (h) => { const t = document.createElement("template"); t.innerHTML = h.trim(); return t.content.firstChild; };
+
+  /* --- настройки: шрифт, тема, удобная строка --- */
+  function applyPrefs() {
+    const fs = raw("moto-fs", "1"); if (fs === "1") delete root.dataset.fs; else root.dataset.fs = fs;
+    const th = raw("moto-theme", ""); if (th === "dark") root.dataset.theme = "dark"; else delete root.dataset.theme;
+    if (raw("moto-comfy", "") === "1") root.dataset.comfy = "1"; else delete root.dataset.comfy;
+    const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.content = th === "dark" ? "#191d1a" : "#f3efe6";
+    syncButtons();
+  }
+  function syncButtons() {
+    const dark = raw("moto-theme", "") === "dark", comfy = raw("moto-comfy", "") === "1", fs = +raw("moto-fs", "1");
+    document.querySelectorAll('[data-ux="theme"]').forEach((b) => { b.textContent = dark ? "☀ Светлая" : "☾ Тёмная"; b.setAttribute("aria-label", dark ? "Включить светлую тему" : "Включить тёмную тему"); });
+    document.querySelectorAll('[data-ux="comfy"]').forEach((b) => b.setAttribute("aria-pressed", comfy));
+    document.querySelectorAll('[data-ux="fs-"]').forEach((b) => (b.disabled = fs <= 0));
+    document.querySelectorAll('[data-ux="fs+"]').forEach((b) => (b.disabled = fs >= 3));
+    const n = getJ("moto-bm", []).length;
+    document.querySelectorAll('[data-ux="bm"]').forEach((b) => (b.textContent = "☆ Закладки" + (n ? " (" + n + ")" : "")));
+  }
+  const prefBtns = '<span class="ux-grp"><button type="button" class="ux-btn" data-ux="fs-" aria-label="Уменьшить шрифт">A−</button><button type="button" class="ux-btn" data-ux="fs+" aria-label="Увеличить шрифт">A+</button></span><button type="button" class="ux-btn" data-ux="theme"></button>';
+
+  /* --- прочитано и закладки --- */
+  const isRead = (k) => !!getJ("moto-read", {})[k];
+  function setRead(k, on) { const r = getJ("moto-read", {}); if (on) r[k] = Date.now(); else delete r[k]; setJ("moto-read", r); markLists(); syncMarks(); }
+  const isBm = (k) => getJ("moto-bm", []).some((b) => b.key === k);
+  function toggleBm(item) {
+    let l = getJ("moto-bm", []);
+    if (l.some((b) => b.key === item.key)) l = l.filter((b) => b.key !== item.key); else l.unshift(Object.assign({ t: Date.now() }, item));
+    setJ("moto-bm", l); syncMarks(); syncButtons(); if (panel && !panel.hidden) drawPanel();
+  }
+  function syncMarks() {
+    document.querySelectorAll("[data-bm-key]").forEach((b) => {
+      const on = isBm(b.dataset.bmKey); b.setAttribute("aria-pressed", on);
+      if (b.classList.contains("ux-mini")) { b.textContent = on ? "★" : "☆"; b.setAttribute("aria-label", on ? "Убрать из закладок" : "В закладки"); }
+      else b.textContent = on ? "★ В закладках" : "☆ В закладки";
+    });
+    document.querySelectorAll("[data-read-key]").forEach((b) => {
+      const on = isRead(b.dataset.readKey); b.setAttribute("aria-pressed", on);
+      b.textContent = on ? "✓ Прочитано" : (b.dataset.readLabel || "Отметить прочитанным");
+    });
+  }
+  const bmData = new WeakMap();
+  function starBtn(item, mini) {
+    const b = mk(`<button type="button" class="${mini ? "ux-mini" : "ux-btn ux-star"}" data-bm-key="${esc(item.key)}"></button>`);
+    bmData.set(b, item); return b;
+  }
+  const readBtn = (key, label) => mk(`<button type="button" class="ux-btn" data-read-key="${esc(key)}"${label ? ` data-read-label="${esc(label)}"` : ""}></button>`);
+
+  /* --- панель закладок --- */
+  let panel = null, panelReturn = null;
+  const GROUPS = [["brief", "Сводки"], ["ch", "Главы методички"], ["put", "Дорожки"], ["term", "Термины"], ["sp", "Справочник Python"]];
+  function drawPanel() {
+    const l = getJ("moto-bm", []);
+    const body = GROUPS.map(([t, name]) => {
+      const g = l.filter((b) => b.type === t); if (!g.length) return "";
+      return `<h4>${name}</h4><ul>${g.map((b) => `<li><a href="${esc(b.href)}">${esc(b.title)}</a><button type="button" data-ux-del="${esc(b.key)}" aria-label="Убрать «${esc(b.title)}» из закладок">✕</button></li>`).join("")}</ul>`;
+    }).join("");
+    panel.querySelector(".ux-bm-body").innerHTML = body || '<div class="empty">Закладок пока нет. Нажмите ☆ у сводки, главы, дорожки или термина.</div>';
+  }
+  function openPanel() {
+    if (!panel) {
+      panel = mk('<div class="ux-bm" role="dialog" aria-modal="false" aria-label="Закладки" hidden><div class="ux-bm-head"><b>☆ Закладки</b><button type="button" data-ux="bm-close" aria-label="Закрыть">✕</button></div><div class="ux-bm-body"></div></div>');
+      document.body.appendChild(panel);
+    }
+    panelReturn = document.activeElement; drawPanel(); panel.hidden = false;
+    const more = document.querySelector(".site-header .nav-more"); if (more) more.open = false;
+    const f = panel.querySelector("a,button"); if (f) f.focus();
+  }
+  function closePanel() { if (!panel || panel.hidden) return; panel.hidden = true; if (panelReturn && panelReturn.focus) panelReturn.focus(); }
+
+  /* --- общие клики --- */
+  document.addEventListener("click", (e) => {
+    const u = e.target.closest("[data-ux]");
+    if (u) {
+      const a = u.dataset.ux;
+      if (a === "fs-" || a === "fs+") setRaw("moto-fs", String(Math.max(0, Math.min(3, +raw("moto-fs", "1") + (a === "fs+" ? 1 : -1)))));
+      else if (a === "theme") setRaw("moto-theme", raw("moto-theme", "") === "dark" ? "light" : "dark");
+      else if (a === "comfy") setRaw("moto-comfy", raw("moto-comfy", "") === "1" ? null : "1");
+      else if (a === "bm") { openPanel(); return; }
+      else if (a === "bm-close") { closePanel(); return; }
+      applyPrefs(); return;
+    }
+    const s = e.target.closest("[data-bm-key]");
+    if (s) { e.preventDefault(); e.stopPropagation(); const it = bmData.get(s); if (it) toggleBm(it); return; }
+    const r = e.target.closest("[data-read-key]");
+    if (r) { e.preventDefault(); e.stopPropagation(); setRead(r.dataset.readKey, !isRead(r.dataset.readKey)); return; }
+    const d = e.target.closest("[data-ux-del]");
+    if (d) { const l = getJ("moto-bm", []).filter((b) => b.key !== d.dataset.uxDel); setJ("moto-bm", l); drawPanel(); syncMarks(); syncButtons(); return; }
+    if (panel && !panel.hidden && !panel.contains(e.target)) closePanel();
+  }, true);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closePanel(); });
+
+  /* --- плавное раскрытие описаний --- */
+  const ANIM = "details.fold-item, details.gl-item, details.sp-item";
+  document.addEventListener("click", (e) => {
+    if (reduce || e.defaultPrevented) return;
+    const s = e.target.closest("summary"); if (!s || e.target.closest("a,button")) return;
+    const d = s.parentElement; if (!d || !d.matches(ANIM) || !d.animate) return;
+    const body = Array.from(d.children).find((c) => c !== s); if (!body) return;
+    e.preventDefault();
+    if (d._uxA) d._uxA.cancel();
+    body.classList.add("ux-anim-body");
+    const done = () => { body.classList.remove("ux-anim-body"); d._uxA = null; };
+    if (!d.open) {
+      d.open = true; const h = body.scrollHeight;
+      d._uxA = body.animate([{ height: "0px", opacity: 0 }, { height: h + "px", opacity: 1 }], { duration: 220, easing: "ease-out" });
+      d._uxA.onfinish = done; d._uxA.oncancel = done;
+    } else {
+      const h = body.offsetHeight;
+      d._uxA = body.animate([{ height: h + "px", opacity: 1 }, { height: "0px", opacity: 0 }], { duration: 170, easing: "ease-in" });
+      d._uxA.onfinish = () => { d.open = false; done(); }; d._uxA.oncancel = done;
+    }
+  });
+
+  /* --- появление карточек при прокрутке --- */
+  const REVEAL = ".news-card,.fold-item,.issue-item,.issue-lead,.m-chapter,.put-road,.card,.kb-card,.lesson-card,.gl-item,.sp-item,.course-block,.issue-nav,.more-link";
+  const io = !reduce && "IntersectionObserver" in window ? new IntersectionObserver((ens) => ens.forEach((en) => {
+    if (en.isIntersecting) { en.target.classList.add("ux-in"); io.unobserve(en.target); }
+  }), { rootMargin: "0px 0px -4% 0px" }) : null;
+
+  /* --- копирование кода --- */
+  async function copyText(t) {
+    try { await navigator.clipboard.writeText(t); return true; } catch (e) {
+      const ta = document.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+      document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand("copy"); } catch (x) {} ta.remove(); return ok;
+    }
+  }
+  function addCopy(pre) {
+    if (pre.dataset.ux || pre.closest(".ux-code")) return; pre.dataset.ux = "1";
+    const w = document.createElement("div"); w.className = "ux-code"; pre.before(w); w.appendChild(pre);
+    const b = mk('<button type="button" class="ux-copy" aria-label="Копировать код">Копировать</button>');
+    b.addEventListener("click", async () => {
+      const ok = await copyText(pre.innerText.replace(/\n$/, ""));
+      b.textContent = ok ? "Скопировано ✓" : "Не вышло"; b.classList.toggle("ok", ok);
+      clearTimeout(b._t); b._t = setTimeout(() => { b.textContent = "Копировать"; b.classList.remove("ok"); }, 1600);
+    });
+    w.appendChild(b);
+  }
+
+  /* --- обработка нового содержимого (в т.ч. отрисованного скриптами) --- */
+  const page = location.pathname.split("/").pop().replace(/\.html$/, "") || "index";
+  const params = new URLSearchParams(location.search);
+  const qa = (scope, sel) => { const r = Array.from(scope.querySelectorAll(sel)); if (scope.matches && scope.matches(sel)) r.unshift(scope); return r; };
+  function enhance(scope) {
+    qa(scope, "pre").forEach(addCopy);
+    if (io) qa(scope, REVEAL).forEach((n) => { if (!n.classList.contains("ux-rv")) { n.classList.add("ux-rv"); io.observe(n); } });
+    qa(scope, "#slovar-list .fold-item > summary, .gl-item > summary").forEach((s) => {
+      if (s.querySelector(".ux-mini")) return;
+      const name = txt(s.querySelector(".fold-title")) || txt(s).replace(/^[+−]\s*/, "");
+      if (name) s.appendChild(starBtn({ key: "term:" + name.toLowerCase(), type: "term", title: name, href: "slovar.html#t=" + encodeURIComponent(name) }, true));
+    });
+    qa(scope, ".sp-item > summary").forEach((s) => {
+      if (s.querySelector(".ux-mini")) return; const d = s.parentElement;
+      s.appendChild(starBtn({ key: "sp:" + d.id, type: "sp", title: txt(s.querySelector(".sp-name")), href: "spravochnik.html#" + d.id }, true));
+    });
+    if (qa(scope, ".news-card,.put-road").length) markLists();
+    syncMarks();
+  }
+  function markLists() {
+    document.querySelectorAll("a.news-card").forEach((a) => {
+      let id = ""; try { id = new URL(a.href).searchParams.get("id") || ""; } catch (e) {}
+      const on = id && isRead("brief:" + id); a.classList.toggle("ux-read", !!on);
+      const head = a.querySelector(".news-head"), bd = a.querySelector(".ux-read-badge");
+      if (on && !bd && head) head.appendChild(mk('<span class="ux-read-badge">✓ прочитано</span>')); else if (!on && bd) bd.remove();
+    });
+    document.querySelectorAll("a.put-road").forEach((a) => {
+      const slug = (a.getAttribute("href") || "").replace(/^\//, "").replace(/\.html$/, "");
+      const on = isRead("put:" + slug); a.classList.toggle("ux-read", on);
+      const lab = a.querySelector(".put-road-label"), bd = a.querySelector(".ux-read-badge");
+      if (on && !bd && lab) lab.appendChild(mk('<span class="ux-read-badge">✓ прочитано</span>')); else if (!on && bd) bd.remove();
+    });
+    document.querySelectorAll(".m-toc > ol > li > a[data-ch], .m-panel > ol > li > a[data-ch]").forEach((a) => a.classList.toggle("ux-read", isRead("ch:" + a.dataset.ch)));
+  }
+
+  /* --- длинные страницы: полоса прогресса, время чтения, панель --- */
+  const words = (n) => txt(n).split(" ").length;
+  const minutes = (n) => Math.max(1, Math.round((typeof n === "number" ? n : words(n)) / 170));
+  const dur = (n) => { const m = minutes(n); return m < 90 ? m + " мин" : Math.floor(m / 60) + " ч " + (m % 60) + " мин"; };
+  function readingBar(after, content, extra) {
+    if (!after || document.querySelector(".ux-bar")) return;
+    const bar = mk(`<div class="ux-bar" role="group" aria-label="Чтение"><span class="ux-time">${content == null ? "" : "≈ " + dur(content) + " чтения"}</span>${prefBtns}</div>`);
+    (extra || []).forEach((n) => bar.appendChild(n));
+    after.after(bar); syncButtons(); syncMarks(); progress();
+  }
+  let prog = null;
+  function progress() {
+    if (prog) return; const h = document.querySelector(".site-header"); if (!h) return;
+    prog = mk('<div class="ux-progress" aria-hidden="true"><i></i></div>'); h.appendChild(prog);
+    const bar = prog.firstChild; let q = false;
+    const upd = () => { q = false; const max = document.documentElement.scrollHeight - innerHeight; bar.style.transform = "scaleX(" + (max > 0 ? Math.min(1, scrollY / max) : 0) + ")"; };
+    addEventListener("scroll", () => { if (!q) { q = true; requestAnimationFrame(upd); } }, { passive: true }); addEventListener("resize", upd); upd();
+  }
+  function setupBrief(br) {
+    const head = br.querySelector(".issue-head"); if (!head || br.querySelector(".ux-bar")) return;
+    const id = params.get("id") || ""; if (!id) return;
+    const m = /^(\d{4})-(\d\d)-(\d\d)(?:-(\w+))?/.exec(id), slot = m ? ({ utro: "утро", vecher: "вечер" }[m[4]] || "") : "";
+    const title = (m ? `${m[3]}.${m[2]}${slot ? " " + slot : ""}: ` : "") + txt(head.querySelector("h1"));
+    const item = { key: "brief:" + id, type: "brief", title, href: "brief.html?id=" + encodeURIComponent(id) + "&kind=" + encodeURIComponent(params.get("kind") || "ai") };
+    readingBar(head, br.querySelector(".issue, .article") || br, [starBtn(item), readBtn(item.key)]);
+    const pager = br.querySelector(".issue-nav"); const end = mk('<div class="ux-endmark"></div>'); end.appendChild(readBtn(item.key, "✓ Отметить сводку прочитанной"));
+    pager ? pager.before(end) : br.appendChild(end); syncMarks();
+  }
+  function setupPut() {
+    const hero = document.querySelector("header.hero"), list = document.querySelector("section .fold-list"); if (!hero || !list) return;
+    const item = { key: "put:" + page, type: "put", title: "Дорожка: " + txt(hero.querySelector("h1")), href: page + ".html" };
+    readingBar(hero, list, [starBtn(item), readBtn(item.key)]);
+    const end = mk('<div class="ux-endmark"></div>'); end.appendChild(readBtn(item.key, "✓ Отметить дорожку прочитанной")); list.after(end); syncMarks();
+  }
+  function setupMetod() {
+    const chs = document.querySelectorAll(".m-chapter"); if (!chs.length) return;
+    const intro = document.querySelector(".page-intro") || document.querySelector(".m-tools");
+    readingBar(intro, Array.from(chs).reduce((a, d) => a + words(d.querySelector(".m-body")), 0), []);
+    chs.forEach((d) => {
+      const s = d.querySelector(":scope > summary"), body = d.querySelector(".m-body"); if (!s || !body || s.querySelector(".ux-mini")) return;
+      s.appendChild(mk(`<span class="ux-chtime">≈ ${minutes(body)} мин</span>`));
+      s.appendChild(starBtn({ key: "ch:" + d.id, type: "ch", title: txt(s.querySelector("h2")), href: "metodichka.html#" + d.id }, true));
+      const end = mk('<div class="ux-endmark"></div>'); end.appendChild(readBtn("ch:" + d.id, "✓ Глава прочитана"));
+      const pn = body.querySelector(":scope > .m-pn"); pn ? pn.before(end) : body.appendChild(end);
+    });
+    markLists(); syncMarks();
+  }
+  function setupSprav() { const intro = document.querySelector(".page-intro"), r = document.getElementById("sp-root"); if (intro && r) readingBar(intro, null, []); }
+
+  /* --- меню «Ещё»: блок «Чтение» и закладки --- */
+  function setupMenu() {
+    const list = document.querySelector(".site-header .nav-more-list"); if (!list || list.querySelector(".ux-menu")) return;
+    list.appendChild(mk(`<div class="ux-menu" role="group" aria-label="Настройки чтения"><b>Чтение</b><div class="ux-row">${prefBtns}<button type="button" class="ux-btn" data-ux="comfy" aria-pressed="false">Удобная строка</button></div><button type="button" class="ux-btn" data-ux="bm"></button></div>`));
+  }
+  /* --- кнопка «наверх» (где нет своих плавающих кнопок методички/справочника) --- */
+  function setupTop() {
+    if (document.getElementById("m-fab")) return;
+    const b = mk('<button type="button" class="ux-top" aria-label="Наверх" tabindex="-1">↑</button>'); document.body.appendChild(b);
+    b.addEventListener("click", () => scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" }));
+    const upd = () => { const on = scrollY > 900; b.classList.toggle("on", on); b.tabIndex = on ? 0 : -1; };
+    addEventListener("scroll", upd, { passive: true }); upd();
+  }
+  /* --- словарь: переход по закладке slovar.html#t=термин --- */
+  let slovarHashDone = false;
+  function slovarHash() {
+    if (slovarHashDone || !location.hash.startsWith("#t=")) return;
+    const list = document.getElementById("slovar-list"), input = document.getElementById("slovar-search");
+    if (!list || !input || !list.querySelector(".fold-item")) return; slovarHashDone = true;
+    const term = decodeURIComponent(location.hash.slice(3)); input.value = term; input.dispatchEvent(new Event("input"));
+    const hit = Array.from(list.querySelectorAll(".fold-item")).find((d) => txt(d.querySelector(".fold-title")).toLowerCase() === term.toLowerCase()) || list.querySelector(".fold-item");
+    if (hit) { hit.open = true; hit.scrollIntoView({ block: "center" }); }
+  }
+
+  function init() {
+    applyPrefs(); setupMenu(); setupTop(); enhance(document); markLists();
+    if (document.querySelector(".m-chapter")) setupMetod();
+    else if (/^put-/.test(page)) setupPut();
+    if (document.getElementById("sp-root")) setupSprav();
+    const br = document.getElementById("brief-root"); if (br) setupBrief(br);
+    syncButtons();
+    let pend = new Set(), sched = false;
+    new MutationObserver((ms) => {
+      ms.forEach((m) => m.addedNodes.forEach((n) => { if (n.nodeType === 1 && !n.closest(".ux-code,.ux-bar,.ux-bm,.ux-endmark")) pend.add(n); }));
+      if (sched || !pend.size) return; sched = true;
+      requestAnimationFrame(() => {
+        sched = false; const nodes = Array.from(pend); pend = new Set();
+        nodes.forEach((n) => { if (n.isConnected) enhance(n); });
+        if (br) setupBrief(br);
+        slovarHash();
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+    slovarHash();
+    addEventListener("hashchange", () => { slovarHashDone = false; closePanel(); slovarHash(); });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+  window.addEventListener("storage", (e) => { if (/^moto-/.test(e.key || "")) { applyPrefs(); markLists(); syncMarks(); } });
 })();

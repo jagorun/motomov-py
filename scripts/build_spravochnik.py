@@ -325,6 +325,7 @@ def build_page(root, n):
   <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
   <link rel="canonical" href="https://py.motomov.ru/spravochnik">
   <link rel="stylesheet" href="styles.css?v={ver}">
+  <script>try{{var d=document.documentElement,s=localStorage;if(s.getItem("moto-theme")==="dark")d.dataset.theme="dark";var f=s.getItem("moto-fs");if(f&&f!=="1")d.dataset.fs=f;if(s.getItem("moto-comfy")==="1")d.dataset.comfy="1"}}catch(e){{}}</script>
 </head>
 <body>
   <div class="bg-grid" aria-hidden="true"></div>

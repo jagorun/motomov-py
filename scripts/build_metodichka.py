@@ -129,6 +129,7 @@ def main():
   <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
   <link rel="canonical" href="https://py.motomov.ru/metodichka">
   <link rel="stylesheet" href="styles.css?v={ver}">
+  <script>try{{var d=document.documentElement,s=localStorage;if(s.getItem("moto-theme")==="dark")d.dataset.theme="dark";var f=s.getItem("moto-fs");if(f&&f!=="1")d.dataset.fs=f;if(s.getItem("moto-comfy")==="1")d.dataset.comfy="1"}}catch(e){{}}</script>
   <style>
   .m-toc{{background:#fffcf6;border:1px solid var(--line);border-radius:1rem;padding:.9rem 1.1rem;margin:0 0 1.2rem}}
   .m-toc summary{{cursor:pointer;font-weight:600}}
