@@ -46,7 +46,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 19.10.2026 07:58 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 19.10.2026 20:57 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -4943,6 +4943,235 @@ with tempfile.TemporaryDirectory() as d:
 # ожидаем: нет переменной MISSING_KEY
 # ожидаем: {&#x27;ok&#x27;: True}</code></pre>
 <p>Как это считалось. В пункте 1 <code>python -m kontur.tools.search</code> поднимает пакет целиком: относительные <code>from ..errors</code> и <code>from ..state</code> находят родителей, печатается состояние и имя <code>ConfigError</code>. Тот же файл, запущенный напрямую, не знает родителя — отсюда <code>ImportError</code> про relative import. В пункте 2 <code>load_dotenv</code> читает файл в окружение; отсутствие переменной — это <code>RuntimeError</code> с <strong>именем</strong>, не с секретом. В пункте 3 строка <code>main:app</code> режется по <code>:</code>, модуль импортируется, объект достаётся через <code>getattr</code> — ровно тот механизм, которым <code>uvicorn</code> находит приложение в 05.<br>&lt;/details&gt;</p>
+<h5 id="ch-01-закрепление-предвыездная-проверка-комплекта-check_proj">Закрепление: предвыездная проверка комплекта — <code>check_project</code> перед запуском контура</h5>
+<p>Утром мы разложили проект по папкам, развели <code>python -m</code> и прямой запуск, убрали ключ в <code>.env</code> и разобрали строку <code>main:app</code>. Вечером собираем всё это в одну функцию-проверку, которую оркестратор гоняет <strong>до</strong> первого вызова модели. Ошибки раскладки дешевле поймать на сухом осмотре, чем на третьем шаге графа в 04, где после падения импорта остаётся только traceback.</p>
+<p><strong>Аналогия из жизни техника/документалиста.</strong> Перед выездом на объект ты не включаешь каждую камеру, а проходишь лист сборки кейса. Все отсеки подписаны? PIN от кейса не приклеен снаружи? В описи для напарника есть все позиции, но без самих PIN? Пульт находит нужный блок по его номеру? Лист не снимает кадр, он только говорит: «можно ехать» или «вот семь пунктов, которые надо исправить». И в лист пишут <strong>где</strong> проблема, а не переписывают туда сам PIN.</p>
+<p><strong>Условие.</strong> Стенд уже готов: <code>build_project(root, fixed=False)</code> создаёт во временной папке проект с типичными поломками, а <code>fixed=True</code> создаёт его исправленную версию.</p>
+<pre><code class="lang-python">import tempfile
+from pathlib import Path
+
+def build_project(root: Path, *, fixed: bool) -&gt; None:
+    files = {
+        &quot;kontur/__init__.py&quot;: &quot;&quot;,
+        &quot;kontur/state.py&quot;: &quot;def new_state(q):\n    return {&#x27;query&#x27;: q, &#x27;step&#x27;: 0}\n&quot;,
+        &quot;kontur/tools/search.py&quot;: &quot;from ..state import new_state\n\ndef find(q):\n    return new_state(q)\n&quot;,
+        &quot;kontur/cfg.py&quot;: &#x27;import os\nAPI_KEY = &quot;sk-demo-123&quot;\n&#x27;,
+        &quot;main.py&quot;: &quot;from kontur.state import new_state\n\nservice = {&#x27;name&#x27;: &#x27;kontur&#x27;}\n&quot;,
+        &quot;tests/test_state.py&quot;: &quot;from .helpers import make_query\n&quot;,
+        &quot;.gitignore&quot;: &quot;.venv/\n__pycache__/\n&quot;,
+        &quot;.env&quot;: (&#x27;# ключи контура\n&#x27;
+                 &#x27;export KONTUR_API_KEY=demo-not-real\n&#x27;
+                 &#x27;KONTUR_BASE_URL = &quot;https://example.test&quot;\n&#x27;),
+        &quot;.env.example&quot;: &quot;KONTUR_API_KEY=sk-live-oops\n&quot;,
+    }
+    if fixed:
+        files.update({
+            &quot;kontur/tools/__init__.py&quot;: &quot;&quot;,
+            &quot;kontur/cfg.py&quot;: &#x27;import os\nAPI_KEY = os.environ.get(&quot;KONTUR_API_KEY&quot;, &quot;&quot;)\n&#x27;,
+            &quot;main.py&quot;: &quot;from kontur.state import new_state\n\napp = {&#x27;name&#x27;: &#x27;kontur&#x27;}\n&quot;,
+            &quot;tests/test_state.py&quot;: &quot;from kontur.state import new_state\n&quot;,
+            &quot;.gitignore&quot;: &quot;.venv/\n__pycache__/\n.env\n&quot;,
+            &quot;.env.example&quot;: &quot;KONTUR_API_KEY=\nKONTUR_BASE_URL=\n&quot;,
+        })
+    for rel, text in files.items():
+        path = root / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding=&quot;utf-8&quot;)</code></pre>
+<p>Напиши три функции.</p>
+<ol>
+<li><code>env_keys(path) -&gt; dict[str, str]</code> читает файл <code>.env</code> построчно и возвращает словарь «имя → значение». Пустые строки и строки с <code>#</code> в начале пропускай. Приставку <code>export </code> снимай. Пробелы вокруг <code>=</code> убирай. Кавычки вокруг значения тоже убирай. Строку без <code>=</code> пропускай.</li>
+<li><code>secret_status(env, name) -&gt; str</code> возвращает <code>&quot;ИМЯ: есть, длина N&quot;</code> или <code>&quot;ИМЯ: нет&quot;</code>. Само значение не возвращает <strong>никогда</strong>.</li>
+<li><code>check_project(root, package=&quot;kontur&quot;, target=&quot;main:app&quot;) -&gt; list[str]</code> возвращает список проблем в таком порядке:
+<ul>
+<li>папка внутри пакета, где есть <code>.py</code>-файлы, но нет <code>__init__.py</code>: <code>нет __init__.py: kontur/tools</code>;</li>
+<li>строки <code>.env</code> нет в <code>.gitignore</code>: <code>&#x27;.env&#x27; не в .gitignore</code>;</li>
+<li>в <code>.env.example</code> нет каких-то имён из <code>.env</code> (<code>в .env.example нет ключей: ...</code>) или у имени в примере заполнено значение (<code>в .env.example заполнено значение: ...</code>);</li>
+<li>в <code>.py</code>-файле есть строка вида <code>API_KEY = &quot;...&quot;</code>: <code>секрет в коде: путь:строка</code>, <strong>без значения</strong>;</li>
+<li>файл <strong>вне</strong> пакета начинается с <code>from .</code>: <code>относительный импорт вне пакета: путь:строка</code>;</li>
+<li>строку <code>target</code> не удалось разрешить как <code>модуль:объект</code> в отдельном процессе с <code>cwd=root</code>: <code>точка входа main:app: &lt;тип ошибки&gt;: &lt;сообщение&gt;</code>.</li>
+</ul>
+</ol>
+</li>
+<p>Прогони проверку на обеих версиях стенда и выведи список имён из <code>.env</code> и два статуса: <code>KONTUR_API_KEY</code> и <code>KONTUR_TIMEOUT</code>. Ожидаемый вывод:</p>
+<pre><code class="lang-text">--- перед выездом: проблем 7
+нет __init__.py: kontur/tools
+&#x27;.env&#x27; не в .gitignore
+в .env.example нет ключей: KONTUR_BASE_URL
+в .env.example заполнено значение: KONTUR_API_KEY
+секрет в коде: kontur/cfg.py:2
+относительный импорт вне пакета: tests/test_state.py:1
+точка входа main:app: AttributeError: module &#x27;main&#x27; has no attribute &#x27;app&#x27;
+[&#x27;KONTUR_API_KEY&#x27;, &#x27;KONTUR_BASE_URL&#x27;] KONTUR_API_KEY: есть, длина 13 KONTUR_TIMEOUT: нет
+--- после ремонта: проблем 0
+готов к запуску
+[&#x27;KONTUR_API_KEY&#x27;, &#x27;KONTUR_BASE_URL&#x27;] KONTUR_API_KEY: есть, длина 13 KONTUR_TIMEOUT: нет</code></pre>
+<p><strong>Подсказка.</strong> Строку <code>.env</code> удобно резать через <code>partition(&quot;=&quot;)</code> из 1.5: она всегда возвращает три части, а пустой разделитель сразу говорит, что <code>=</code> в строке не было. Имена, которых нет в примере, даёт разность множеств из 1.4: <code>set(env) - set(example)</code>. Путь печатай через <code>relative_to(root).as_posix()</code>, тогда вывод одинаковый на Windows и Linux. Порядок проблем должен быть стабильным, поэтому файлы перебирай через <code>sorted</code>, а не в том порядке, в каком их отдаёт <code>rglob</code>. Точку входа проверяй <strong>в отдельном процессе</strong> (<code>subprocess.run([sys.executable, &quot;-c&quot;, код, target], cwd=root)</code>), а не через <code>importlib</code> в своём: иначе модуль <code>main</code> останется в кэше <code>sys.modules</code>, и второй прогон проверит старую версию. Чтобы в выводе была одна строка ошибки, а не весь traceback, пусть код внутри <code>-c</code> сам ловит исключение и печатает <code>f&quot;{type(e).__name__}: {e}&quot;</code>.</p>
+<p><strong>Вопросы на понимание.</strong></p>
+<ol>
+<li>Без <code>kontur/tools/__init__.py</code> строка <code>import kontur.tools.search</code> <strong>работает</strong>: проверь сам. Зачем тогда проверка считает это проблемой?</li>
+<li>Проверка на секреты сработает и на безобидной строке <code>KEY_NAME = &quot;KONTUR_API_KEY&quot;</code>. Почему лучше такое ложное срабатывание, чем пропуск, и как с ним жить?</li>
+<li>Почему <code>check_project</code> возвращает <strong>список</strong> проблем, а не бросает исключение на первой же?</li>
+</ol>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">import re, subprocess, sys, tempfile, textwrap
+from pathlib import Path
+
+def build_project(root: Path, *, fixed: bool) -&gt; None:
+    files = {
+        &quot;kontur/__init__.py&quot;: &quot;&quot;,
+        &quot;kontur/state.py&quot;: &quot;def new_state(q):\n    return {&#x27;query&#x27;: q, &#x27;step&#x27;: 0}\n&quot;,
+        &quot;kontur/tools/search.py&quot;: &quot;from ..state import new_state\n\ndef find(q):\n    return new_state(q)\n&quot;,
+        &quot;kontur/cfg.py&quot;: &#x27;import os\nAPI_KEY = &quot;sk-demo-123&quot;\n&#x27;,
+        &quot;main.py&quot;: &quot;from kontur.state import new_state\n\nservice = {&#x27;name&#x27;: &#x27;kontur&#x27;}\n&quot;,
+        &quot;tests/test_state.py&quot;: &quot;from .helpers import make_query\n&quot;,
+        &quot;.gitignore&quot;: &quot;.venv/\n__pycache__/\n&quot;,
+        &quot;.env&quot;: (&#x27;# ключи контура\n&#x27;
+                 &#x27;export KONTUR_API_KEY=demo-not-real\n&#x27;
+                 &#x27;KONTUR_BASE_URL = &quot;https://example.test&quot;\n&#x27;),
+        &quot;.env.example&quot;: &quot;KONTUR_API_KEY=sk-live-oops\n&quot;,
+    }
+    if fixed:
+        files.update({
+            &quot;kontur/tools/__init__.py&quot;: &quot;&quot;,
+            &quot;kontur/cfg.py&quot;: &#x27;import os\nAPI_KEY = os.environ.get(&quot;KONTUR_API_KEY&quot;, &quot;&quot;)\n&#x27;,
+            &quot;main.py&quot;: &quot;from kontur.state import new_state\n\napp = {&#x27;name&#x27;: &#x27;kontur&#x27;}\n&quot;,
+            &quot;tests/test_state.py&quot;: &quot;from kontur.state import new_state\n&quot;,
+            &quot;.gitignore&quot;: &quot;.venv/\n__pycache__/\n.env\n&quot;,
+            &quot;.env.example&quot;: &quot;KONTUR_API_KEY=\nKONTUR_BASE_URL=\n&quot;,
+        })
+    for rel, text in files.items():
+        path = root / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding=&quot;utf-8&quot;)
+
+SECRET_RE = re.compile(
+    r&quot;&quot;&quot;(?i)\b\w*(key|token|secret|password)\w*\s*=\s*[&quot;&#x27;][^&quot;&#x27;]+[&quot;&#x27;]&quot;&quot;&quot;
+)
+
+PROBE = (
+    &quot;import importlib, sys\n&quot;
+    &quot;mod_name, obj_name = sys.argv[1].split(&#x27;:&#x27;, 1)\n&quot;
+    &quot;try:\n&quot;
+    &quot;    getattr(importlib.import_module(mod_name), obj_name)\n&quot;
+    &quot;except Exception as e:\n&quot;
+    &quot;    print(f&#x27;{type(e).__name__}: {e}&#x27;)\n&quot;
+    &quot;    sys.exit(1)\n&quot;
+)
+
+def env_keys(path: Path) -&gt; dict[str, str]:
+    &quot;&quot;&quot;KEY=VALUE построчно: без пустых строк, комментариев, export и кавычек.&quot;&quot;&quot;
+    result = {}
+    for raw in path.read_text(encoding=&quot;utf-8&quot;).splitlines():
+        line = raw.strip()
+        if not line or line.startswith(&quot;#&quot;):
+            continue
+        line = line.removeprefix(&quot;export &quot;).strip()
+        key, sep, value = line.partition(&quot;=&quot;)
+        if not sep:                       # строка без &quot;=&quot; — не переменная
+            continue
+        result[key.strip()] = value.strip().strip(&#x27;&quot;&#x27;).strip(&quot;&#x27;&quot;)
+    return result
+
+def secret_status(env: dict[str, str], name: str) -&gt; str:
+    value = env.get(name, &quot;&quot;)
+    return f&quot;{name}: есть, длина {len(value)}&quot; if value else f&quot;{name}: нет&quot;
+
+def py_files(root: Path) -&gt; list[Path]:
+    found = [p for p in root.rglob(&quot;*.py&quot;)
+             if &quot;.venv&quot; not in p.parts and &quot;__pycache__&quot; not in p.parts]
+    return sorted(found, key=lambda p: p.relative_to(root).as_posix())
+
+def check_project(root: Path, package: str = &quot;kontur&quot;,
+                  target: str = &quot;main:app&quot;) -&gt; list[str]:
+    problems = []
+    rel = lambda p: p.relative_to(root).as_posix()
+    pkg = root / package
+
+    # 1. каждая папка пакета с .py-файлами помечена __init__.py
+    folders = sorted({p.parent for p in py_files(pkg)}, key=rel)
+    for folder in folders:
+        if not (folder / &quot;__init__.py&quot;).exists():
+            problems.append(f&quot;нет __init__.py: {rel(folder)}&quot;)
+
+    # 2. .env не едет в git
+    gitignore = root / &quot;.gitignore&quot;
+    ignored = gitignore.read_text(encoding=&quot;utf-8&quot;).splitlines() if gitignore.exists() else []
+    if &quot;.env&quot; not in [line.strip() for line in ignored]:
+        problems.append(&quot;&#x27;.env&#x27; не в .gitignore&quot;)
+
+    # 3. .env.example — те же имена, без значений
+    env = env_keys(root / &quot;.env&quot;) if (root / &quot;.env&quot;).exists() else {}
+    example_path = root / &quot;.env.example&quot;
+    if not example_path.exists():
+        problems.append(&quot;нет .env.example&quot;)
+    else:
+        example = env_keys(example_path)
+        missing = sorted(set(env) - set(example))
+        if missing:
+            problems.append(f&quot;в .env.example нет ключей: {&#x27;, &#x27;.join(missing)}&quot;)
+        for name, value in example.items():
+            if value:
+                problems.append(f&quot;в .env.example заполнено значение: {name}&quot;)
+
+    # 4 и 5. секреты в коде и относительные импорты вне пакета
+    for path in py_files(root):
+        inside = pkg in path.parents
+        for n, line in enumerate(path.read_text(encoding=&quot;utf-8&quot;).splitlines(), 1):
+            if SECRET_RE.search(line):
+                problems.append(f&quot;секрет в коде: {rel(path)}:{n}&quot;)   # место, не значение
+            if not inside and line.lstrip().startswith(&quot;from .&quot;):
+                problems.append(f&quot;относительный импорт вне пакета: {rel(path)}:{n}&quot;)
+
+    # 6. точка входа «модуль:объект» действительно находится
+    r = subprocess.run([sys.executable, &quot;-c&quot;, PROBE, target],
+                       cwd=root, capture_output=True, text=True, timeout=10)
+    if r.returncode != 0:
+        why = (r.stdout.strip() or r.stderr.strip() or &quot;без вывода&quot;).splitlines()[-1]
+        problems.append(f&quot;точка входа {target}: {why}&quot;)
+    return problems
+
+for fixed in (False, True):
+    with tempfile.TemporaryDirectory() as d:
+        root = Path(d)
+        build_project(root, fixed=fixed)
+        problems = check_project(root)
+        print(f&quot;--- {&#x27;после ремонта&#x27; if fixed else &#x27;перед выездом&#x27;}: проблем {len(problems)}&quot;)
+        for p in problems:
+            print(p)
+        if not problems:
+            print(&quot;готов к запуску&quot;)
+        env = env_keys(root / &quot;.env&quot;)
+        print(sorted(env), secret_status(env, &quot;KONTUR_API_KEY&quot;),
+              secret_status(env, &quot;KONTUR_TIMEOUT&quot;))
+# ожидаем: --- перед выездом: проблем 7
+# ожидаем: нет __init__.py: kontur/tools
+# ожидаем: &#x27;.env&#x27; не в .gitignore
+# ожидаем: в .env.example нет ключей: KONTUR_BASE_URL
+# ожидаем: в .env.example заполнено значение: KONTUR_API_KEY
+# ожидаем: секрет в коде: kontur/cfg.py:2
+# ожидаем: относительный импорт вне пакета: tests/test_state.py:1
+# ожидаем: точка входа main:app: AttributeError: module &#x27;main&#x27; has no attribute &#x27;app&#x27;
+# ожидаем: [&#x27;KONTUR_API_KEY&#x27;, &#x27;KONTUR_BASE_URL&#x27;] KONTUR_API_KEY: есть, длина 13 KONTUR_TIMEOUT: нет
+# ожидаем: --- после ремонта: проблем 0
+# ожидаем: готов к запуску
+# ожидаем: [&#x27;KONTUR_API_KEY&#x27;, &#x27;KONTUR_BASE_URL&#x27;] KONTUR_API_KEY: есть, длина 13 KONTUR_TIMEOUT: нет</code></pre>
+<p>Как это считалось. В сломанном стенде <code>.env</code> содержит комментарий, <code>export KONTUR_API_KEY=demo-not-real</code> и <code>KONTUR_BASE_URL = &quot;https://example.test&quot;</code>. Комментарий пропущен, <code>export </code> снят, пробелы и кавычки убраны, поэтому имён два, а у ключа длина <code>len(&quot;demo-not-real&quot;) == 13</code>. В <code>.env.example</code> есть только <code>KONTUR_API_KEY</code>, да ещё и со значением <code>sk-live-oops</code>, это две отдельные проблемы. В <code>kontur/cfg.py</code> на второй строке ключ записан прямо в код, и проверка называет место (<code>kontur/cfg.py:2</code>), а не сам ключ. Файл <code>tests/test_state.py</code> лежит вне пакета, но начинается с <code>from .</code>, а вне пакета относительному импорту не к чему привязаться (утренний шаг 3). В <code>main.py</code> объект называется <code>service</code>, а не <code>app</code>, поэтому <code>getattr(module, &quot;app&quot;)</code> даёт <code>AttributeError</code>, ровно то, что увидел бы <code>uvicorn main:app</code>. В исправленном стенде все шесть проверок проходят, а статусы секретов не меняются: ключ остался в <code>.env</code>, просто теперь он туда и положен.</p>
+<p><strong>Ответы на вопросы.</strong></p>
+<ol>
+<li>Python 3 считает папку без <code>__init__.py</code> пакетом-«пространством имён» (namespace package), поэтому импорт проходит. Но у такого пакета <code>kontur.tools.__file__ is None</code>, его не видят некоторые инструменты сборки (например, <code>find_packages</code> из setuptools без особой настройки), и он может «склеиться» с одноимённой папкой в другом месте <code>sys.path</code>. Работает он случайно, а не по контракту. Утром мы договорились: пока проект не на namespace packages осознанно, в каждой папке пакета лежит <code>__init__.py</code>. Проверка следит за договорённостью, а не за тем, упадёт ли сегодня импорт.</li>
+<li>Пропущенный ключ уезжает в историю git навсегда, и его приходится перевыпускать. Лишнее срабатывание стоит минуту: ты переименовываешь переменную (<code>KEY_NAME = ...</code> → <code>ENV_NAME = ...</code>) или выносишь имена переменных в одно место и добавляешь его в список исключений проверки. Это тот же выбор, что и в бюджете из 1.7: ошибку дешевле поймать на входе, чем разгребать после траты. В серьёзных проектах для этого берут готовые сканеры секретов, но принцип у них тот же: искать по виду строки и показывать место, а не значение.</li>
+<li>Это предвыездная проверка, а не тормоз во время смены. Человеку нужно увидеть <strong>все</strong> семь пунктов сразу и исправить их за один заход, а не узнавать о них по одному за семь запусков. Исключение уместно на старте самого контура: <code>if problems: raise ConfigError(...)</code> с этим списком в сообщении. Так проверка остаётся чистой функцией, которую легко тестировать (в 02 это станет тестом), а решение «ехать или нет» принимает тот, кто её вызвал.</li>
+</ol>
+<p><strong>Типичные ошибки в этом упражнении.</strong></p>
+<ul>
+<li>Печатать проблему как <code>секрет в коде: API_KEY = &quot;sk-demo-123&quot;</code>. Проверка, которая сама выводит секрет в лог, и есть утечка, только аккуратно оформленная. В след пишут место и длину, но не значение.</li>
+<li>Резать строку <code>.env</code> через <code>split(&quot;=&quot;)</code>. Значение со знаком <code>=</code> внутри (<code>URL=https://x.test/?a=1</code>) развалится на три части. <code>partition</code> или <code>split(&quot;=&quot;, 1)</code> режут только по первому <code>=</code>.</li>
+<li>Проверять <code>.env</code> в <code>.gitignore</code> через <code>&quot;.env&quot; in text</code>. Строка <code>.env.example</code> или <code># .env</code> тоже дадут <code>True</code>. Сравнивай строки целиком, как в решении.</li>
+<li>Разрешать <code>main:app</code> через <code>importlib</code> в том же процессе, а потом исправлять <code>main.py</code> и проверять ещё раз. Второй <code>import_module</code> вернёт закэшированный старый модуль из <code>sys.modules</code>, и проверка соврёт.</li>
+<li>Брать файлы из <code>rglob</code> без сортировки. Порядок проблем начнёт плавать между машинами, и сравнивать отчёты двух прогонов станет нельзя.</li>
+</ul>
+<p><strong>Связь с оркестратором.</strong> <code>check_project</code> — первый <strong>потолок</strong> «до траты»: прогон, который не прошёл проверку, не тратит ни одного вызова модели. Раскладка, <code>.env.example</code> и строка <code>main:app</code> — это <strong>контракт</strong> проекта: что где лежит, какие переменные нужны и какой объект отдаётся наружу. Список проблем с путями и строками — это <strong>след</strong>, по которому видно, что чинить, и в нём нет ни одного секрета. <strong>Цель, которую можно провалить</strong>, проверяется одной строкой: <code>check_project(root) == []</code>. А каждая новая поломка, которую ты однажды поймал руками (например, забытый <code>.dockerignore</code> в 05), становится ещё одним пунктом проверки. Это и есть <strong>улучшение по дыре</strong>: дыра закрывается навсегда, а не до следующего раза.</p>
+<p>&lt;/details&gt;</p>
 <hr>
 <h3 id="ch-01-1-10-чтение-traceback-и-отладка">1.10. Чтение traceback и отладка</h3>
 <p>Каждый упавший пример, тест или граф заканчивается <strong>traceback</strong> — отчётом о падении. Новички пугаются его длины и читают сверху. Читать надо <strong>снизу</strong>.</p>
