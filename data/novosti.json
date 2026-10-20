@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-10-20-utro",
+    "kind": "ai",
+    "date": "2026-10-20",
+    "dateLabel": "20.10.2026, вторник",
+    "topic": "OpenAI и старые языки COBOL/Fortran, диффузионная Mercury 3, модель извлечения Clairic, суперкластер Meta Prometheus, $45 млрд Anthropic–Nscale, $30 млрд для OpenAI, DeepSeek и чипы Huawei, Samsung и TSMC, роботы Dream Labs",
+    "title": "Новости ИИ · 20.10.2026 · быстрее, дешевле, надёжнее",
+    "summary": "OpenAI показала, что новые модели почти научились переписывать старые программы на COBOL и Fortran, а Inception и Cloudflare выпустили модели, которые выигрывают не умом, а скоростью и ценой. Meta подробно рассказала, как держит в работе сотни тысяч видеокарт кластера Prometheus, а Anthropic и OpenAI, по данным Bloomberg и Reuters, собирают десятки миллиардов долларов на вычисления. DeepSeek, по данным The Information, проектирует чипы вместе с Huawei, а Dream Labs открыла платный доступ к «мозгу» для роботов."
+  },
+  {
     "id": "2026-10-19-vecher",
     "kind": "ai",
     "date": "2026-10-19",
