@@ -47,7 +47,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 20.10.2026 07:59 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 20.10.2026 20:52 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -808,6 +808,157 @@ print(run_int(usages, limit_micro=2000, estimate_micro=500))
 <li>Сравнение с <code>nan</code> всегда ложно. <code>spent &lt;= limit</code> станет <code>False</code>, и цикл остановится: испорченное число тормозит. <code>not spent &gt; limit</code> станет <code>not False</code>, то есть <code>True</code>, и цикл продолжит тратить: испорченное число отключает потолок.</li>
 <li>Разный: <code>round(0.5) == 0</code>, <code>round(1.5) == 2</code>. Ровная половина округляется к ближайшему <strong>чётному</strong> числу.</li>
 <li>JSON-число <code>0.20</code> при <code>json.loads</code> станет <code>float</code> с двоичной погрешностью, и <code>Decimal(0.2)</code> перенесёт её в длинный хвост цифр. Строка <code>&quot;0.20&quot;</code> даёт ровно <code>Decimal(&quot;0.20&quot;)</code>. Другой путь: <code>json.loads(text, parse_float=Decimal)</code> превращает все дробные числа JSON сразу в <code>Decimal</code>.</li>
+</ol>
+<p>&lt;/details&gt;</p>
+<h5 id="ch-01-закрепление-смета-смены-расход-строкой-целые-микродолл">Закрепление: смета смены — расход строкой, целые микродоллары и потолок, который не выключит <code>NaN</code></h5>
+<p>Утром мы разобрали, почему потолок держится только на «настоящих» числах: <code>nan</code> выключает сравнение, <code>float</code> плывёт на границе, а <code>Decimal</code> надо создавать из строки. Вечером собираем это в одну маленькую смету: журнал смены приходит строками, расход в долларах надо перевести в <strong>целые микродоллары</strong>, вести общий счёт и остановиться <strong>до</strong> шага, который может пробить бюджет.</p>
+<p><strong>Аналогия из жизни техника/документалиста.</strong> Вечером ты сдаёшь продюсеру смету съёмочного дня по рабочему журналу. В журнале строки вида «дубль 3, расход 0,68 $, длительность 59 с». Ты не округляешь каждую строку «на глаз» и не пропускаешь строку, где вместо суммы стоит клякса. Клякса — повод остановиться и выяснить, а не считать её нулём: деньги за этот дубль уже потрачены, просто ты не знаешь сколько. А перед каждым новым дублем прикидываешь: «если он обойдётся как обычный, влезу в лимит дня?» Если нет — дубль не снимаешь.</p>
+<p><strong>Условие.</strong> Журнал смены — список строк:</p>
+<pre><code class="lang-python">SHIFT = [
+    &quot;step=1 cost_usd=0.00048 dur_ms=62350&quot;,
+    &quot;step=2 cost_usd=0,00052 dur_ms=41100&quot;,
+    &quot;step=3 cost_usd=0.0006805 dur_ms=59999&quot;,
+    &quot;step=4 cost_usd=NaN dur_ms=3000&quot;,
+    &quot;step=5 cost_usd=0.0005 dur_ms=2000&quot;,
+]</code></pre>
+<p>Напиши пять функций.</p>
+<ol>
+<li><code>to_micro(raw: str) -&gt; int</code> переводит строку с суммой в долларах в целые микродоллары. Пробелы по краям убирает, десятичную запятую понимает. Округляет ровную половину <strong>вверх</strong> (<code>0.0006805 $</code> это <code>680.5</code>, значит <code>681</code>). Пустую строку, не число, <code>NaN</code>, <code>Infinity</code> и отрицательную сумму отвергает через <code>ValueError</code> с понятным текстом. <code>float</code> не использует нигде.</li>
+<li><code>parse_line(line: str) -&gt; dict</code> разбирает строку журнала в <code>{&quot;step&quot;: int, &quot;cost_micro&quot;: int, &quot;dur_ms&quot;: int}</code>. Если нет какого-то поля, токен без <code>=</code> или <code>step</code>/<code>dur_ms</code> не целое, бросает <code>ValueError</code>.</li>
+<li><code>fmt_usd(micro: int) -&gt; str</code> показывает сумму как <code>&quot;0.001681 $&quot;</code>, только целыми операциями (<code>divmod</code>).</li>
+<li><code>fmt_ms(ms: int) -&gt; str</code> возьми из утреннего упражнения 1.</li>
+<li><code>run_shift(lines, limit_micro, estimate_micro) -&gt; dict</code> идёт по журналу циклом <code>while</code> и возвращает <code>done</code>, <code>spent_micro</code>, <code>spent</code> (строкой), <code>time</code> (строкой), <code>reason</code> и <code>warnings</code>. Правила:
+<ul>
+<li>перед каждым шагом проверяет <code>spent + estimate_micro &gt; limit_micro</code>; если да, останавливается с причиной <code>&quot;потолок бюджета&quot;</code>;</li>
+<li>испорченная строка <strong>останавливает</strong> смену с причиной <code>&quot;плохая строка N: ...&quot;</code>, а не пропускается;</li>
+<li>если настоящий расход шага больше оценки, в <code>warnings</code> попадает <code>&quot;шаг N: расход X &gt; оценки Y&quot;</code>: значит, оценку надо поднять, иначе потолок может пробиться;</li>
+<li>если журнал кончился, причина <code>&quot;смена закрыта&quot;</code>.</li>
+</ul>
+</ol>
+</li>
+<p>Проверь <code>to_micro</code> на входах <code>[&quot;0.0006805&quot;, &quot; 0,00052 &quot;, &quot;1e-4&quot;, &quot;nan&quot;, &quot;-0.0001&quot;, &quot;&quot;]</code>, а <code>run_shift</code> при <code>estimate_micro=600</code> и лимитах <code>2000</code> и <code>5000</code>.</p>
+<p><strong>Подсказка.</strong></p>
+<ul>
+<li><code>Decimal(&quot; 0.1 &quot;)</code> сам убирает пробелы, понимает <code>&quot;1e-4&quot;</code> и <code>&quot;1_000&quot;</code>, но запятую не понимает: её надо заменить заранее.</li>
+<li><code>Decimal(&quot;abc&quot;)</code> бросает <code>decimal.InvalidOperation</code>. Это <strong>не</strong> <code>ValueError</code>, поэтому <code>except ValueError</code> его не поймает. Лови <code>InvalidOperation</code> и превращай в <code>ValueError</code>, чтобы у всех плохих входов был один вид отказа.</li>
+<li><code>Decimal(&quot;NaN&quot;)</code> создаётся без ошибки. Проверяй <code>d.is_finite()</code>.</li>
+<li>Целые микродоллары: <code>(d * 1_000_000).quantize(Decimal(&quot;1&quot;), rounding=ROUND_HALF_UP)</code>, потом <code>int(...)</code>.</li>
+<li><code>partition(&quot;=&quot;)</code> из 1.5 разбирает токен <code>key=value</code> и честно сообщает, был ли разделитель.</li>
+</ul>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
+
+MICRO = 1_000_000                     # микродолларов в одном долларе
+
+
+def to_micro(raw: str) -&gt; int:
+    s = raw.strip().replace(&quot;,&quot;, &quot;.&quot;)
+    try:
+        d = Decimal(s)
+    except InvalidOperation:          # это НЕ ValueError, см. вопрос 1
+        raise ValueError(f&quot;расход не число: {raw!r}&quot;) from None
+    if not d.is_finite():
+        raise ValueError(f&quot;расход не конечен: {raw!r}&quot;)
+    if d &lt; 0:
+        raise ValueError(f&quot;отрицательный расход: {raw!r}&quot;)
+    return int((d * MICRO).quantize(Decimal(&quot;1&quot;), rounding=ROUND_HALF_UP))
+
+
+def parse_line(line: str) -&gt; dict:
+    fields = {}
+    for token in line.split():
+        key, sep, value = token.partition(&quot;=&quot;)
+        if not sep:
+            raise ValueError(f&quot;нет &#x27;=&#x27; в {token!r}&quot;)
+        fields[key] = value
+    for key in (&quot;step&quot;, &quot;cost_usd&quot;, &quot;dur_ms&quot;):
+        if key not in fields:
+            raise ValueError(f&quot;нет поля {key}&quot;)
+    for key in (&quot;step&quot;, &quot;dur_ms&quot;):
+        if not fields[key].isdecimal():
+            raise ValueError(f&quot;{key} не целое: {fields[key]!r}&quot;)
+    return {&quot;step&quot;: int(fields[&quot;step&quot;]),
+            &quot;cost_micro&quot;: to_micro(fields[&quot;cost_usd&quot;]),
+            &quot;dur_ms&quot;: int(fields[&quot;dur_ms&quot;])}
+
+
+def fmt_usd(micro: int) -&gt; str:
+    dollars, rest = divmod(micro, MICRO)
+    return f&quot;{dollars}.{rest:06} $&quot;
+
+
+def fmt_ms(ms: int) -&gt; str:            # из утреннего упражнения 1
+    minutes, s = divmod(ms // 1000, 60)
+    h, m = divmod(minutes, 60)
+    return f&quot;{h} ч {m:02} мин {s:02} с&quot; if h else f&quot;{m} мин {s:02} с&quot;
+
+
+def run_shift(lines: list[str], limit_micro: int, estimate_micro: int) -&gt; dict:
+    spent = 0
+    dur = 0
+    done = 0
+    warnings = []
+    reason = &quot;смена закрыта&quot;
+    while done &lt; len(lines):
+        if spent + estimate_micro &gt; limit_micro:          # 1. потолок ДО шага
+            reason = &quot;потолок бюджета&quot;
+            break
+        try:
+            rec = parse_line(lines[done])                 # 2. разбор строки
+        except ValueError as e:
+            reason = f&quot;плохая строка {done + 1}: {e}&quot;     # испорченное число тормозит
+            break
+        if rec[&quot;cost_micro&quot;] &gt; estimate_micro:            # 3. оценка оказалась мала
+            warnings.append(f&quot;шаг {rec[&#x27;step&#x27;]}: расход {rec[&#x27;cost_micro&#x27;]} &gt; оценки {estimate_micro}&quot;)
+        spent += rec[&quot;cost_micro&quot;]
+        dur += rec[&quot;dur_ms&quot;]
+        done += 1
+    return {&quot;done&quot;: done, &quot;spent_micro&quot;: spent, &quot;spent&quot;: fmt_usd(spent),
+            &quot;time&quot;: fmt_ms(dur), &quot;reason&quot;: reason, &quot;warnings&quot;: warnings}
+
+
+SHIFT = [
+    &quot;step=1 cost_usd=0.00048 dur_ms=62350&quot;,
+    &quot;step=2 cost_usd=0,00052 dur_ms=41100&quot;,
+    &quot;step=3 cost_usd=0.0006805 dur_ms=59999&quot;,
+    &quot;step=4 cost_usd=NaN dur_ms=3000&quot;,
+    &quot;step=5 cost_usd=0.0005 dur_ms=2000&quot;,
+]
+
+for raw in [&quot;0.0006805&quot;, &quot; 0,00052 &quot;, &quot;1e-4&quot;, &quot;nan&quot;, &quot;-0.0001&quot;, &quot;&quot;]:
+    try:
+        print(repr(raw), &quot;-&gt;&quot;, to_micro(raw))
+    except ValueError as e:
+        print(repr(raw), &quot;-&gt; ValueError:&quot;, e)
+
+for limit in (2000, 5000):
+    r = run_shift(SHIFT, limit_micro=limit, estimate_micro=600)
+    print(limit, &quot;|&quot;, r[&quot;done&quot;], r[&quot;spent&quot;], r[&quot;time&quot;], &quot;|&quot;, r[&quot;reason&quot;], &quot;|&quot;, r[&quot;warnings&quot;])
+print(run_shift(SHIFT[:3], limit_micro=5000, estimate_micro=600)[&quot;reason&quot;])
+# ожидаем: &#x27;0.0006805&#x27; -&gt; 681
+# ожидаем: &#x27;&#x27; -&gt; ValueError: расход не число: &#x27;&#x27;
+# ожидаем: 2000 | 3 0.001681 $ 2 мин 43 с | потолок бюджета | [&#x27;шаг 3: расход 681 &gt; оценки 600&#x27;]
+# ожидаем: 5000 | 3 0.001681 $ 2 мин 43 с | плохая строка 4: расход не конечен: &#x27;NaN&#x27; | [&#x27;шаг 3: расход 681 &gt; оценки 600&#x27;]
+# ожидаем: смена закрыта</code></pre>
+<p>Разбор.</p>
+<ul>
+<li><strong>Почему при лимите <code>2000</code> три шага.</strong> После трёх шагов потрачено <code>480 + 520 + 681 = 1681</code> микродоллар. Перед четвёртым <code>1681 + 600 = 2281 &gt; 2000</code>, поэтому цикл остановился <strong>до</strong> разбора четвёртой строки. Клякса <code>NaN</code> даже не понадобилась: потолок сработал раньше.</li>
+<li><strong>Почему при лимите <code>5000</code> тоже три шага, но причина другая.</strong> Потолок пропустил четвёртый шаг, разбор нашёл <code>NaN</code> и остановил смену. В следе стоит, <strong>какая</strong> строка испорчена и <strong>что</strong> в ней. Если бы <code>run_shift</code> делал <code>continue</code>, итог занизился бы на неизвестную сумму, и потолок считал бы от неправды.</li>
+<li><strong>Предупреждение про шаг 3.</strong> Оценка <code>600</code> меньше настоящих <code>681</code>. Сейчас это не пробило лимит, но при другом лимите могло бы: проверка «с запасом» работает, только если запас действительно больше расхода. Это и есть «улучшение по дыре»: в след попадает сигнал «подними оценку», а не тихое превышение через неделю.</li>
+<li><strong><code>fmt_usd</code> без <code>float</code>.</strong> <code>divmod(1681, 1_000_000)</code> даёт <code>(0, 1681)</code>, а <code>f&quot;{rest:06}&quot;</code> дописывает ведущие нули: <code>001681</code>. Деньги ни разу не побывали в двоичной дроби.</li>
+</ul>
+<p>&lt;/details&gt;</p>
+<p><strong>Вопросы на понимание.</strong></p>
+<ol>
+<li>Почему <code>except ValueError</code> не ловит ошибку <code>Decimal(&quot;abc&quot;)</code>, а <code>except ArithmeticError</code> ловит? Чем опасно оставить в <code>to_micro</code> только <code>except ValueError</code>?</li>
+<li>Что изменится, если в <code>run_shift</code> поменять местами проверку потолка и разбор строки?</li>
+<li><code>to_micro(&quot;0.0000004&quot;)</code> вернёт <code>0</code>. Это ошибка? Что надо записать в контракт, чтобы такое поведение было честным?</li>
+</ol>
+<p>&lt;details&gt;&lt;summary&gt;Ответы&lt;/summary&gt;</p>
+<ol>
+<li><code>InvalidOperation</code> наследует от <code>DecimalException</code>, а та от <code>ArithmeticError</code>, не от <code>ValueError</code>. Проверь: <code>decimal.InvalidOperation.__mro__</code>. Если ловить только <code>ValueError</code>, плохая строка вылетит из <code>run_shift</code> необработанным исключением: смена упадёт с traceback вместо аккуратной остановки с причиной в следе. Заодно запомни ещё одно отличие от <code>float</code>: сравнение <code>Decimal(&quot;NaN&quot;) &lt; 0</code> не тихо даёт <code>False</code>, а бросает <code>InvalidOperation</code>. <code>Decimal</code> громче <code>float</code>, и для денег это плюс.</li>
+<li>Если сначала разбирать строку, а потом проверять потолок, при лимите <code>2000</code> причина станет «плохая строка 4», хотя честная причина — потолок: четвёртый шаг всё равно не влез бы. Порядок «сначала потолок, потом работа» показывает в следе <strong>первую</strong> причину остановки и не тратит силы на шаг, который делать нельзя. Заметь, что в настоящем контуре строка журнала появляется <strong>после</strong> вызова модели, так что проверка потолка до шага — единственное место, где ещё можно не тратить деньги.</li>
+<li>Не ошибка, а единица точности: всё меньше половины микродоллара округляется в <code>0</code>. Это надо записать в контракт и в имя поля: <code>cost_micro_usd</code>, «округление к ближайшему, половина вверх, погрешность не больше 0.5 микродоллара на шаг». Тогда на тысяче шагов известно, что итог может разойтись со счётом не больше чем на <code>500</code> микродолларов, то есть <code>0.0005 $</code>.</li>
 </ol>
 <p>&lt;/details&gt;</p>
 <hr>
