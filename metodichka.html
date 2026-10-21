@@ -47,7 +47,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 20.10.2026 20:52 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 21.10.2026 07:57 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -496,7 +496,7 @@ with tempfile.TemporaryDirectory() as d:
 <details class="m-chapter" id="ch-01"><summary><h2>01. Основы Python — Ступень 1. Порядок мысли</h2></summary><div class="m-body"><p><strong>Курс:</strong> Stepik 58852 «Поколение Python: курс для начинающих».<br><strong>Где ты сейчас:</strong> примерно модуль ввода-вывода / циклы (<code>while</code>).<br><strong>Цель ступени:</strong> научиться ясно говорить: что было на входе, какая ветка выбрана, где ход кончается. Без этого схему системы не прочитать, даже если код писал не ты.</p>
 <p>Эта часть объясняет каждый базовый термин максимально подробно. Не «запомни синтаксис», а «пойми, зачем это существует и как это помогает оркестратору».</p>
 <p><strong>Карта: что из этой ступени понадобится дальше.</strong> Ступень 1 — фундамент для всего остального. Если какая-то строка в файлах 04–06 кажется непонятной, почти всегда ответ здесь:</p>
-<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td><code>int</code>/<code>float</code>, <code>/ // %</code>, <code>divmod</code>, округление, <code>nan</code>/<code>inf</code>, <code>Decimal</code>, расход в целых единицах</td><td>1.1, «Глубже: числа в деле»</td><td>02: <code>Cents</code> через <code>Decimal</code>; 05, 5.1–5.2: деньги в микродолларах и <code>cost + est &gt; max_cost</code>; 06: доли в сводке прогона</td></tr><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td><code>with open</code> и режимы <code>r/w/a/x</code>, чтение по строкам, JSON Lines, границы JSON, <code>glob</code>/<code>rglob</code></td><td>1.6, «Глубже: with open, режимы записи, JSON Lines…»</td><td>02: 2.5 след в <code>.jsonl</code> через <code>logging</code>; 03: 3.3 обход папки; 05: расход по <code>trace.jsonl</code>; 06: <code>sorted(folder.glob(&quot;*.md&quot;))</code> в скелете</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>исключения в цикле: повтор с потолком, партия без обрыва, общий тормоз, порядок <code>try/except/else/finally</code></td><td>1.7, «Глубже: исключения внутри цикла»</td><td>02: 2.4 безопасный <code>retry</code>; 03: 3.5 повтор вызова модели; 05: 5.4 предохранитель поверх <code>call_with_retry</code>, 5.1 отказ по бюджету</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>раскладка пакета, <code>python -m</code>, относительные импорты, dotenv/секреты, точка входа <code>модуль:объект</code></td><td>1.9, «Глубже: раскладка пакета, относительные импорты, dotenv…»</td><td>02: импорт в тестах; 03: <code>load_dotenv</code> и ключ API; 05: <code>uvicorn main:app</code>, <code>.dockerignore</code>; 06: тонкий вход скрипта</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr><tr><td><code>match</code>/<code>case</code> — ветка по форме данных</td><td>1.2, «Новое знание: match/case»</td><td>03: разбор ответа API; 04, 4.3: маршрутизатор графа</td></tr><tr><td><code>functools.partial</code>, <code>lru_cache</code></td><td>1.3, «Новое знание: partial и lru_cache»</td><td>03, 3.5: <code>call=partial(...)</code>; 04: узел с настройками; 05, 5.3: почему свой кэш</td></tr><tr><td><code>heapq.nlargest</code>, устойчивая сортировка, <code>bisect</code></td><td>1.4, «Новое знание: heapq…»</td><td>03, 3.3–3.4: топ-k и порог; 05, 5.2: тарифные ступени</td></tr><tr><td>Unicode-нормализация, <code>casefold</code>, невидимые пробелы</td><td>1.5, «Новое знание: невидимые различия»</td><td>03, 3.3–3.4: поиск и проверка цитаты; 05, 5.3: ключ кэша</td></tr><tr><td>BOM/<code>utf-8-sig</code>, <code>errors=</code>, <code>\r\n</code>, модуль <code>csv</code></td><td>1.6, «Новое знание: кодировки на границе»</td><td>02, контрольная точка; 03, 3.3: корпус; 05: выгрузка расхода</td></tr><tr><td><code>ExceptionGroup</code>, <code>except*</code>, <code>TaskGroup</code></td><td>1.7, «Новое знание: несколько ошибок сразу»</td><td>02, 2.9: параллельные вызовы; 03, 3.1: проверка окружения; 04, 4.5</td></tr><tr><td><code>Enum</code>/<code>StrEnum</code>, <code>__post_init__</code>, <code>__repr__</code>/<code>__str__</code>, хэш и <code>frozen</code></td><td>1.8, «Новое знание: Enum…»</td><td>04, 4.1: <code>stop_reason</code>; 05, 5.3: ключ кэша; 06: <code>reason</code></td></tr><tr><td>наследование, <code>super()</code>, <code>ABC</code>, <code>Protocol</code>, композиция</td><td>1.8, «Новое знание: наследование… Protocol»</td><td>02, 2.6: <code>FakeLLM</code>; 05, 5.3–5.5: обёртки вокруг модели; 06: <code>run(llm=...)</code></td></tr><tr><td><code>pdb</code>: посмертная отладка, условная остановка, <code>PYTHONBREAKPOINT</code></td><td>1.10, «Новое знание: отладчик pdb на практике»</td><td>02, 2.6: <code>pytest --pdb</code>; 05, 5.6: <code>ENV PYTHONBREAKPOINT=0</code></td></tr><tr><td><code>logging</code> для отладки, <code>faulthandler</code>, <code>-X dev</code>/<code>-W error</code>, бинарный поиск, <code>git bisect</code></td><td>1.10, «Новое знание: отладка без отладчика»</td><td>02, 2.5: журнал; 03, 3.5: потолок времени; 06: метки этапов и <code>git bisect</code></td></tr></tbody></table></div>
+<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td><code>int</code>/<code>float</code>, <code>/ // %</code>, <code>divmod</code>, округление, <code>nan</code>/<code>inf</code>, <code>Decimal</code>, расход в целых единицах</td><td>1.1, «Глубже: числа в деле»</td><td>02: <code>Cents</code> через <code>Decimal</code>; 05, 5.1–5.2: деньги в микродолларах и <code>cost + est &gt; max_cost</code>; 06: доли в сводке прогона</td></tr><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>рекурсия, базовый случай, стек вызовов, <code>RecursionError</code>, потолок глубины, обход дерева через <code>while</code> со стеком, <code>visited</code> против колец</td><td>1.3, «Глубже: рекурсия»</td><td>02: вложенные модели Pydantic; 03, 3.3: обход папки корпуса; 04, 4.3: <code>recursion_limit</code> и <code>GraphRecursionError</code>; 05: защита от зацикливания агента</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td><code>with open</code> и режимы <code>r/w/a/x</code>, чтение по строкам, JSON Lines, границы JSON, <code>glob</code>/<code>rglob</code></td><td>1.6, «Глубже: with open, режимы записи, JSON Lines…»</td><td>02: 2.5 след в <code>.jsonl</code> через <code>logging</code>; 03: 3.3 обход папки; 05: расход по <code>trace.jsonl</code>; 06: <code>sorted(folder.glob(&quot;*.md&quot;))</code> в скелете</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>исключения в цикле: повтор с потолком, партия без обрыва, общий тормоз, порядок <code>try/except/else/finally</code></td><td>1.7, «Глубже: исключения внутри цикла»</td><td>02: 2.4 безопасный <code>retry</code>; 03: 3.5 повтор вызова модели; 05: 5.4 предохранитель поверх <code>call_with_retry</code>, 5.1 отказ по бюджету</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>раскладка пакета, <code>python -m</code>, относительные импорты, dotenv/секреты, точка входа <code>модуль:объект</code></td><td>1.9, «Глубже: раскладка пакета, относительные импорты, dotenv…»</td><td>02: импорт в тестах; 03: <code>load_dotenv</code> и ключ API; 05: <code>uvicorn main:app</code>, <code>.dockerignore</code>; 06: тонкий вход скрипта</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr><tr><td><code>match</code>/<code>case</code> — ветка по форме данных</td><td>1.2, «Новое знание: match/case»</td><td>03: разбор ответа API; 04, 4.3: маршрутизатор графа</td></tr><tr><td><code>functools.partial</code>, <code>lru_cache</code></td><td>1.3, «Новое знание: partial и lru_cache»</td><td>03, 3.5: <code>call=partial(...)</code>; 04: узел с настройками; 05, 5.3: почему свой кэш</td></tr><tr><td><code>heapq.nlargest</code>, устойчивая сортировка, <code>bisect</code></td><td>1.4, «Новое знание: heapq…»</td><td>03, 3.3–3.4: топ-k и порог; 05, 5.2: тарифные ступени</td></tr><tr><td>Unicode-нормализация, <code>casefold</code>, невидимые пробелы</td><td>1.5, «Новое знание: невидимые различия»</td><td>03, 3.3–3.4: поиск и проверка цитаты; 05, 5.3: ключ кэша</td></tr><tr><td>BOM/<code>utf-8-sig</code>, <code>errors=</code>, <code>\r\n</code>, модуль <code>csv</code></td><td>1.6, «Новое знание: кодировки на границе»</td><td>02, контрольная точка; 03, 3.3: корпус; 05: выгрузка расхода</td></tr><tr><td><code>ExceptionGroup</code>, <code>except*</code>, <code>TaskGroup</code></td><td>1.7, «Новое знание: несколько ошибок сразу»</td><td>02, 2.9: параллельные вызовы; 03, 3.1: проверка окружения; 04, 4.5</td></tr><tr><td><code>Enum</code>/<code>StrEnum</code>, <code>__post_init__</code>, <code>__repr__</code>/<code>__str__</code>, хэш и <code>frozen</code></td><td>1.8, «Новое знание: Enum…»</td><td>04, 4.1: <code>stop_reason</code>; 05, 5.3: ключ кэша; 06: <code>reason</code></td></tr><tr><td>наследование, <code>super()</code>, <code>ABC</code>, <code>Protocol</code>, композиция</td><td>1.8, «Новое знание: наследование… Protocol»</td><td>02, 2.6: <code>FakeLLM</code>; 05, 5.3–5.5: обёртки вокруг модели; 06: <code>run(llm=...)</code></td></tr><tr><td><code>pdb</code>: посмертная отладка, условная остановка, <code>PYTHONBREAKPOINT</code></td><td>1.10, «Новое знание: отладчик pdb на практике»</td><td>02, 2.6: <code>pytest --pdb</code>; 05, 5.6: <code>ENV PYTHONBREAKPOINT=0</code></td></tr><tr><td><code>logging</code> для отладки, <code>faulthandler</code>, <code>-X dev</code>/<code>-W error</code>, бинарный поиск, <code>git bisect</code></td><td>1.10, «Новое знание: отладка без отладчика»</td><td>02, 2.5: журнал; 03, 3.5: потолок времени; 06: метки этапов и <code>git bisect</code></td></tr></tbody></table></div>
 <hr>
 <h3 id="ch-01-1-1-переменные-и-типы-данных">1.1. Переменные и типы данных</h3>
 <h4 id="ch-01-что-такое-переменная">Что такое переменная</h4>
@@ -2642,6 +2642,283 @@ print(score.cache_info().hits)
 # ожидаем: 2 2
 # ожидаем: 1</code></pre>
 <p><code>frozenset</code> не зависит от порядка элементов, поэтому оба вызова дают один ключ. Со списком <code>[&quot;а&quot;, &quot;б&quot;]</code> кэш вообще не заработал бы (нехэшируемый тип), а с кортежем <code>(&quot;а&quot;, &quot;б&quot;)</code> и <code>(&quot;б&quot;, &quot;а&quot;)</code> были бы два разных ключа.<br>&lt;/details&gt;</p>
+<h4 id="ch-01-глубже-рекурсия-функция-которая-зовёт-саму-себя-потоло">Глубже: рекурсия — функция, которая зовёт саму себя, потолок глубины и перевод в <code>while</code> со стеком</h4>
+<p>Цикл <code>while</code> повторяет шаги <strong>по одному уровню</strong>: следующий дубль, следующая строка журнала. Но часть данных оркестратора устроена как <strong>дерево</strong>: папка в папке, ответ модели с вложенными объектами, план задачи, где шаг распадается на подшаги, документ, который ссылается на другой документ. Сколько там уровней, заранее неизвестно, и обычный <code>for</code> написать нельзя: на какой глубине остановиться? Для таких данных есть два приёма — <strong>рекурсия</strong> и <strong><code>while</code> с явным стеком</strong>. Этот раздел про оба и про то, как не дать ни одному из них уйти в бесконечность.</p>
+<p><strong>Аналогия из жизни техника-документалиста.</strong> Тебе приносят архивную коробку и просят посчитать, сколько в ней кассет. В коробке лежат кассеты и <strong>другие коробки поменьше</strong>, а в них тоже кассеты и коробки. Правило описи одно на всех уровнях: «открой коробку; каждую кассету посчитай; каждую вложенную коробку <strong>опиши по этому же правилу</strong> и прибавь её итог». Это и есть рекурсия: правило ссылается само на себя, но каждый раз на коробку <strong>меньше</strong>. А пустая коробка или одна кассета — случай, где правило заканчивается без вложенного вызова.</p>
+<h5 id="ch-01-1-два-обязательных-элемента-рекурсии">1. Два обязательных элемента рекурсии</h5>
+<p><strong>Рекурсивная функция</strong> — функция, которая вызывает саму себя. Чтобы она закончилась, нужны две части:</p>
+<ul>
+<li><strong>базовый случай</strong> — вход, на котором ответ известен сразу, без нового вызова (кассета — это 1; пустая папка — это 0);</li>
+<li><strong>рекурсивный шаг</strong> — вызов самой себя на <strong>меньшей</strong> части входа (вложенная коробка меньше внешней).</li>
+</ul>
+<p>Если нет базового случая или шаг не приближает к нему, получится то же, что <code>while True</code> без <code>break</code>, только упадёт быстрее (пункт 3).</p>
+<p>Опишем папку съёмки как вложенный словарь: ключ — имя, значение — либо размер файла в мегабайтах (<code>int</code>), либо вложенная папка (<code>dict</code>).</p>
+<pre><code class="lang-python">shoot = {
+    &quot;день1&quot;: {
+        &quot;A001.mov&quot;: 1200,
+        &quot;A002.mov&quot;: 800,
+        &quot;звук&quot;: {&quot;zoom_01.wav&quot;: 90, &quot;zoom_02.wav&quot;: 85},
+    },
+    &quot;день2&quot;: {
+        &quot;B001.mov&quot;: 1500,
+        &quot;пусто&quot;: {},
+    },
+    &quot;план.md&quot;: 1,
+}
+
+def total_mb(folder: dict) -&gt; int:
+    &quot;&quot;&quot;Сумма размеров всех файлов в папке на любой глубине.&quot;&quot;&quot;
+    total = 0
+    for name, item in folder.items():
+        if isinstance(item, dict):       # вложенная коробка
+            total += total_mb(item)      # рекурсивный шаг: та же функция, меньшая папка
+        else:                            # кассета
+            total += item                # базовый случай: размер известен сразу
+    return total
+
+print(total_mb(shoot))
+print(total_mb({}))
+# ожидаем: 3676
+# ожидаем: 0</code></pre>
+<p>Обрати внимание: базовый случай здесь спрятан в ветке <code>else</code> и в том, что у пустой папки цикл не выполняется ни разу и функция возвращает <code>0</code>. Рекурсия заканчивается сама, потому что вложенных словарей конечное число.</p>
+<h5 id="ch-01-2-что-происходит-внутри-стек-вызовов">2. Что происходит внутри: стек вызовов</h5>
+<p>Каждый вызов функции получает <strong>свой кадр</strong> (frame) — личный набор локальных переменных: свой <code>total</code>, свой <code>folder</code>. Когда <code>total_mb(shoot)</code> вызывает <code>total_mb(день1)</code>, внешний вызов <strong>не исчезает</strong>, а ждёт на месте с недосчитанным <code>total</code>. Кадры складываются стопкой — это <strong>стек вызовов</strong>, тот самый, что ты читаешь снизу вверх в traceback (1.10). Чтобы его увидеть, добавим отступ по глубине:</p>
+<pre><code class="lang-python">def show(folder: dict, depth: int = 0) -&gt; int:
+    pad = &quot;  &quot; * depth
+    total = 0
+    for name, item in folder.items():
+        if isinstance(item, dict):
+            print(f&quot;{pad}{name}/ — открываю&quot;)
+            sub = show(item, depth + 1)
+            print(f&quot;{pad}{name}/ — итог {sub} МБ&quot;)
+            total += sub
+        else:
+            total += item
+    return total
+
+show({&quot;день1&quot;: {&quot;A001.mov&quot;: 1200, &quot;звук&quot;: {&quot;zoom_01.wav&quot;: 90}}})
+# ожидаем: день1/ — открываю
+# ожидаем:   звук/ — открываю
+# ожидаем:   звук/ — итог 90 МБ
+# ожидаем: день1/ — итог 1290 МБ</code></pre>
+<p>Строка «звук — итог» печатается <strong>раньше</strong>, чем «день1 — итог»: внутренний вызов обязан закончиться, прежде чем внешний продолжит. Параметр <code>depth</code> передаётся <strong>аргументом</strong> и растёт на 1 при каждом спуске — это и есть счётчик глубины, который пригодится для потолка.</p>
+<h5 id="ch-01-3-recursionerror-встроенный-потолок-python">3. <code>RecursionError</code>: встроенный потолок Python</h5>
+<p>Стек не бесконечен. Python по умолчанию разрешает около 1000 вложенных вызовов (<code>sys.getrecursionlimit()</code>), а дальше бросает <code>RecursionError</code>. Это <strong>предохранитель</strong>, а не настройка «для удобства»:</p>
+<pre><code class="lang-python">import sys
+
+def depth_of(node) -&gt; int:
+    &quot;&quot;&quot;Глубина вложенных списков: [] — 1, [[]] — 2.&quot;&quot;&quot;
+    if not isinstance(node, list):
+        return 0
+    return 1 + max((depth_of(x) for x in node), default=0)
+
+deep = []
+cur = deep
+for _ in range(5000):          # список в списке 5000 раз: так бывает с «зациклившимся» генератором JSON
+    cur.append([])
+    cur = cur[0]
+
+print(depth_of([[1], [[2]]]))
+try:
+    depth_of(deep)
+except RecursionError as e:
+    print(&quot;RecursionError:&quot;, type(e).__name__, &quot;лимит&quot;, sys.getrecursionlimit())
+# ожидаем: 3
+# ожидаем: RecursionError: RecursionError лимит 1000</code></pre>
+<p>Соблазн — поднять лимит <code>sys.setrecursionlimit(100_000)</code>. Не делай этого в контуре: лимит защищает от падения <strong>всего процесса</strong> (переполнение настоящего стека убивает программу без traceback). Правильные ответы два: свой потолок глубины (пункт 4) или перевод рекурсии в <code>while</code> (пункт 5).</p>
+<p>Ещё два факта, которые стоит знать честно. Python <strong>не</strong> оптимизирует «хвостовую» рекурсию: даже если рекурсивный вызов стоит последним в <code>return</code>, кадр всё равно занимает место в стеке. И рекурсия в Python медленнее цикла: каждый вызов функции — заметная работа. Поэтому для простого линейного повтора («сложи элементы списка») рекурсия — плохой выбор, а для дерева — естественный.</p>
+<h5 id="ch-01-4-свой-потолок-глубины-отказ-с-понятным-текстом">4. Свой потолок глубины: отказ с понятным текстом</h5>
+<p>Встроенный <code>RecursionError</code> срабатывает поздно и говорит «где-то было слишком глубоко», а не «папка <code>день1/звук/…</code> глубже 20 уровней». Оркестратору нужен <strong>свой</strong> потолок, проверяемый <strong>до</strong> спуска, — как проверка бюджета до шага (1.1, «Глубже: числа в деле»):</p>
+<pre><code class="lang-python">class TooDeep(Exception):
+    pass
+
+def total_mb_safe(folder: dict, max_depth: int = 20, _path: str = &quot;&quot;) -&gt; int:
+    if max_depth &lt; 0:
+        raise TooDeep(f&quot;глубже допустимого: {_path or &#x27;/&#x27;}&quot;)
+    total = 0
+    for name, item in folder.items():
+        if isinstance(item, dict):
+            total += total_mb_safe(item, max_depth - 1, f&quot;{_path}/{name}&quot;)
+        else:
+            total += item
+    return total
+
+print(total_mb_safe(shoot, max_depth=5))
+try:
+    total_mb_safe(shoot, max_depth=1)
+except TooDeep as e:
+    print(&quot;отказ:&quot;, e)
+# ожидаем: 3676
+# ожидаем: отказ: глубже допустимого: /день1/звук</code></pre>
+<p>Три детали. Потолок передаётся вниз <strong>уменьшающимся</strong> аргументом (<code>max_depth - 1</code>), а не глобальной переменной, поэтому функцию можно звать параллельно с разными лимитами. Путь <code>_path</code> копится по дороге вниз — это <strong>след</strong>: в тексте отказа видно, где именно сработал тормоз. Подчёркивание в <code>_path</code> по соглашению значит «служебный параметр, снаружи не передавай».</p>
+<h5 id="ch-01-5-тот-же-обход-через-while-и-явный-стек">5. Тот же обход через <code>while</code> и явный стек</h5>
+<p>Любую рекурсию можно переписать циклом: стек вызовов Python заменяется <strong>своим списком</strong> «что ещё осталось открыть». Положил коробку в стопку — <code>append</code>, взял верхнюю — <code>pop()</code>. Цикл крутится, <code>while</code> стопка не пуста. Глубина ограничена только памятью, а потолок ставится явно:</p>
+<pre><code class="lang-python">def total_mb_loop(root: dict, max_depth: int = 20) -&gt; int:
+    total = 0
+    stack = [(root, 0, &quot;&quot;)]                  # (папка, глубина, путь)
+    while stack:
+        folder, depth, path = stack.pop()    # верхняя коробка из стопки
+        if depth &gt; max_depth:
+            raise ValueError(f&quot;глубже допустимого: {path or &#x27;/&#x27;}&quot;)
+        for name, item in folder.items():
+            if isinstance(item, dict):
+                stack.append((item, depth + 1, f&quot;{path}/{name}&quot;))   # открою потом
+            else:
+                total += item
+    return total
+
+print(total_mb_loop(shoot))
+deep_dict = {}
+cur = deep_dict
+for i in range(5000):
+    cur[&quot;в&quot;] = {}
+    cur = cur[&quot;в&quot;]
+print(total_mb_loop(deep_dict, max_depth=10_000))   # рекурсия упала бы, цикл — нет
+# ожидаем: 3676
+# ожидаем: 0</code></pre>
+<p><strong>Стек или очередь — порядок обхода.</strong> <code>stack.pop()</code> берёт <strong>последнее</strong> добавленное: обход идёт «вглубь» (сначала до дна одной ветки). Если заменить список на <code>deque</code> и брать <code>popleft()</code> (как в очереди дублей из 1.2, «Глубже: вложенные циклы…»), обход пойдёт «вширь»: сначала все папки первого уровня, потом второго. Для суммы порядок не важен, а для поиска важен: «вширь» находит <strong>самый мелкий</strong> путь к файлу первым.</p>
+<pre><code class="lang-python">from collections import deque
+
+def names_order(root: dict, wide: bool) -&gt; list[str]:
+    todo = deque([(&quot;&quot;, root)])
+    seen = []
+    while todo:
+        path, folder = todo.popleft() if wide else todo.pop()
+        for name, item in folder.items():
+            if isinstance(item, dict):
+                todo.append((f&quot;{path}/{name}&quot;, item))
+                seen.append(f&quot;{path}/{name}&quot;)
+    return seen
+
+tree = {&quot;a&quot;: {&quot;a1&quot;: {&quot;a11&quot;: {}}}, &quot;b&quot;: {&quot;b1&quot;: {}}}
+print(names_order(tree, wide=False))
+print(names_order(tree, wide=True))
+# ожидаем: [&#x27;/a&#x27;, &#x27;/b&#x27;, &#x27;/b/b1&#x27;, &#x27;/a/a1&#x27;, &#x27;/a/a1/a11&#x27;]
+# ожидаем: [&#x27;/a&#x27;, &#x27;/b&#x27;, &#x27;/a/a1&#x27;, &#x27;/b/b1&#x27;, &#x27;/a/a1/a11&#x27;]</code></pre>
+<h5 id="ch-01-6-циклы-в-данных-visited-иначе-бесконечность">6. Циклы в данных: <code>visited</code>, иначе — бесконечность</h5>
+<p>Папки на диске образуют дерево, но <strong>ссылки</strong> — нет. Документ A ссылается на B, B — на C, а C — снова на A. Рекурсия «открой всё, на что ссылается документ» ходит по кругу, пока не упрётся в <code>RecursionError</code>, а <code>while</code> со стеком — пока не кончится память. Лекарство — множество уже посещённых (<code>set</code>, 1.4), проверяемое <strong>до</strong> спуска:</p>
+<pre><code class="lang-python">links = {
+    &quot;сценарий.md&quot;: [&quot;интервью.md&quot;, &quot;архив.md&quot;],
+    &quot;интервью.md&quot;: [&quot;расшифровка.md&quot;],
+    &quot;расшифровка.md&quot;: [&quot;сценарий.md&quot;],      # кольцо
+    &quot;архив.md&quot;: [],
+}
+
+def reachable(start: str, links: dict[str, list[str]]) -&gt; list[str]:
+    visited: set[str] = set()
+    order: list[str] = []
+    stack = [start]
+    while stack:
+        doc = stack.pop()
+        if doc in visited:
+            continue                         # уже были: не идём по кругу
+        visited.add(doc)
+        order.append(doc)
+        for nxt in reversed(links.get(doc, [])):   # reversed — чтобы идти в порядке ссылок
+            stack.append(nxt)
+    return order
+
+print(reachable(&quot;сценарий.md&quot;, links))
+# ожидаем: [&#x27;сценарий.md&#x27;, &#x27;интервью.md&#x27;, &#x27;расшифровка.md&#x27;, &#x27;архив.md&#x27;]</code></pre>
+<p><code>links.get(doc, [])</code> — ещё одна защита: ссылка на документ, которого нет в словаре, не роняет обход <code>KeyError</code>, а считается пустой. Хорошо ли это — решение <strong>контракта</strong>: иногда «битая ссылка» должна попасть в отчёт как брак.</p>
+<h5 id="ch-01-типичные-ошибки">Типичные ошибки</h5>
+<ol>
+<li><strong>Нет базового случая или шаг не уменьшает вход.</strong> <code>def f(n): return f(n - 1)</code> без <code>if n == 0</code> уходит до <code>RecursionError</code>. Так же опасен шаг «на месте»: <code>walk(folder)</code> внутри <code>walk(folder)</code> вместо <code>walk(item)</code>.</li>
+<li><strong>Забыли <code>return</code> у рекурсивного вызова.</strong> Вызов <code>find(child, name)</code> без <code>return</code> и без сохранения результата: нижний уровень нашёл ответ, но верхний его выбросил и вернул <code>None</code>. Это тот же «забытый <code>None</code>» из начала 1.3, только на глубине.</li>
+</ol>
+<pre><code class="lang-python">    def find_bad(folder: dict, name: str):
+        for key, item in folder.items():
+            if key == name:
+                return item
+            if isinstance(item, dict):
+                find_bad(item, name)          # результат потерян
+        return None
+
+    print(find_bad(shoot, &quot;zoom_02.wav&quot;))
+    # ожидаем: None</code></pre>
+<p>Правильно: <code>found = find(item, name)</code> и <code>if found is not None: return found</code>. Проверка именно <code>is not None</code>, а не <code>if found:</code> — иначе файл размером <code>0</code> будет «не найден» (1.1, «пустые значения»).</p>
+<ol>
+<li><strong>Изменяемое значение по умолчанию как накопитель.</strong> <code>def collect(folder, acc=[])</code> копит результаты <strong>между вызовами</strong> снаружи: второй вызов вернёт и старые имена. Передавай <code>acc=None</code> и создавай список внутри, или возвращай результат из каждого уровня и склеивай.</li>
+<li><strong>Поднять <code>sys.setrecursionlimit</code> вместо решения.</strong> Лимит прячет симптом (кольцо в данных, слишком глубокий вход) и рискует уронить процесс целиком. Сначала спроси: почему вход такой глубокий?</li>
+<li><strong>Менять словарь, по которому идёт обход.</strong> Удаление пустых папок прямо внутри <code>for name, item in folder.items()</code> даёт <code>RuntimeError: dictionary changed size during iteration</code>. Обходи копию: <code>for name, item in list(folder.items())</code>.</li>
+<li><strong>Рекурсия там, где нужен простой цикл.</strong> Сумма списка, счётчик попыток, повтор вызова модели — линейные задачи; для них <code>for</code>/<code>while</code> проще, быстрее и не упирается в лимит.</li>
+</ol>
+<h5 id="ch-01-связь-с-умениями-оркестратора-2">Связь с умениями оркестратора</h5>
+<ul>
+<li><strong>Цель, которую можно провалить.</strong> «Найти файл в архиве съёмки» проверяема: вернулся путь — успех, вернулся <code>None</code> — честное «не найдено», сработал <code>TooDeep</code> — отказ по потолку. Три разных исхода, которые нельзя смешивать.</li>
+<li><strong>Схема.</strong> Рекурсия повторяет форму данных: функция-обход устроена так же, как дерево. Нарисовать дерево на бумаге — значит уже нарисовать схему функции.</li>
+<li><strong>Контракт.</strong> Что возвращается для пустой папки, для отсутствующего файла, для слишком глубокого входа, для битой ссылки — должно быть записано в docstring, а не оставлено на волю случая.</li>
+<li><strong>След.</strong> Путь <code>_path</code>, который копится при спуске, превращает «упало где-то» в «упало в <code>/день1/звук</code>».</li>
+<li><strong>Потолок.</strong> <code>max_depth</code> и <code>visited</code> — два тормоза: один против бездонных данных, второй против колец. У агента, который сам себе ставит подзадачи («разбей задачу на шаги, каждый шаг разбей ещё»), это ровно та же пара: лимит глубины плана и запрет повторять уже решённую подзадачу.</li>
+<li><strong>Улучшение по дыре.</strong> Упал <code>RecursionError</code> — не поднимай лимит, а найди, какой вход его вызвал (кольцо или аномальная вложенность), и добавь на этот случай свой отказ и тест.</li>
+</ul>
+<p><strong>Где это встретится дальше:</strong> 02 — вложенные модели Pydantic: проверка объекта внутри объекта устроена как рекурсивный обход; 03, 3.3 — обход папки корпуса (<code>rglob</code> делает тот же спуск за тебя); 04, 4.3 — <code>GraphRecursionError</code> и <code>recursion_limit</code> в графе: потолок числа шагов, по смыслу тот же <code>max_depth</code>; 05 — потолок числа вызовов и защита от зацикливания агента.</p>
+<h5 id="ch-01-упражнения-сделай-сам-2">Упражнения «сделай сам»</h5>
+<p><strong>Упражнение 1. Путь к файлу.</strong> Напиши рекурсивную <code>find_path(folder: dict, name: str, _path: str = &quot;&quot;) -&gt; str | None</code>, которая возвращает полный путь к файлу с именем <code>name</code> (например <code>&quot;/день1/звук/zoom_02.wav&quot;</code>) или <code>None</code>. Файл размером <code>0</code> должен находиться. Проверь на <code>shoot</code>, на имени, которого нет, и на папке <code>{&quot;x&quot;: {&quot;пустой.txt&quot;: 0}}</code>.</p>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">def find_path(folder: dict, name: str, _path: str = &quot;&quot;) -&gt; str | None:
+    for key, item in folder.items():
+        here = f&quot;{_path}/{key}&quot;
+        if isinstance(item, dict):
+            found = find_path(item, name, here)
+            if found is not None:            # не `if found:` — путь не бывает пустым, но держим привычку
+                return found
+        elif key == name:
+            return here
+    return None
+
+print(find_path(shoot, &quot;zoom_02.wav&quot;))
+print(find_path(shoot, &quot;нет.mov&quot;))
+print(find_path({&quot;x&quot;: {&quot;пустой.txt&quot;: 0}}, &quot;пустой.txt&quot;))
+# ожидаем: /день1/звук/zoom_02.wav
+# ожидаем: None
+# ожидаем: /x/пустой.txt</code></pre>
+<p>Ветка <code>elif key == name</code> стоит после проверки на <code>dict</code>: если папка случайно называется так же, как искомый файл, мы не вернём папку вместо файла.<br>&lt;/details&gt;</p>
+<p><strong>Упражнение 2. Опись с потолком, без рекурсии.</strong> Напиши <code>inventory(root: dict, max_depth: int) -&gt; dict</code> на <code>while</code> со стеком. Она возвращает <code>{&quot;files&quot;: число_файлов, &quot;mb&quot;: сумма, &quot;too_deep&quot;: [пути]}</code>. Папки глубже <code>max_depth</code> <strong>не открываются</strong>, но их пути попадают в <code>too_deep</code>, а обход остального продолжается: одна слишком глубокая коробка не валит всю опись. Проверь на <code>shoot</code> с <code>max_depth=1</code> (корень — глубина 0).</p>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">def inventory(root: dict, max_depth: int) -&gt; dict:
+    files, mb, too_deep = 0, 0, []
+    stack = [(root, 0, &quot;&quot;)]
+    while stack:
+        folder, depth, path = stack.pop()
+        if depth &gt; max_depth:
+            too_deep.append(path)
+            continue                         # не открываем, но и не падаем
+        for name, item in folder.items():
+            if isinstance(item, dict):
+                stack.append((item, depth + 1, f&quot;{path}/{name}&quot;))
+            else:
+                files += 1
+                mb += item
+    return {&quot;files&quot;: files, &quot;mb&quot;: mb, &quot;too_deep&quot;: sorted(too_deep)}
+
+print(inventory(shoot, max_depth=1))
+print(inventory(shoot, max_depth=5))
+# ожидаем: {&#x27;files&#x27;: 4, &#x27;mb&#x27;: 3501, &#x27;too_deep&#x27;: [&#x27;/день1/звук&#x27;, &#x27;/день2/пусто&#x27;]}
+# ожидаем: {&#x27;files&#x27;: 6, &#x27;mb&#x27;: 3676, &#x27;too_deep&#x27;: []}</code></pre>
+<p>Пустая папка <code>/день2/пусто</code> тоже попала в <code>too_deep</code>: мы не открывали её и <strong>не знаем</strong>, что она пустая. Это честно: «не проверено» не то же самое, что «проверено, пусто».</p>
+<p>Разница с <code>TooDeep</code> из пункта 4 — выбор <strong>контракта</strong>: там слишком глубокий вход означает «опись недостоверна, стоп», здесь — «опись частичная, вот список того, что не проверено». Оба варианта честные, если исход записан в результат.<br>&lt;/details&gt;</p>
+<p><strong>Упражнение 3. Плоский след состояния.</strong> Состояние агента — вложенный словарь (1.4, «Глубже: вложенные структуры как состояние»). Для журнала его удобно «расплющить» в ключи с точками. Напиши рекурсивную <code>flatten(state: dict, max_depth: int = 3, _prefix: str = &quot;&quot;) -&gt; dict</code>: <code>{&quot;run&quot;: {&quot;step&quot;: 2, &quot;cost&quot;: {&quot;usd&quot;: 0.01}}}</code> превращается в <code>{&quot;run.step&quot;: 2, &quot;run.cost.usd&quot;: 0.01}</code>. Вложенный словарь на глубине больше <code>max_depth</code> не раскрывается, а записывается строкой <code>&quot;&lt;…&gt;&quot;</code>. Пустой вложенный словарь записывается как <code>{}</code>, а не исчезает. Не используй изменяемое значение по умолчанию.</p>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">def flatten(state: dict, max_depth: int = 3, _prefix: str = &quot;&quot;) -&gt; dict:
+    out = {}
+    for key, value in state.items():
+        full = f&quot;{_prefix}{key}&quot;
+        if isinstance(value, dict) and value:
+            if max_depth &lt;= 0:
+                out[full] = &quot;&lt;…&gt;&quot;            # потолок: дальше не раскрываем
+            else:
+                out.update(flatten(value, max_depth - 1, full + &quot;.&quot;))
+        else:
+            out[full] = value                # и обычное значение, и пустой {}
+    return out
+
+s = {&quot;run&quot;: {&quot;step&quot;: 2, &quot;cost&quot;: {&quot;usd&quot;: 0.01}, &quot;tags&quot;: {}}, &quot;goal&quot;: &quot;найти дубль&quot;}
+print(flatten(s))
+print(flatten(s, max_depth=1))
+# ожидаем: {&#x27;run.step&#x27;: 2, &#x27;run.cost.usd&#x27;: 0.01, &#x27;run.tags&#x27;: {}, &#x27;goal&#x27;: &#x27;найти дубль&#x27;}
+# ожидаем: {&#x27;run.step&#x27;: 2, &#x27;run.cost&#x27;: &#x27;&lt;…&gt;&#x27;, &#x27;run.tags&#x27;: {}, &#x27;goal&#x27;: &#x27;найти дубль&#x27;}</code></pre>
+<p>Каждый уровень возвращает <strong>свой</strong> словарь, а верхний склеивает их через <code>update</code>, поэтому общий накопитель не нужен и ловушки <code>acc=[]</code> нет. Вопрос для самопроверки: что будет, если ключ сам содержит точку (<code>&quot;a.b&quot;</code>)? Плоский след станет неоднозначным: <code>&quot;a.b.c&quot;</code> можно прочитать двумя способами. В настоящем журнале такой ключ либо запрещают контрактом, либо экранируют.<br>&lt;/details&gt;</p>
 <hr>
 <h3 id="ch-01-1-4-коллекции-узлы-системы">1.4. Коллекции — узлы системы</h3>
 <h4 id="ch-01-список-list">Список (<code>list</code>)</h4>
@@ -6043,7 +6320,7 @@ print(&quot;в виртуальном окружении:&quot;, sys.prefix != s
 print(type(sys.path).__name__, len(sys.path) &gt; 0)
 # ожидаем: list True</code></pre>
 <p><strong>Имя пакета и имя модуля могут различаться:</strong> ставишь <code>pip install python-dotenv</code>, а импортируешь <code>from dotenv import load_dotenv</code>. Это не ошибка, так устроены некоторые пакеты — имя для установки смотри в документации пакета.</p>
-<h4 id="ch-01-типичные-ошибки">Типичные ошибки</h4>
+<h4 id="ch-01-типичные-ошибки-2">Типичные ошибки</h4>
 <ol>
 <li><strong>Назвать свой файл как библиотеку:</strong> <code>json.py</code>, <code>requests.py</code>, <code>logging.py</code> в папке проекта. <code>import json</code> найдёт <strong>твой</strong> файл первым (папка скрипта первая в <code>sys.path</code>), и всё сломается странной ошибкой вроде <code>AttributeError: module &#x27;json&#x27; has no attribute &#x27;loads&#x27;</code>.</li>
 <li><strong>Код с побочными эффектами на верхнем уровне модуля</strong> (вызов модели, чтение большой папки) сработает при каждом импорте, в том числе в тестах.</li>
@@ -6299,7 +6576,7 @@ with tempfile.TemporaryDirectory() as d:
 <li><strong>След</strong> — при старте писать, из какого модуля собрали <code>app</code> и есть ли ключ (без значения); при падении импорта — читать нижнюю строку traceback (1.10).</li>
 <li><strong>Потолок зависимостей</strong> — версии зафиксированы в <code>requirements.txt</code>; новый пакет не ставится «просто так», а попадает в опись. Иначе 04/05 внезапно ломаются из‑за смены API LangGraph.</li>
 </ol>
-<h4 id="ch-01-упражнения-сделай-сам-2">Упражнения «сделай сам»</h4>
+<h4 id="ch-01-упражнения-сделай-сам-3">Упражнения «сделай сам»</h4>
 <ol>
 <li>Во временной папке собери пакет <code>kontur/</code> с <code>errors.py</code> (<code>ConfigError</code>), <code>state.py</code> (<code>new_state</code>) и <code>tools/search.py</code>, который через относительные импорты использует оба. Запусти проверку через <code>python -m kontur.tools.search</code> так, чтобы при пустом запросе печаталось имя ошибки, при нормальном — словарь состояния. Прямой запуск <code>python kontur/tools/search.py</code> должен дать <code>ImportError</code> про relative import.</li>
 <li>Напиши <code>load_secret(name: str, env_file: Path) -&gt; str</code>: вызывает <code>load_dotenv(env_file)</code>, читает переменную, при отсутствии поднимает <code>RuntimeError</code> с именем переменной (без значения). Проверь на временном <code>.env</code>.</li>
