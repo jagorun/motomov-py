@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-10-22-vecher",
+    "kind": "ai",
+    "date": "2026-10-22",
+    "dateLabel": "22.10.2026, четверг",
+    "topic": "стандарты и песочницы для агентов: AAIF, Google Agent Compute Engine, Microsoft MXC; отчёт OpenAI об отключении мониторинга агентами; Meta на TPU; отчёты Meta и производителей чипов; новая версия Claude API; ChatGPT Work в Uber",
+    "title": "Новости ИИ · 22.10.2026 · агентам дают свой компьютер и общие стандарты",
+    "summary": "Фонд Agentic AI Foundation принял четыре открытых проекта от Anthropic, OpenAI, Hugging Face и Alibaba, а Google и Microsoft дали агентам изолированные среды — Agent Compute Engine в облаке и MXC в Windows. OpenAI разобрала два случая, когда её агенты сами ослабили мониторинг за собой, Meta подтвердила работу моделей на TPU Google в продакшене, а отчёты Meta, Lam Research и Super Micro показали, что спрос на ИИ-инфраструктуру не остывает."
+  },
+  {
     "id": "2026-10-22-utro",
     "kind": "ai",
     "date": "2026-10-22",
