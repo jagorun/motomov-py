@@ -4,8 +4,17 @@
 Запуск:  python3 scripts/build_metodichka.py [ПАПКА_С_MD]   (по умолчанию /workspace/metodichka-src)
 Каждый файл NN-*.md = глава; заголовок «# ...» = название главы, «## ...» = пункты оглавления.
 Только stdlib. Шапка берётся из novosti.html, чтобы совпадать с остальным сайтом.
+
+Навигационная разметка бота «Методичка Python» (необязательна, главы без неё собираются как раньше):
+  <a id="x"></a>                       — якорь, становится целью внутренних ссылок;
+  [текст](#x), [текст](NN-файл.md#x)   — внутренние ссылки (все главы на одной странице → #x);
+  <!-- nav:toc:start/end -->           — блок «Оглавление файла» / «Состав раздела»;
+  <!-- nav:index:start/end -->         — «Указатель терминов»: из него берутся термины для
+                                         подсказок и автоссылок на `код` (js/metodichka-nav.js);
+  <details><summary>…</summary> … </details> — сворачиваемое «Решение».
+Текст глав не меняется: добавляются только ссылки, якоря и обёртки.
 """
-import html, re, sys, datetime, pathlib
+import html, re, sys, datetime, pathlib, json
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SRC = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else "/workspace/metodichka-src")
@@ -20,6 +29,8 @@ def inline(t):
     t = re.sub(r"`([^`]+)`", keep, t)
     t = esc(t)
     t = re.sub(r"\[([^\]]+)\]\((https?://[^)\s]+)\)", r'<a href="\2" target="_blank" rel="noopener">\1</a>', t)
+    t = re.sub(r"\[([^\]]+)\]\((?:(\d\d)-[\w.-]*?\.md)?#([\w-]+)\)", lambda m: f'<a class="m-xref" href="#{m.group(3)}">{m.group(1)}</a>', t)
+    t = re.sub(r"\[([^\]]+)\]\((\d\d)-[\w.-]*?\.md\)", lambda m: f'<a class="m-xref" href="#ch-{m.group(2)}">{m.group(1)}</a>', t)
     t = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", t)
     t = re.sub(r"(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])", r"<em>\1</em>", t)
     t = re.sub(r"\x00(\d+)\x00", lambda m: codes[int(m.group(1))], t)
@@ -30,6 +41,9 @@ def slug(s, used):
     s2, i = b, 2
     while s2 in used: s2, i = f"{b}-{i}", i + 1
     used.add(s2); return s2
+
+anchors = set()
+KEYMAP = {}
 
 def md_to_html(lines, prefix, used):
     out, toc, i, title = [], [], 0, None
@@ -46,6 +60,19 @@ def md_to_html(lines, prefix, used):
             i += 1
             cls = f' class="lang-{esc(lang)}"' if lang else ""
             out.append(f"<pre><code{cls}>{esc(chr(10).join(buf))}</code></pre>"); continue
+        if s.startswith("<!--"):
+            flush(); nv = re.match(r"<!--\s*nav:(toc|index):(start|end)\s*-->", s)
+            if nv: out.append(("<div class=\"m-navbox\">" if nv.group(1) == "toc" else "<div class=\"m-index\">") if nv.group(2) == "start" else "</div>")
+            while i < len(lines) and "-->" not in lines[i]: i += 1
+            i += 1; continue
+        am = re.match(r'^<a id="([\w-]+)"></a>$', s)
+        if am:
+            flush()
+            if am.group(1) not in anchors: anchors.add(am.group(1)); out.append(f'<span class="m-anchor" id="{am.group(1)}"></span>')
+            i += 1; continue
+        dm = re.match(r"^<details>\s*<summary>(.*?)</summary>\s*$", s)
+        if dm: flush(); out.append(f'<details class="m-sol"><summary>{inline(dm.group(1))}</summary>'); i += 1; continue
+        if s == "</details>": flush(); out.append("</details>"); i += 1; continue
         m = re.match(r"^(#{1,6})\s+(.*)", ln)
         if m:
             flush(); lvl, txt = len(m.group(1)), m.group(2).strip()
@@ -87,7 +114,75 @@ def md_to_html(lines, prefix, used):
         para.append(s); i += 1
     flush()
     # закрыть li, у которых внутри вложенный список
+    if KEYMAP: out = autolink(out, KEYMAP)
     return title, "\n".join(out), toc
+
+IDX_RE = re.compile(r"^- \*\*(.+?)\*\*\s*(?:\*\(([^)]*)\)\*)?\s*[—–-]\s*(.*)$")
+
+def term_keys(name):
+    """Имена термина, по которым его узнаём в `коде`: «any и all» → any, all; «time.monotonic» → time.monotonic, monotonic."""
+    base = re.split(r"\s+[—–]\s+", name)[0]
+    keys = []
+    for part in re.split(r"\s+и\s+|\s*/\s*|,\s*", base):
+        part = part.strip().replace("\\", "")
+        part = re.sub(r"\(.*\)$", "", part).strip()
+        if len(part) < 2 or not re.fullmatch(r"[A-Za-z_@*.][\w.@*\-]*", part): continue
+        keys.append(part)
+        if part.startswith("@"): keys.append(part[1:])
+    return keys
+
+def parse_terms(files):
+    """Термины из «Указателя терминов» всех глав (если бот его добавил)."""
+    terms = {}
+    for p in files:
+        inside = False; ch = p.name[:2]
+        for ln in p.read_text(encoding="utf-8").replace("\r\n", "\n").split("\n"):
+            if "nav:index:start" in ln: inside = True; continue
+            if "nav:index:end" in ln: inside = False; continue
+            m = IDX_RE.match(ln.strip()) if inside else None
+            if not m: continue
+            name, stage, rest = m.group(1).replace("\\", ""), (m.group(2) or "").strip(), m.group(3)
+            links = re.findall(r"\]\((?:\d\d-[\w.-]*?\.md)?#([\w-]+)\)", rest)
+            star = re.search(r"★\s*\[[^\]]*\]\((?:\d\d-[\w.-]*?\.md)?#([\w-]+)\)", rest)
+            labels = re.findall(r"\[([^\]]+)\]\((?:\d\d-[\w.-]*?\.md)?#[\w-]+\)", rest)
+            d = re.split(r"\s*★", rest)[0].strip()
+            d = re.sub(r"\s*(?:·\s*)?\[[^\]]+\]\((?:\d\d-[\w.-]*?\.md)?#[\w-]+\)", "", d).strip()
+            key = name.lower()
+            if key in terms: continue
+            main = star.group(1) if star else (links[0] if links else "")
+            lab = ""
+            if main:
+                for l, a in zip(labels, links):
+                    if a == main: lab = l; break
+            terms[key] = {"n": name, "s": stage, "d": inline(d), "m": main, "l": lab, "ch": ch, "k": term_keys(name)}
+    return terms
+
+def autolink(html_parts, keymap):
+    """Первое упоминание термина в `коде` внутри раздела → тихая ссылка на объяснение."""
+    out, cur, seen, skip = [], "", set(), 0
+    code_re = re.compile(r"<code>([^<]+)</code>")
+    for part in html_parts:
+        if skip:
+            skip += part.count("<div") - part.count("</div>"); out.append(part); continue
+        if part.startswith(('<div class="m-navbox">', '<div class="m-index">')): skip = 1; out.append(part); continue
+        am = re.match(r'<span class="m-anchor" id="([\w-]+)">', part)
+        if am: cur = am.group(1); seen = set(); out.append(part); continue
+        if part.startswith("<h"): seen = set(); out.append(part); continue
+        if part.startswith("<pre") or "<code>" not in part: out.append(part); continue
+        res, pos, depth = [], 0, 0
+        for m in code_re.finditer(part):
+            seg = part[pos:m.start()]
+            depth += len(re.findall(r"<a[\s>]", seg)) - seg.count("</a>")
+            res.append(seg); pos = m.end()
+            raw = html.unescape(m.group(1)).strip()
+            k = re.sub(r"\(.*\)$", "", raw).strip()
+            t = keymap.get(k) or keymap.get(k.lower())
+            if depth > 0 or not t or t[0] in seen or not t[1]["m"] or t[1]["m"] == cur:
+                res.append(m.group(0)); continue
+            seen.add(t[0])
+            res.append(f'<a class="m-term" href="#{t[1]["m"]}" data-t="{esc(t[0])}">{m.group(0)}</a>')
+        res.append(part[pos:]); out.append("".join(res))
+    return out
 
 def header():
     src = (ROOT / "novosti.html").read_text(encoding="utf-8")
@@ -101,12 +196,28 @@ def main():
     files = sorted(p for p in SRC.glob("*.md") if re.match(r"^\d\d-", p.name))
     if not files: sys.exit(f"нет файлов NN-*.md в {SRC}")
     used, chapters = set(), []
+    terms = parse_terms(files)
+    owners = {}
+    for key, t in terms.items():
+        for k in t["k"]:
+            owners.setdefault(k, []).append((key, t))
+    for k, v in owners.items():
+        exact = [x for x in v if x[1]["n"] == k]
+        if len(v) == 1 or len(exact) == 1: KEYMAP[k] = (exact or v)[0]  # «else» есть у двух терминов → не связываем
+    # «time.monotonic» узнаём и как «monotonic()», если такое короткое имя однозначно
+    short = {}
+    for key, t in terms.items():
+        for k in t["k"]:
+            if "." in k and len(k.rsplit(".", 1)[1]) >= 6: short.setdefault(k.rsplit(".", 1)[1], []).append((key, t))
+    for k, v in short.items():
+        if len(v) == 1 and k not in KEYMAP: KEYMAP[k] = v[0]
     for n, p in enumerate(files):
         lines = p.read_text(encoding="utf-8").replace("\r\n", "\n").split("\n")
         cid = "ch-" + p.name[:2]
         title, body, toc = md_to_html(lines, cid, used)
         chapters.append((cid, title or p.stem, body, toc))
-    ver = css_ver() + "-nav3"
+    ver = css_ver() + "-nav4"
+    terms_json = json.dumps({k: {x: t[x] for x in ("n", "s", "d", "m", "l")} for k, t in terms.items()}, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     stamp = datetime.datetime.now().strftime("%d.%m.%Y %H:%M")
     toc_html = "".join(
         f'<li><a href="#{c}" data-ch="{c}">{inline(t)}</a>' + (f'<ol>{"".join(f"<li><a href=\"#{a}\" data-ch=\"{c}\">{inline(x)}</a></li>" for a, x in toc)}</ol>' if toc else "") + "</li>"
@@ -158,13 +269,15 @@ def main():
       <p class="bio">{len(chapters)} глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: {stamp} (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol>{toc_html}</ol></details>
-    <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
+    <div class="m-tools"><button type="button" class="m-sbtn" id="m-sbtn" aria-haspopup="dialog">🔍 Поиск по методичке</button><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
     {chs}
-    <div class="m-fab" id="m-fab" hidden><button type="button" id="m-top" aria-label="Наверх, к содержанию">↑ Содержание</button><button type="button" id="m-sec" aria-expanded="false" aria-controls="m-panel">☰ Разделы</button></div>
+    <div class="m-fab" id="m-fab" hidden><button type="button" id="m-top" aria-label="Наверх, к содержанию">↑ Содержание</button><button type="button" id="m-sfab" aria-label="Поиск по методичке">🔍</button><button type="button" id="m-sec" aria-expanded="false" aria-controls="m-panel">☰ Разделы</button></div>
     <div class="m-panel" id="m-panel" hidden role="dialog" aria-label="Разделы методички"><div class="m-panel-head"><b>Разделы</b><button type="button" id="m-pclose" aria-label="Закрыть">✕</button></div><ol>{toc_html}</ol></div>
     <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
   </div>
+  <script type="application/json" id="m-terms">{terms_json}</script>
   <script src="js/app.js?v={ver}" defer></script>
+  <script src="js/metodichka-nav.js?v={ver}" defer></script>
   <script>
   (function(){{
     var all=function(){{return document.querySelectorAll('.m-chapter');}};
@@ -190,7 +303,7 @@ def main():
 </html>
 '''
     OUT.write_text(page, encoding="utf-8")
-    print(f"OK: {OUT} · глав: {len(chapters)} · из {SRC}")
+    print(f"OK: {OUT} · глав: {len(chapters)} · терминов: {len(terms)} · якорей: {len(anchors)} · из {SRC}")
 
 def css_ver():
     m = re.search(r'styles\.css\?v=([\w.-]+)', (ROOT / "novosti.html").read_text(encoding="utf-8"))

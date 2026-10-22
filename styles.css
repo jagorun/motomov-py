@@ -606,3 +606,54 @@ html[data-theme="dark"] .contacts a,html[data-theme="dark"] .btn{color:var(--tex
 html[data-theme="dark"] .brand-logo{filter:brightness(.92)}
 html[data-theme="dark"] .ux-mini[aria-pressed="true"]{color:#e3c08a}
 html[data-theme="dark"] .ux-bm li button:hover{color:#f0b4ac}
+/* --- методичка: навигация (js/metodichka-nav.js) --- */
+.m-anchor{display:block;height:0;scroll-margin-top:7.5rem}
+.m-body a.m-xref{color:var(--accent);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 35%,transparent);text-underline-offset:.18em}
+.m-body a.m-term{color:inherit;text-decoration:none;border-bottom:1px dotted var(--accent);cursor:help}
+.m-body a.m-term code{background:var(--accent-soft)}
+.m-body a.m-term:hover code,.m-body a.m-term:focus-visible code{background:color-mix(in srgb,var(--accent) 22%,transparent)}
+.m-navbox{font-size:.9rem;line-height:1.45;margin:.6rem 0 1rem;padding:.55rem .9rem;border:1px dashed var(--line);border-radius:.8rem;background:var(--accent-soft);position:relative}
+.m-navbox p{margin:.25rem 0}.m-navbox ul{margin:.25rem 0;padding-left:1.1rem}.m-navbox li{margin:.1rem 0}
+.m-navbox a{color:var(--text);text-decoration:none}.m-navbox a:hover{text-decoration:underline}
+.m-navbox-cut{max-height:15.5rem;overflow:hidden}
+.m-navbox-cut::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3.2rem;background:linear-gradient(transparent,var(--card-solid,#fffcf6));border-radius:0 0 .8rem .8rem;pointer-events:none}
+.m-navbox-more{position:absolute;right:.6rem;bottom:.45rem;z-index:1;font:inherit;font-size:.82rem;padding:.3rem .7rem;border-radius:999px;border:1px solid var(--line);background:var(--card-solid,#fffcf6);color:var(--accent);cursor:pointer}
+.m-navbox:not(.m-navbox-cut) .m-navbox-more{position:static;margin:.3rem 0 0}
+.m-index{margin-top:1rem}.m-index ul{padding-left:1.1rem}.m-index li{margin:.35rem 0}
+details.m-sol{margin:.6rem 0 1rem;border:1px solid var(--line);border-radius:.7rem;padding:.1rem .8rem}
+details.m-sol>summary{cursor:pointer;font-weight:600;color:var(--accent);padding:.45rem 0}
+details.m-sol[open]>summary{border-bottom:1px solid var(--line);margin-bottom:.4rem}
+.m-flash{animation:m-flash 1.8s ease-out}
+@keyframes m-flash{0%,30%{background:color-mix(in srgb,var(--accent) 22%,transparent);box-shadow:0 0 0 .3rem color-mix(in srgb,var(--accent) 22%,transparent)}100%{background:transparent;box-shadow:0 0 0 .3rem transparent}}
+mark.m-hit,.m-res mark{background:#ffe58a;color:inherit;border-radius:2px;padding:0 1px}
+html[data-theme="dark"] mark.m-hit,html[data-theme="dark"] .m-res mark{background:#6b5a12}
+.m-tools .m-sbtn{flex:1 1 14rem;text-align:left;color:var(--muted)}
+.m-fab #m-sfab{min-width:44px;padding:.55rem .8rem}
+.m-back{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(4.6rem + env(safe-area-inset-bottom));z-index:62;display:flex;flex-direction:column;align-items:center;gap:.05rem;max-width:calc(100vw - 1.5rem);font:inherit;font-size:.95rem;font-weight:600;padding:.55rem 1.1rem;min-height:44px;border-radius:999px;border:0;background:var(--accent);color:#f7f4ea;box-shadow:0 8px 24px rgba(20,40,25,.3);cursor:pointer;animation:m-backin .2s ease-out}
+@keyframes m-backin{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translateX(-50%)}}
+.m-back small{font-weight:400;font-size:.76rem;opacity:.9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80vw}
+.m-back small:empty{display:none}
+.m-back[hidden],.m-card[hidden],.m-search[hidden]{display:none}
+html[data-theme="dark"] .m-back{color:#14201a}
+.m-card{position:absolute;z-index:80;width:min(24rem,calc(100vw - 1.5rem));background:var(--card-solid,#fffcf6);color:var(--text);border:1px solid var(--line);border-radius:.9rem;box-shadow:0 14px 40px rgba(30,40,30,.25);padding:.8rem 1rem .9rem;font-size:.93rem;line-height:1.5}
+.m-card.sheet{position:fixed;left:.6rem;right:.6rem;bottom:calc(.6rem + env(safe-area-inset-bottom));top:auto;width:auto;max-height:60vh;overflow:auto;z-index:90}
+.m-card-h{font-weight:700;padding-right:2rem}.m-card-h code{font-size:1rem}
+.m-card-st{font-size:.8rem;color:var(--muted);margin:.15rem 0 .4rem}
+.m-card-x{position:absolute;top:.3rem;right:.3rem;min-width:40px;min-height:40px;border:0;background:none;color:var(--muted);font-size:1rem;cursor:pointer}
+.m-card-b{margin-top:.6rem}.m-card-go{font:inherit;font-size:.9rem;font-weight:600;padding:.5rem .9rem;min-height:40px;border-radius:999px;border:0;background:var(--accent);color:#f7f4ea;cursor:pointer}
+html[data-theme="dark"] .m-card-go{color:#14201a}
+.m-search{position:fixed;inset:0;z-index:95;background:rgba(20,25,20,.38);display:flex;justify-content:center;align-items:flex-start;padding:4vh .6rem 0}
+html.m-search-on{overflow:hidden}
+.m-search-box{width:min(44rem,100%);max-height:88vh;display:flex;flex-direction:column;background:var(--card-solid,#fffcf6);color:var(--text);border:1px solid var(--line);border-radius:1rem;box-shadow:0 18px 50px rgba(20,30,20,.35);overflow:hidden;animation:ux-pop .16s ease-out}
+.m-search-head{display:flex;gap:.4rem;padding:.7rem .7rem .3rem}
+.m-search-head input{flex:1;min-width:0;font:inherit;font-size:1.05rem;padding:.6rem .8rem;border-radius:.7rem;border:1px solid var(--line);background:var(--bg0);color:var(--text)}
+.m-search-x{min-width:44px;border:0;background:none;color:var(--muted);font-size:1.1rem;cursor:pointer}
+.m-search-hint{font-size:.78rem;color:var(--muted);padding:0 .9rem .4rem}
+.m-res{overflow:auto;padding:0 .3rem .6rem;-webkit-overflow-scrolling:touch}
+.m-grp{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:.7rem .6rem .2rem}
+.m-r{display:block;padding:.5rem .6rem;border-radius:.6rem;color:var(--text);text-decoration:none;font-size:.92rem;line-height:1.45;border-left:3px solid transparent}
+.m-r:hover,.m-r.sel{background:var(--accent-soft);border-left-color:var(--accent)}
+.m-w{display:block;font-size:.76rem;color:var(--muted)}
+.m-none{padding:.5rem .6rem;color:var(--muted);font-size:.9rem}
+@media (max-width:600px){.m-search{padding:0}.m-search-box{max-height:100%;height:100%;border-radius:0;border:0}.m-back{bottom:calc(4.4rem + env(safe-area-inset-bottom))}}
+@media print{.m-back,.m-card,.m-search,.m-navbox-more{display:none!important}.m-navbox-cut{max-height:none}}
