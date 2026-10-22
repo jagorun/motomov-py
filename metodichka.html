@@ -47,7 +47,7 @@
     </header>
     <section class="page-intro">
       <h1>Методичка Python для оркестратора</h1>
-      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 21.10.2026 20:59 (МСК).</p>
+      <p class="bio">7 глав: от основ Python до каркаса агента и чек-листов. Обновляется утром и вечером. Последняя сборка: 22.10.2026 07:59 (МСК).</p>
     </section>
     <details class="m-toc" id="m-toc" open><summary>Оглавление</summary><ol><li><a href="#ch-00" data-ch="ch-00">00. Введение и шесть умений оркестратора</a><ol><li><a href="#ch-00-что-оркестратор-делает-руками-в-коде" data-ch="ch-00">Что оркестратор делает руками в коде</a></li><li><a href="#ch-00-правила-работы-с-этой-методичкой" data-ch="ch-00">Правила работы с этой методичкой</a></li><li><a href="#ch-00-структура-методички-файлы" data-ch="ch-00">Структура методички (файлы)</a></li></ol></li><li><a href="#ch-01" data-ch="ch-01">01. Основы Python — Ступень 1. Порядок мысли</a><ol><li><a href="#ch-01-1-1-переменные-и-типы-данных" data-ch="ch-01">1.1. Переменные и типы данных</a></li><li><a href="#ch-01-1-2-управление-потоком-выполнения" data-ch="ch-01">1.2. Управление потоком выполнения</a></li><li><a href="#ch-01-1-3-функции" data-ch="ch-01">1.3. Функции</a></li><li><a href="#ch-01-1-4-коллекции-узлы-системы" data-ch="ch-01">1.4. Коллекции — узлы системы</a></li><li><a href="#ch-01-1-5-строки" data-ch="ch-01">1.5. Строки</a></li><li><a href="#ch-01-1-6-файлы-и-json" data-ch="ch-01">1.6. Файлы и JSON</a></li><li><a href="#ch-01-1-7-исключения-маленький-тормоз" data-ch="ch-01">1.7. Исключения — маленький тормоз</a></li><li><a href="#ch-01-1-8-основы-объектно-ориентированного-программирования-" data-ch="ch-01">1.8. Основы объектно-ориентированного программирования (ООП)</a></li><li><a href="#ch-01-1-9-модули-импорты-виртуальное-окружение-и-pip" data-ch="ch-01">1.9. Модули, импорты, виртуальное окружение и <code>pip</code></a></li><li><a href="#ch-01-1-10-чтение-traceback-и-отладка" data-ch="ch-01">1.10. Чтение traceback и отладка</a></li><li><a href="#ch-01-контрольная-точка-ступени-1" data-ch="ch-01">Контрольная точка Ступени 1</a></li></ol></li><li><a href="#ch-02" data-ch="ch-02">02. Средний уровень — язык проверки (Ступень 3)</a><ol><li><a href="#ch-02-2-1-аннотации-типов-type-hints" data-ch="ch-02">2.1. Аннотации типов (type hints)</a></li><li><a href="#ch-02-2-2-pydantic-валидация-контракта" data-ch="ch-02">2.2. Pydantic — валидация контракта</a></li><li><a href="#ch-02-2-3-генераторы-и-итераторы" data-ch="ch-02">2.3. Генераторы и итераторы</a></li><li><a href="#ch-02-2-4-декораторы-на-уровне-чтения-и-простого-использован" data-ch="ch-02">2.4. Декораторы (на уровне чтения и простого использования)</a></li><li><a href="#ch-02-2-5-логирование-след-системы" data-ch="ch-02">2.5. Логирование — след системы</a></li><li><a href="#ch-02-2-6-pytest-автоматическая-проверка-трёх-случаев" data-ch="ch-02">2.6. Pytest — автоматическая проверка трёх случаев</a></li><li><a href="#ch-02-2-7-работа-с-датами-и-регулярными-выражениями-кратко" data-ch="ch-02">2.7. Работа с датами и регулярными выражениями (кратко)</a></li><li><a href="#ch-02-2-8-контекстные-менеджеры-with-__enter__-__exit__-и-co" data-ch="ch-02">2.8. Контекстные менеджеры: <code>with</code>, <code>__enter__</code>/<code>__exit__</code> и <code>contextlib</code></a></li><li><a href="#ch-02-2-9-async-await-на-уровне-понимания" data-ch="ch-02">2.9. <code>async</code>/<code>await</code> на уровне понимания</a></li><li><a href="#ch-02-контрольная-точка-ступени-3" data-ch="ch-02">Контрольная точка Ступени 3</a></li></ol></li><li><a href="#ch-03" data-ch="ch-03">03. Вызов модели и отказ (Ступень 4)</a><ol><li><a href="#ch-03-3-1-переменные-окружения-и-ключ-вне-кода" data-ch="ch-03">3.1. Переменные окружения и ключ вне кода</a></li><li><a href="#ch-03-3-2-http-запрос-к-api-модели" data-ch="ch-03">3.2. HTTP-запрос к API модели</a></li><li><a href="#ch-03-3-3-простой-поиск-по-своим-файлам-зародыш-rag" data-ch="ch-03">3.3. Простой поиск по своим файлам (зародыш RAG)</a></li><li><a href="#ch-03-3-4-полный-отказ-если-источника-нет" data-ch="ch-03">3.4. Полный отказ, если источника нет</a></li><li><a href="#ch-03-3-5-повтор-при-временных-ошибках" data-ch="ch-03">3.5. Повтор при временных ошибках</a></li><li><a href="#ch-03-контрольная-точка-ступени-4" data-ch="ch-03">Контрольная точка Ступени 4</a></li></ol></li><li><a href="#ch-04" data-ch="ch-04">04. Схема, а не чат (Ступень 6)</a><ol><li><a href="#ch-04-4-1-состояние-агента" data-ch="ch-04">4.1. Состояние агента</a></li><li><a href="#ch-04-4-2-ручной-цикл-с-потолком-чистый-python" data-ch="ch-04">4.2. Ручной цикл с потолком (чистый Python)</a></li><li><a href="#ch-04-4-3-langgraph-граф-состояний" data-ch="ch-04">4.3. LangGraph — граф состояний</a></li><li><a href="#ch-04-4-4-журнал-шага" data-ch="ch-04">4.4. Журнал шага</a></li><li><a href="#ch-04-4-5-mcp-кратко" data-ch="ch-04">4.5. MCP (кратко)</a></li><li><a href="#ch-04-контрольная-точка-ступени-6" data-ch="ch-04">Контрольная точка Ступени 6</a></li></ol></li><li><a href="#ch-05" data-ch="ch-05">05. Надёжность, потолок и стоимость (Ступень 7)</a><ol><li><a href="#ch-05-5-1-класс-бюджета-потолок" data-ch="ch-05">5.1. Класс бюджета (потолок)</a></li><li><a href="#ch-05-5-2-подсчёт-токенов-и-стоимости" data-ch="ch-05">5.2. Подсчёт токенов и стоимости</a></li><li><a href="#ch-05-5-3-кэш-повторного-вопроса" data-ch="ch-05">5.3. Кэш повторного вопроса</a></li><li><a href="#ch-05-5-4-circuit-breaker-предохранитель" data-ch="ch-05">5.4. Circuit breaker (предохранитель)</a></li><li><a href="#ch-05-5-5-запасной-путь" data-ch="ch-05">5.5. Запасной путь</a></li><li><a href="#ch-05-5-6-fastapi-и-docker-один-контейнер" data-ch="ch-05">5.6. FastAPI и Docker (один контейнер)</a></li><li><a href="#ch-05-контрольная-точка-ступени-7" data-ch="ch-05">Контрольная точка Ступени 7</a></li></ol></li><li><a href="#ch-06" data-ch="ch-06">06. Практический скелет контура и чеклисты</a><ol><li><a href="#ch-06-скелет-который-растёт-по-ступеням" data-ch="ch-06">Скелет, который растёт по ступеням</a></li><li><a href="#ch-06-минимальный-рабочий-пример-собирается-постепенно" data-ch="ch-06">Минимальный рабочий пример (собирается постепенно)</a></li><li><a href="#ch-06-чеклисты-готовности" data-ch="ch-06">Чеклисты готовности</a></li><li><a href="#ch-06-чего-сознательно-нет-в-цепочке" data-ch="ch-06">Чего сознательно нет в цепочке</a></li><li><a href="#ch-06-следующий-конкретный-шаг" data-ch="ch-06">Следующий конкретный шаг</a></li></ol></li></ol></details>
     <div class="m-tools"><button type="button" id="m-open">Развернуть все главы</button><button type="button" id="m-close">Свернуть все</button></div>
@@ -496,7 +496,7 @@ with tempfile.TemporaryDirectory() as d:
 <details class="m-chapter" id="ch-01"><summary><h2>01. Основы Python — Ступень 1. Порядок мысли</h2></summary><div class="m-body"><p><strong>Курс:</strong> Stepik 58852 «Поколение Python: курс для начинающих».<br><strong>Где ты сейчас:</strong> примерно модуль ввода-вывода / циклы (<code>while</code>).<br><strong>Цель ступени:</strong> научиться ясно говорить: что было на входе, какая ветка выбрана, где ход кончается. Без этого схему системы не прочитать, даже если код писал не ты.</p>
 <p>Эта часть объясняет каждый базовый термин максимально подробно. Не «запомни синтаксис», а «пойми, зачем это существует и как это помогает оркестратору».</p>
 <p><strong>Карта: что из этой ступени понадобится дальше.</strong> Ступень 1 — фундамент для всего остального. Если какая-то строка в файлах 04–06 кажется непонятной, почти всегда ответ здесь:</p>
-<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td><code>int</code>/<code>float</code>, <code>/ // %</code>, <code>divmod</code>, округление, <code>nan</code>/<code>inf</code>, <code>Decimal</code>, расход в целых единицах</td><td>1.1, «Глубже: числа в деле»</td><td>02: <code>Cents</code> через <code>Decimal</code>; 05, 5.1–5.2: деньги в микродолларах и <code>cost + est &gt; max_cost</code>; 06: доли в сводке прогона</td></tr><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>рекурсия, базовый случай, стек вызовов, <code>RecursionError</code>, потолок глубины, обход дерева через <code>while</code> со стеком, <code>visited</code> против колец</td><td>1.3, «Глубже: рекурсия»</td><td>02: вложенные модели Pydantic; 03, 3.3: обход папки корпуса; 04, 4.3: <code>recursion_limit</code> и <code>GraphRecursionError</code>; 05: защита от зацикливания агента</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td><code>with open</code> и режимы <code>r/w/a/x</code>, чтение по строкам, JSON Lines, границы JSON, <code>glob</code>/<code>rglob</code></td><td>1.6, «Глубже: with open, режимы записи, JSON Lines…»</td><td>02: 2.5 след в <code>.jsonl</code> через <code>logging</code>; 03: 3.3 обход папки; 05: расход по <code>trace.jsonl</code>; 06: <code>sorted(folder.glob(&quot;*.md&quot;))</code> в скелете</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>исключения в цикле: повтор с потолком, партия без обрыва, общий тормоз, порядок <code>try/except/else/finally</code></td><td>1.7, «Глубже: исключения внутри цикла»</td><td>02: 2.4 безопасный <code>retry</code>; 03: 3.5 повтор вызова модели; 05: 5.4 предохранитель поверх <code>call_with_retry</code>, 5.1 отказ по бюджету</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>раскладка пакета, <code>python -m</code>, относительные импорты, dotenv/секреты, точка входа <code>модуль:объект</code></td><td>1.9, «Глубже: раскладка пакета, относительные импорты, dotenv…»</td><td>02: импорт в тестах; 03: <code>load_dotenv</code> и ключ API; 05: <code>uvicorn main:app</code>, <code>.dockerignore</code>; 06: тонкий вход скрипта</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr><tr><td><code>match</code>/<code>case</code> — ветка по форме данных</td><td>1.2, «Новое знание: match/case»</td><td>03: разбор ответа API; 04, 4.3: маршрутизатор графа</td></tr><tr><td><code>functools.partial</code>, <code>lru_cache</code></td><td>1.3, «Новое знание: partial и lru_cache»</td><td>03, 3.5: <code>call=partial(...)</code>; 04: узел с настройками; 05, 5.3: почему свой кэш</td></tr><tr><td><code>heapq.nlargest</code>, устойчивая сортировка, <code>bisect</code></td><td>1.4, «Новое знание: heapq…»</td><td>03, 3.3–3.4: топ-k и порог; 05, 5.2: тарифные ступени</td></tr><tr><td>Unicode-нормализация, <code>casefold</code>, невидимые пробелы</td><td>1.5, «Новое знание: невидимые различия»</td><td>03, 3.3–3.4: поиск и проверка цитаты; 05, 5.3: ключ кэша</td></tr><tr><td>BOM/<code>utf-8-sig</code>, <code>errors=</code>, <code>\r\n</code>, модуль <code>csv</code></td><td>1.6, «Новое знание: кодировки на границе»</td><td>02, контрольная точка; 03, 3.3: корпус; 05: выгрузка расхода</td></tr><tr><td><code>ExceptionGroup</code>, <code>except*</code>, <code>TaskGroup</code></td><td>1.7, «Новое знание: несколько ошибок сразу»</td><td>02, 2.9: параллельные вызовы; 03, 3.1: проверка окружения; 04, 4.5</td></tr><tr><td><code>Enum</code>/<code>StrEnum</code>, <code>__post_init__</code>, <code>__repr__</code>/<code>__str__</code>, хэш и <code>frozen</code></td><td>1.8, «Новое знание: Enum…»</td><td>04, 4.1: <code>stop_reason</code>; 05, 5.3: ключ кэша; 06: <code>reason</code></td></tr><tr><td>наследование, <code>super()</code>, <code>ABC</code>, <code>Protocol</code>, композиция</td><td>1.8, «Новое знание: наследование… Protocol»</td><td>02, 2.6: <code>FakeLLM</code>; 05, 5.3–5.5: обёртки вокруг модели; 06: <code>run(llm=...)</code></td></tr><tr><td><code>pdb</code>: посмертная отладка, условная остановка, <code>PYTHONBREAKPOINT</code></td><td>1.10, «Новое знание: отладчик pdb на практике»</td><td>02, 2.6: <code>pytest --pdb</code>; 05, 5.6: <code>ENV PYTHONBREAKPOINT=0</code></td></tr><tr><td><code>logging</code> для отладки, <code>faulthandler</code>, <code>-X dev</code>/<code>-W error</code>, бинарный поиск, <code>git bisect</code></td><td>1.10, «Новое знание: отладка без отладчика»</td><td>02, 2.5: журнал; 03, 3.5: потолок времени; 06: метки этапов и <code>git bisect</code></td></tr></tbody></table></div>
+<div class="md-table"><table><thead><tr><th>Тема Ступени 1</th><th>Где в этом файле</th><th>Где встретится дальше</th></tr></thead><tbody><tr><td><code>int</code>/<code>float</code>, <code>/ // %</code>, <code>divmod</code>, округление, <code>nan</code>/<code>inf</code>, <code>Decimal</code>, расход в целых единицах</td><td>1.1, «Глубже: числа в деле»</td><td>02: <code>Cents</code> через <code>Decimal</code>; 05, 5.1–5.2: деньги в микродолларах и <code>cost + est &gt; max_cost</code>; 06: доли в сводке прогона</td></tr><tr><td>словарь как состояние, вложенные структуры, <code>{**a, **b}</code></td><td>1.4 и «Глубже: вложенные структуры как состояние»</td><td>04: 4.1 состояние, 4.3 узлы возвращают обновление; 06: <code>{**r, &quot;log&quot;: log}</code></td></tr><tr><td>функции как значения, <code>lambda</code>, <code>*args/**kwargs</code>, аргументы по имени</td><td>1.3, «Глубже: функции как значения»</td><td>04: условные переходы графа — это функции; 05: <code>call=</code>, <code>sleep=</code>, <code>clock=</code>; 06: <code>llm=lambda ...</code></td></tr><tr><td>замыкания</td><td>1.3, «Глубже: замыкания»</td><td>02: 2.4 декораторы; 05: заглушки <code>clock=lambda: now[0]</code></td></tr><tr><td>генераторы, <code>yield</code>, <code>next()</code>, <code>yield from</code>, ленивые конвейеры</td><td>1.3, «Глубже: генераторы и yield»</td><td>02: 2.3 <code>iter_files</code>, <code>iter_chunks</code>, <code>islice</code>; 03: 3.3 нарезка большой папки на чанки; 03, 3.2 и 05, 5.2: потоковый ответ модели и <code>usage</code> в потоке</td></tr><tr><td>рекурсия, базовый случай, стек вызовов, <code>RecursionError</code>, потолок глубины, обход дерева через <code>while</code> со стеком, <code>visited</code> против колец</td><td>1.3, «Глубже: рекурсия»</td><td>02: вложенные модели Pydantic; 03, 3.3: обход папки корпуса; 04, 4.3: <code>recursion_limit</code> и <code>GraphRecursionError</code>; 05: защита от зацикливания агента</td></tr><tr><td>включения, <code>sorted(key=...)</code>, <code>any/all</code>, <code>:=</code>, операции с множествами</td><td>1.4, «Глубже: включения…»</td><td>03: поиск и сортировка по оценке; 04: 4.5 MCP; 06: <code>set(sources) &lt;= allowed</code></td></tr><tr><td>распаковка, <code>*rest</code>, обход <code>.items()</code>, <code>defaultdict</code>, <code>Counter</code>, кортеж-ключ</td><td>1.4, «Глубже: распаковка, обход словаря…»</td><td>02: слияние обновлений через <code>.items()</code>; 04: разбор журнала узлов; 05: расход по узлам и ключ кэша; 06: сводка прогона</td></tr><tr><td>f-строки, срезы, partition/removeprefix, разбор ответа по кускам</td><td>1.5, «Глубже: f-строки, срезы и partition»</td><td>03: разбор ответа модели; 04–06: след и усечённые логи</td></tr><tr><td><code>with open</code> и режимы <code>r/w/a/x</code>, чтение по строкам, JSON Lines, границы JSON, <code>glob</code>/<code>rglob</code></td><td>1.6, «Глубже: with open, режимы записи, JSON Lines…»</td><td>02: 2.5 след в <code>.jsonl</code> через <code>logging</code>; 03: 3.3 обход папки; 05: расход по <code>trace.jsonl</code>; 06: <code>sorted(folder.glob(&quot;*.md&quot;))</code> в скелете</td></tr><tr><td>исключения, их иерархия, свои классы ошибок</td><td>1.7 и «Глубже: иерархия исключений»</td><td>02: Pydantic <code>ValidationError</code>; 03: ошибки <code>requests</code>; 05: отказы бюджета и предохранителя</td></tr><tr><td>исключения в цикле: повтор с потолком, партия без обрыва, общий тормоз, порядок <code>try/except/else/finally</code></td><td>1.7, «Глубже: исключения внутри цикла»</td><td>02: 2.4 безопасный <code>retry</code>; 03: 3.5 повтор вызова модели; 05: 5.4 предохранитель поверх <code>call_with_retry</code>, 5.1 отказ по бюджету</td></tr><tr><td>классы, <code>@dataclass</code>, <code>@property</code>, <code>@classmethod</code></td><td>1.8 и «Глубже: dataclass…»</td><td>04: <code>AgentState</code>; 05: <code>Budget</code>, <code>CircuitBreaker</code>, <code>Cache</code></td></tr><tr><td>модули, импорты, виртуальное окружение, <code>pip</code>, <code>if __name__ == &quot;__main__&quot;</code></td><td>новый раздел 1.9</td><td>02: pytest и <code>monkeypatch</code>; 03: <code>requests</code>, <code>dotenv</code>; 05: <code>uvicorn main:app</code>, Docker; 06: скрипт с кодом выхода</td></tr><tr><td>раскладка пакета, <code>python -m</code>, относительные импорты, dotenv/секреты, точка входа <code>модуль:объект</code></td><td>1.9, «Глубже: раскладка пакета, относительные импорты, dotenv…»</td><td>02: импорт в тестах; 03: <code>load_dotenv</code> и ключ API; 05: <code>uvicorn main:app</code>, <code>.dockerignore</code>; 06: тонкий вход скрипта</td></tr><tr><td>чтение traceback и отладка</td><td>новый раздел 1.10</td><td>везде: каждый упавший пример, тест или граф</td></tr><tr><td><code>match</code>/<code>case</code> — ветка по форме данных</td><td>1.2, «Новое знание: match/case»</td><td>03: разбор ответа API; 04, 4.3: маршрутизатор графа</td></tr><tr><td><code>functools.partial</code>, <code>lru_cache</code></td><td>1.3, «Новое знание: partial и lru_cache»</td><td>03, 3.5: <code>call=partial(...)</code>; 04: узел с настройками; 05, 5.3: почему свой кэш</td></tr><tr><td><code>heapq.nlargest</code>, устойчивая сортировка, <code>bisect</code></td><td>1.4, «Новое знание: heapq…»</td><td>03, 3.3–3.4: топ-k и порог; 05, 5.2: тарифные ступени</td></tr><tr><td>Unicode-нормализация, <code>casefold</code>, невидимые пробелы</td><td>1.5, «Новое знание: невидимые различия»</td><td>03, 3.3–3.4: поиск и проверка цитаты; 05, 5.3: ключ кэша</td></tr><tr><td>BOM/<code>utf-8-sig</code>, <code>errors=</code>, <code>\r\n</code>, модуль <code>csv</code></td><td>1.6, «Новое знание: кодировки на границе»</td><td>02, контрольная точка; 03, 3.3: корпус; 05: выгрузка расхода</td></tr><tr><td><code>ExceptionGroup</code>, <code>except*</code>, <code>TaskGroup</code></td><td>1.7, «Новое знание: несколько ошибок сразу»</td><td>02, 2.9: параллельные вызовы; 03, 3.1: проверка окружения; 04, 4.5</td></tr><tr><td><code>Enum</code>/<code>StrEnum</code>, <code>__post_init__</code>, <code>__repr__</code>/<code>__str__</code>, хэш и <code>frozen</code></td><td>1.8, «Новое знание: Enum…»</td><td>04, 4.1: <code>stop_reason</code>; 05, 5.3: ключ кэша; 06: <code>reason</code></td></tr><tr><td>наследование, <code>super()</code>, <code>ABC</code>, <code>Protocol</code>, композиция</td><td>1.8, «Новое знание: наследование… Protocol»</td><td>02, 2.6: <code>FakeLLM</code>; 05, 5.3–5.5: обёртки вокруг модели; 06: <code>run(llm=...)</code></td></tr><tr><td><code>pdb</code>: посмертная отладка, условная остановка, <code>PYTHONBREAKPOINT</code></td><td>1.10, «Новое знание: отладчик pdb на практике»</td><td>02, 2.6: <code>pytest --pdb</code>; 05, 5.6: <code>ENV PYTHONBREAKPOINT=0</code></td></tr><tr><td><code>logging</code> для отладки, <code>faulthandler</code>, <code>-X dev</code>/<code>-W error</code>, бинарный поиск, <code>git bisect</code></td><td>1.10, «Новое знание: отладка без отладчика»</td><td>02, 2.5: журнал; 03, 3.5: потолок времени; 06: метки этапов и <code>git bisect</code></td></tr><tr><td><code>time.monotonic()</code> против <code>time.time()</code>, дедлайн и остаток в <code>while</code>, сон не дольше остатка, <code>datetime</code> с поясом и ISO-метки в следе</td><td>1.2, «Глубже: время как потолок»</td><td>03: <code>timeout=</code> у запросов к модели; 04: потолок графа по времени; 05: заглушка <code>clock=lambda: now[0]</code>, <code>Budget</code> и <code>CircuitBreaker</code> по времени; 06: <code>ts</code>/<code>elapsed_ms</code> в следе</td></tr></tbody></table></div>
 <hr>
 <h3 id="ch-01-1-1-переменные-и-типы-данных">1.1. Переменные и типы данных</h3>
 <h4 id="ch-01-что-такое-переменная">Что такое переменная</h4>
@@ -1641,6 +1641,335 @@ for e in ({&quot;node&quot;: &quot;search&quot;, &quot;found&quot;: 0}, {&quot;n
 # ожидаем: потолок
 # ожидаем: неизвестная запись</code></pre>
 <p>Частная ветка <code>&quot;found&quot;: 0</code> стоит выше общей <code>int(n)</code>: если бы общая стояла первой и без guard <code>if n &gt; 0</code>, ноль ушёл бы в «найдено 0», и пустой поиск выглядел бы как успех. Записи <code>{&quot;node&quot;: &quot;search&quot;, &quot;found&quot;: -1}</code> не подойдёт ни одна поисковая ветка — она уйдёт в «неизвестная запись», и это правильно: отрицательное число найденного — дыра в коде, её надо видеть.<br>&lt;/details&gt;</p>
+<h4 id="ch-01-глубже-время-как-потолок-time-monotonic-против-time-ti">Глубже: время как потолок — <code>time.monotonic()</code> против <code>time.time()</code>, дедлайн в <code>while</code>, сон без перебора и метка времени для следа</h4>
+<p>До сих пор каждый <code>while</code> в этой ступени останавливал <strong>счётчик</strong>: не больше 5 дублей, не больше 8 вызовов, не глубже 10 уровней. Но заказчику обычно важнее другое: «ответ нужен за 30 секунд», «смена длится до 18:00», «если инструмент молчит минуту — бросай». Это потолок по <strong>времени</strong>. Он устроен так же, как потолок по счётчику (проверка перед шагом, честная причина остановки в отчёте), но у времени есть три ловушки, которых у счётчика нет: часы бывают разные, шаг может перескочить дедлайн, а сон может проспать его. Этот раздел про все три и про то, как записать время в след так, чтобы его потом можно было прочитать.</p>
+<p><strong>Аналогия из жизни техника-документалиста.</strong> На площадке два прибора времени. <strong>Настенные часы</strong> в студии показывают «который час»: по ним пишут в монтажный лист «дубль 3 — 14:05». Но их могут перевести (летнее время, кто-то подвёл на пять минут, телефон сам синхронизировался по сети). <strong>Секундомер</strong> на хлопушке не знает, который час: он показывает только, сколько прошло с момента, как его запустили, и всегда идёт вперёд. Длительность дубля меряют секундомером, а время в журнал пишут по настенным часам. Перепутаешь — получишь дубль длиной «минус 55 минут».</p>
+<h5 id="ch-01-1-трое-часов-python-и-зачем-каждые">1. Трое часов Python и зачем каждые</h5>
+<p>Модуль <code>time</code> из стандартной библиотеки даёт несколько «приборов»:</p>
+<div class="md-table"><table><thead><tr><th>Функция</th><th>Что возвращает</th><th>Может прыгнуть назад?</th><th>Для чего</th></tr></thead><tbody><tr><td><code>time.time()</code></td><td>секунды с 1 января 1970 UTC (так называемая <strong>эпоха Unix</strong>), <code>float</code></td><td><strong>да</strong>: системные часы подводят вручную и по сети</td><td>«который час», метка в журнал</td></tr><tr><td><code>time.monotonic()</code></td><td>секунды от неизвестной точки отсчёта, <code>float</code></td><td><strong>нет</strong>, только вперёд</td><td>дедлайны и длительности</td></tr><tr><td><code>time.perf_counter()</code></td><td>то же, что <code>monotonic</code>, но с самой высокой точностью</td><td>нет</td><td>замер коротких кусков кода</td></tr><tr><td><code>time.monotonic_ns()</code></td><td>то же, что <code>monotonic</code>, но <strong>целые наносекунды</strong> (<code>int</code>)</td><td>нет</td><td>когда нужна точная арифметика без <code>float</code></td></tr></tbody></table></div>
+<p>Термины.</p>
+<ul>
+<li><strong>Настенное время</strong> (wall clock) — то, что показывают часы на стене: дата и время суток. Его можно перевести.</li>
+<li><strong>Монотонные часы</strong> (monotonic clock) — счётчик, который никогда не уменьшается. Само значение <code>time.monotonic()</code> ничего не значит (это может быть «секунды с загрузки компьютера»), смысл имеет только <strong>разность</strong> двух замеров.</li>
+<li><strong>Дедлайн</strong> (deadline) — момент, после которого новый шаг начинать нельзя. Считается один раз в начале: <code>deadline = start + budget_s</code>.</li>
+<li><strong>Остаток</strong> (remaining) — <code>deadline - сейчас</code>. Считается <strong>заново перед каждым шагом</strong>.</li>
+</ul>
+<p>Свойство «может ли прыгнуть» Python умеет сказать сам:</p>
+<pre><code class="lang-python">import time
+
+for name in (&quot;time&quot;, &quot;monotonic&quot;, &quot;perf_counter&quot;):
+    info = time.get_clock_info(name)
+    print(f&quot;{name:13} можно перевести: {info.adjustable}, монотонные: {info.monotonic}&quot;)
+# ожидаем: time          можно перевести: True, монотонные: False
+# ожидаем: monotonic     можно перевести: False, монотонные: True
+# ожидаем: perf_counter  можно перевести: False, монотонные: True</code></pre>
+<p>Правило, которое стоит выучить наизусть: <strong>длительности и дедлайны — только по <code>monotonic</code>, метки «когда это было» — по настенному времени</strong>. Одни часы на обе задачи не годятся.</p>
+<h5 id="ch-01-2-дедлайн-в-while-проверка-перед-шагом-и-причина-остан">2. Дедлайн в <code>while</code>: проверка перед шагом и причина остановки</h5>
+<p>Скелет тот же, что у потолка по дублям из начала 1.2, только вместо <code>take &lt; max_takes</code> стоит сравнение со временем. И сразу два потолка: по числу шагов и по времени. Какой сработал — пишем в <code>stop_reason</code>, это часть <strong>контракта</strong> функции.</p>
+<p>Чтобы пример был проверяемым, часы <strong>внедряем параметром</strong> <code>clock=time.monotonic</code> (приём из 1.3, «Шаг 6»). В бою туда идут настоящие часы, а в примере — поддельные: список из одного числа, которое мы двигаем сами. Это та же заглушка <code>clock=lambda: now[0]</code>, которая встретится в 05.</p>
+<pre><code class="lang-python">import time
+
+
+def run_until(steps, *, budget_s: float, max_steps: int = 10,
+              clock=time.monotonic) -&gt; dict:
+    &quot;&quot;&quot;Выполняет шаги по очереди, пока есть время и шаги.&quot;&quot;&quot;
+    start = clock()
+    deadline = start + budget_s              # считаем один раз
+    log = []
+    stop_reason = &quot;done&quot;
+    i = 0
+    while i &lt; len(steps):
+        if len(log) &gt;= max_steps:
+            stop_reason = &quot;max_steps&quot;
+            break
+        if clock() &gt;= deadline:              # проверка ПЕРЕД шагом
+            stop_reason = &quot;timeout&quot;
+            break
+        log.append(steps[i]())
+        i += 1
+    return {&quot;log&quot;: log, &quot;stop_reason&quot;: stop_reason,
+            &quot;elapsed_s&quot;: round(clock() - start, 3)}
+
+
+now = [100.0]                    # поддельные часы: значение двигаем сами
+fake_clock = lambda: now[0]
+
+def fake_step(name: str, seconds: float):
+    &quot;&quot;&quot;Шаг, который «занимает» seconds секунд.&quot;&quot;&quot;
+    def step():
+        now[0] += seconds
+        return f&quot;{name}: {seconds} с&quot;
+    return step
+
+
+plan = [fake_step(&quot;поиск&quot;, 2), fake_step(&quot;модель&quot;, 3),
+        fake_step(&quot;проверка&quot;, 4), fake_step(&quot;отчёт&quot;, 1)]
+print(run_until(plan, budget_s=6, clock=fake_clock))
+now[0] = 100.0
+print(run_until(plan, budget_s=60, max_steps=2, clock=fake_clock))
+# ожидаем: {&#x27;log&#x27;: [&#x27;поиск: 2 с&#x27;, &#x27;модель: 3 с&#x27;, &#x27;проверка: 4 с&#x27;], &#x27;stop_reason&#x27;: &#x27;timeout&#x27;, &#x27;elapsed_s&#x27;: 9.0}
+# ожидаем: {&#x27;log&#x27;: [&#x27;поиск: 2 с&#x27;, &#x27;модель: 3 с&#x27;], &#x27;stop_reason&#x27;: &#x27;max_steps&#x27;, &#x27;elapsed_s&#x27;: 5.0}</code></pre>
+<p>Посмотри на первую строку внимательно: бюджет 6 секунд, а прошло <strong>9</strong>. Проверка перед «проверкой» шла в момент 5 секунд, остаток был 1 секунда, и шаг честно начали. Но длился он 4 секунды. Это главное свойство потолка по времени:</p>
+<blockquote><p><strong>Проверка перед шагом не даёт начать новый шаг после дедлайна, но не может прервать шаг, который уже идёт.</strong></p></blockquote>
+<p>Отсюда два лекарства, оба понадобятся дальше.</p>
+<ol>
+<li><strong>Передать остаток самому шагу как его таймаут.</strong> Шаг, который умеет ждать ограниченно (сетевой запрос, вызов модели), получает <code>timeout=remaining</code>. В 03 это будет <code>requests.post(url, json=..., timeout=remaining)</code>: если сервер не ответил за остаток, запрос сам бросит исключение, и цикл не уйдёт за дедлайн.</li>
+<li><strong>Не начинать шаг, который заведомо не влезет.</strong> Если известна оценка длительности шага, условие становится <code>if clock() + estimate_s &gt; deadline</code>. Это упражнение 1 ниже.</li>
+</ol>
+<h5 id="ch-01-3-сон-между-попытками-не-проспать-дедлайн">3. Сон между попытками: не проспать дедлайн</h5>
+<p>В 1.7 был повтор с экспоненциальным откатом: пауза <code>pause * 2 ** (attempt - 1)</code>. Если над повтором стоит потолок по времени, появляется новая дыра: последняя пауза может быть длиннее остатка. Программа уснёт на 8 секунд, когда до дедлайна осталась одна, проснётся уже после него и только тогда поймёт, что время вышло. Лекарство — спать не больше остатка: <code>sleep(min(pause, remaining))</code>.</p>
+<pre><code class="lang-python">import time
+
+
+def retry_until(call, *, budget_s: float, pause: float = 1.0,
+                clock=time.monotonic, sleep=time.sleep) -&gt; dict:
+    &quot;&quot;&quot;Повторяет call(), пока он не вернёт не-None или не кончится время.&quot;&quot;&quot;
+    deadline = clock() + budget_s
+    attempts = 0
+    while True:
+        if clock() &gt;= deadline:
+            return {&quot;result&quot;: None, &quot;attempts&quot;: attempts, &quot;stop_reason&quot;: &quot;timeout&quot;}
+        attempts += 1
+        result = call()
+        if result is not None:
+            return {&quot;result&quot;: result, &quot;attempts&quot;: attempts, &quot;stop_reason&quot;: &quot;ok&quot;}
+        remaining = deadline - clock()
+        if remaining &lt;= 0:
+            return {&quot;result&quot;: None, &quot;attempts&quot;: attempts, &quot;stop_reason&quot;: &quot;timeout&quot;}
+        sleep(min(pause, remaining))         # не дольше остатка
+        pause *= 2
+
+
+now = [0.0]
+pauses = []
+
+def fake_sleep(seconds: float):
+    pauses.append(seconds)
+    now[0] += seconds
+
+def silent_tool():                       # инструмент молчит, каждый вызов 0.5 с
+    now[0] += 0.5
+    return None
+
+print(retry_until(silent_tool, budget_s=5, clock=lambda: now[0], sleep=fake_sleep))
+print(&quot;паузы:&quot;, pauses, &quot;часы:&quot;, now[0])
+# ожидаем: {&#x27;result&#x27;: None, &#x27;attempts&#x27;: 3, &#x27;stop_reason&#x27;: &#x27;timeout&#x27;}
+# ожидаем: паузы: [1.0, 2.0, 0.5] часы: 5.0</code></pre>
+<p>Пройди по шагам: попытка 1 закончилась в 0.5 с, сон 1 с; попытка 2 закончилась в 2.0 с, сон 2 с; попытка 3 закончилась в 4.5 с. Следующая пауза по откату была бы 4 секунды, но остаток всего 0.5, поэтому сон 0.5. В момент 5.0 проверка в начале цикла говорит «время вышло» — ровно в дедлайн, а не через 3.5 секунды после него.</p>
+<p>Почему <code>sleep</code> тоже внедрён параметром. Настоящий <code>time.sleep</code> в примере или тесте заставил бы ждать по-настоящему. Поддельный двигает поддельные часы и записывает паузы, и мы видим <strong>решение программы</strong>, а не ждём его.</p>
+<h5 id="ch-01-4-метка-времени-для-следа-datetime-с-часовым-поясом">4. Метка времени для следа: <code>datetime</code> с часовым поясом</h5>
+<p>Для журнала нужно настенное время, причём такое, чтобы через неделю его однозначно прочитал человек в другом городе и программа на другом сервере. Для этого есть модуль <code>datetime</code>.</p>
+<ul>
+<li><strong>Наивное</strong> время (naive) — дата и время без часового пояса: <code>datetime(2026, 10, 22, 7, 35)</code>. Непонятно, это 7:35 в Москве или в Лондоне.</li>
+<li><strong>Осведомлённое</strong> время (aware) — с поясом: <code>datetime(..., tzinfo=timezone.utc)</code>. Однозначно.</li>
+<li><strong>ISO 8601</strong> — международный формат записи: <code>2026-10-22T04:35:58+00:00</code>. Сортируется как строка (если пояс у всех записей один), читается человеком, разбирается <code>datetime.fromisoformat</code>.</li>
+<li><strong>UTC</strong> — всемирное координированное время, «нулевой» пояс. Метки в следе удобно писать в UTC, а показывать человеку в его поясе.</li>
+</ul>
+<pre><code class="lang-python">from datetime import datetime, timedelta, timezone
+
+stamp = datetime(2026, 10, 22, 4, 35, 58, tzinfo=timezone.utc)
+msk = timezone(timedelta(hours=3))
+
+print(stamp.isoformat(timespec=&quot;seconds&quot;))
+print(stamp.astimezone(msk).isoformat(timespec=&quot;seconds&quot;))
+print(stamp == stamp.astimezone(msk))                     # один и тот же момент
+print(datetime.fromisoformat(&quot;2026-10-22T04:35:58Z&quot;) == stamp)
+
+naive = datetime(2026, 10, 22, 7, 35, 58)
+try:
+    print(naive &lt; stamp)
+except TypeError as e:
+    print(&quot;TypeError:&quot;, e)
+# ожидаем: 2026-10-22T04:35:58+00:00
+# ожидаем: 2026-10-22T07:35:58+03:00
+# ожидаем: True
+# ожидаем: True
+# ожидаем: TypeError: can&#x27;t compare offset-naive and offset-aware datetimes</code></pre>
+<p>Разбор.</p>
+<ul>
+<li><code>astimezone(msk)</code> не меняет момент, он меняет только <strong>подпись</strong>. Поэтому <code>==</code> даёт <code>True</code>: 04:35 по UTC и 07:35 по Москве — одна секунда истории.</li>
+<li><code>fromisoformat</code> с буквой <code>Z</code> (так часто пишут UTC в ответах API) работает начиная с Python 3.11. На более старых версиях <code>Z</code> надо заменить на <code>+00:00</code>.</li>
+<li>Сравнить наивное и осведомлённое время Python отказывается. Это хорошо: он не угадывает пояс за тебя. В бою метку берут так: <code>datetime.now(timezone.utc)</code>, а не голый <code>datetime.now()</code>.</li>
+<li>В JSON объект <code>datetime</code> сам не сохранится (это была строка таблицы ошибок в 1.6): пиши в след строку <code>stamp.isoformat()</code>, а при чтении разбирай <code>fromisoformat</code>.</li>
+</ul>
+<p>Запись следа поэтому содержит <strong>два</strong> времени, и у каждого своя работа:</p>
+<pre><code class="lang-python">import time
+from datetime import datetime, timezone
+
+
+def trace_event(step: str, started: float, *, clock=time.monotonic,
+                wall=lambda: datetime.now(timezone.utc)) -&gt; dict:
+    return {
+        &quot;ts&quot;: wall().isoformat(timespec=&quot;milliseconds&quot;),      # КОГДА — для человека и сверки
+        &quot;step&quot;: step,
+        &quot;elapsed_ms&quot;: round((clock() - started) * 1000),      # СКОЛЬКО — для потолка
+    }
+
+
+fixed = datetime(2026, 10, 22, 4, 36, 1, 250000, tzinfo=timezone.utc)
+print(trace_event(&quot;модель&quot;, started=10.0, clock=lambda: 12.3456, wall=lambda: fixed))
+# ожидаем: {&#x27;ts&#x27;: &#x27;2026-10-22T04:36:01.250+00:00&#x27;, &#x27;step&#x27;: &#x27;модель&#x27;, &#x27;elapsed_ms&#x27;: 2346}</code></pre>
+<p>Длительность считаем по монотонным часам, а не как разность двух <code>ts</code>: если между шагами часы подвели по сети, разность меток соврёт, а <code>elapsed_ms</code> нет. Миллисекунды храним целым числом: так же, как деньги в целых единицах из 1.1, целое не накапливает хвостов <code>0.30000000000000004</code>.</p>
+<h5 id="ch-01-5-типичные-ошибки">5. Типичные ошибки</h5>
+<ol>
+<li><strong>Дедлайн по <code>time.time()</code>.</strong> Работает, пока никто не трогает часы. Перевели часы на час назад — цикл проработает лишний час; вперёд — остановится сразу, хотя время было. Для дедлайна — только <code>time.monotonic()</code>.</li>
+<li><strong>Остаток посчитан один раз до цикла.</strong> <code>remaining = deadline - clock()</code> вне <code>while</code> — это не остаток, а бюджет. Пересчитывать надо перед каждым шагом.</li>
+<li><strong>Сон после последней попытки.</strong> Если попытки кончились или время вышло, спать уже незачем: проверка остатка стоит <strong>до</strong> <code>sleep</code>, а не после.</li>
+<li><strong>Сон длиннее остатка.</strong> <code>sleep(pause)</code> вместо <code>sleep(min(pause, remaining))</code> — дедлайн проспан.</li>
+<li><strong><code>==</code> вместо <code>&gt;=</code> при сравнении с дедлайном.</strong> <code>while clock() != deadline</code> почти наверняка бесконечен: <code>float</code> никогда не попадёт точно в ту же точку. Сравнения со временем — только <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;=</code>.</li>
+<li><strong>Путаница единиц.</strong> Где-то секунды, где-то миллисекунды: <code>budget=30</code> для функции, которая ждёт миллисекунды, — это 30 мс вместо 30 с. Лекарство — единица в имени параметра: <code>budget_s</code>, <code>elapsed_ms</code>, <code>timeout_s</code>.</li>
+<li><strong>Настоящий <code>time.sleep</code> в тестах и примерах.</strong> Тест на повтор с откатом ждёт по-настоящему 7 секунд и проверяет только итог. С внедрённым <code>sleep</code> он мгновенный и проверяет паузы.</li>
+<li><strong>Голый <code>datetime.now()</code> в следе.</strong> Наивное время с неизвестным поясом: при сверке журналов двух машин записи перемешаются, а сравнение с меткой из API упадёт с <code>TypeError</code>.</li>
+</ol>
+<h5 id="ch-01-6-связь-с-умениями-оркестратора">6. Связь с умениями оркестратора</h5>
+<ul>
+<li><strong>Цель, которую можно провалить.</strong> «Ответить за 30 секунд» — проверяемая цель: либо <code>stop_reason == &quot;ok&quot;</code>, либо <code>&quot;timeout&quot;</code>. Без потолка по времени цель не проваливается, она просто зависает.</li>
+<li><strong>Контракт.</strong> <code>stop_reason</code> различает <code>&quot;timeout&quot;</code> и <code>&quot;max_steps&quot;</code>, это разные дыры: первая про медленный инструмент, вторая про план, который не сходится.</li>
+<li><strong>След.</strong> <code>ts</code> отвечает «когда», <code>elapsed_ms</code> — «сколько». По ним видно, какой шаг съел бюджет.</li>
+<li><strong>Потолок.</strong> Время, шаги, деньги — три потолка одной формы: «проверить перед шагом, передать остаток шагу, записать причину».</li>
+<li><strong>Улучшение по дыре.</strong> Увидел в следе <code>elapsed_s: 9.0</code> при бюджете 6 — дыра найдена: шаг не получил остаток как таймаут. Чинишь именно её, а не «увеличиваешь бюджет на всякий случай».</li>
+</ul>
+<h5 id="ch-01-7-упражнения-сделай-сам">7. Упражнения «сделай сам»</h5>
+<p><strong>Упражнение 1. Не начинать то, что не влезет.</strong> Напиши <code>run_planned(plan, *, budget_s, clock=time.monotonic)</code>. <code>plan</code> — список кортежей <code>(имя, оценка_с, шаг)</code>, где <code>шаг</code> — функция без аргументов. Перед каждым шагом проверь: если <code>clock() + оценка_с &gt; deadline</code>, остановись с <code>stop_reason=&quot;no_time_for_next&quot;</code> и запиши в отчёт имя шага, который не начали (<code>&quot;skipped&quot;</code>). Если время уже вышло — <code>&quot;timeout&quot;</code>. Если всё сделано — <code>&quot;done&quot;</code>. Прогони на плане из раздела 2 с оценками, равными длительностям, и бюджетом 6.</p>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">import time
+
+
+def run_planned(plan, *, budget_s: float, clock=time.monotonic) -&gt; dict:
+    start = clock()
+    deadline = start + budget_s
+    log, skipped, stop_reason = [], None, &quot;done&quot;
+    i = 0
+    while i &lt; len(plan):
+        name, estimate_s, step = plan[i]
+        if clock() &gt;= deadline:
+            stop_reason = &quot;timeout&quot;
+            skipped = name
+            break
+        if clock() + estimate_s &gt; deadline:  # шаг заведомо не влезет
+            stop_reason = &quot;no_time_for_next&quot;
+            skipped = name
+            break
+        log.append(step())
+        i += 1
+    return {&quot;log&quot;: log, &quot;stop_reason&quot;: stop_reason, &quot;skipped&quot;: skipped,
+            &quot;elapsed_s&quot;: round(clock() - start, 3)}
+
+
+now = [0.0]
+
+def fake_step(name, seconds):
+    def step():
+        now[0] += seconds
+        return f&quot;{name}: {seconds} с&quot;
+    return step
+
+plan = [(n, s, fake_step(n, s)) for n, s in
+        [(&quot;поиск&quot;, 2), (&quot;модель&quot;, 3), (&quot;проверка&quot;, 4), (&quot;отчёт&quot;, 1)]]
+print(run_planned(plan, budget_s=6, clock=lambda: now[0]))
+now[0] = 0.0
+print(run_planned(plan, budget_s=10, clock=lambda: now[0]))
+# ожидаем: {&#x27;log&#x27;: [&#x27;поиск: 2 с&#x27;, &#x27;модель: 3 с&#x27;], &#x27;stop_reason&#x27;: &#x27;no_time_for_next&#x27;, &#x27;skipped&#x27;: &#x27;проверка&#x27;, &#x27;elapsed_s&#x27;: 5.0}
+# ожидаем: {&#x27;log&#x27;: [&#x27;поиск: 2 с&#x27;, &#x27;модель: 3 с&#x27;, &#x27;проверка: 4 с&#x27;, &#x27;отчёт: 1 с&#x27;], &#x27;stop_reason&#x27;: &#x27;done&#x27;, &#x27;skipped&#x27;: None, &#x27;elapsed_s&#x27;: 10.0}</code></pre>
+<p>Теперь бюджет не превышен: «проверку» на 4 секунды не начали, потому что оставалась одна. Во втором прогоне бюджет 10 и шаги ровно в него укладываются: условие <code>&gt;</code> (а не <code>&gt;=</code>) разрешает шаг, который заканчивается точно в дедлайн. Помни, что оценка — это обещание шага, а не гарантия. Если шаг соврал и длился дольше, спасёт только таймаут внутри него (лекарство 1 из раздела 2).<br>&lt;/details&gt;</p>
+<p><strong>Упражнение 2. Самая длинная пауза в журнале.</strong> Дан журнал JSON Lines (строки по одной записи), метки в разных поясах, одна строка битая:</p>
+<pre><code class="lang-python">lines = [
+    &#x27;{&quot;ts&quot;: &quot;2026-10-22T04:30:00Z&quot;, &quot;step&quot;: &quot;старт&quot;}&#x27;,
+    &#x27;{&quot;ts&quot;: &quot;2026-10-22T07:30:05+03:00&quot;, &quot;step&quot;: &quot;поиск&quot;}&#x27;,
+    &#x27;обрыв записи&#x27;,
+    &#x27;{&quot;ts&quot;: &quot;2026-10-22T04:31:40+00:00&quot;, &quot;step&quot;: &quot;модель&quot;}&#x27;,
+    &#x27;{&quot;ts&quot;: &quot;2026-10-22T07:31:42+03:00&quot;, &quot;step&quot;: &quot;отчёт&quot;}&#x27;,
+]</code></pre>
+<p>Напиши <code>longest_gap(lines) -&gt; dict</code> с ключами <code>gap_s</code> (самая длинная пауза в секундах, <code>int</code>), <code>between</code> (кортеж двух имён шагов), <code>bad</code> (сколько строк не разобрано). Битая строка или строка без пояса не роняет разбор, а считается в <code>bad</code>. Подсказка: разность двух <code>datetime</code> — это <code>timedelta</code>, у него есть <code>.total_seconds()</code>.</p>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<pre><code class="lang-python">import json
+from datetime import datetime
+
+
+def longest_gap(lines) -&gt; dict:
+    events, bad = [], 0
+    for line in lines:
+        try:
+            rec = json.loads(line)
+            ts = datetime.fromisoformat(rec[&quot;ts&quot;])
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+            bad += 1
+            continue
+        if ts.tzinfo is None:                # наивное время: пояс неизвестен
+            bad += 1
+            continue
+        events.append((ts, rec.get(&quot;step&quot;, &quot;?&quot;)))
+
+    best = {&quot;gap_s&quot;: 0, &quot;between&quot;: None, &quot;bad&quot;: bad}
+    for (t1, s1), (t2, s2) in zip(events, events[1:]):
+        gap = int((t2 - t1).total_seconds())
+        if gap &gt; best[&quot;gap_s&quot;]:
+            best[&quot;gap_s&quot;], best[&quot;between&quot;] = gap, (s1, s2)
+    return best
+
+
+lines = [
+    &#x27;{&quot;ts&quot;: &quot;2026-10-22T04:30:00Z&quot;, &quot;step&quot;: &quot;старт&quot;}&#x27;,
+    &#x27;{&quot;ts&quot;: &quot;2026-10-22T07:30:05+03:00&quot;, &quot;step&quot;: &quot;поиск&quot;}&#x27;,
+    &#x27;обрыв записи&#x27;,
+    &#x27;{&quot;ts&quot;: &quot;2026-10-22T04:31:40+00:00&quot;, &quot;step&quot;: &quot;модель&quot;}&#x27;,
+    &#x27;{&quot;ts&quot;: &quot;2026-10-22T07:31:42+03:00&quot;, &quot;step&quot;: &quot;отчёт&quot;}&#x27;,
+    &#x27;{&quot;ts&quot;: &quot;2026-10-22T07:32:00&quot;, &quot;step&quot;: &quot;без пояса&quot;}&#x27;,
+]
+print(longest_gap(lines))
+# ожидаем: {&#x27;gap_s&#x27;: 95, &#x27;between&#x27;: (&#x27;поиск&#x27;, &#x27;модель&#x27;), &#x27;bad&#x27;: 2}</code></pre>
+<p>Пауза «поиск → модель» — 95 секунд: 04:30:05 UTC и 04:31:40 UTC. Если бы сравнивали строки, «07:30:05+03:00» казалось бы на три часа позже «04:31:40+00:00», и пауза вышла бы отрицательной. Строковая сортировка ISO-меток честна, только когда пояс у всех один. Отсюда правило следа: пиши в UTC, а разбирай через <code>fromisoformat</code>. Запись без пояса не угадываем, а считаем в <code>bad</code>: это дыра в том, кто писал журнал, и её надо видеть.<br>&lt;/details&gt;</p>
+<p><strong>Упражнение 3. Найди дыру.</strong> Код ниже ждёт ответа инструмента не дольше 60 секунд. Ночью системные часы подвели по сети на час назад, и цикл крутился лишний час. Объясни, почему, и почини. Проверь починку поддельными часами: настенные <code>wall</code> прыгают на 3600 секунд назад после второй проверки, монотонные <code>mono</code> идут ровно.</p>
+<pre><code class="lang-python">import time
+
+def wait_reply(poll, budget_s=60):
+    deadline = time.time() + budget_s
+    while time.time() &lt; deadline:
+        reply = poll()
+        if reply is not None:
+            return reply
+        time.sleep(1)
+    return None</code></pre>
+<p>&lt;details&gt;&lt;summary&gt;Решение&lt;/summary&gt;</p>
+<p><code>time.time()</code> — настенные часы. Когда их перевели на час назад, <code>time.time()</code> стало на 3600 меньше, и до прежнего <code>deadline</code> снова «осталось» больше часа. Цикл не сломан логически, он честно сравнивает — но не с тем прибором. Починка: часы для дедлайна — монотонные, и оба прибора внедряем, чтобы проверить.</p>
+<pre><code class="lang-python">import time
+
+
+def wait_reply(poll, *, budget_s: float = 60, clock=time.monotonic,
+               sleep=time.sleep):
+    deadline = clock() + budget_s
+    polls = 0
+    while clock() &lt; deadline:
+        polls += 1
+        reply = poll()
+        if reply is not None:
+            return reply, polls
+        sleep(min(1.0, max(0.0, deadline - clock())))
+    return None, polls
+
+
+# симуляция: обе пары часов идут вместе, но настенные прыгают назад
+mono = [0.0]
+wall = [1_000_000.0]
+calls = [0]
+
+def wall_clock():
+    calls[0] += 1
+    if calls[0] == 3:
+        wall[0] -= 3600                  # перевели часы
+    return wall[0]
+
+def fake_sleep(s):
+    mono[0] += s
+    wall[0] += s
+
+silent = lambda: None
+print(&quot;monotonic:&quot;, wait_reply(silent, budget_s=60, clock=lambda: mono[0], sleep=fake_sleep))
+mono[0], wall[0], calls[0] = 0.0, 1_000_000.0, 0
+print(&quot;time.time:&quot;, wait_reply(silent, budget_s=60, clock=wall_clock, sleep=fake_sleep))
+# ожидаем: monotonic: (None, 60)
+# ожидаем: time.time: (None, 3660)</code></pre>
+<p>С монотонными часами 60 опросов за 60 секунд и честный <code>None</code>. С настенными — 3660 опросов: час и минута вместо минуты. Заодно в починке сон ограничен остатком (раздел 3), а число опросов вернулось в отчёт: это след, по которому дыру видно без отладчика.<br>&lt;/details&gt;</p>
 <hr>
 <h3 id="ch-01-1-3-функции">1.3. Функции</h3>
 <h4 id="ch-01-что-такое-функция">Что такое функция</h4>
