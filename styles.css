@@ -657,3 +657,15 @@ html.m-search-on{overflow:hidden}
 .m-none{padding:.5rem .6rem;color:var(--muted);font-size:.9rem}
 @media (max-width:600px){.m-search{padding:0}.m-search-box{max-height:100%;height:100%;border-radius:0;border:0}.m-back{bottom:calc(4.4rem + env(safe-area-inset-bottom))}}
 @media print{.m-back,.m-card,.m-search,.m-navbox-more{display:none!important}.m-navbox-cut{max-height:none}}
+
+/* ===== UI 2026-10-26: липкие панели по реальной высоте шапки (--hdr из js/app.js) ===== */
+:root{--hdr:104px}
+@media(min-width:701px){:root{--hdr:61px}}
+html,html:root{scroll-padding-top:calc(var(--hdr) + .75rem)}
+.day-nav,.issue-toc,.sp-search{top:calc(var(--hdr) - 1px)}
+@media(min-width:701px){.day-nav,.issue-toc,.sp-search{top:calc(var(--hdr) - 1px)}}
+:root .news-day{scroll-margin-top:3.6rem}
+:root .issue h2,:root .issue h3,:root .issue section,:root .issue [id]{scroll-margin-top:3.4rem}
+:root .sp-group,:root .sp-item{scroll-margin-top:4rem}
+:root .m-chapter,:root .m-body h3,:root .m-body h4,:root .m-body h5,:root #m-toc,:root .m-anchor{scroll-margin-top:.25rem}
+:root .issue-sec,:root .issue-lead,:root .issue-item{scroll-margin-top:3rem}

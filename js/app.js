@@ -1146,3 +1146,12 @@ async function loadAiItem(id) {
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
   window.addEventListener("storage", (e) => { if (/^moto-/.test(e.key || "")) { applyPrefs(); markLists(); syncMarks(); } });
 })();
+// ---- высота шапки -> CSS-переменная --hdr (липкие панели и якоря встают ровно под шапку) ----
+(function () {
+  const h = document.querySelector(".site-header");
+  if (!h) return;
+  const set = () => document.documentElement.style.setProperty("--hdr", Math.round(h.getBoundingClientRect().height) + "px");
+  set();
+  if (window.ResizeObserver) new ResizeObserver(set).observe(h);
+  else addEventListener("resize", set);
+})();
