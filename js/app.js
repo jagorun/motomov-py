@@ -838,7 +838,7 @@ async function loadAiItem(id) {
 (function () {
   const KW = new Set("False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield match case".split(" "));
   const BI = new Set("print len range int str float bool list dict set tuple open isinstance enumerate zip sorted min max sum any all type super self Exception ValueError KeyError TypeError".split(" "));
-  const esc = (t) => t.replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
+  const esc = (t) => t.replace(/&/g, "\u0026amp;").replace(/</g, "\u0026lt;").replace(/>/g, "\u0026gt;");
   const re = /(#[^\n]*)|([rbfu]{0,2}(?:"""[\s\S]*?"""|'''[\s\S]*?'''|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])*'))|(\b\d[\d_]*(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_]*)(\s*\()?/g;
   const run = (root) => (root || document).querySelectorAll("pre > code").forEach((el) => {
     if (el.dataset.hl || el.children.length) return;
