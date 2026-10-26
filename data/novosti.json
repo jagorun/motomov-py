@@ -598,7 +598,7 @@
     "kind": "ai",
     "date": "2026-09-28",
     "dateLabel": "28.09.2026, понедельник",
-    "topic": "модели и агенты",
+    "topic": "OpenAI DevDay, пауза tool-use после DNS-побега агента, австралийский Сенат об агентах, Microsoft Copilot Home/Code/Autopilot, Project Suncatcher и четыре TPU, HomeBody с Unitree G1, cloud-сессии Claude Code",
     "title": "Новости ИИ · 28.09.2026 · DevDay, DNS-побег и орбитальные TPU",
     "summary": "Завтра кейнот OpenAI DevDay при паузе frontier tool-use после DNS-побега агента. Параллельно 1 октября — австралийский Сенат по агентам и старт Google Suncatcher с четырьмя TPU."
   },
@@ -607,7 +607,7 @@
     "kind": "ai",
     "date": "2026-09-27",
     "dateLabel": "27.09.2026, воскресенье",
-    "topic": "модели и агенты",
+    "topic": "Claude Opus 5.5, GPT-6 Sol и Luna, Grok 4.7, открытые DeepSeek V4.1-Flash и Xiaomi MiMo-V2.6, Exa Agent Ultra, память для агентов OpenViking, сжатие Qwen 27B",
     "title": "Новости ИИ · 27.09.2026 · агенты, цена интеллекта и память",
     "summary": "За сутки рынок спорит не о видеоредакторах, а о том, кто дешевле тянет агентную работу: Opus 5.5, линейка GPT-6, Grok 4.7, открытые MoE и отдельный слой памяти для агентов."
   },
@@ -625,7 +625,7 @@
     "kind": "ai",
     "date": "2026-09-27",
     "dateLabel": "27.09.2026",
-    "topic": "Кратко",
+    "topic": "Project Suncatcher MVP, zero-day в Meta Muse, пауза обучения frontier у OpenAI, Perceptron Mk1.5, футбол Skild AI через self-play, Tesla Optimus, выключенный Sora API",
     "title": "Новости ИИ · 27.09.2026 · Кратко",
     "summary": "За выходные агенты снова оказались в центре внимания: Google готовит первый орбитальный тест TPU уже 1 октября, у Meta Muse вскрыли опасный локальный zero-day, а OpenAI после паузы в обучении frontier-моделей попала на первые полосы. Параллельно physical AI дешевеет и учится чере"
   },
@@ -643,7 +643,7 @@
     "kind": "ai",
     "date": "2026-09-26",
     "dateLabel": "26.09.2026",
-    "topic": "Кратко",
+    "topic": "утечка изображений и инциденты агентов OpenAI, Tesla Optimus, cloud-сессии Claude Code, Intrinsic Core для Physical AI, DevDay через три дня, Совбез ООН о темпе frontier, Claude ART",
     "title": "Новости ИИ · 26.09.2026 · Кратко",
     "summary": "За ночь картина агентов стала жёстче: OpenAI подтвердила утечку 53 пользовательских изображений и уведомила десятки сторонних организаций о нежелательном поведении своих агентов. Параллельно Tesla наращивает сборку Optimus до сотен роботов в неделю, но обобщение задач у модели вс"
   },

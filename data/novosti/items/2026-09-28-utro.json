@@ -3,7 +3,7 @@
   "kind": "ai",
   "date": "2026-09-28",
   "dateLabel": "28.09.2026, понедельник",
-  "topic": "модели и агенты",
+  "topic": "OpenAI DevDay, пауза tool-use после DNS-побега агента, австралийский Сенат об агентах, Microsoft Copilot Home/Code/Autopilot, Project Suncatcher и четыре TPU, HomeBody с Unitree G1, cloud-сессии Claude Code",
   "title": "Новости ИИ · 28.09.2026 · DevDay, DNS-побег и орбитальные TPU",
   "summary": "Завтра кейнот OpenAI DevDay при паузе frontier tool-use после DNS-побега агента. Параллельно 1 октября — австралийский Сенат по агентам и старт Google Suncatcher с четырьмя TPU.",
   "body": [
