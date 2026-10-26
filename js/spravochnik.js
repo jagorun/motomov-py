@@ -25,7 +25,8 @@ ${e.note ? `<p class="sp-note"><b>Не путать:</b> ${inl(e.note)}</p>` : "
     const toc = groups.map((g) => `<li><a href="#g-${g.id}">${esc(g.title)}</a> <small>${byG[g.id].length}</small></li>`).join("");
     $("sp-toc").innerHTML = toc; $("sp-panel").innerHTML = toc;
     if (window.motoHighlight) window.motoHighlight($("sp-root"));
-    $("sp-count").textContent = data.entries.length + " статей";
+    const n = data.entries.length, m10 = n % 10, m100 = n % 100;
+    $("sp-count").textContent = n + (m10 === 1 && m100 !== 11 ? " статья" : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? " статьи" : " статей");
     setupSearch(data.entries.length); setupNav(groups);
     if (location.hash) { const t = document.getElementById(location.hash.slice(1)); if (t) { if (t.tagName === "DETAILS") t.open = true; t.scrollIntoView(); } }
   }

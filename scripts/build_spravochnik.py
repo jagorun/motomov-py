@@ -286,6 +286,55 @@ e("json","json.loads","json.loads(s, *, cls=None, object_hook=None, parse_float=
 e("json","json.dump / json.load","json.dump(obj, fp, …)\njson.load(fp, …)","То же, но сразу в файл / из файла.",
  """import json\nwith open("d.json", "w", encoding="utf-8") as f:\n    json.dump({"a": 1}, f)\nwith open("d.json", encoding="utf-8") as f:\n    print(json.load(f))""","Без s — работа с файлом; с s (dumps/loads) — со строкой.",J+"dump")
 
+# ---------- дополнения 2026-10-26: частые случаи из уроков (в конце групп, чтобы не менять вывод прежних примеров) ----------
+e("builtins","repr","repr(object)","Строка «как в коде»: у строки видны кавычки, у спецсимволов — обратная косая черта. Удобно для отладки, когда непонятно, есть ли в строке пробел или перевод строки.",
+ """s = "кот \\n"\nprint(s)\nprint(repr(s))""","print показывает текст для человека, repr — для программиста.",F+"repr")
+e("builtins","bin / hex / oct","bin(x)\nhex(x)\noct(x)","Записывает целое число в двоичной, шестнадцатеричной или восьмеричной системе. Результат — строка с приставкой 0b, 0x или 0o.",
+ """print(bin(10), hex(255), oct(8))\nprint(int("ff", 16))""","Обратно в число — int(строка, основание).",F+"bin")
+e("builtins","callable","callable(object, /)","Проверяет, можно ли объект вызвать скобками: функции, классы и методы — можно, числа и строки — нет.",
+ """print(callable(len), callable(print), callable(42))""","",F+"callable")
+sm("rfind","str.rfind(sub[, start[, end]])","Как find, но ищет с правого края: индекс последнего вхождения или -1.",
+ """path = "data/notes/2026/report.md"\nprint(path.rfind("/"))\nprint(path[path.rfind("/") + 1:])""")
+sm("isalnum","str.isalnum()","True, если строка не пустая и в ней только буквы и цифры, без пробелов и знаков.",
+ """print("урок5".isalnum(), "урок 5".isalnum(), "".isalnum())""")
+sm("isupper","str.isupper()","True, если все буквы в строке заглавные. Пара — islower() для строчных.",
+ """print("RAG".isupper(), "Rag".isupper(), "rag".islower())""","Цифры и знаки не мешают: \"GPT-5\".isupper() тоже True.")
+sm("ljust","str.ljust(width, fillchar=' ', /)","Дополняет строку справа до нужной ширины. rjust — слева. Так выравнивают столбцы в выводе.",
+ """for name, n in [("кот", 3), ("собака", 12)]:\n    print(name.ljust(8, "."), str(n).rjust(3))""","Если строка уже длиннее width, она возвращается как есть.")
+e("list","Списковое включение","[выражение for элемент in последовательность if условие]","Короткая запись цикла, который собирает новый список. Условие if можно не писать.",
+ """nums = [1, 2, 3, 4, 5, 6]\nprint([n * n for n in nums])\nprint([n for n in nums if n % 2 == 0])""","Если выражение не помещается в строку, понятнее обычный цикл for с append.",D+"tutorial/datastructures.html#list-comprehensions")
+e("list","del","del a[i]\ndel a[start:stop]","Удаляет элемент по индексу или целый срез. В отличие от pop, ничего не возвращает.",
+ """a = [10, 20, 30, 40, 50]\ndel a[0]\nprint(a)\ndel a[1:3]\nprint(a)""","",D+"tutorial/datastructures.html#the-del-statement")
+e("dict","Словарное включение","{ключ: значение for элемент in последовательность}","Как списковое включение, только собирает словарь.",
+ """words = ["кот", "собака", "ёж"]\nprint({w: len(w) for w in words})""","",D+"tutorial/datastructures.html#dictionaries")
+e("set","set.issuperset","set.issuperset(other, /)","Проверяет, что в множестве есть все элементы other. Короткая запись — оператор >=.",
+ """have = {"python", "git", "json"}\nprint(have.issuperset({"git", "json"}), have >= {"docker"})""","Обратная проверка — issubset.",S+"frozenset.issuperset")
+e("set","set.isdisjoint","set.isdisjoint(other, /)","True, если у двух множеств нет ни одного общего элемента.",
+ """print({1, 2}.isdisjoint({3, 4}), {1, 2}.isdisjoint({2, 3}))""","",S+"frozenset.isdisjoint")
+for name, sig, text, code in [
+ ("trunc","math.trunc(x)","Отбрасывает дробную часть: к нулю, а не вниз. Для отрицательных чисел это не то же самое, что floor.","import math\nprint(math.trunc(3.7), math.trunc(-3.7), math.floor(-3.7))"),
+ ("factorial","math.factorial(n)","Факториал: 5! = 1 · 2 · 3 · 4 · 5.","import math\nprint(math.factorial(5))"),
+ ("inf","math.inf","Бесконечность. Удобна как стартовое значение, когда ищем минимум.","import math\nbest = math.inf\nfor x in [7, 3, 9]:\n    best = min(best, x)\nprint(best, math.inf > 10**100)"),
+]:
+    e("math", "math."+name, sig, text, code, "", M+name)
+for name, sig, text, code, note in [
+ ("uniform","random.uniform(a, b)","Случайное дробное число между a и b.","import random\nx = random.uniform(1.5, 2.5)\nprint(1.5 <= x <= 2.5)",""),
+ ("choices","random.choices(population, weights=None, *, cum_weights=None, k=1)","k случайных элементов с повторами; weights задаёт, что выпадает чаще.",'import random\nr = random.choices(["да", "нет"], weights=[9, 1], k=5)\nprint(len(r), set(r) <= {"да", "нет"})',"Без повторов — random.sample."),
+]:
+    e("random", "random."+name, sig, text, code, note, R+name)
+e("datetime","date.today / datetime.now","date.today()\ndatetime.now(tz=None)","Сегодняшняя дата и текущий момент. Значение меняется при каждом запуске, поэтому в примере проверяем только тип.",
+ """from datetime import date, datetime\nprint(type(date.today()).__name__, type(datetime.now()).__name__)""","",DT+"date.today")
+e("datetime","weekday","date.weekday()\ndate.isoweekday()","Номер дня недели. weekday: понедельник = 0, воскресенье = 6. isoweekday: понедельник = 1, воскресенье = 7.",
+ """from datetime import date\nd = date(2026, 10, 26)\nprint(d.weekday(), d.isoweekday())""","",DT+"date.weekday")
+e("pathlib","Path.name / stem / suffix","PurePath.name\nPurePath.stem\nPurePath.suffix","Части имени файла: name — целиком, stem — без расширения, suffix — расширение с точкой.",
+ """from pathlib import Path\np = Path("notes/2026/урок.md")\nprint(p.name, p.stem, p.suffix)""","",P+"PurePath.suffix")
+e("pathlib","Path.iterdir","Path.iterdir()","Перебирает всё, что лежит в папке, сразу как объекты Path. Порядок не гарантирован, поэтому часто сортируют.",
+ """from pathlib import Path\nd = Path("box2")\nd.mkdir(exist_ok=True)\n(d / "b.md").write_text("b", encoding="utf-8")\n(d / "a.md").write_text("a", encoding="utf-8")\nprint(sorted(p.name for p in d.iterdir()))""","",P+"Path.iterdir")
+e("pathlib","Path.rglob","Path.rglob(pattern, *, case_sensitive=None, recurse_symlinks=False)","Как glob, но сразу ищет во всех вложенных папках. rglob('*.md') — то же, что glob('**/*.md').",
+ """from pathlib import Path\nPath("kb/a").mkdir(parents=True, exist_ok=True)\nPath("kb/a/x.md").write_text("x", encoding="utf-8")\nPath("kb/y.md").write_text("y", encoding="utf-8")\nprint(sorted(p.as_posix() for p in Path("kb").rglob("*.md")))""","",P+"Path.rglob")
+e("pathlib","Path.unlink","Path.unlink(missing_ok=False)","Удаляет файл. missing_ok=True — без ошибки, если файла уже нет. Папку так не удалить: для пустой папки есть rmdir().",
+ """from pathlib import Path\np = Path("tmp_del.txt")\np.write_text("x", encoding="utf-8")\np.unlink()\nprint(p.exists())\np.unlink(missing_ok=True)""","",P+"Path.unlink")
+
 def run_all():
     cwd = os.getcwd(); tmp = tempfile.mkdtemp(); os.chdir(tmp)
     os.environ.pop("MY_API_KEY", None)
@@ -307,6 +356,11 @@ if __name__ == "__main__":
 
 # ---------- страница spravochnik.html (оболочка; содержимое рисует JS из data/spravochnik.json) ----------
 import re as _re
+def _plural(n, one, few, many):
+    if n % 10 == 1 and n % 100 != 11: return one
+    if 2 <= n % 10 <= 4 and not 12 <= n % 100 <= 14: return few
+    return many
+
 def build_page(root, n):
     src = (root / "novosti.html").read_text(encoding="utf-8")
     h = _re.search(r'<header class="site-header">.*?</header>', src, _re.S).group(0)
@@ -333,7 +387,7 @@ def build_page(root, n):
     {h}
     <section class="page-intro">
       <h1>Справочник Python</h1>
-      <p class="bio">{n} функций и методов простыми словами: что делает, когда нужно, пример с настоящим выводом и ссылка на официальную документацию Python 3.14. Нажмите на строку, чтобы раскрыть.</p>
+      <p class="bio">{n} {_plural(n, "статья", "статьи", "статей")} о функциях и методах простыми словами: что делает, когда нужно, пример с настоящим выводом и ссылка на официальную документацию Python 3.14. Нажмите на строку, чтобы раскрыть.</p>
     </section>
     <div class="sp-search"><input type="search" id="sp-q" placeholder="Поиск: split, сортировка, файл…" autocomplete="off" aria-label="Поиск по справочнику"><span id="sp-count"></span></div>
     <details class="m-toc" id="m-toc"><summary>Содержание</summary><ol id="sp-toc"></ol></details>

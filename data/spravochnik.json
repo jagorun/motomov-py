@@ -1448,6 +1448,236 @@
    "note": "Без s — работа с файлом; с s (dumps/loads) — со строкой.",
    "url": "https://docs.python.org/ru/3.14/library/json.html#json.dump",
    "out": "{'a': 1}"
+  },
+  {
+   "group": "builtins",
+   "name": "repr",
+   "sig": "repr(object)",
+   "text": "Строка «как в коде»: у строки видны кавычки, у спецсимволов — обратная косая черта. Удобно для отладки, когда непонятно, есть ли в строке пробел или перевод строки.",
+   "code": "s = \"кот \\n\"\nprint(s)\nprint(repr(s))",
+   "note": "print показывает текст для человека, repr — для программиста.",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#repr",
+   "out": "кот \n\n'кот \\n'"
+  },
+  {
+   "group": "builtins",
+   "name": "bin / hex / oct",
+   "sig": "bin(x)\nhex(x)\noct(x)",
+   "text": "Записывает целое число в двоичной, шестнадцатеричной или восьмеричной системе. Результат — строка с приставкой 0b, 0x или 0o.",
+   "code": "print(bin(10), hex(255), oct(8))\nprint(int(\"ff\", 16))",
+   "note": "Обратно в число — int(строка, основание).",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#bin",
+   "out": "0b1010 0xff 0o10\n255"
+  },
+  {
+   "group": "builtins",
+   "name": "callable",
+   "sig": "callable(object, /)",
+   "text": "Проверяет, можно ли объект вызвать скобками: функции, классы и методы — можно, числа и строки — нет.",
+   "code": "print(callable(len), callable(print), callable(42))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/functions.html#callable",
+   "out": "True True False"
+  },
+  {
+   "group": "str",
+   "name": "str.rfind",
+   "sig": "str.rfind(sub[, start[, end]])",
+   "text": "Как find, но ищет с правого края: индекс последнего вхождения или -1.",
+   "code": "path = \"data/notes/2026/report.md\"\nprint(path.rfind(\"/\"))\nprint(path[path.rfind(\"/\") + 1:])",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.rfind",
+   "out": "15\nreport.md"
+  },
+  {
+   "group": "str",
+   "name": "str.isalnum",
+   "sig": "str.isalnum()",
+   "text": "True, если строка не пустая и в ней только буквы и цифры, без пробелов и знаков.",
+   "code": "print(\"урок5\".isalnum(), \"урок 5\".isalnum(), \"\".isalnum())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.isalnum",
+   "out": "True False False"
+  },
+  {
+   "group": "str",
+   "name": "str.isupper",
+   "sig": "str.isupper()",
+   "text": "True, если все буквы в строке заглавные. Пара — islower() для строчных.",
+   "code": "print(\"RAG\".isupper(), \"Rag\".isupper(), \"rag\".islower())",
+   "note": "Цифры и знаки не мешают: \"GPT-5\".isupper() тоже True.",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.isupper",
+   "out": "True False True"
+  },
+  {
+   "group": "str",
+   "name": "str.ljust",
+   "sig": "str.ljust(width, fillchar=' ', /)",
+   "text": "Дополняет строку справа до нужной ширины. rjust — слева. Так выравнивают столбцы в выводе.",
+   "code": "for name, n in [(\"кот\", 3), (\"собака\", 12)]:\n    print(name.ljust(8, \".\"), str(n).rjust(3))",
+   "note": "Если строка уже длиннее width, она возвращается как есть.",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#str.ljust",
+   "out": "кот.....   3\nсобака..  12"
+  },
+  {
+   "group": "list",
+   "name": "Списковое включение",
+   "sig": "[выражение for элемент in последовательность if условие]",
+   "text": "Короткая запись цикла, который собирает новый список. Условие if можно не писать.",
+   "code": "nums = [1, 2, 3, 4, 5, 6]\nprint([n * n for n in nums])\nprint([n for n in nums if n % 2 == 0])",
+   "note": "Если выражение не помещается в строку, понятнее обычный цикл for с append.",
+   "url": "https://docs.python.org/ru/3.14/tutorial/datastructures.html#list-comprehensions",
+   "out": "[1, 4, 9, 16, 25, 36]\n[2, 4, 6]"
+  },
+  {
+   "group": "list",
+   "name": "del",
+   "sig": "del a[i]\ndel a[start:stop]",
+   "text": "Удаляет элемент по индексу или целый срез. В отличие от pop, ничего не возвращает.",
+   "code": "a = [10, 20, 30, 40, 50]\ndel a[0]\nprint(a)\ndel a[1:3]\nprint(a)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/tutorial/datastructures.html#the-del-statement",
+   "out": "[20, 30, 40, 50]\n[20, 50]"
+  },
+  {
+   "group": "dict",
+   "name": "Словарное включение",
+   "sig": "{ключ: значение for элемент in последовательность}",
+   "text": "Как списковое включение, только собирает словарь.",
+   "code": "words = [\"кот\", \"собака\", \"ёж\"]\nprint({w: len(w) for w in words})",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/tutorial/datastructures.html#dictionaries",
+   "out": "{'кот': 3, 'собака': 6, 'ёж': 2}"
+  },
+  {
+   "group": "set",
+   "name": "set.issuperset",
+   "sig": "set.issuperset(other, /)",
+   "text": "Проверяет, что в множестве есть все элементы other. Короткая запись — оператор >=.",
+   "code": "have = {\"python\", \"git\", \"json\"}\nprint(have.issuperset({\"git\", \"json\"}), have >= {\"docker\"})",
+   "note": "Обратная проверка — issubset.",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#frozenset.issuperset",
+   "out": "True False"
+  },
+  {
+   "group": "set",
+   "name": "set.isdisjoint",
+   "sig": "set.isdisjoint(other, /)",
+   "text": "True, если у двух множеств нет ни одного общего элемента.",
+   "code": "print({1, 2}.isdisjoint({3, 4}), {1, 2}.isdisjoint({2, 3}))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/stdtypes.html#frozenset.isdisjoint",
+   "out": "True False"
+  },
+  {
+   "group": "math",
+   "name": "math.trunc",
+   "sig": "math.trunc(x)",
+   "text": "Отбрасывает дробную часть: к нулю, а не вниз. Для отрицательных чисел это не то же самое, что floor.",
+   "code": "import math\nprint(math.trunc(3.7), math.trunc(-3.7), math.floor(-3.7))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.trunc",
+   "out": "3 -3 -4"
+  },
+  {
+   "group": "math",
+   "name": "math.factorial",
+   "sig": "math.factorial(n)",
+   "text": "Факториал: 5! = 1 · 2 · 3 · 4 · 5.",
+   "code": "import math\nprint(math.factorial(5))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.factorial",
+   "out": "120"
+  },
+  {
+   "group": "math",
+   "name": "math.inf",
+   "sig": "math.inf",
+   "text": "Бесконечность. Удобна как стартовое значение, когда ищем минимум.",
+   "code": "import math\nbest = math.inf\nfor x in [7, 3, 9]:\n    best = min(best, x)\nprint(best, math.inf > 10**100)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/math.html#math.inf",
+   "out": "3 True"
+  },
+  {
+   "group": "random",
+   "name": "random.uniform",
+   "sig": "random.uniform(a, b)",
+   "text": "Случайное дробное число между a и b.",
+   "code": "import random\nx = random.uniform(1.5, 2.5)\nprint(1.5 <= x <= 2.5)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/random.html#random.uniform",
+   "out": "True"
+  },
+  {
+   "group": "random",
+   "name": "random.choices",
+   "sig": "random.choices(population, weights=None, *, cum_weights=None, k=1)",
+   "text": "k случайных элементов с повторами; weights задаёт, что выпадает чаще.",
+   "code": "import random\nr = random.choices([\"да\", \"нет\"], weights=[9, 1], k=5)\nprint(len(r), set(r) <= {\"да\", \"нет\"})",
+   "note": "Без повторов — random.sample.",
+   "url": "https://docs.python.org/ru/3.14/library/random.html#random.choices",
+   "out": "5 True"
+  },
+  {
+   "group": "datetime",
+   "name": "date.today / datetime.now",
+   "sig": "date.today()\ndatetime.now(tz=None)",
+   "text": "Сегодняшняя дата и текущий момент. Значение меняется при каждом запуске, поэтому в примере проверяем только тип.",
+   "code": "from datetime import date, datetime\nprint(type(date.today()).__name__, type(datetime.now()).__name__)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/datetime.html#datetime.date.today",
+   "out": "date datetime"
+  },
+  {
+   "group": "datetime",
+   "name": "weekday",
+   "sig": "date.weekday()\ndate.isoweekday()",
+   "text": "Номер дня недели. weekday: понедельник = 0, воскресенье = 6. isoweekday: понедельник = 1, воскресенье = 7.",
+   "code": "from datetime import date\nd = date(2026, 10, 26)\nprint(d.weekday(), d.isoweekday())",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/datetime.html#datetime.date.weekday",
+   "out": "0 1"
+  },
+  {
+   "group": "pathlib",
+   "name": "Path.name / stem / suffix",
+   "sig": "PurePath.name\nPurePath.stem\nPurePath.suffix",
+   "text": "Части имени файла: name — целиком, stem — без расширения, suffix — расширение с точкой.",
+   "code": "from pathlib import Path\np = Path(\"notes/2026/урок.md\")\nprint(p.name, p.stem, p.suffix)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/pathlib.html#pathlib.PurePath.suffix",
+   "out": "урок.md урок .md"
+  },
+  {
+   "group": "pathlib",
+   "name": "Path.iterdir",
+   "sig": "Path.iterdir()",
+   "text": "Перебирает всё, что лежит в папке, сразу как объекты Path. Порядок не гарантирован, поэтому часто сортируют.",
+   "code": "from pathlib import Path\nd = Path(\"box2\")\nd.mkdir(exist_ok=True)\n(d / \"b.md\").write_text(\"b\", encoding=\"utf-8\")\n(d / \"a.md\").write_text(\"a\", encoding=\"utf-8\")\nprint(sorted(p.name for p in d.iterdir()))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/pathlib.html#pathlib.Path.iterdir",
+   "out": "['a.md', 'b.md']"
+  },
+  {
+   "group": "pathlib",
+   "name": "Path.rglob",
+   "sig": "Path.rglob(pattern, *, case_sensitive=None, recurse_symlinks=False)",
+   "text": "Как glob, но сразу ищет во всех вложенных папках. rglob('*.md') — то же, что glob('**/*.md').",
+   "code": "from pathlib import Path\nPath(\"kb/a\").mkdir(parents=True, exist_ok=True)\nPath(\"kb/a/x.md\").write_text(\"x\", encoding=\"utf-8\")\nPath(\"kb/y.md\").write_text(\"y\", encoding=\"utf-8\")\nprint(sorted(p.as_posix() for p in Path(\"kb\").rglob(\"*.md\")))",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/pathlib.html#pathlib.Path.rglob",
+   "out": "['kb/a/x.md', 'kb/y.md']"
+  },
+  {
+   "group": "pathlib",
+   "name": "Path.unlink",
+   "sig": "Path.unlink(missing_ok=False)",
+   "text": "Удаляет файл. missing_ok=True — без ошибки, если файла уже нет. Папку так не удалить: для пустой папки есть rmdir().",
+   "code": "from pathlib import Path\np = Path(\"tmp_del.txt\")\np.write_text(\"x\", encoding=\"utf-8\")\np.unlink()\nprint(p.exists())\np.unlink(missing_ok=True)",
+   "note": "",
+   "url": "https://docs.python.org/ru/3.14/library/pathlib.html#pathlib.Path.unlink",
+   "out": "False"
   }
  ]
 }
