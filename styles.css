@@ -686,3 +686,12 @@ html,html:root{scroll-padding-top:calc(var(--hdr) + .75rem)}
 .bio a:not([class]),.hero p a{color:var(--accent);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 40%,transparent);text-underline-offset:2px}
 .bio a:not([class]):hover,.hero p a:hover{text-decoration-color:var(--accent)}
 :where(.wrap) :where(a:not([class])){color:var(--accent)}
+
+/* ===== UI 2026-10-26: ровные отступы ленты, подсказка «есть ещё» у прокручиваемых рядов ===== */
+.day-nav + section{margin-top:0}
+.news-days > .news-day{margin-top:0}
+.news-days{gap:1.5rem}
+.nav[data-fade],.issue-toc[data-fade],.chips[data-fade]{-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+.nav[data-fade="r"],.issue-toc[data-fade="r"],.chips[data-fade="r"]{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 2rem),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 2rem),transparent)}
+.nav[data-fade="l"],.issue-toc[data-fade="l"],.chips[data-fade="l"]{-webkit-mask-image:linear-gradient(to right,transparent,#000 2rem);mask-image:linear-gradient(to right,transparent,#000 2rem)}
+.nav[data-fade="lr"],.issue-toc[data-fade="lr"],.chips[data-fade="lr"]{-webkit-mask-image:linear-gradient(to right,transparent,#000 2rem,#000 calc(100% - 2rem),transparent);mask-image:linear-gradient(to right,transparent,#000 2rem,#000 calc(100% - 2rem),transparent)}

@@ -1182,3 +1182,23 @@ async function loadAiItem(id) {
   if (window.ResizeObserver) new ResizeObserver(set).observe(h);
   else addEventListener("resize", set);
 })();
+// ---- прокручиваемые ряды (меню, разделы выпуска, теги): помечаем, с какой стороны есть ещё ----
+(function () {
+  const SEL = ".site-header .nav, .issue-toc, .chips";
+  const mark = (e) => {
+    const max = e.scrollWidth - e.clientWidth;
+    if (max <= 2) { e.removeAttribute("data-fade"); return; }
+    const l = e.scrollLeft > 2, r = e.scrollLeft < max - 2;
+    const v = l && r ? "lr" : l ? "l" : r ? "r" : "";
+    if (v) e.setAttribute("data-fade", v); else e.removeAttribute("data-fade");
+  };
+  const seen = new WeakSet();
+  const scan = () => document.querySelectorAll(SEL).forEach((e) => {
+    if (!seen.has(e)) { seen.add(e); e.addEventListener("scroll", () => mark(e), { passive: true }); if (window.ResizeObserver) new ResizeObserver(() => mark(e)).observe(e); }
+    mark(e);
+  });
+  scan();
+  let t = 0;
+  new MutationObserver(() => { clearTimeout(t); t = setTimeout(scan, 120); }).observe(document.body, { childList: true, subtree: true });
+  addEventListener("resize", scan);
+})();
