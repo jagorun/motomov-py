@@ -669,3 +669,20 @@ html,html:root{scroll-padding-top:calc(var(--hdr) + .75rem)}
 :root .sp-group,:root .sp-item{scroll-margin-top:4rem}
 :root .m-chapter,:root .m-body h3,:root .m-body h4,:root .m-body h5,:root #m-toc,:root .m-anchor{scroll-margin-top:.25rem}
 :root .issue-sec,:root .issue-lead,:root .issue-item{scroll-margin-top:3rem}
+
+/* ===== UI 2026-10-26: свёрнутые карточки на телефоне — стрелка, номер шага и заголовок в одной строке ===== */
+@media(max-width:560px){
+  .fold-item summary{flex-wrap:wrap;gap:.35rem .55rem;padding:.8rem .85rem}
+  .fold-item summary .fold-date{order:0;width:auto;padding-left:0;min-width:1.4rem;height:1.4rem;line-height:1.4rem;text-align:center;border-radius:999px;background:var(--accent-soft)}
+  .fold-item summary .fold-title{order:1;flex:1 1 calc(100% - 5rem);min-width:0}
+  .fold-item summary .ux-mini{order:2}
+  .fold-item summary .badge{order:3;margin-left:1.25rem}
+}
+@media(min-width:561px){
+  .fold-item summary .fold-date{min-width:1.4rem;height:1.4rem;line-height:1.4rem;text-align:center;border-radius:999px;background:var(--accent-soft)}
+}
+
+/* ===== ссылки в шапке страниц (было: синий цвет браузера по умолчанию) ===== */
+.bio a:not([class]),.hero p a{color:var(--accent);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 40%,transparent);text-underline-offset:2px}
+.bio a:not([class]):hover,.hero p a:hover{text-decoration-color:var(--accent)}
+:where(.wrap) :where(a:not([class])){color:var(--accent)}
