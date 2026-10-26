@@ -121,8 +121,8 @@ async function loadCourse() {
   const box = document.getElementById("course-list");
   try {
     const [data, glossary] = await Promise.all([
-      fetch("data/course-path.json", { cache: "no-store" }).then((r) => r.json()),
-      fetch("data/course-glossary.json", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
+      fetch("data/course-path.json", { cache: "no-cache" }).then((r) => r.json()),
+      fetch("data/course-glossary.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null)
     ]);
     const courses = Array.isArray(data) ? data : (data.courses || []);
     if (!courses.length || !courses[0].blocks) throw new Error("empty");
@@ -161,7 +161,7 @@ function paintLesson(root, lesson, lessons, index, tabId) {
 }
 async function loadLesson(id, tabId) {
   const root = document.getElementById("lesson-root");
-  const lessons = await fetch("data/lessons.json", { cache: "no-store" }).then((r) => r.json()).catch(() => []);
+  const lessons = await fetch("data/lessons.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => []);
   const i = Math.max(0, lessons.findIndex((l) => l.id === id));
   const lesson = lessons[i] || lessons[0];
   if (!lesson) { root.innerHTML = '<div class="empty">Урок не найден.</div>'; return; }
@@ -377,13 +377,39 @@ function renderAiIssue(brief) {
   const tocHtml = toc.length > 1 ? `<nav class="issue-toc" aria-label="Разделы выпуска">${toc.map(([a, t]) => `<a href="#${a}">${escapeHtml(t)}</a>`).join("")}</nav>` : "";
   return { tocHtml, html };
 }
+// ---- общие помощники списков: синонимы тегов, порционная отрисовка, задержка поиска ----
+const TAG_ALIAS = { "агент": "агенты", "инфраструктура": "инфра", "регулирование": "регуляторика", "инструмент": "инструменты", "бенчмарк": "бенчмарки" };
+function tagNorm(t) { const k = String(t || "").trim(); return TAG_ALIAS[k] || k; }
+function renderChunked(list, arr, rowHtml, emptyHtml) {
+  const tok = (list._drawTok = (list._drawTok || 0) + 1);
+  list.innerHTML = "";
+  if (!arr.length) { list.innerHTML = emptyHtml; return; }
+  let i = 0;
+  const step = () => {
+    if (list._drawTok !== tok) return;
+    const frag = document.createDocumentFragment();
+    const end = Math.min(arr.length, i + (i ? 160 : 60));
+    for (; i < end; i++) frag.appendChild(el(rowHtml(arr[i])));
+    list.appendChild(frag);
+    if (i < arr.length) setTimeout(step, 16);
+  };
+  step();
+}
+function onSearchInput(input, draw) {
+  let t = 0;
+  input.addEventListener("input", (e) => {
+    clearTimeout(t);
+    if (!e.isTrusted) { draw(input.value); return; }
+    t = setTimeout(() => draw(input.value), 140);
+  });
+}
 async function loadKb() {
   const list = document.getElementById("kb-list");
   const input = document.getElementById("kb-search");
   const filters = document.getElementById("kb-filters");
-  const items = await fetch("data/kb.json", { cache: "no-store" }).then((r) => r.json()).catch(() => []);
+  const items = await fetch("data/kb.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => []);
   let activeTag = "";
-  const tags = Array.from(new Set(items.map((it) => it.tag).filter(Boolean)));
+  const tags = Array.from(new Set(items.map((it) => tagNorm(it.tag)).filter(Boolean)));
   if (filters) {
     filters.innerHTML = "";
     const allBtn = el(`<button type="button" class="ghost-btn active" data-tag="">Все</button>`);
@@ -402,15 +428,13 @@ async function loadKb() {
   function draw(q) {
     const needle = (q || "").trim().toLowerCase();
     const shown = items.filter((it) => {
-      if (activeTag && it.tag !== activeTag) return false;
+      if (activeTag && tagNorm(it.tag) !== activeTag) return false;
       return !needle || kbHaystack(it).includes(needle);
     });
-    list.innerHTML = "";
-    if (!shown.length) { list.innerHTML = '<div class="empty">В базе этого нет.</div>'; return; }
-    shown.forEach((it) => list.appendChild(el(kbCardHtml(it))));
+    renderChunked(list, shown, kbCardHtml, '<div class="empty">В базе этого нет.</div>');
   }
   draw("");
-  if (input) input.addEventListener("input", () => draw(input.value));
+  if (input) onSearchInput(input, draw);
 }
 function slovarNameKey(it) {
   return String(it.title || "").trim();
@@ -436,10 +460,10 @@ async function loadSlovar() {
   const input = document.getElementById("slovar-search");
   const filters = document.getElementById("slovar-filters");
   const sortBox = document.getElementById("slovar-sort");
-  const items = await fetch("data/kb.json", { cache: "no-store" }).then((r) => r.json()).catch(() => []);
+  const items = await fetch("data/kb.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => []);
   let activeTag = "";
   let sortMode = "fresh";
-  const tags = Array.from(new Set(items.map((it) => it.tag).filter(Boolean))).sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
+  const tags = Array.from(new Set(items.map((it) => tagNorm(it.tag)).filter(Boolean))).sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
   if (filters) {
     filters.innerHTML = "";
     filters.appendChild(el(`<button type="button" class="ghost-btn active" data-tag="">Все</button>`));
@@ -470,19 +494,17 @@ async function loadSlovar() {
   function draw(q) {
     const needle = (q || "").trim().toLowerCase();
     const shown = items.filter((it) => {
-      if (activeTag && it.tag !== activeTag) return false;
+      if (activeTag && tagNorm(it.tag) !== activeTag) return false;
       return !needle || kbHaystack(it).includes(needle);
     }).sort((a, b) => compareSlovar(a, b, sortMode));
-    list.innerHTML = "";
-    if (!shown.length) { list.innerHTML = '<div class="empty">Ничего не найдено.</div>'; return; }
-    shown.forEach((it) => list.appendChild(el(slovarRowHtml(it))));
+    renderChunked(list, shown, slovarRowHtml, '<div class="empty">Ничего не найдено.</div>');
   }
   draw("");
-  if (input) input.addEventListener("input", () => draw(input.value));
+  if (input) onSearchInput(input, draw);
 }
 const NOVOSTI_RECENT_LIMIT = 14;
 async function fetchJson(url) {
-  const r = await fetch(url, { cache: "no-store" });
+  const r = await fetch(url, { cache: "no-cache" });
   if (!r.ok) return [];
   return r.json();
 }
@@ -547,9 +569,11 @@ async function loadArchive(monthParam) {
 async function loadBrief(id, kind) {
   const root = document.getElementById("brief-root");
   const wantYoutube = kind === "youtube" || (id && String(id).startsWith("yt-"));
+  // выпуск ИИ или YouTube — большой briefs.json (python) не нужен
+  const needPython = kind !== "ai" && kind !== "youtube";
   const fetches = [
-    fetchJson("data/briefs.json"),
-    fetchJson("data/novosti.json")
+    needPython ? fetchJson("data/briefs.json") : Promise.resolve([]),
+    kind === "youtube" ? Promise.resolve([]) : fetchJson("data/novosti.json")
   ];
   if (wantYoutube || !kind) fetches.push(fetchJson("data/youtube.json"));
   const results = await Promise.all(fetches);
@@ -656,7 +680,7 @@ async function loadPySlovar() {
   const input = document.getElementById("py-slovar-search");
   const filters = document.getElementById("py-slovar-filters");
   const sortBox = document.getElementById("py-slovar-sort");
-  const items = await fetch("data/python-glossary.json", { cache: "no-store" }).then((r) => r.json()).catch(() => []);
+  const items = await fetch("data/python-glossary.json", { cache: "no-cache" }).then((r) => r.json()).catch(() => []);
   let activeTag = "";
   let sortMode = "course";
   const tags = Array.from(new Set(items.map((it) => it.tag).filter(Boolean))).sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
@@ -693,12 +717,10 @@ async function loadPySlovar() {
       if (activeTag && it.tag !== activeTag) return false;
       return !needle || pySlovarHaystack(it).includes(needle);
     }).sort((a, b) => comparePySlovar(a, b, sortMode));
-    list.innerHTML = "";
-    if (!shown.length) { list.innerHTML = '<div class="empty">Ничего не найдено.</div>'; return; }
-    shown.forEach((it) => list.appendChild(el(pySlovarRowHtml(it))));
+    renderChunked(list, shown, pySlovarRowHtml, '<div class="empty">Ничего не найдено.</div>');
   }
   draw("");
-  if (input) input.addEventListener("input", () => draw(input.value));
+  if (input) onSearchInput(input, draw);
 }
 function deepExampleHtml(ex, index) {
   if (!ex) return "";
@@ -787,11 +809,11 @@ async function loadPythonDeep() {
   if (!box) return;
   try {
     const [deep, path] = await Promise.all([
-      fetch("data/python-deep.json", { cache: "no-store" }).then((r) => {
+      fetch("data/python-deep.json", { cache: "no-cache" }).then((r) => {
         if (!r.ok) throw new Error("deep");
         return r.json();
       }),
-      fetch("data/course-path.json", { cache: "no-store" }).then((r) => (r.ok ? r.json() : { courses: [] })).catch(() => ({ courses: [] }))
+      fetch("data/course-path.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : { courses: [] })).catch(() => ({ courses: [] }))
     ]);
     const courses = deep.courses || [];
     const pathCourses = path.courses || [];
@@ -819,7 +841,7 @@ async function loadYoutube() {
   items.forEach((it) => list.appendChild(el(cardHtml(it))));
 }
 async function loadAiItem(id) {
-  const r = await fetch("data/novosti/items/" + encodeURIComponent(id) + ".json", { cache: "no-store" });
+  const r = await fetch("data/novosti/items/" + encodeURIComponent(id) + ".json", { cache: "no-cache" });
   if (!r.ok) return null;
   return r.json();
 }
@@ -906,13 +928,14 @@ async function loadAiItem(id) {
     setJ("moto-bm", l); syncMarks(); syncButtons(); if (panel && !panel.hidden) drawPanel();
   }
   function syncMarks() {
+    const bmKeys = new Set(getJ("moto-bm", []).map((b) => b.key)), readMap = getJ("moto-read", {});
     document.querySelectorAll("[data-bm-key]").forEach((b) => {
-      const on = isBm(b.dataset.bmKey); b.setAttribute("aria-pressed", on);
+      const on = bmKeys.has(b.dataset.bmKey); b.setAttribute("aria-pressed", on);
       if (b.classList.contains("ux-mini")) { b.textContent = on ? "★" : "☆"; b.setAttribute("aria-label", on ? "Убрать из закладок" : "В закладки"); }
       else b.textContent = on ? "★ В закладках" : "☆ В закладки";
     });
     document.querySelectorAll("[data-read-key]").forEach((b) => {
-      const on = isRead(b.dataset.readKey); b.setAttribute("aria-pressed", on);
+      const on = !!readMap[b.dataset.readKey]; b.setAttribute("aria-pressed", on);
       b.textContent = on ? "✓ Прочитано" : (b.dataset.readLabel || "Отметить прочитанным");
     });
   }
@@ -1018,7 +1041,7 @@ async function loadAiItem(id) {
   const page = location.pathname.split("/").pop().replace(/\.html$/, "") || "index";
   const params = new URLSearchParams(location.search);
   const qa = (scope, sel) => { const r = Array.from(scope.querySelectorAll(sel)); if (scope.matches && scope.matches(sel)) r.unshift(scope); return r; };
-  function enhance(scope) {
+  function enhance(scope, batch) {
     qa(scope, "pre").forEach(addCopy);
     if (io) qa(scope, REVEAL).forEach((n) => { if (!n.classList.contains("ux-rv")) { n.classList.add("ux-rv"); io.observe(n); } });
     qa(scope, "#slovar-list .fold-item > summary, .gl-item > summary").forEach((s) => {
@@ -1030,10 +1053,11 @@ async function loadAiItem(id) {
       if (s.querySelector(".ux-mini")) return; const d = s.parentElement;
       s.appendChild(starBtn({ key: "sp:" + d.id, type: "sp", title: txt(s.querySelector(".sp-name")), href: "spravochnik.html#" + d.id }, true));
     });
-    if (qa(scope, ".news-card,.put-road").length) markLists();
-    syncMarks();
+    if (qa(scope, ".news-card,.put-road").length) { if (batch) batch.lists = true; else markLists(); }
+    if (!batch) syncMarks();
   }
   function markLists() {
+    const readMap = getJ("moto-read", {}), isRead = (k) => !!readMap[k];
     document.querySelectorAll("a.news-card").forEach((a) => {
       let id = ""; try { id = new URL(a.href).searchParams.get("id") || ""; } catch (e) {}
       const on = id && isRead("brief:" + id); a.classList.toggle("ux-read", !!on);
@@ -1135,7 +1159,10 @@ async function loadAiItem(id) {
       if (sched || !pend.size) return; sched = true;
       requestAnimationFrame(() => {
         sched = false; const nodes = Array.from(pend); pend = new Set();
-        nodes.forEach((n) => { if (n.isConnected) enhance(n); });
+        const batch = { lists: false };
+        nodes.forEach((n) => { if (n.isConnected) enhance(n, batch); });
+        if (batch.lists) markLists();
+        syncMarks();
         if (br) setupBrief(br);
         slovarHash();
       });
