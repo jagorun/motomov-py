@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-11-07-utro",
+    "kind": "ai",
+    "date": "2026-11-07",
+    "dateLabel": "07.11.2026, суббота",
+    "topic": "водяной знак Grok; телеком-ЦОДы NVIDIA/Brightspeed; Inkling 2 Small; ERNIE 5.5 Flash Base; Teammates; Mistral Studio; Wyoming $17B; DOJ-SITF",
+    "title": "Новости ИИ · 07.11.2026 · водяной знак Grok и обход мораториев на ЦОДы",
+    "summary": "С 7 ноября у семи моделей Grok API по умолчанию включён невидимый текстовый водяной знак. NVIDIA обсуждает переделку 130+ телеком-зданий Brightspeed в мелкие ЦОДы под инференс (~1 ГВт), Thinking Machines и Baidu выложили крупные MoE-веса/доступ, Perplexity и Mistral усилили always-on агентов, а Google зафиксировала $17 млрд и 702 МВт топливных элементов в Wyoming."
+  },
+  {
     "id": "2026-11-06-utro",
     "kind": "ai",
     "date": "2026-11-06",
