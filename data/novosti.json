@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-11-07-vecher",
+    "kind": "ai",
+    "date": "2026-11-07",
+    "dateLabel": "07.11.2026, суббота",
+    "topic": "память агентов Anthropic; TODO-отвлечение Google; Rubicon; DeepMind RSA-1024; BioBasicsBench; оценки OpenAI/Anthropic; Microsoft–Oracle",
+    "title": "Новости ИИ · 07.11.2026 · агентная инженерия вместо нового чата",
+    "summary": "Anthropic показала слои памяти и dreaming для агентов, Google измерила налог старых TODO (+77% токенов), GitHub описал Rubicon под тысячи агентных push, DeepMind ускорила известный расчёт RSA-1024 агентами, OpenAI выложила BioBasicsBench, а оценки OpenAI ($1,25 трлн) и Anthropic IPO ($1,1–1,3 трлн) остыли после распродажи; Microsoft сворачивает аренду GPU у Oracle."
+  },
+  {
     "id": "2026-11-07-utro",
     "kind": "ai",
     "date": "2026-11-07",
