@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-11-08-utro",
+    "kind": "ai",
+    "date": "2026-11-08",
+    "dateLabel": "08.11.2026, воскресенье",
+    "topic": "Hacktron проверяет OpenAI; Muse Wonder в массовых Muse и Meta AI; научные модели как набор гипотез; Claude в EU Data Boundary; Google Z4M",
+    "title": "Новости ИИ · 08.11.2026 · память агентов и проверка своих же систем",
+    "summary": "OpenAI 6 ноября наняла Hacktron совместно проверять свои системы и стыки с чужими сервисами. Meta спускает в Muse и Meta AI навыки флагмана Muse Wonder — активную память и Active Focus. Anthropic опубликовала эссе о том, что научный агент должен отдавать набор гипотез, а не одну формулу; Microsoft обещает до конца 2026 года завести Claude в Copilot внутрь EU Data Boundary, а Google Cloud вывела в общий доступ машины Z4M под чекпоинты и KV-кэш."
+  },
+  {
     "id": "2026-11-07-vecher",
     "kind": "ai",
     "date": "2026-11-07",
