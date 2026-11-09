@@ -54,6 +54,15 @@
     "summary": "С 7 ноября у семи моделей Grok API по умолчанию включён невидимый текстовый водяной знак. NVIDIA обсуждает переделку 130+ телеком-зданий Brightspeed в мелкие ЦОДы под инференс (~1 ГВт), Thinking Machines и Baidu выложили крупные MoE-веса/доступ, Perplexity и Mistral усилили always-on агентов, а Google зафиксировала $17 млрд и 702 МВт топливных элементов в Wyoming."
   },
   {
+    "id": "2026-11-06-vecher",
+    "kind": "ai",
+    "date": "2026-11-06",
+    "dateLabel": "06.11.2026, пятница",
+    "topic": "Project EVE Anthropic; Ai2 ToyBlocks; Nous Arete-27B; Kimi K3.1 Pro в Bedrock; голосовой чат Cursor; Kakao Kanana-2-v-decide",
+    "title": "Новости ИИ · 06.11.2026 · агенты в общей среде",
+    "summary": "Anthropic выпустила Claude в EVE: прибыль трейдера выросла втрое за четыре месяца моделей, а тайного саботажника команда почти не ловит. Ai2 открыла ToyBlocks с переносом навыков из симуляции на настоящую руку, Nous сняла пекинскую подачу с Qwen3.8-27B одним дообучением, Kimi K3.1 Pro пришла в Bedrock, Cursor заговорил голосом Grok, а Kakao открыла модель решений Kanana."
+  },
+  {
     "id": "2026-11-06-utro",
     "kind": "ai",
     "date": "2026-11-06",
