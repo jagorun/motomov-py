@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-11-10-vecher",
+    "kind": "ai",
+    "date": "2026-11-10",
+    "dateLabel": "10.11.2026, вторник",
+    "topic": "модели и агенты",
+    "title": "Новости ИИ · 10.11.2026 · Gemini 4 Carbon и цена цепочки поставок",
+    "summary": "Google открыла Gemini 4 Carbon по цене Argon, выпустила Gemini Robotics 2.5 и вместе с Artificial Analysis запустила тест MKA для агентов. Маск обещает мягкий запуск Grok 4.8 на этой неделе, Fireworks AI расширила отчёт о взломе, а Anthropic отозвала цифры размещения акций."
+  },
+  {
     "id": "2026-11-10-utro",
     "kind": "ai",
     "date": "2026-11-10",
