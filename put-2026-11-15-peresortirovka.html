@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Как второй шаг поиска ставит лучших наверх: пересортировка перекрёстным кодировщиком · py.motomov.ru</title>
+  <meta name="description" content="Пять ступеней: двухэтапный поиск и разница между двойным и перекрёстным кодировщиком; что модель видит на входе и что значит её оценка; сколько стоит пересортировка и сколько кандидатов ей давать; как мерить пользу — nDCG@10 и потолок первого поиска; где пересортировка ломается — обрезка длинных текстов, чужой язык, порог «ответа нет». Все примеры запускались на настоящих моделях MiniLM и наборе SciFact.">
+  <meta name="theme-color" content="#f3efe6">
+  <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
+  <link rel="canonical" href="https://py.motomov.ru/put-2026-11-15-peresortirovka">
+  <link rel="stylesheet" href="styles.css?v=ui20261019ux">
+  <script>try{var d=document.documentElement,s=localStorage;if(s.getItem("moto-theme")==="dark")d.dataset.theme="dark";var f=s.getItem("moto-fs");if(f&&f!=="1")d.dataset.fs=f;if(s.getItem("moto-comfy")==="1")d.dataset.comfy="1"}catch(e){}</script>
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="novosti.html" aria-label="На главную: новости">
+        <img class="brand-logo" src="https://www.motomov.ru/logo.jpg" width="32" height="32" alt="">
+        <span class="brand-name">Moto<span class="brand-dot">·</span><span class="brand-py">py</span></span>
+      </a>
+      <nav class="nav" aria-label="Разделы сайта">
+        <a href="novosti.html">Новости</a><a href="metodichka.html">Методичка</a><a class="active" aria-current="page" href="put.html">Дорожка</a><a href="slovar.html">Словарь</a><a href="kb.html">База</a><a href="archive.html">Архив</a>
+      </nav>
+      <details class="nav-more">
+        <summary aria-label="Ещё разделы">Ещё <span aria-hidden="true">▾</span></summary>
+        <div class="nav-more-list"><a href="spravochnik.html">Справочник Python</a><a href="news.html">Python: уроки</a><a href="course.html">Курс</a><a href="slovar-python.html">Словарь Python</a><a href="youtube.html">YouTube</a><a href="index.html">Старт</a><a href="https://www.motomov.ru/">Визитка motomov.ru</a></div>
+      </details>
+    </header>
+    <header class="hero">
+      <span class="badge">дорожка · 15.11.2026 · пересортировка</span>
+      <h1>Как второй шаг поиска ставит лучших наверх: пересортировка перекрёстным кодировщиком</h1>
+      <p class="bio">В <a href="/put-2026-11-14-gibridnyj-poisk">прошлой дорожке</a> мы склеивали выдачу поиска по словам и векторного поиска и несколько раз упирались в одно и то же: за порядок внутри первой десятки лучше отвечает отдельный, более дорогой шаг — пересортировка (reranking). Узкий вопрос дня: как устроена пересортировка перекрёстным кодировщиком (cross-encoder), сколько она стоит, сколько кандидатов ей давать и как проверить, что она вообще помогает. В <a href="/put-poisk">старой короткой дорожке про поиск по заметкам</a> пересортировка была одной ступенью «на пальцах», а в <a href="/put-2026-11-12-kontrastnoe-obuchenie">дорожке про контрастное обучение</a> — одной фразой; здесь — устройство, замеры и ловушки. В этот раз примеры работают не на игрушечном мире, а на настоящих открытых моделях: перекрёстный кодировщик cross-encoder/ms-marco-MiniLM-L6-v2 и двойной кодировщик sentence-transformers/all-MiniLM-L6-v2, обе запускались на процессоре коробки через ONNX Runtime. Качество мерили на открытом наборе SciFact из сборника BEIR: 5183 аннотации научных статей и 300 проверочных утверждений с размеченными правильными статьями. Обе модели английские, поэтому и примеры на английском; что бывает с русским, показано на пятой ступени. Все цифры ниже — из наших запусков, кроме помеченных источником.</p>
+      <p class="bio" style="margin-top:.6rem">Все дорожки — <a href="/put">/put</a>. Прошлая — <a href="/put-2026-11-14-gibridnyj-poisk">BM25 и гибридный поиск</a>.</p>
+    </header>
+    <section>
+      <div class="fold-list">
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">1</span>
+            <span class="fold-title">Двухэтапный поиск: зачем после быстрого поиска нужен медленный и внимательный</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Поиск по словам и векторный поиск из прошлых дорожек быстро достают из миллионов документов сотню «похожих по теме». Но в ответ модели, в подсказку RAG или на первый экран пользователя попадают обычно три–десять штук, и важно, чтобы это были тексты, которые <em>отвечают</em> на вопрос, а не просто говорят о том же. Пересортировка (reranking) — второй шаг, который берёт короткий список кандидатов и расставляет его заново более точной и более дорогой моделью. Она стоит в Cohere Rerank, в ретривере text_similarity_reranker в Elasticsearch, в шаблонах LangChain и LlamaIndex, и почти любой «продвинутый RAG» — это первый поиск плюс пересортировка.</p>
+<p><strong>Как это устроено.</strong> Шаг первый — отбор кандидатов (retrieval): дешёвый поиск по всей базе возвращает, например, 20–100 документов. Здесь важна полнота: правильный документ должен хотя бы попасть в список, место внутри не так важно. Шаг второй — пересортировка: для каждой пары «вопрос — кандидат» модель считает одну оценку соответствия, и список сортируется по ней. Шаг третий — отрезают первые k и отдают дальше. Такая схема называется двухэтапным поиском (retrieve-then-rerank), а бывает и трёхэтапной, когда между дешёвым и самым дорогим шагом ставят средний.</p>
+<p>Ключевая разница — в том, как модели видят вопрос и текст. Двойной кодировщик (bi-encoder), которым делают векторный поиск, кодирует вопрос и текст <em>по отдельности</em>, а потом сравнивает два готовых вектора косинусом. Поэтому векторы всех документов можно посчитать заранее, а при вопросе закодировать только сам вопрос. Перекрёстный кодировщик (cross-encoder) получает вопрос и текст <em>одной строкой</em>, и внимание трансформера (дорожка про внимание) связывает каждое слово вопроса с каждым словом текста на всех слоях. Он видит, что «сколько хранить» в вопросе связано с «четыре–шесть дней» в тексте, а не просто что оба текста про рис. Цена: заранее ничего посчитать нельзя, модель надо прогонять заново на каждую пару.</p>
+<p>Отсюда ограничение: перекрёстный кодировщик никогда не ставят на всю базу — он может только переставить то, что принёс первый шаг. Если правильного документа нет среди кандидатов, никакая пересортировка его не вернёт. Отличие от соседнего понятия — склейки из прошлой дорожки (RRF, взвешенная сумма): склейка работает только с уже посчитанными оценками и местами и почти ничего не стоит, а пересортировка заново читает тексты и стоит в сотни раз дороже. Идею «BERT как пересортировщик» опубликовали Nogueira и Cho в 2019 году (Passage Re-ranking with BERT) на наборе MS MARCO — это 8,8 млн отрывков веб-страниц и настоящие вопросы из поиска Bing с отмеченными ответами.</p>
+<p><strong>Подробный пример.</strong> Две настоящие открытые модели. Двойной кодировщик — sentence-transformers/all-MiniLM-L6-v2 (6 слоёв, вектор из 384 чисел, вектор текста — среднее по векторам его токенов). Перекрёстный — cross-encoder/ms-marco-MiniLM-L6-v2 (тоже 6 слоёв и 384 числа в скрытом слое, обучен на MS MARCO). Обе скачаны в формате ONNX и запускаются через ONNX Runtime на процессоре; общий модуль lib.py с обёртками моделей, BM25 и метриками используется во всех примерах дорожки. Задаём вопрос «сколько можно хранить варёный рис в холодильнике» (по-английски, модели английские) и восемь коротких текстов: один прямой ответ, остальные — про рис, про холодильник или про хранение другой еды.</p>
+<pre><code class="language-python">import json, time, math, re, numpy as np, onnxruntime as ort
+from tokenizers import Tokenizer
+from collections import Counter, defaultdict
+HERE = "/workspace/put-gen-1115"
+so = ort.SessionOptions(); so.intra_op_num_threads = 8
+
+class CrossEncoder:
+    """Перекрёстный кодировщик: вопрос и текст идут в модель ОДНОЙ строкой [CLS] вопрос [SEP] текст [SEP]."""
+    def __init__(self, path=f"{HERE}/models/ms", max_len=512):
+        self.tok = Tokenizer.from_file(f"{path}/tokenizer.json")
+        self.tok.enable_truncation(max_len, strategy="only_second")   # режем только текст, вопрос целиком
+        self.tok.enable_padding()
+        self.sess = ort.InferenceSession(f"{path}/model.onnx", so, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+    def score(self, query, docs, batch=32):
+        out = []
+        for s in range(0, len(docs), batch):
+            enc = self.tok.encode_batch([(query, d) for d in docs[s:s+batch]])
+            feed = {"input_ids": np.array([e.ids for e in enc], dtype=np.int64),
+                    "attention_mask": np.array([e.attention_mask for e in enc], dtype=np.int64),
+                    "token_type_ids": np.array([e.type_ids for e in enc], dtype=np.int64)}
+            out.append(self.sess.run(None, {k: v for k, v in feed.items() if k in self.names})[0][:, 0])
+        return np.concatenate(out)
+
+class BiEncoder:
+    """Двойной кодировщик: каждый текст отдельно -&gt; вектор (среднее по токенам), сравнение косинусом."""
+    def __init__(self, path=f"{HERE}/models/bi", max_len=256):
+        self.tok = Tokenizer.from_file(f"{path}/tokenizer.json")
+        self.tok.enable_truncation(max_len); self.tok.enable_padding()
+        self.sess = ort.InferenceSession(f"{path}/model.onnx", so, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+    def encode(self, texts, batch=64):
+        out = []
+        for s in range(0, len(texts), batch):
+            enc = self.tok.encode_batch(texts[s:s+batch])
+            ids = np.array([e.ids for e in enc], dtype=np.int64); m = np.array([e.attention_mask for e in enc], dtype=np.int64)
+            feed = {"input_ids": ids, "attention_mask": m, "token_type_ids": np.zeros_like(ids)}
+            h = self.sess.run(None, {k: v for k, v in feed.items() if k in self.names})[0]
+            v = (h * m[..., None]).sum(1) / m.sum(1, keepdims=True)
+            out.append(v / np.linalg.norm(v, axis=1, keepdims=True))
+        return np.concatenate(out).astype(np.float32)
+
+def words(t): return re.findall(r"\w+", t.lower())
+class BM25:
+    def __init__(self, docs, k1=1.2, b=0.75):
+        self.k1, self.b, self.N = k1, b, len(docs)
+        self.len = np.array([len(d) for d in docs], float); self.avg = self.len.mean()
+        self.post = defaultdict(list)
+        for i, d in enumerate(docs):
+            for w, c in Counter(d).items(): self.post[w].append((i, c))
+    def scores(self, q):
+        s = np.zeros(self.N)
+        for w in set(q):
+            p = self.post.get(w, []); n = len(p)
+            idf = math.log(1 + (self.N - n + 0.5) / (n + 0.5))
+            for i, tf in p:
+                s[i] += idf * tf * (self.k1 + 1) / (tf + self.k1 * (1 - self.b + self.b * self.len[i] / self.avg))
+        return s
+
+def ndcg10(ranked, rel):
+    """nDCG@10 для двоичных меток: сумма 1/log2(место+1) по правильным в первой десятке, делённая на лучшее возможное."""
+    dcg = sum(1 / math.log2(r + 2) for r, d in enumerate(ranked[:10]) if d in rel)
+    idcg = sum(1 / math.log2(r + 2) for r in range(min(len(rel), 10)))
+    return dcg / idcg
+def recall(ranked, rel, k): return len(set(ranked[:k]) &amp; rel) / len(rel)
+
+def load_scifact():
+    corpus = [json.loads(l) for l in open(f"{HERE}/scifact/corpus.jsonl")]
+    queries = {q["_id"]: q["text"] for q in map(json.loads, open(f"{HERE}/scifact/queries.jsonl"))}
+    qrels = defaultdict(set)
+    for line in list(open(f"{HERE}/scifact/qrels/test.tsv"))[1:]:
+        q, d, s = line.split("\t")
+        if int(s) &gt; 0: qrels[q].add(d)
+    return corpus, queries, dict(qrels)</code></pre>
+<pre><code class="language-python"># Ступень 1: первый поиск находит «про то же», пересортировка ставит наверх то, что ОТВЕЧАЕТ.
+from lib import *
+q = "how long can I keep a cooked rice in the fridge"
+docs = [
+ "Cooked rice can be stored in the refrigerator for up to four to six days in an airtight container.",
+ "Rice is a staple food in Asia; cooked rice is served with almost every meal.",
+ "Keep your fridge at 4 degrees Celsius or below to slow the growth of bacteria.",
+ "How to cook fluffy rice: rinse the grains, use 1.5 cups of water per cup of rice, simmer 18 minutes.",
+ "Uncooked white rice keeps for years in the pantry if protected from moisture and insects.",
+ "Leftover pasta should be eaten within three to five days when kept refrigerated.",
+ "Bacillus cereus spores in rice survive cooking, so cool leftovers within an hour before refrigerating.",
+ "A new fridge model with a rice cooker built into the door was shown at the trade fair.",
+]
+bi, ce = BiEncoder(), CrossEncoder()
+cos = bi.encode(docs) @ bi.encode([q])[0]
+ces = ce.score(q, docs)
+print("документ | косинус (двойной) | оценка перекрёстного | место до -&gt; после")
+o1 = np.argsort(-cos); o2 = np.argsort(-ces)
+for i in o1:
+    print(f"d{i} | {cos[i]:.3f} | {ces[i]:+.2f} | {list(o1).index(i)+1} -&gt; {list(o2).index(i)+1} | {docs[i][:60]}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">документ | косинус (двойной) | оценка перекрёстного | место до -&gt; после
+d0 | 0.895 | +9.93 | 1 -&gt; 1 | Cooked rice can be stored in the refrigerator for up to four
+d4 | 0.631 | +3.88 | 2 -&gt; 2 | Uncooked white rice keeps for years in the pantry if protect
+d6 | 0.588 | +2.10 | 3 -&gt; 3 | Bacillus cereus spores in rice survive cooking, so cool left
+d1 | 0.531 | -6.59 | 4 -&gt; 7 | Rice is a staple food in Asia; cooked rice is served with al
+d3 | 0.519 | -3.28 | 5 -&gt; 5 | How to cook fluffy rice: rinse the grains, use 1.5 cups of w
+d5 | 0.476 | -2.41 | 6 -&gt; 4 | Leftover pasta should be eaten within three to five days whe
+d2 | 0.345 | -8.84 | 7 -&gt; 8 | Keep your fridge at 4 degrees Celsius or below to slow the g
+d7 | 0.292 | -5.39 | 8 -&gt; 6 | A new fridge model with a rice cooker built into the door wa</code></pre>
+<p>Что видно. Прямой ответ d0 оба кодировщика ставят первым, здесь задача простая. Разница — в середине списка. Двойной кодировщик поставил на четвёртое место d1 «рис — основная еда в Азии» с косинусом 0,531: текст очень «про рис», но ничего не говорит о хранении. Перекрёстный кодировщик опустил его на седьмое место с оценкой −6,59. Зато d5 про то, сколько хранится варёная паста, поднялся с шестого места на четвёртое: это ответ на очень похожий вопрос о хранении в холодильнике. Обратите внимание на шкалы: косинусы лежат между 0,29 и 0,90, а оценки перекрёстного — от −8,84 до +9,93; это не вероятности и не косинусы, о них — на второй ступени.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Пытаются поставить перекрёстный кодировщик на всю базу «для точности». Он не умеет искать, он умеет только сравнивать пары; на третьей ступени видно, что один вопрос по базе из 5 тысяч коротких текстов занял бы у нас около двух минут.</li>
+<li>Добавляют пересортировку, чтобы «находилось больше». Пересортировка не добавляет новых документов, она меняет только порядок; если ответ не попадает в кандидатов, чинить надо первый шаг.</li>
+<li>Путают роли моделей и берут двойной кодировщик для пересортировки (пересчитать косинус). Это тот же самый взгляд, что на первом шаге, и порядок почти не изменится; смысл второго шага — в модели, которая читает пару вместе.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Пересортировка (reranking).</strong> Второй шаг поиска: короткий список кандидатов заново оценивается более точной моделью и сортируется.</p>
+<p><strong>Отбор кандидатов (retrieval).</strong> Первый, дешёвый шаг, который достаёт из всей базы несколько десятков подходящих текстов.</p>
+<p><strong>Двухэтапный поиск (retrieve-then-rerank).</strong> Схема «быстро отобрать по всей базе, потом внимательно переставить немногих».</p>
+<p><strong>Двойной кодировщик (bi-encoder).</strong> Модель, которая кодирует вопрос и текст по отдельности в векторы и сравнивает их косинусом.</p>
+<p><strong>Перекрёстный кодировщик (cross-encoder).</strong> Модель, которая читает вопрос и текст одной строкой и выдаёт одно число — насколько текст подходит.</p>
+<p><strong>MS MARCO.</strong> Открытый набор Microsoft из вопросов поиска Bing и 8,8 млн отрывков с отмеченными ответами, на нём учат большинство пересортировщиков.</p>
+<p><strong>MiniLM.</strong> Семейство небольших трансформеров, полученных дистилляцией из больших; на нём построены обе модели примеров.</p>
+<p><strong>ONNX Runtime.</strong> Библиотека для быстрого запуска уже обученных моделей на процессоре или видеокарте без PyTorch.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">2</span>
+            <span class="fold-title">Что видит перекрёстный кодировщик и что означает его оценка</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Оценку пересортировщика постоянно пытаются использовать как «уверенность»: показывать ответ, только если она выше порога, или сравнивать оценки разных вопросов. Чтобы делать это осознанно, нужно знать, что именно подаётся в модель, что она возвращает и чему её учили. От этого же зависит, что делать с длинными документами и почему модель иногда уверенно хвалит неверный ответ.</p>
+<p><strong>Как это устроено.</strong> Вход — одна строка из двух частей: [CLS] вопрос [SEP] текст [SEP]. [CLS] и [SEP] — служебные токены: первый стоит в начале и его итоговый вектор используют как «сводку» всей пары, второй разделяет части. Каждому токену дополнительно сообщают номер части (token_type_ids): 0 — вопрос, 1 — текст; так модель знает, где что. Порядок частей важен: модель учили на парах «вопрос, потом отрывок», и если их поменять местами, оценка будет другой.</p>
+<p>Внутри — обычный трансформер-кодировщик вроде BERT, где каждый токен на каждом слое смотрит на все токены пары. Поверх итогового вектора [CLS] стоит один маленький линейный слой, который выдаёт одно число — логит (logit), то есть оценку до превращения в вероятность. У нашей модели нет верхней и нижней границы: хороший ответ получает около +10, явно чужой текст — около −10. Если пропустить логит через сигмоиду (sigmoid), получится число от 0 до 1, но это не откалиброванная вероятность «текст отвечает»: при логите 6 сигмоида уже 0,998, и все хорошие кандидаты сливаются в «почти единицу».</p>
+<p>Длина входа ограничена: у моделей семейства BERT — 512 токенов на всю пару. Если пара длиннее, токенизатор отрезает лишнее; разумно резать только текст и оставлять вопрос целиком (в библиотеке tokenizers это стратегия only_second). Всё, что после отреза, модель просто не видит — к этому вернёмся на пятой ступени.</p>
+<p>Чему модель учили, то она и меряет. На MS MARCO пару «вопрос — отрывок» размечали как «отрывок содержит ответ» или нет, поэтому модель оценивает <em>соответствие вопросу</em>, а не истинность. Отличие от соседнего понятия — модели проверки фактов или естественно-языкового вывода (NLI, natural language inference), которая решает, следует ли утверждение из текста: пересортировщику всё равно, правильное ли число в тексте, если текст выглядит как ответ на такой вопрос. Различают и способ обучения: поточечный (pointwise) — каждая пара получает свою оценку, как у нас; попарный (pairwise) — модель учат, какой из двух текстов лучше; списочный (listwise) — модель видит сразу весь список, так работают пересортировщики на больших языковых моделях вроде RankGPT (Sun и соавторы, 2023).</p>
+<p><strong>Подробный пример.</strong> Смотрим, на какие куски токенизатор режет пару, какие у неё номера частей, что получается при обрезке до 24 токенов и как меняется оценка, если поменять местами вопрос и текст или заменить в ответе одну важную деталь. Рядом печатаем косинус двойного кодировщика для тех же текстов.</p>
+<pre><code class="language-python"># Ступень 2: что именно видит перекрёстный кодировщик и что он возвращает.
+from lib import *
+ce, bi = CrossEncoder(), BiEncoder()
+q = "how long can I keep a cooked rice in the fridge"
+d = "Cooked rice can be stored in the refrigerator for up to four to six days in an airtight container."
+e = ce.tok.encode(q, d)
+print("токенов в паре:", len(e.ids))
+print("куски:", " ".join(e.tokens))
+print("номер части (token_type_ids):", "".join(map(str, e.type_ids)))
+s = float(ce.score(q, [d])[0])
+print(f"выход модели (логит) = {s:+.3f}; сигмоида = {1/(1+math.exp(-s)):.4f}; косинус двойного = {float(bi.encode([d])[0] @ bi.encode([q])[0]):.3f}")
+# одна и та же пара в обратном порядке: модель не симметрична
+print(f"поменяли местами вопрос и текст: {float(ce.score(d, [q])[0]):+.3f}")
+# текст тот же, но ответ сказан с отрицанием и с другим числом
+for alt in ["Cooked rice should never be stored in the refrigerator.",
+            "Cooked rice can be stored in the refrigerator for up to one hour.",
+            "Cooked pasta can be stored in the refrigerator for up to four to six days."]:
+    cos = float(bi.encode([alt])[0] @ bi.encode([q])[0])
+    print(f"перекрёстный {float(ce.score(q, [alt])[0]):+.3f} | косинус {cos:.3f} | {alt}")
+# обрезка: вопрос остаётся целиком, режется только текст
+ce2 = CrossEncoder(max_len=24)
+e2 = ce2.tok.encode(q, d)
+print("при max_len=24:", " ".join(e2.tokens))</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">токенов в паре: 35
+куски: [CLS] how long can i keep a cooked rice in the fridge [SEP] cooked rice can be stored in the refrigerator for up to four to six days in an air ##tight container . [SEP]
+номер части (token_type_ids): 00000000000001111111111111111111111
+выход модели (логит) = +9.926; сигмоида = 1.0000; косинус двойного = 0.895
+поменяли местами вопрос и текст: +4.652
+перекрёстный +2.435 | косинус 0.665 | Cooked rice should never be stored in the refrigerator.
+перекрёстный +9.529 | косинус 0.881 | Cooked rice can be stored in the refrigerator for up to one hour.
+перекрёстный +0.762 | косинус 0.576 | Cooked pasta can be stored in the refrigerator for up to four to six days.
+при max_len=24: [CLS] how long can i keep a cooked rice in the fridge [SEP] cooked rice can be stored in the refrigerator for up [SEP]</code></pre>
+<p>Что видно. В паре 35 токенов: 13 у вопроса со служебными [CLS] и [SEP] (номер части 0) и 22 у текста (номер 1); слово airtight разрезано на air и ##tight. Логит прямого ответа +9,926, и сигмоида от него печатается как 1,0000 — для сортировки она бесполезна. Если поменять части местами, оценка падает до +4,652: модель несимметрична. Самое поучительное — три изменённых ответа. Текст «можно хранить до одного часа» получил +9,529, почти столько же, сколько верный: по форме это ответ на вопрос, и модель не проверяет число. Текст «никогда не храните в холодильнике» — +2,435, а «паста хранится четыре–шесть дней» — +0,762: подмену предмета (паста вместо риса) модель заметила сильнее, чем подмену срока. Косинусы двойного кодировщика для тех же текстов — 0,881, 0,665 и 0,576, то есть порядок тот же, но разрыв между ответом и «почти ответом» у перекрёстного кодировщика гораздо больше. При обрезке до 24 токенов вопрос остался целиком, а текст оборвался на «for up».</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Считают сигмоиду от логита вероятностью правильного ответа и ставят порог 0,5 или 0,9. Почти все тематически близкие тексты получат больше 0,9; порог, если он нужен, подбирают по размеченным примерам (пятая ступень).</li>
+<li>Ждут от пересортировщика проверки фактов. Он ставит наверх текст, похожий на ответ; верно ли там написано, решает источник, а не модель.</li>
+<li>Подают пару в другом порядке или другом формате, чем при обучении (например, текст первым или с длинной инструкцией перед вопросом). Оценки заметно меняются; формат входа смотрят в карточке модели.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>[CLS].</strong> Служебный токен в начале входа, итоговый вектор которого используют как сводку всей пары.</p>
+<p><strong>[SEP].</strong> Служебный токен-разделитель между вопросом и текстом и в конце входа.</p>
+<p><strong>Номер части (token_type_ids).</strong> Метка у каждого токена, показывающая, из вопроса он или из текста.</p>
+<p><strong>Логит (logit).</strong> Число на выходе модели до превращения в вероятность; у пересортировщика оно и есть оценка пары.</p>
+<p><strong>Сигмоида (sigmoid).</strong> Функция 1/(1 + e<sup>−x</sup>), сжимающая любое число в промежуток от 0 до 1.</p>
+<p><strong>Поточечное обучение (pointwise).</strong> Способ, при котором модель учится оценивать каждую пару «вопрос — текст» отдельно.</p>
+<p><strong>Списочная пересортировка (listwise).</strong> Способ, при котором модель видит сразу весь список кандидатов и выдаёт их порядок.</p>
+<p><strong>Обрезка (truncation).</strong> Отбрасывание токенов сверх предельной длины входа модели.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">3</span>
+            <span class="fold-title">Сколько стоит пересортировка и сколько кандидатов ей давать</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Пересортировка — обычно самый медленный шаг поиска: первый поиск укладывается в миллисекунды, а модель над сотней кандидатов может занимать секунды. Чтобы ответ приходил вовремя и не стоил лишнего (пересортировка через облачный сервис оплачивается за каждый запрос и документ), нужно знать, от чего растёт время: от числа кандидатов, от их длины и от железа. Тогда число кандидатов выбирают расчётом, а не «возьмём 100, на всякий случай».</p>
+<p><strong>Как это устроено.</strong> Время пересортировки примерно пропорционально числу пар: каждая пара — отдельный прогон модели, и сэкономить на повторяющемся вопросе нельзя, потому что вопрос внутри модели перемешивается с текстом. Пары собирают в пакеты (batch) и считают пакетом, это лучше загружает процессор или видеокарту, но не меняет пропорциональность.</p>
+<p>Второй рычаг — длина. Внимание сравнивает каждый токен с каждым, поэтому его часть стоит пропорционально квадрату длины, а остальная работа слоя — пропорционально длине. В итоге пара из 512 токенов обходится в разы дороже пары из 128, и обрезать тексты кандидатов до разумной длины (или пересортировывать короткие куски, а не целые документы) — главный способ ускорения после уменьшения числа кандидатов.</p>
+<p>Третий рычаг — размер модели и железо. Маленькие модели вроде MiniLM с 6 слоями работают на процессоре; большие пересортировщики на сотни миллионов параметров (например, многоязычная BAAI/bge-reranker-v2-m3) или списочные на языковых моделях обычно требуют видеокарты. Бывает и промежуточный путь — позднее взаимодействие (late interaction), как в ColBERT (Khattab и Zaharia, 2020): векторы каждого токена документа считают заранее, а при вопросе сравнивают токены вопроса с токенами документа. Это дешевле перекрёстного кодировщика и точнее одного вектора на текст.</p>
+<p>Отличие от двойного кодировщика здесь в том, когда платят. Двойной платит один раз за весь корпус при индексации, а потом каждый вопрос стоит одно кодирование и умножение матрицы. Перекрёстный платит на каждый вопрос и каждого кандидата. Масштаб разницы хорошо виден в статье Sentence-BERT (Reimers и Gurevych, 2019): найти самую похожую пару среди 10 000 предложений перекрёстным BERT — около 50 млн прогонов и примерно 65 часов, а векторами — около 5 секунд.</p>
+<p><strong>Подробный пример.</strong> Меряем на коробке, на 8 ядрах процессора без видеокарты: сначала длину пар «вопрос + аннотация статьи» в SciFact, затем время пересортировки 10–200 кандидатов при предельной длине 512, затем время на 100 пар при обрезке до 64, 128, 256 и 512 токенов, и для сравнения — сколько занимает векторный поиск по готовым векторам всех 5183 аннотаций. Каждое время — медиана трёх повторов после одного прогрева.</p>
+<pre><code class="language-python"># Ступень 3: сколько стоит пересортировка. Время на 8 ядрах процессора коробки, ONNX Runtime, без видеокарты.
+from lib import *
+corpus, queries, qrels = load_scifact()
+texts = [(d["title"] + ". " + d["text"]).strip() for d in corpus]
+q = queries[sorted(qrels)[0]]
+ce, bi = CrossEncoder(), BiEncoder()
+def timed(f, rep=3):
+    f(); ts = []
+    for _ in range(rep):
+        t = time.perf_counter(); f(); ts.append(time.perf_counter() - t)
+    return sorted(ts)[len(ts) // 2]
+lens = [len(ce.tok.encode(q, t).ids) for t in texts[:2000]]
+print(f"длина пары «вопрос + аннотация» в токенах: медиана {int(np.median(lens))}, 90-й процентиль {int(np.percentile(lens, 90))}, длиннее 512: {np.mean(np.array(lens) &gt;= 512):.1%}")
+print("сколько кандидатов -&gt; время пересортировки (max_len 512):")
+for n in (10, 20, 50, 100, 200):
+    t = timed(lambda: ce.score(q, texts[:n]))
+    print(f"  {n:&gt;4d} пар: {1000*t:7.0f} мс  ({1000*t/n:.1f} мс на пару)")
+print("длина пары -&gt; время на 100 пар:")
+for L in (64, 128, 256, 512):
+    c = CrossEncoder(max_len=L)
+    t = timed(lambda: c.score(q, texts[:100]))
+    print(f"  max_len {L:&gt;3d}: {1000*t:6.0f} мс")
+D = bi.encode(texts)
+t = timed(lambda: np.argsort(-(D @ bi.encode([q])[0]))[:100])
+print(f"двойной кодировщик: закодировать вопрос и найти 100 лучших из {len(texts)} готовых векторов — {1000*t:.1f} мс")
+t1 = timed(lambda: ce.score(q, texts[:100]), rep=1)
+print(f"перекрёстный по всем {len(texts)} документам для одного вопроса заняло бы примерно {t1/100*len(texts):.0f} с")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">длина пары «вопрос + аннотация» в токенах: медиана 328, 90-й процентиль 507, длиннее 512: 9.3%
+сколько кандидатов -&gt; время пересортировки (max_len 512):
+    10 пар:     239 мс  (23.9 мс на пару)
+    20 пар:     526 мс  (26.3 мс на пару)
+    50 пар:    1273 мс  (25.5 мс на пару)
+   100 пар:    2450 мс  (24.5 мс на пару)
+   200 пар:    4556 мс  (22.8 мс на пару)
+длина пары -&gt; время на 100 пар:
+  max_len  64:    225 мс
+  max_len 128:    363 мс
+  max_len 256:    784 мс
+  max_len 512:   2279 мс
+двойной кодировщик: закодировать вопрос и найти 100 лучших из 5183 готовых векторов — 8.0 мс
+перекрёстный по всем 5183 документам для одного вопроса заняло бы примерно 121 с</code></pre>
+<p>Что видно. Пара «утверждение + аннотация» в SciFact — в среднем 328 токенов, и у 9,3% пар не помещается в 512. Время растёт почти ровно пропорционально числу кандидатов: 10 пар — 239 мс, 100 — 2,45 с, 200 — 4,56 с, примерно 23–26 мс на пару. Длина влияет сильнее, чем кажется: те же 100 пар при обрезке до 128 токенов заняли 363 мс, до 512 — 2279 мс, в 6,3 раза дольше. Векторный поиск по всей базе занял 8 мс, а перекрёстный кодировщик по всей базе для одного вопроса занял бы около 121 секунды. Поэтому на процессоре с такой моделью разумный бюджет — 20–50 коротких кандидатов, если ответ нужен за секунду. В большом прогоне для четвёртой ступени мы пересортировали 51 697 пар за 1619 с, это 31,3 мс на пару — чуть медленнее, потому что тогда параллельно работали другие задачи.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Подают в пересортировку целые документы на тысячи токенов. Время растёт быстрее длины, а модель всё равно видит только первые 512 токенов; режут на куски и пересортировывают куски.</li>
+<li>Выбирают число кандидатов, не померив время на своём железе и своей длине текстов. Цифры из чужого бенчмарка на видеокарте ничего не говорят о процессоре в вашем сервисе.</li>
+<li>Забывают, что пересортировка платная за документ. У облачных сервисов цена считается за запрос и число документов в нём; 100 кандидатов вместо 20 — это и в пять раз больше времени, и больший счёт.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Пакет (batch).</strong> Несколько пар, которые модель обрабатывает за один прогон для лучшей загрузки железа.</p>
+<p><strong>Задержка (latency).</strong> Время от вопроса до готового ответа; у пересортировки оно растёт с числом и длиной кандидатов.</p>
+<p><strong>Число кандидатов (top-N).</strong> Сколько документов первого шага передаётся на пересортировку.</p>
+<p><strong>Позднее взаимодействие (late interaction).</strong> Схема, где векторы токенов документа хранятся заранее, а с токенами вопроса сравниваются при поиске.</p>
+<p><strong>ColBERT.</strong> Модель поиска с поздним взаимодействием, промежуточная по цене и точности между двойным и перекрёстным кодировщиком.</p>
+<p><strong>Индексация (indexing).</strong> Подготовка базы до вопросов: подсчёт векторов, построение индексов.</p>
+<p><strong>Прогрев (warm-up).</strong> Первый пробный прогон модели перед замером, чтобы не считать время загрузки и подготовки.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">4</span>
+            <span class="fold-title">Как проверить пользу: nDCG@10, потолок первого поиска и глубина пересортировки</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Пересортировку обычно включают «потому что все так делают» и ожидают заметного прироста. На своих данных прирост может оказаться маленьким, нулевым или разным для разных вопросов, а задержка и счёт вырастут точно. Поэтому решение «ставить или нет, какую модель и сколько кандидатов» принимают по замеру на наборе вопросов с известными правильными ответами — так же, как в дорожке про проверку качества.</p>
+<p><strong>Как это устроено.</strong> Нужна метрика порядка, потому что пересортировка меняет именно порядок. Чаще всего берут nDCG@10 (normalized discounted cumulative gain). Каждый правильный документ в первой десятке приносит 1/log₂(место + 1): на первом месте — 1, на втором — 0,63, на десятом — 0,29. Сумму делят на лучшую возможную для этого вопроса, чтобы получилось число от 0 до 1, и усредняют по вопросам. В отличие от hit@10 и MRR из прошлой дорожки, nDCG учитывает несколько правильных документов и плавно наказывает за каждое место вниз. Именно nDCG@10 — главная метрика сборника BEIR (Thakur и соавторы, 2021), на котором сравнивают поиск на 18 разных наборах.</p>
+<p>Второе, что меряют, — потолок первого шага: recall@N, доля правильных документов, попавших в первые N кандидатов. Если recall@100 равен 0,89, то 11% правильных документов пересортировка не увидит никогда. Это объясняет, почему лучшая схема — та, где первый шаг даёт высокий recall, а пересортировка — хороший порядок.</p>
+<p>Третье — глубина пересортировки, то есть сколько кандидатов давать модели. Больше кандидатов — выше потолок, но и больше шанс, что модель поднимет наверх неправильный текст из хвоста. Особенно если модель учили на другом виде текстов: наша модель видела веб-отрывки и вопросы Bing, а SciFact — это научные утверждения и аннотации статей. Отличие от глубины склейки из прошлой дорожки: там глубина меняла только, какие оценки складывать, а здесь — сколько текстов модель будет читать и сколько вы заплатите.</p>
+<p><strong>Подробный пример.</strong> Большой прогон на SciFact: для каждого из 300 проверочных утверждений берём по 100 лучших у BM25 и у двойного кодировщика, перекрёстным кодировщиком оцениваем объединение (51 697 пар; скрипт run_scifact.py лежит в папке генератора, результаты сохранены в файл). Затем без новых прогонов моделей считаем nDCG@10 и recall@10 для первого поиска, для RRF из прошлой дорожки, для пересортировки первых 10, 20, 50 и 100 кандидатов и считаем, у скольких вопросов nDCG стал лучше и хуже. В конце — два настоящих утверждения, у которых правильная статья сильно сдвинулась.</p>
+<pre><code class="language-python"># Большой замер на открытом наборе SciFact (BEIR): 5183 аннотации статей, 300 проверочных вопросов-утверждений.
+from lib import *
+import pickle
+corpus, queries, qrels = load_scifact()
+ids = [d["_id"] for d in corpus]; texts = [(d["title"] + ". " + d["text"]).strip() for d in corpus]
+qids = sorted(qrels); print("документов", len(texts), "вопросов", len(qids))
+t = time.time(); bi = BiEncoder(); D = bi.encode(texts); tb = time.time() - t
+print(f"двойной: закодировали корпус за {tb:.1f} с")
+Q = bi.encode([queries[q] for q in qids])
+bm = BM25([words(x) for x in texts])
+ce = CrossEncoder()
+res = {}; tce = 0; npairs = 0
+for n, q in enumerate(qids):
+    s_bm = bm.scores(words(queries[q])); s_bi = D @ Q[n]
+    top_bm = list(np.argsort(-s_bm)[:100]); top_bi = list(np.argsort(-s_bi)[:100])
+    cand = sorted(set(top_bm) | set(top_bi))
+    t = time.time(); sc = ce.score(queries[q], [texts[i] for i in cand]); tce += time.time() - t; npairs += len(cand)
+    res[q] = dict(bm=top_bm, bi=top_bi, ce=dict(zip(cand, sc.tolist())))
+    if n % 50 == 0: print(n, f"{tce:.0f} c, пар {npairs}", flush=True)
+print(f"перекрёстный: {npairs} пар за {tce:.1f} с = {1000*tce/npairs:.1f} мс на пару")
+pickle.dump(dict(res=res, ids=ids, qids=qids, tb=tb, tce=tce, npairs=npairs), open("scifact_runs.pkl", "wb"))</code></pre>
+<pre><code class="language-python"># Ступень 4: польза пересортировки на SciFact — nDCG@10 и потолок, который задаёт первый поиск.
+from lib import *
+import pickle
+R = pickle.load(open("scifact_runs.pkl", "rb")); res, ids, qids = R["res"], R["ids"], R["qids"]
+_, _, qrels = load_scifact()
+def rerank(r, base, depth):
+    head = r[base][:depth]
+    return sorted(head, key=lambda i: -r["ce"][i]) + r[base][depth:]
+def rrf(r, depth=100, k=60):
+    s = defaultdict(float)
+    for lst in (r["bm"][:depth], r["bi"][:depth]):
+        for p, i in enumerate(lst): s[i] += 1 / (k + p + 1)
+    return sorted(s, key=lambda i: -s[i])
+def ev(name, make):
+    nd, r10, r100 = [], [], []
+    for q in qids:
+        rel = qrels[q]
+        ranked = [ids[i] for i in make(res[q])]
+        nd.append(ndcg10(ranked, rel)); r10.append(recall(ranked, rel, 10))
+    print(f"{name:&lt;42s} nDCG@10 = {np.mean(nd):.3f}   recall@10 = {np.mean(r10):.3f}")
+    return np.array(nd)
+print("первый поиск без пересортировки:")
+b_bm = ev("BM25", lambda r: r["bm"])
+b_bi = ev("двойной кодировщик (all-MiniLM-L6-v2)", lambda r: r["bi"])
+ev("RRF(BM25, двойной), k=60", rrf)
+print("потолок: доля правильных документов среди первых N кандидатов (recall@N):")
+for base in ("bm", "bi"):
+    print("  ", base, "  ".join(f"N={n}: {np.mean([recall([ids[i] for i in res[q][base]], qrels[q], n) for q in qids]):.3f}" for n in (10, 20, 50, 100)))
+print("пересортировка перекрёстным кодировщиком (ms-marco-MiniLM-L6-v2) первых N:")
+for base, nm in (("bm", "BM25"), ("bi", "двойной")):
+    for n in (10, 20, 50, 100):
+        x = ev(f"{nm} -&gt; пересортировка {n}", lambda r: rerank(r, base, n))
+        if n == 100:
+            ref = b_bm if base == "bm" else b_bi
+            print(f"     вопросов стало лучше: {np.sum(x &gt; ref + 1e-9)}, хуже: {np.sum(x &lt; ref - 1e-9)}, без изменений: {np.sum(abs(x - ref) &lt;= 1e-9)}")
+ev("RRF -&gt; пересортировка 100", lambda r: rerank({**r, "rrf": rrf(r)}, "rrf", 100))
+print("два настоящих вопроса из проверочного набора (место первой правильной статьи):")
+corpus, queries, _ = load_scifact()
+def first(lst, rel): return next((p + 1 for p, i in enumerate(lst) if ids[i] in rel), None)
+up = down = None
+for q in qids:
+    r = res[q]; a = first(r["bi"], qrels[q]); b = first(rerank(r, "bi", 20), qrels[q])
+    if a and b and a &gt;= 6 and b == 1 and up is None: up = (q, a, b)
+    if a == 1 and b and b &gt;= 4 and down is None: down = (q, a, b)
+for name, (q, a, b) in (("поднялась", up), ("опустилась", down)):
+    print(f"  {name}: «{queries[q]}» — двойной: место {a}, после пересортировки 20: место {b}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">первый поиск без пересортировки:
+BM25                                       nDCG@10 = 0.662   recall@10 = 0.791
+двойной кодировщик (all-MiniLM-L6-v2)      nDCG@10 = 0.648   recall@10 = 0.788
+RRF(BM25, двойной), k=60                   nDCG@10 = 0.687   recall@10 = 0.809
+потолок: доля правильных документов среди первых N кандидатов (recall@N):
+   bm N=10: 0.791  N=20: 0.833  N=50: 0.870  N=100: 0.886
+   bi N=10: 0.788  N=20: 0.844  N=50: 0.889  N=100: 0.925
+пересортировка перекрёстным кодировщиком (ms-marco-MiniLM-L6-v2) первых N:
+BM25 -&gt; пересортировка 10                  nDCG@10 = 0.673   recall@10 = 0.791
+BM25 -&gt; пересортировка 20                  nDCG@10 = 0.686   recall@10 = 0.805
+BM25 -&gt; пересортировка 50                  nDCG@10 = 0.678   recall@10 = 0.796
+BM25 -&gt; пересортировка 100                 nDCG@10 = 0.673   recall@10 = 0.786
+     вопросов стало лучше: 59, хуже: 50, без изменений: 191
+двойной -&gt; пересортировка 10               nDCG@10 = 0.682   recall@10 = 0.788
+двойной -&gt; пересортировка 20               nDCG@10 = 0.689   recall@10 = 0.812
+двойной -&gt; пересортировка 50               nDCG@10 = 0.688   recall@10 = 0.809
+двойной -&gt; пересортировка 100              nDCG@10 = 0.687   recall@10 = 0.809
+     вопросов стало лучше: 79, хуже: 51, без изменений: 170
+RRF -&gt; пересортировка 100                  nDCG@10 = 0.685   recall@10 = 0.806
+два настоящих вопроса из проверочного набора (место первой правильной статьи):
+  поднялась: «The PRR MDA5 is a sensor of RNA virus infection.» — двойной: место 20, после пересортировки 20: место 1
+  опустилась: «The combination of H3K4me3 and H3K79me2 is found in quiescent hair follicle stem cells.» — двойной: место 1, после пересортировки 20: место 4</code></pre>
+<p>Что видно. BM25 дал nDCG@10 0,662, двойной кодировщик — 0,648, а простая склейка RRF без всякой модели — 0,687. Пересортировка тоже помогла: лучший результат — двойной кодировщик плюс пересортировка первых 20, nDCG@10 0,689. Но прирост маленький, около 0,04 к двойному кодировщику и 0,02 к BM25, и почти такой же, как у бесплатного RRF. Глубина больше 20 не помогла совсем: у BM25 nDCG упал с 0,686 при 20 кандидатах до 0,673 при 100, хотя потолок recall@100 (0,886) заметно выше, чем recall@20 (0,833). Прирост — это сумма разнонаправленных изменений: при пересортировке 100 кандидатов двойного кодировщика 79 вопросов стали лучше, а 51 — хуже. Два примера: у утверждения про датчик MDA5 правильная статья поднялась с 20-го места на первое, а у утверждения про метки H3K4me3 и H3K79me2 — опустилась с первого на четвёртое. Вывод не «пересортировка бесполезна», а «модель, обученная на веб-вопросах, на научных утверждениях даёт скромный прирост, и глубину надо ограничивать»; на ваших данных ответ может быть другим, и его даёт только такой замер.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Сравнивают с пересортировкой только один первый поиск, а не лучшую дешёвую схему. В нашем замере бесплатный RRF дал почти тот же прирост; честное сравнение — с самым сильным вариантом без модели.</li>
+<li>Ставят глубину «побольше, чтобы точно влез ответ». Потолок растёт, но качество порядка может падать, а время растёт линейно; глубину выбирают по кривой nDCG от N.</li>
+<li>Смотрят только на среднее. Средний прирост 0,02 может скрывать десятки вопросов, которым стало хуже; полезно глазами посмотреть на вопросы, где порядок ухудшился.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>nDCG@10.</strong> Метрика порядка: правильные документы в первой десятке с весом 1/log₂(место + 1), делённые на лучший возможный результат.</p>
+<p><strong>Скидка за место (discount).</strong> Уменьшение вклада правильного документа тем сильнее, чем ниже он стоит в списке.</p>
+<p><strong>recall@N.</strong> Доля правильных документов, попавших в первые N кандидатов; для пересортировки это потолок.</p>
+<p><strong>Глубина пересортировки.</strong> Сколько первых кандидатов передаётся модели; остальные остаются в старом порядке.</p>
+<p><strong>BEIR.</strong> Сборник из 18 открытых наборов для проверки поиска на разных областях, опубликованный в 2021 году.</p>
+<p><strong>SciFact.</strong> Набор из BEIR: научные утверждения и аннотации статей, которые их подтверждают или опровергают.</p>
+<p><strong>Сдвиг области (domain shift).</strong> Разница между текстами, на которых модель учили, и текстами, на которых её применяют.</p>
+<p><strong>Проверочный набор.</strong> Вопросы с известными правильными документами, отложенные для замеров и не использованные для настройки.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">5</span>
+            <span class="fold-title">Где пересортировка ломается: длинные тексты, чужой язык и порог «ответа нет»</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Пересортировщик подключается одной строкой кода и сразу «что-то делает»: порядок меняется, оценки печатаются. Ошибки видны не сразу и выглядят как случайные: длинный документ с ответом в конце внезапно оказывается в самом низу, на русских вопросах порядок почти не отличается от исходного, а система с порогом «показывать, только если оценка выше X» то молчит при наличии ответа, то уверенно отвечает при его отсутствии. У всех трёх случаев понятные причины, и каждую можно проверить за несколько минут.</p>
+<p><strong>Как это устроено.</strong> Первая ловушка — обрезка. Модель видит не больше 512 токенов пары, и всё после этого предела для неё не существует. Если ответ стоит в начале длинного документа, оценка просто станет ниже из-за лишнего текста вокруг; если в конце — модель оценит документ по чужому началу. Лечение — резать документы на куски (дорожка про куски) и оценивать куски; оценку документа берут по лучшему куску (так называемый MaxP), а в подсказку модели отдают сам этот кусок.</p>
+<p>Вторая ловушка — язык и область. Модель, обученная на английских вопросах Bing, на русском тексте видит в основном обрывки букв: её словарь почти не знает кириллицы, и слова распадаются на отдельные буквы. Оценки при этом остаются большими и уверенными, но различают тексты плохо. Для русского берут многоязычные пересортировщики — например, BAAI/bge-reranker-v2-m3 или облачные многоязычные модели — и проверяют их на своих вопросах. Та же логика верна для области: юридические, медицинские, программные тексты лучше проверять отдельно, а при большом объёме — дообучать пересортировщик на своих парах.</p>
+<p>Третья ловушка — порог. Оценку пересортировщика соблазнительно использовать для решения «в базе ответа нет»: если лучшая оценка ниже порога, честно сказать «не знаю». Но оценки разных вопросов несопоставимы: у короткого точного вопроса даже чужой текст может получить высокую оценку, у сложного длинного утверждения — правильный получает низкую. Отличие от порога на косинус или BM25 из прошлой дорожки здесь только в масштабе: оценка пересортировщика лучше разделяет «есть ответ» и «нет», но одного числа на все вопросы обычно мало. Порог подбирают на размеченных примерах и по двум ошибкам сразу: сколько ответов потеряем и сколько ложных «ответов» пропустим.</p>
+<p><strong>Подробный пример.</strong> Три замера. (а) Ответ про рис ставим в начало или в конец текста из 1500 слов чужих аннотаций SciFact, затем режем тот же длинный текст на куски по 200 слов и берём лучший кусок. (б) Тот же вопрос и четыре текста по-русски на английской модели — смотрим, на что разрезался вопрос и какие получились оценки. (в) На 300 вопросах SciFact берём 100 кандидатов BM25 и сравниваем лучшую оценку в двух случаях: когда правильная статья есть среди кандидатов и когда мы её специально убрали, — и считаем ошибки при порогах 0, 2 и 4.</p>
+<pre><code class="language-python"># Ступень 5: где пересортировка ломается.
+from lib import *
+import pickle
+ce = CrossEncoder()
+corpus, queries, qrels = load_scifact()
+filler = " ".join(d["text"] for d in corpus[1000:1010])          # чужие аннотации как «длинный документ»
+q = "how long can I keep a cooked rice in the fridge"
+ans = "Cooked rice can be stored in the refrigerator for up to four to six days in an airtight container."
+print("(а) ответ в начале и в конце длинного текста:")
+for name, doc in (("только ответ", ans), ("ответ + 1500 слов после", ans + " " + " ".join(filler.split()[:1500])),
+                  ("1500 слов + ответ в конце", " ".join(filler.split()[:1500]) + " " + ans)):
+    n = len(ce.tok.encode(q, doc).ids)
+    print(f"   {name:&lt;28s} токенов после обрезки {n:&gt;3d}  оценка {float(ce.score(q, [doc])[0]):+.2f}")
+# то же, но порезанное на куски по 200 слов: оценка документа = лучший кусок
+w = (" ".join(filler.split()[:1500]) + " " + ans).split()
+chunks = [" ".join(w[i:i+200]) for i in range(0, len(w), 200)]
+sc = ce.score(q, chunks)
+print(f"   порезали на {len(chunks)} кусков по 200 слов: лучший кусок №{int(np.argmax(sc))+1}, оценка {sc.max():+.2f}")
+
+print("(б) английская модель на русском тексте:")
+q_ru = "сколько можно хранить варёный рис в холодильнике"
+docs_ru = ["Варёный рис можно хранить в холодильнике до четырёх–шести дней в герметичном контейнере.",
+           "Рис — основной продукт питания в Азии, варёный рис подают почти к каждому блюду.",
+           "Держите холодильник при температуре не выше 4 градусов, чтобы замедлить рост бактерий.",
+           "Как сварить рассыпчатый рис: промойте крупу, возьмите полторы чашки воды на чашку риса."]
+print("   куски вопроса:", " ".join(ce.tok.encode(q_ru).tokens[1:-1]))
+for d, s in zip(docs_ru, ce.score(q_ru, docs_ru)):
+    print(f"   {s:+.2f}  {d}")
+
+print("(в) можно ли по оценке понять, что ответа в кандидатах нет (SciFact, 300 вопросов):")
+R = pickle.load(open("scifact_runs.pkl", "rb")); res, ids = R["res"], R["ids"]
+with_ans, without = [], []
+for q_ in R["qids"]:
+    cand = res[q_]["bm"][:100]; rel = qrels[q_]
+    s = [res[q_]["ce"][i] for i in cand]
+    s_no = [res[q_]["ce"][i] for i in cand if ids[i] not in rel]
+    if any(ids[i] in rel for i in cand): with_ans.append(max(s))
+    without.append(max(s_no))
+a, b = np.array(with_ans), np.array(without)
+print(f"   лучшая оценка, когда ответ среди кандидатов: медиана {np.median(a):+.2f}, 10-й процентиль {np.percentile(a,10):+.2f}")
+print(f"   лучшая оценка, когда ответы убрали:          медиана {np.median(b):+.2f}, 90-й процентиль {np.percentile(b,90):+.2f}")
+for thr in (0, 2, 4):
+    print(f"   порог {thr:+d}: пропустим вопросов с ответом {np.mean(a &lt; thr):.1%}, примем «без ответа» за ответ {np.mean(b &gt;= thr):.1%}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">(а) ответ в начале и в конце длинного текста:
+   только ответ                 токенов после обрезки  35  оценка +9.93
+   ответ + 1500 слов после      токенов после обрезки 512  оценка +5.26
+   1500 слов + ответ в конце    токенов после обрезки 512  оценка -11.23
+   порезали на 8 кусков по 200 слов: лучший кусок №8, оценка +1.64
+(б) английская модель на русском тексте:
+   куски вопроса: с ##к ##о ##л ##ь ##к ##о м ##о ##ж ##н ##о х ##р ##ан ##и ##т ##ь в ##а ##р ##е ##н ##ы ##и р ##и ##с в х ##о ##л ##о ##д ##и ##л ##ь ##н ##и ##к ##е
+   +9.15  Варёный рис можно хранить в холодильнике до четырёх–шести дней в герметичном контейнере.
+   +7.96  Рис — основной продукт питания в Азии, варёный рис подают почти к каждому блюду.
+   +8.53  Держите холодильник при температуре не выше 4 градусов, чтобы замедлить рост бактерий.
+   +8.66  Как сварить рассыпчатый рис: промойте крупу, возьмите полторы чашки воды на чашку риса.
+(в) можно ли по оценке понять, что ответа в кандидатах нет (SciFact, 300 вопросов):
+   лучшая оценка, когда ответ среди кандидатов: медиана +4.07, 10-й процентиль -0.52
+   лучшая оценка, когда ответы убрали:          медиана +0.90, 90-й процентиль +4.89
+   порог +0: пропустим вопросов с ответом 12.7%, примем «без ответа» за ответ 65.0%
+   порог +2: пропустим вопросов с ответом 31.0%, примем «без ответа» за ответ 34.3%
+   порог +4: пропустим вопросов с ответом 49.6%, примем «без ответа» за ответ 16.3%</code></pre>
+<p>Что видно. (а) Один ответ получил +9,93, ответ с 1500 словами после — +5,26 (модель видит ответ, но и много чужого текста), а тот же ответ в конце длинного текста — −11,23: модель его просто не видела, и документ с ответом упал бы в самый низ выдачи. Нарезка на 8 кусков по 200 слов нашла нужный последний кусок, и оценка вернулась к +1,64 — ниже чистого ответа, потому что в куске ещё около ста слов чужого текста, но уже положительная. (б) Русский вопрос токенизатор разрезал почти на отдельные буквы («с ##к ##о ##л ##ь ##к ##о»). Правильный текст всё равно оказался первым (+9,15), но все четыре текста получили от +7,96 до +9,15; на английском разброс был от −8,84 до +9,93. Различение почти исчезло: текст про рецепт рассыпчатого риса (+8,66) почти не отличается от ответа. (в) Когда правильная статья среди кандидатов, медиана лучшей оценки +4,07; когда её убрали — +0,90. Разница есть, но распределения сильно перекрываются: порог 0 пропускает 65% вопросов без ответа, порог 4 отсекает их лучше (16,3% ложных), но теряет почти половину (49,6%) вопросов, у которых ответ был. Одного порога на оценку недостаточно; нужна отдельная проверка или порог, подобранный под цену каждой ошибки.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Пересортировывают документы целиком и не проверяют длину. Всё дальше 512 токенов модель не видит; документ с ответом в конце получает оценку как чужой.</li>
+<li>Берут англоязычный пересортировщик для русских текстов, потому что «на английском бенчмарке он лучший». Слова распадаются на буквы, оценки сливаются; модель выбирают и проверяют на своём языке.</li>
+<li>Ставят единый порог на оценку пересортировщика как решение «ответа нет», не измерив обе ошибки. В нашем замере любой порог либо пропускал много пустых вопросов, либо терял много правильных ответов.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Предельная длина (max_len).</strong> Наибольшее число токенов пары, которое модель может прочитать; у моделей семейства BERT — 512.</p>
+<p><strong>MaxP.</strong> Оценка документа по его лучшему куску, когда документ слишком длинный для модели целиком.</p>
+<p><strong>Многоязычный пересортировщик (multilingual reranker).</strong> Модель пересортировки, обученная на парах на многих языках, включая русский.</p>
+<p><strong>Словарь токенизатора (vocabulary).</strong> Набор кусков слов, которые модель знает; незнакомые слова распадаются на мелкие куски и буквы.</p>
+<p><strong>Калибровка (calibration).</strong> Приведение оценок модели к виду, в котором одно и то же число означает одинаковую уверенность для разных вопросов.</p>
+<p><strong>Ложное срабатывание (false positive).</strong> Случай, когда система «нашла ответ», хотя в базе его нет.</p>
+<p><strong>Пропуск (false negative).</strong> Случай, когда ответ в базе был, но система его отсекла.</p>
+<p><strong>Дообучение пересортировщика.</strong> Продолжение обучения модели на своих парах «вопрос — правильный текст», чтобы она лучше знала свою область.</p>
+          </div>
+        </details>
+      </div>
+      <p class="bio" style="margin-top:1.4rem;text-align:center">Словарь целиком — <a href="/slovar">/slovar</a>, новости — <a href="/novosti">/novosti</a>. Все дорожки — <a href="/put">/put</a>.</p>
+    </section>
+    <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
+  </div>
+  <script src="js/app.js?v=ui20261019ux" defer></script>
+</body>
+</html>
