@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Как помочь поиску, когда вопрос и ответ написаны разными словами: расширение запроса и псевдообратная связь · py.motomov.ru</title>
+  <meta name="description" content="Пять ступеней: словарный разрыв между вопросом и документом; псевдообратная связь RM3 поверх BM25 — какие слова добавляются и что это даёт; настройки и дрейф запроса — подбор на обучающих вопросах и проверка на отложенных; сдвиг вектора вопроса по Роккио; расширение как поставщик кандидатов для пересортировки и переписывание запроса языковой моделью. Все цифры — из запусков на наборе SciFact.">
+  <meta name="theme-color" content="#f3efe6">
+  <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
+  <link rel="canonical" href="https://py.motomov.ru/put-2026-11-16-rasshirenie-zaprosa">
+  <link rel="stylesheet" href="styles.css?v=ui20261019ux">
+  <script>try{var d=document.documentElement,s=localStorage;if(s.getItem("moto-theme")==="dark")d.dataset.theme="dark";var f=s.getItem("moto-fs");if(f&&f!=="1")d.dataset.fs=f;if(s.getItem("moto-comfy")==="1")d.dataset.comfy="1"}catch(e){}</script>
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="novosti.html" aria-label="На главную: новости">
+        <img class="brand-logo" src="https://www.motomov.ru/logo.jpg" width="32" height="32" alt="">
+        <span class="brand-name">Moto<span class="brand-dot">·</span><span class="brand-py">py</span></span>
+      </a>
+      <nav class="nav" aria-label="Разделы сайта">
+        <a href="novosti.html">Новости</a><a href="metodichka.html">Методичка</a><a class="active" aria-current="page" href="put.html">Дорожка</a><a href="slovar.html">Словарь</a><a href="kb.html">База</a><a href="archive.html">Архив</a>
+      </nav>
+      <details class="nav-more">
+        <summary aria-label="Ещё разделы">Ещё <span aria-hidden="true">▾</span></summary>
+        <div class="nav-more-list"><a href="spravochnik.html">Справочник Python</a><a href="news.html">Python: уроки</a><a href="course.html">Курс</a><a href="slovar-python.html">Словарь Python</a><a href="youtube.html">YouTube</a><a href="index.html">Старт</a><a href="https://www.motomov.ru/">Визитка motomov.ru</a></div>
+      </details>
+    </header>
+    <header class="hero">
+      <span class="badge">дорожка · 16.11.2026 · расширение запроса</span>
+      <h1>Как помочь поиску, когда вопрос и ответ написаны разными словами: расширение запроса и псевдообратная связь</h1>
+      <p class="bio">Две прошлые дорожки — <a href="/put-2026-11-14-gibridnyj-poisk">BM25 и гибридный поиск</a> и <a href="/put-2026-11-15-peresortirovka">пересортировка</a> — упирались в один и тот же потолок: если правильный документ не попал в список кандидатов, его уже ничто не поднимет. Частая причина — вопрос и ответ написаны разными словами. Узкий вопрос дня: можно ли «дописать» запрос так, чтобы поиск нашёл больше, — расширение запроса (query expansion), и особенно его самый старый автоматический вид, псевдообратная связь (pseudo-relevance feedback): поиск делается дважды, и второй раз запрос дополняется словами из лучших документов первого раза. Разберём, как это устроено для поиска по словам (RM3) и для векторов (сдвиг Роккио), как подбирать настройки, не обманывая себя, почему расширение иногда уводит поиск в сторону и где ему место в связке с пересортировкой. Примеры работают на тех же открытых данных и моделях, что и вчера: набор SciFact из сборника BEIR (5183 аннотации научных статей, 300 проверочных и 809 обучающих утверждений с размеченными правильными статьями), двойной кодировщик sentence-transformers/all-MiniLM-L6-v2 и перекрёстный cross-encoder/ms-marco-MiniLM-L6-v2 через ONNX Runtime на процессоре коробки. Модели и данные английские, поэтому и примеры на английском. Все цифры ниже — из наших запусков; честно скажу заранее: на этом наборе расширение — не волшебная кнопка, и замеры это покажут.</p>
+      <p class="bio" style="margin-top:.6rem">Все дорожки — <a href="/put">/put</a>. Прошлая — <a href="/put-2026-11-15-peresortirovka">пересортировка перекрёстным кодировщиком</a>.</p>
+    </header>
+    <section>
+      <div class="fold-list">
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">1</span>
+            <span class="fold-title">Словарный разрыв: почему поиск не находит статью, которая отвечает</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Человек спрашивает своими словами, а документ написан словами автора. Пользователь пишет «ноутбук не включается», а в базе знаний статья «устройство не реагирует на кнопку питания»; в научном поиске утверждение говорит «нульмерные биоматериалы», а статья — «наночастицы и квантовые точки». Это называется словарным разрывом (vocabulary mismatch): смысл совпадает, слова — нет. Поиск по словам (BM25 из позапрошлой дорожки) такую статью просто не видит, а следующий шаг — пересортировка, ответ модели в RAG — работает только с тем, что принёс поиск. Поэтому прежде чем улучшать порядок, полезно измерить, сколько правильных документов вообще теряется на входе и почему.</p>
+<p><strong>Как это устроено.</strong> BM25 даёт документу очки только за слова, которые есть одновременно в запросе и в документе; за каждое такое слово очков тем больше, чем оно реже в базе (вес редкости, IDF). Если общих слов нет, оценка документа ровно ноль, и он оказывается где-то в хвосте среди тысяч таких же нулей. Если общих слов одно-два и они частые, документ проигрывает статьям, где совпало больше слов, пусть и не по делу.</p>
+<p>У разрыва несколько обычных причин. Синонимы и пересказ: «рак» и «опухоль», «сердечный приступ» и «инфаркт миокарда». Разный уровень общности: в вопросе «белок TET», в статье — конкретные Tet1 и Tet2. Сокращения и полные названия: «TET» и «ten-eleven translocation». Формы слова и опечатки: в одном из вопросов SciFact стоит «tanslocates» вместо «translocates», и это слово не совпадёт ни с одной статьёй.</p>
+<p>Борются с разрывом с двух сторон. Можно менять документы: заранее дописывать к ним вероятные вопросы или синонимы — это расширение документов (document expansion, например doc2query). Можно менять запрос: дописывать к нему слова, которых пользователь не написал, — расширение запроса (query expansion). Сегодня — второе. Отличие от векторного поиска: векторы частично закрывают разрыв сами, потому что «инфаркт» и «сердечный приступ» получают близкие векторы, но, как мы видели 14.11, теряют точные коды и имена. Расширение запроса пытается дать поиску по словам немного «понимания синонимов», не отказываясь от точных совпадений.</p>
+<p>Ограничение надо видеть сразу: чтобы дописать правильные слова, их надо откуда-то взять. Словарь синонимов составляют люди, и он не знает вашей области; языковая модель может сочинить; а самый старый автоматический способ — подсмотреть слова в документах, которые поиск уже нашёл, — работает, только если поиск нашёл хоть что-то близкое. Об этом вся остальная дорожка.</p>
+<p><strong>Подробный пример.</strong> Общий модуль lib.py — тот же, что вчера (обёртки моделей, BM25, nDCG@10), плюс несколько добавлений для сегодняшних примеров: список служебных слов (stop words), BM25 с весами слов запроса, функция RM3 и кэш векторов корпуса. Первым делом считаем для каждой пары «проверочный вопрос — правильная статья» (их 339 на 300 вопросов) место статьи в выдаче BM25 и долю значимых слов вопроса (без служебных), которые в статье вообще встречаются.</p>
+<pre><code class="language-python">import json, time, math, re, numpy as np, onnxruntime as ort
+from tokenizers import Tokenizer
+from collections import Counter, defaultdict
+HERE = "/workspace/put-gen-1116"
+so = ort.SessionOptions(); so.intra_op_num_threads = 8
+
+class CrossEncoder:
+    """Перекрёстный кодировщик: вопрос и текст идут в модель ОДНОЙ строкой [CLS] вопрос [SEP] текст [SEP]."""
+    def __init__(self, path=f"{HERE}/models/ms", max_len=512):
+        self.tok = Tokenizer.from_file(f"{path}/tokenizer.json")
+        self.tok.enable_truncation(max_len, strategy="only_second")   # режем только текст, вопрос целиком
+        self.tok.enable_padding()
+        self.sess = ort.InferenceSession(f"{path}/model.onnx", so, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+    def score(self, query, docs, batch=32):
+        out = []
+        for s in range(0, len(docs), batch):
+            enc = self.tok.encode_batch([(query, d) for d in docs[s:s+batch]])
+            feed = {"input_ids": np.array([e.ids for e in enc], dtype=np.int64),
+                    "attention_mask": np.array([e.attention_mask for e in enc], dtype=np.int64),
+                    "token_type_ids": np.array([e.type_ids for e in enc], dtype=np.int64)}
+            out.append(self.sess.run(None, {k: v for k, v in feed.items() if k in self.names})[0][:, 0])
+        return np.concatenate(out)
+
+class BiEncoder:
+    """Двойной кодировщик: каждый текст отдельно -&gt; вектор (среднее по токенам), сравнение косинусом."""
+    def __init__(self, path=f"{HERE}/models/bi", max_len=256):
+        self.tok = Tokenizer.from_file(f"{path}/tokenizer.json")
+        self.tok.enable_truncation(max_len); self.tok.enable_padding()
+        self.sess = ort.InferenceSession(f"{path}/model.onnx", so, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+    def encode(self, texts, batch=64):
+        out = []
+        for s in range(0, len(texts), batch):
+            enc = self.tok.encode_batch(texts[s:s+batch])
+            ids = np.array([e.ids for e in enc], dtype=np.int64); m = np.array([e.attention_mask for e in enc], dtype=np.int64)
+            feed = {"input_ids": ids, "attention_mask": m, "token_type_ids": np.zeros_like(ids)}
+            h = self.sess.run(None, {k: v for k, v in feed.items() if k in self.names})[0]
+            v = (h * m[..., None]).sum(1) / m.sum(1, keepdims=True)
+            out.append(v / np.linalg.norm(v, axis=1, keepdims=True))
+        return np.concatenate(out).astype(np.float32)
+
+def words(t): return re.findall(r"\w+", t.lower())
+class BM25:
+    def __init__(self, docs, k1=1.2, b=0.75):
+        self.k1, self.b, self.N = k1, b, len(docs)
+        self.len = np.array([len(d) for d in docs], float); self.avg = self.len.mean()
+        self.post = defaultdict(list)
+        for i, d in enumerate(docs):
+            for w, c in Counter(d).items(): self.post[w].append((i, c))
+    def scores(self, q):
+        s = np.zeros(self.N)
+        for w in set(q):
+            p = self.post.get(w, []); n = len(p)
+            idf = math.log(1 + (self.N - n + 0.5) / (n + 0.5))
+            for i, tf in p:
+                s[i] += idf * tf * (self.k1 + 1) / (tf + self.k1 * (1 - self.b + self.b * self.len[i] / self.avg))
+        return s
+
+def ndcg10(ranked, rel):
+    """nDCG@10 для двоичных меток: сумма 1/log2(место+1) по правильным в первой десятке, делённая на лучшее возможное."""
+    dcg = sum(1 / math.log2(r + 2) for r, d in enumerate(ranked[:10]) if d in rel)
+    idcg = sum(1 / math.log2(r + 2) for r in range(min(len(rel), 10)))
+    return dcg / idcg
+def recall(ranked, rel, k): return len(set(ranked[:k]) &amp; rel) / len(rel)
+
+def load_scifact(split="test"):
+    corpus = [json.loads(l) for l in open(f"{HERE}/scifact/corpus.jsonl")]
+    queries = {q["_id"]: q["text"] for q in map(json.loads, open(f"{HERE}/scifact/queries.jsonl"))}
+    qrels = defaultdict(set)
+    for line in list(open(f"{HERE}/scifact/qrels/{split}.tsv"))[1:]:
+        q, d, s = line.split("\t")
+        if int(s) &gt; 0: qrels[q].add(d)
+    return corpus, queries, dict(qrels)
+
+# --- добавлено для дорожки 16.11: стоп-слова, BM25 с весами слов, RM3, кэш векторов ---
+STOP = set("""a an the of in on at to for from by with without and or not no nor is are was were be been being
+has have had do does did this that these those it its as than then there their they them we our you your he she his her
+which who whom what when where why how can could may might will would shall should into over under between
+during after before about above below up down out off also such both each other more most less least very
+via among within per however while if but so all any some only same own just""".split())
+def terms(t): return [w for w in words(t) if w not in STOP and len(w) &gt; 1]
+
+def bm25_weighted(bm, qw):
+    """BM25, где у каждого слова запроса свой вес (у обычного запроса вес = сколько раз слово встретилось)."""
+    s = np.zeros(bm.N)
+    for w, wt in qw.items():
+        p = bm.post.get(w, []); n = len(p)
+        if not n: continue
+        idf = math.log(1 + (bm.N - n + 0.5) / (n + 0.5))
+        for i, tf in p:
+            s[i] += wt * idf * tf * (bm.k1 + 1) / (tf + bm.k1 * (1 - bm.b + bm.b * bm.len[i] / bm.avg))
+    return s
+
+def rm3(bm, docs_tf, q_terms, first_scores, k=10, m=20, lam=0.5, uniform=False):
+    """RM3: берём k лучших документов первого прохода, считаем, какие слова в них частые
+    (с учётом веса документа), берём m лучших слов и смешиваем с исходным запросом: lam — доля исходного."""
+    top = np.argsort(-first_scores)[:k]
+    sc = first_scores[top]; w_doc = np.ones(k) if uniform else np.exp(sc - sc.max()); w_doc /= w_doc.sum()   # вес документа ~ exp(оценка) или поровну
+    rel = Counter()
+    for wd, i in zip(w_doc, top):
+        tf = docs_tf[i]; L = sum(tf.values())
+        for w, c in tf.items():
+            if w not in STOP and len(w) &gt; 1 and not w.isdigit(): rel[w] += wd * c / L
+    exp = dict(rel.most_common(m)); z = sum(exp.values())
+    orig = Counter(q_terms); zq = sum(orig.values())
+    qw = defaultdict(float)
+    for w, c in orig.items(): qw[w] += lam * c / zq
+    for w, v in exp.items(): qw[w] += (1 - lam) * v / z
+    return dict(qw), exp
+
+def load_all():
+    corpus, queries, qt = load_scifact("test"); _, _, qtr = load_scifact("train")
+    ids = [d["_id"] for d in corpus]; texts = [(d["title"] + ". " + d["text"]).strip() for d in corpus]
+    return ids, texts, queries, qt, qtr
+
+def corpus_vectors(texts):
+    import os
+    f = f"{HERE}/corpus_vec.npy"
+    if os.path.exists(f): return np.load(f)
+    D = BiEncoder().encode(texts); np.save(f, D); return D</code></pre>
+<pre><code class="language-python"># Ступень 1: словарный разрыв на SciFact — правильная статья и вопрос говорят разными словами.
+from lib import *
+ids, texts, queries, qrels, _ = load_all()
+bm = BM25([words(x) for x in texts])
+pos = {d: i for i, d in enumerate(ids)}
+rows = []
+for q, rel in qrels.items():
+    qt = set(terms(queries[q])); s = bm.scores(words(queries[q])); order = np.argsort(-s)
+    rank = {i: r + 1 for r, i in enumerate(order)}
+    for d in rel:
+        i = pos[d]; dt = set(terms(texts[i]))
+        rows.append((q, d, rank[i], len(qt &amp; dt) / len(qt), len(qt)))
+r = np.array([x[2] for x in rows]); ov = np.array([x[3] for x in rows])
+print(f"пар «вопрос — правильная статья»: {len(rows)}")
+for lo, hi, nm in ((1, 10, "в первой десятке BM25"), (11, 100, "на местах 11-100"), (101, 10**9, "дальше сотого места")):
+    m = (r &gt;= lo) &amp; (r &lt;= hi)
+    print(f"  {nm:&lt;22s}: {m.sum():3d} пар ({m.mean():.1%}), доля слов вопроса, которые есть в статье: {ov[m].mean():.2f}")
+print(f"пар, где в статье нет НИ ОДНОГО значимого слова вопроса: {(ov == 0).sum()}")
+# пример: правильная статья далеко, общих слов мало
+cand = sorted([x for x in rows if x[2] &gt; 100 and x[4] &gt;= 4], key=lambda x: x[3])
+q, d, rk, o, n = cand[0]
+qt = set(terms(queries[q])); dt = set(terms(texts[pos[d]]))
+print(f"\nпример: «{queries[q]}»")
+print(f"  правильная статья на месте {rk} из {len(ids)}; общих значимых слов: {sorted(qt &amp; dt)} из {sorted(qt)}")
+print(f"  начало статьи: {texts[pos[d]][:300]}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">пар «вопрос — правильная статья»: 339
+  в первой десятке BM25 : 262 пар (77.3%), доля слов вопроса, которые есть в статье: 0.58
+  на местах 11-100      :  39 пар (11.5%), доля слов вопроса, которые есть в статье: 0.26
+  дальше сотого места   :  38 пар (11.2%), доля слов вопроса, которые есть в статье: 0.14
+пар, где в статье нет НИ ОДНОГО значимого слова вопроса: 7
+
+пример: «0-dimensional biomaterials show inductive properties.»
+  правильная статья на месте 4281 из 5183; общих значимых слов: [] из ['biomaterials', 'dimensional', 'inductive', 'properties', 'show']
+  начало статьи: New opportunities: the use of nanotechnologies to manipulate and track stem cells.. Nanotechnologies are emerging platforms that could be useful in measuring, understanding, and manipulating stem cells. Examples include magnetic nanoparticles and quantum dots for stem cell labeling and in vivo track</code></pre>
+<p>Что видно. Связь между общими словами и местом очень прямая. У статей, которые BM25 ставит в первую десятку, в среднем 58% значимых слов вопроса встречаются в тексте; у тех, что на местах 11–100, — 26%; у тех, что дальше сотого места, — 14%. Таких «потерянных» статей 38 из 339, то есть 11,2%: для каждого девятого правильного ответа никакая пересортировка первых ста ничего не сделает. Семь статей не содержат ни одного значимого слова вопроса. Пример показателен: утверждение говорит о «0-dimensional biomaterials» (нульмерных биоматериалах), а правильная статья — про наночастицы и квантовые точки для работы со стволовыми клетками. Для химика это одно и то же (наночастица — и есть нульмерный объект), но общих слов ноль, и статья стоит на 4281-м месте из 5183.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Мерят только качество первой десятки и не смотрят, сколько правильных документов не попало даже в первую сотню. А это потолок для всего, что стоит после поиска.</li>
+<li>Считают, что раз есть векторный поиск, словарного разрыва больше нет. Векторы смягчают синонимы, но редкие термины и сокращения своей области модель может не знать вовсе.</li>
+<li>Пытаются закрыть разрыв огромным списком синонимов «на всякий случай». Каждое лишнее слово тянет в выдачу документы о другом; польза синонимов зависит от области и проверяется замером, а не здравым смыслом.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Словарный разрыв (vocabulary mismatch).</strong> Ситуация, когда вопрос и нужный документ говорят об одном и том же разными словами.</p>
+<p><strong>Расширение запроса (query expansion).</strong> Дописывание к запросу слов, которых пользователь не написал, чтобы поиск нашёл больше подходящих документов.</p>
+<p><strong>Расширение документов (document expansion).</strong> Заранее дописанные к документу вероятные вопросы или синонимы, чтобы его находили по чужим словам.</p>
+<p><strong>Служебные слова (stop words).</strong> Частые слова вроде «и», «в», «the», «of», которые не несут темы и обычно не учитываются при подсчёте совпадений.</p>
+<p><strong>Значимое слово.</strong> Слово запроса, которое осталось после выброса служебных слов и по которому реально ищут.</p>
+<p><strong>Полнота на глубине N (recall@N).</strong> Доля правильных документов, которые попали в первые N мест выдачи.</p>
+<p><strong>Потолок поиска.</strong> Лучшее качество, которое могут дать следующие шаги, если они идеально переставят найденное; его задаёт полнота первого поиска.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">2</span>
+            <span class="fold-title">Псевдообратная связь: второй поиск со словами из первых найденных документов</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Когда человек сам ищет в библиотеке, он делает так: находит одну хорошую статью, смотрит, какими словами в ней всё называется, и ищет снова уже этими словами. Псевдообратная связь (pseudo-relevance feedback) делает то же автоматически: считает лучшие документы первого поиска «наверное, подходящими», собирает из них характерные слова и повторяет поиск с дополненным запросом. Ей не нужны ни словарь синонимов, ни языковая модель, ни разметка — только второй проход по тому же индексу. Поэтому она десятилетиями стоит в исследовательских поисковых системах (Terrier, Anserini и его питоновская обёртка Pyserini) как стандартное «плюс что-то» к BM25, и полезно понимать, что она даёт и чем рискует, прежде чем ставить её в свой поиск.</p>
+<p><strong>Как это устроено.</strong> Шаг первый: обычный поиск BM25 по исходному запросу. Шаг второй: берём k лучших документов (обычно 10) — это и есть «псевдорелевантные», о них никто не говорил, что они правильные, мы только предполагаем. Шаг третий: для каждого слова в этих документах считаем вес — насколько часто оно встречается в документе (доля от длины документа), умноженное на вес самого документа, и складываем по документам. Шаг четвёртый: берём m слов с наибольшим весом (обычно 10–30), выбрасывая служебные. Шаг пятый: смешиваем: новый запрос — это исходные слова с общей долей веса lam и новые слова с долей 1 − lam. Шаг шестой: второй поиск BM25 с весами слов.</p>
+<p>Этот рецепт называется RM3. Модели релевантности (relevance models) предложили Лавренко и Крофт в 2001 году, а вариант со смешиванием с исходным запросом (номер 3) описала команда Массачусетского университета в отчёте о TREC 2004. В классической версии вес документа — вероятность запроса по языковой модели этого документа; у нас поверх BM25 взято упрощение: вес пропорционален exp(оценка BM25). В наборе Anserini, где RM3 часто используют как точку отсчёта, по умолчанию берут 10 документов, 10 слов и вес исходного запроса 0,5 — с этого и начнём.</p>
+<p>Главное ограничение видно прямо из рецепта: если первые документы не про то, новые слова тоже будут не про то, и второй поиск уйдёт ещё дальше. Это называется дрейфом запроса (query drift), подробно о нём — на следующей ступени. Цена — второй проход по индексу, причём с запросом в 15–30 слов вместо 5–10, а время BM25 растёт с числом слов запроса.</p>
+<p>Отличие от настоящей обратной связи (relevance feedback): там человек отмечает, какие документы правильные, и слова берут только из них. Отличие от пересортировки из вчерашней дорожки: пересортировка только переставляет уже найденное, а расширение запроса может найти документы, которых в первом списке не было совсем, — то есть поднимает потолок, а не порядок.</p>
+<p><strong>Подробный пример.</strong> Прогоняем RM3 с настройками по умолчанию (10 документов, 10 новых слов, вес исходного запроса 0,5) по всем 300 проверочным вопросам SciFact и сравниваем с обычным BM25. Время мерили на процессоре коробки, BM25 написан на чистом Python, поэтому важны не миллисекунды, а отношение.</p>
+<pre><code class="language-python"># Ступень 2: псевдообратная связь RM3 поверх BM25 на SciFact (300 проверочных вопросов).
+from lib import *
+ids, texts, queries, qrels, _ = load_all()
+toks = [words(x) for x in texts]; bm = BM25(toks); tfs = [Counter(t) for t in toks]
+def run(q, k=10, m=10, lam=0.5):
+    s0 = bm.scores(words(q))
+    qw, exp = rm3(bm, tfs, words(q), s0, k, m, lam)
+    return s0, bm25_weighted(bm, qw), exp
+base, exp_, t0, t1 = [], [], 0, 0
+store = {}
+for q in sorted(qrels):
+    t = time.time(); s0 = bm.scores(words(queries[q])); t0 += time.time() - t
+    t = time.time(); _, s1, e = run(queries[q]); t1 += time.time() - t
+    r0 = [ids[i] for i in np.argsort(-s0)[:100]]; r1 = [ids[i] for i in np.argsort(-s1)[:100]]
+    base.append((ndcg10(r0, qrels[q]), recall(r0, qrels[q], 10), recall(r0, qrels[q], 100)))
+    exp_.append((ndcg10(r1, qrels[q]), recall(r1, qrels[q], 10), recall(r1, qrels[q], 100)))
+    store[q] = e
+b, e = np.array(base), np.array(exp_)
+print("RM3: 10 документов обратной связи, 10 новых слов, вес исходного запроса 0.5")
+print(f"{'':&lt;12s} nDCG@10  recall@10  recall@100")
+print(f"{'BM25':&lt;12s} {b[:,0].mean():.3f}    {b[:,1].mean():.3f}      {b[:,2].mean():.3f}")
+print(f"{'BM25+RM3':&lt;12s} {e[:,0].mean():.3f}    {e[:,1].mean():.3f}      {e[:,2].mean():.3f}")
+d = e[:, 0] - b[:, 0]
+print(f"по nDCG@10 вопросов стало лучше: {(d &gt; 1e-9).sum()}, хуже: {(d &lt; -1e-9).sum()}, без изменений: {(abs(d) &lt;= 1e-9).sum()}")
+print(f"время на вопрос: BM25 {1000*t0/300:.1f} мс, BM25+RM3 (два прохода) {1000*t1/300:.1f} мс")
+# пример: вопрос, который заметно вырос
+qs = sorted(qrels); best = int(np.argmax(d)); q = qs[best]
+print(f"\nпример роста: «{queries[q]}»  nDCG@10 {b[best,0]:.3f} -&gt; {e[best,0]:.3f}")
+print("  добавленные слова (вес внутри расширения):", ", ".join(f"{w} {v:.3f}" for w, v in list(store[q].items())[:10]))
+pos = {x: i for i, x in enumerate(ids)}
+for dd in qrels[q]:
+    s0, s1, _ = run(queries[q])
+    print(f"  правильная статья {dd}: место {int((s0 &gt; s0[pos[dd]]).sum()) + 1} -&gt; {int((s1 &gt; s1[pos[dd]]).sum()) + 1}; заголовок: {texts[pos[dd]][:110]}")
+import pickle; pickle.dump(dict(b=b, e=e), open("ex2.pkl", "wb"))</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">RM3: 10 документов обратной связи, 10 новых слов, вес исходного запроса 0.5
+             nDCG@10  recall@10  recall@100
+BM25         0.662    0.791      0.886
+BM25+RM3     0.659    0.775      0.883
+по nDCG@10 вопросов стало лучше: 40, хуже: 32, без изменений: 228
+время на вопрос: BM25 6.7 мс, BM25+RM3 (два прохода) 15.3 мс
+
+пример роста: «The loss of the TET protein functions may have dire biological consequences, such as myeloid cancers.»  nDCG@10 0.000 -&gt; 0.431
+  добавленные слова (вес внутри расширения): tet2 0.040, gene 0.022, tet 0.015, myeloid 0.011, ten 0.011, eleven 0.011, translocation 0.011, lymphoid 0.011, malignancies 0.011, hematopoiesis 0.011
+  правильная статья 13777138: место 82 -&gt; 4; заголовок: Tet1 and Tet2 regulate 5-hydroxymethylcytosine production and cell lineage specification in mouse embryonic st</code></pre>
+<p>Что видно. В среднем — ничего хорошего: nDCG@10 0,662 → 0,659, полнота на глубине 100 0,886 → 0,883, то есть чуть хуже. Но среднее прячет два противоположных потока: 40 вопросов стали лучше, 32 — хуже, у 228 первая десятка не изменилась вовсе. Пример роста хорошо показывает механизм. Утверждение про «TET protein» и миелоидные раки; правильная статья говорит «Tet1 and Tet2» и стояла на 82-м месте. Первые найденные документы были про ген TET2 и про его полное название «ten-eleven translocation», и RM3 дописал к запросу слова tet2, gene, ten, eleven, translocation, hematopoiesis. Статья поднялась на 4-е место, nDCG@10 этого вопроса 0 → 0,431. Слова «tet2» в исходном запросе не было — словарный разрыв закрыли слова из соседних документов. Время на вопрос выросло с 6,7 до 15,3 мс, примерно в 2,3 раза: два прохода, и во втором к словам исходного запроса добавлены ещё 10.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Включают RM3 «потому что он всегда помогает», не измерив на своих данных. На SciFact с настройками по умолчанию среднее даже немного упало.</li>
+<li>Не выбрасывают служебные слова и числа из кандидатов в расширение. Тогда в запрос попадают «the», «of», «2019», и расширение просто размывает исходный запрос.</li>
+<li>Смотрят только на среднее. За «почти без изменений» стоят 40 вопросов, которые выросли, и 32, которые упали, — и упавшие пользователь заметит первыми.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Псевдообратная связь (pseudo-relevance feedback, PRF).</strong> Расширение запроса словами из первых найденных документов без участия человека.</p>
+<p><strong>Обратная связь по релевантности (relevance feedback).</strong> То же, но правильные документы отмечает человек.</p>
+<p><strong>Модель релевантности (relevance model).</strong> Распределение вероятностей слов, характерное для документов, отвечающих на запрос; оценивается по первым найденным документам.</p>
+<p><strong>RM3.</strong> Вариант модели релевантности, в котором новые слова смешиваются с исходным запросом с весом lam.</p>
+<p><strong>Документы обратной связи (feedback documents).</strong> Первые k документов первого поиска, из которых берут слова для расширения.</p>
+<p><strong>Взвешенный запрос.</strong> Запрос, где у каждого слова свой вес, который умножает его вклад в оценку BM25.</p>
+<p><strong>Второй проход.</strong> Повторный поиск по тому же индексу с расширенным запросом.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">3</span>
+            <span class="fold-title">Настройки и дрейф запроса: как подбирать честно и почему расширение уводит в сторону</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> У RM3 три ручки — сколько документов брать (k), сколько слов добавлять (m) и какую долю оставить исходному запросу (lam), — и ещё выбор, как взвешивать документы. Если крутить их, глядя на тот же набор, на котором потом отчитываешься, легко получить «прирост», которого на новых вопросах не будет: это подгонка под проверочный набор, о которой говорилось в дорожке про проверку качества. Поэтому в работе настройки подбирают на одной части вопросов, а результат сообщают по другой. И отдельно смотрят, на каких вопросах расширение ломается, — чтобы решить, включать его всегда, никогда или по условию.</p>
+<p><strong>Как это устроено.</strong> Шаг первый: делим вопросы на две части — на чём подбираем и на чём проверяем. В SciFact деление уже есть: 809 обучающих утверждений и 300 проверочных. Шаг второй: перебираем сетку настроек на обучающих и выбираем лучшую по nDCG@10. Шаг третий: один раз прогоняем выбранную настройку на проверочных. Шаг четвёртый: разбираем, где выиграли и где проиграли.</p>
+<p>Дрейф запроса (query drift) — главная поломка. Расширение доверяет первым документам; если первый поиск зацепился за случайное совпадение, новые слова будут описывать это случайное совпадение, и второй поиск поднимет ещё больше документов о нём. Чем меньше доля исходного запроса (lam) и чем больше новых слов, тем сильнее дрейф. Обычные защиты: держать lam высоким (исходные слова весят больше новых), брать мало документов или взвешивать их по оценке, чтобы голосовали только самые уверенные, и не применять расширение, когда первый поиск явно неуверен.</p>
+<p>Тонкость взвешивания документов. Если вес документа — exp(оценка BM25), а оценки у первых документов отличаются на несколько единиц, то почти весь вес достаётся первому документу. Тогда «10 документов» на деле значит «один-два», и ручка k почти перестаёт работать. Это не ошибка, а свойство выбранной формулы, но его надо знать, чтобы правильно читать сетку. Отличие от регуляризации в обучении моделей: здесь нет обучения вообще, мы подбираем всего три числа, но риск подгонки тот же — когда выбираешь лучшее из 48 вариантов, часть «прироста» — просто удача на этих вопросах.</p>
+<p><strong>Подробный пример.</strong> Сетка: k ∈ {3, 5, 10, 20}, m ∈ {10, 30}, lam ∈ {0,3; 0,5; 0,7}, документы взвешены по оценке или поровну — всего 48 настроек. Подбор на 809 обучающих вопросах (считали в 7 процессах на коробке, около минуты), проверка лучшей на 300 проверочных, затем разбор по группам и самый сильный провал. Второй короткий скрипт показывает, сколько документов реально «голосуют» при весе exp(оценка).</p>
+<pre><code class="language-python"># Ступень 4: настройки RM3 подбираем на ОБУЧАЮЩИХ вопросах SciFact (809), проверяем на проверочных (300).
+from lib import *
+from multiprocessing import Pool
+from itertools import product
+ids, texts, queries, qt, qtr = load_all()
+toks = [words(x) for x in texts]; bm = BM25(toks); tfs = [Counter(t) for t in toks]
+S0 = {q: bm.scores(words(queries[q])) for q in list(qt) + list(qtr)}
+def score(args):
+    split, k, m, lam, uni = args
+    qr = qt if split == "test" else qtr
+    nd = []
+    for q in sorted(qr):
+        qw, _ = rm3(bm, tfs, words(queries[q]), S0[q], k, m, lam, uni)
+        r = [ids[i] for i in np.argsort(-bm25_weighted(bm, qw))[:100]]
+        nd.append(ndcg10(r, qr[q]))
+    return args, np.array(nd)
+def base(qr): return np.array([ndcg10([ids[i] for i in np.argsort(-S0[q])[:10]], qr[q]) for q in sorted(qr)])
+bt, btr = base(qt), base(qtr)
+print(f"BM25 без расширения: обучающие nDCG@10 = {btr.mean():.3f}, проверочные = {bt.mean():.3f}")
+grid = [("train", k, m, lam, uni) for k, m, lam, uni in product((3, 5, 10, 20), (10, 30), (0.3, 0.5, 0.7), (False, True))]
+with Pool(7) as p: R = dict(p.map(score, grid))
+rank = sorted(R, key=lambda a: -R[a].mean())
+print(f"сетка: {len(grid)} настроек; лучшие и худшие на обучающих:")
+for a in rank[:5] + rank[-3:]:
+    print(f"  k={a[1]:2d} m={a[2]:2d} lam={a[3]} {'поровну ' if a[4] else 'по оценке'}  nDCG@10 = {R[a].mean():.3f}  ({R[a].mean()-btr.mean():+.3f})")
+best = rank[0]
+_, t = score(("test",) + best[1:])
+d = t - bt
+print(f"лучшая на обучающих -&gt; на проверочных: nDCG@10 {bt.mean():.3f} -&gt; {t.mean():.3f} ({d.mean():+.3f}); лучше {(d&gt;1e-9).sum()}, хуже {(d&lt;-1e-9).sum()}")
+# от чего зависит выигрыш: было ли среди первых k правильное
+k = best[1]
+hit = np.array([any(ids[i] in qt[q] for i in np.argsort(-S0[q])[:k]) for q in sorted(qt)])
+print(f"проверочные, где среди первых {k} документов BM25 есть правильный: {hit.sum()} вопросов, изменение nDCG@10 {d[hit].mean():+.3f}")
+print(f"проверочные, где среди первых {k} правильного НЕТ: {(~hit).sum()} вопросов, изменение nDCG@10 {d[~hit].mean():+.3f}; из них выросли {(d[~hit]&gt;1e-9).sum()}")
+# пример дрейфа: самое сильное падение
+qs = sorted(qt); w = int(np.argmin(d)); q = qs[w]
+qw, e = rm3(bm, tfs, words(queries[q]), S0[q], *best[1:])
+print(f"\nпример дрейфа: «{queries[q]}»  nDCG@10 {bt[w]:.3f} -&gt; {t[w]:.3f}")
+print("  добавленные слова:", ", ".join(list(e)[:12]))
+print("  первые документы первого прохода:", " | ".join(texts[i][:60] for i in np.argsort(-S0[q])[:3]))
+import pickle; pickle.dump(dict(best=best, bt=bt, t=t), open("ex4.pkl", "wb"))</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">BM25 без расширения: обучающие nDCG@10 = 0.670, проверочные = 0.662
+сетка: 48 настроек; лучшие и худшие на обучающих:
+  k=20 m=30 lam=0.7 по оценке  nDCG@10 = 0.681  (+0.011)
+  k=10 m=30 lam=0.7 по оценке  nDCG@10 = 0.681  (+0.011)
+  k= 5 m=30 lam=0.7 по оценке  nDCG@10 = 0.681  (+0.010)
+  k= 3 m=30 lam=0.7 по оценке  nDCG@10 = 0.681  (+0.010)
+  k= 5 m=30 lam=0.5 по оценке  nDCG@10 = 0.679  (+0.008)
+  k= 5 m=10 lam=0.3 поровну   nDCG@10 = 0.529  (-0.142)
+  k=10 m=10 lam=0.3 поровну   nDCG@10 = 0.513  (-0.158)
+  k=20 m=10 lam=0.3 поровну   nDCG@10 = 0.492  (-0.178)
+лучшая на обучающих -&gt; на проверочных: nDCG@10 0.662 -&gt; 0.671 (+0.009); лучше 38, хуже 26
+проверочные, где среди первых 20 документов BM25 есть правильный: 255 вопросов, изменение nDCG@10 +0.005
+проверочные, где среди первых 20 правильного НЕТ: 45 вопросов, изменение nDCG@10 +0.031; из них выросли 4
+
+пример дрейфа: «The YAP1 and TEAD complex tanslocates into the nucleus where it interacts with transcription factors and DNA-binding proteins that modulate target gene transcription.»  nDCG@10 1.000 -&gt; 0.500
+  добавленные слова: dna, tal, effectors, binding, plant, tead, specificity, transcription, hippo, proteins, type, yap
+  первые документы первого прохода: Regulation of Hippo pathway transcription factor TEAD by p38 | TAL effectors are remote controls for gene activation.. TAL  | Breaking the code of DNA binding specificity of TAL-type III</code></pre>
+<pre><code class="language-python"># Почему k почти не влияет при весе exp(оценка): сколько документов реально «голосуют» за новые слова.
+from lib import *
+ids, texts, queries, qt, _ = load_all()
+bm = BM25([words(x) for x in texts])
+for k in (3, 10, 20):
+    eff, top1 = [], []
+    for q in sorted(qt):
+        s = np.sort(bm.scores(words(queries[q])))[::-1][:k]
+        w = np.exp(s - s.max()); w /= w.sum(); eff.append(1 / (w ** 2).sum()); top1.append(w[0])
+    print(f"k={k:2d}: вес первого документа в среднем {np.mean(top1):.2f}, «действующее число документов» 1/sum(w^2) = {np.mean(eff):.2f}")</code></pre>
+<pre><code class="language-text">k= 3: вес первого документа в среднем 0.87, «действующее число документов» 1/sum(w^2) = 1.36
+k=10: вес первого документа в среднем 0.85, «действующее число документов» 1/sum(w^2) = 1.63
+k=20: вес первого документа в среднем 0.84, «действующее число документов» 1/sum(w^2) = 1.74</code></pre>
+<p>Что видно. Первое: лучшие настройки на обучающих все с высокой долей исходного запроса (lam = 0,7) и 30 новыми словами, и их выигрыш небольшой: 0,670 → 0,681. Худшие — с равными весами документов и lam = 0,3: nDCG@10 падает до 0,492, на 0,178 ниже обычного BM25. Это и есть дрейф в чистом виде: когда новые слова весят 70% и все 20 документов голосуют поровну, запрос перестаёт быть про исходный вопрос. Второе: на проверочных лучшая настройка дала 0,662 → 0,671, то есть +0,009, примерно столько же, сколько на обучающих, — подгонки не видно, но и прирост скромный (38 вопросов лучше, 26 хуже). Третье: k = 3 и k = 20 дали одно и то же, и второй скрипт объясняет почему: при весе exp(оценка) первый документ получает в среднем 84–87% веса, а «действующее число документов» — от 1,36 до 1,74. Четвёртое: из 45 вопросов, где среди первых 20 не было ни одного правильного документа, выросли только 4, но сильно (в среднем по группе +0,031); остальные расширение не спасло — слова взять было неоткуда.</p>
+<p>Пример дрейфа. Утверждение про комплекс YAP1–TEAD, который переходит в ядро и взаимодействует с транскрипционными факторами (опечатка «tanslocates» — из самого набора). Обычный BM25 ставил правильную статью первой, nDCG@10 = 1,0. Но среди первых документов оказались статьи про TAL-эффекторы растительных бактерий — тоже «связывание ДНК» и «транскрипция». RM3 добавил слова tal, effectors, plant, specificity, и вторая выдача заполнилась растительной биологией: nDCG@10 упал до 0,5. Ни одно новое слово не ложное само по себе — дрейф получается из того, что расширение не знает, какие из первых документов на самом деле про вопрос.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Подбирают k, m, lam на тех же вопросах, по которым потом сообщают прирост. Честный прирост сообщают на отложенных вопросах.</li>
+<li>Ставят долю исходного запроса низкой, «чтобы расширение сильнее работало». В нашей сетке все худшие варианты — с lam = 0,3; исходные слова должны весить больше новых.</li>
+<li>Крутят k и удивляются, что ничего не меняется, не заметив, что формула веса документов отдаёт почти всё первому. Сначала смотрят, сколько документов реально голосует.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Дрейф запроса (query drift).</strong> Уход расширенного запроса от исходной темы из-за того, что слова взяты из неподходящих первых документов.</p>
+<p><strong>Доля исходного запроса (original query weight, lam).</strong> Часть общего веса, которая остаётся у слов, написанных пользователем.</p>
+<p><strong>Сетка настроек (grid search).</strong> Перебор всех сочетаний нескольких значений каждой настройки.</p>
+<p><strong>Обучающие и проверочные вопросы (train / test split).</strong> Разделение вопросов на те, по которым подбирают настройки, и те, по которым честно сообщают результат.</p>
+<p><strong>Подгонка под проверочный набор.</strong> Прирост, который появился только потому, что настройки выбирали, глядя на те же вопросы, на которых меряют.</p>
+<p><strong>Действующее число документов.</strong> Величина 1 / сумма квадратов весов: сколько документов «реально» участвуют, если веса неравные.</p>
+<p><strong>Выборочное расширение (selective expansion).</strong> Расширение, которое включают только для вопросов, где первый поиск выглядит уверенным, и выключают для остальных.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">4</span>
+            <span class="fold-title">Та же идея для векторов: сдвиг вектора вопроса к найденным документам</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> В векторном поиске нет слов, которые можно дописать, но есть вектор вопроса, который можно сдвинуть. Если первые найденные документы описывают тему точнее, чем короткий вопрос, то средний вектор этих документов указывает «куда искать» лучше, чем сам вопрос. Это дешёвый способ попробовать псевдообратную связь в векторной базе: не нужно ни перекодировать документы, ни звать модель второй раз, только одно сложение векторов и второй поиск. Важно понять, что он улучшает — порядок первой десятки или глубину списка, — потому что от этого зависит, куда его ставить.</p>
+<p><strong>Как это устроено.</strong> Формула Роккио (Rocchio) из системы SMART, 1971 год: новый вектор вопроса = исходный вектор + beta × (средний вектор k лучших документов), иногда ещё минус средний вектор заведомо плохих; в псевдоварианте плохих не знаем и эту часть не берём. Шаг первый: обычный векторный поиск. Шаг второй: средний вектор первых k документов. Шаг третий: сложить с весом beta и снова нормировать длину до единицы, потому что поиск идёт по косинусу. Шаг четвёртый: второй поиск по тем же векторам корпуса.</p>
+<p>Чем это отличается от RM3. RM3 добавляет отдельные слова, и каждое новое слово может притянуть документы, в которых нет ни одного исходного слова, — отсюда и сильный рост, и сильный дрейф. Сдвиг вектора плавный: новый вектор лежит между вопросом и центром найденных документов, поэтому он скорее «уточняет направление», чем добавляет новую тему. Отличие от вчерашней пересортировки то же, что и у RM3: сдвиг может принести документы, которых не было в первом списке.</p>
+<p>Ограничение специфическое для векторов: документы в базе часто похожи друг на друга сильнее, чем на короткий вопрос, а средний вектор нескольких документов — это «типичный документ по теме». Сдвиг к нему тянет наверх тексты, похожие на найденные, а не обязательно отвечающие на вопрос. В наших замерах ниже это видно: первая десятка от сдвига страдает, а глубина списка выигрывает. Векторы корпуса считаются один раз и кэшируются (на коробке 5183 аннотации кодировались около 46 секунд).</p>
+<p><strong>Подробный пример.</strong> Подбираем k ∈ {1, 3, 5, 10} и beta ∈ {0,25; 0,5; 1,0} на 809 обучающих вопросах, лучшую пару проверяем на 300 проверочных, смотрим и на nDCG@10, и на полноту в первой сотне.</p>
+<pre><code class="language-python"># Ступень 3: та же идея для векторов — сдвигаем вектор вопроса к среднему лучших документов (Роккио).
+from lib import *
+ids, texts, queries, qt, qtr = load_all()
+D = corpus_vectors(texts); bi = BiEncoder()
+def run(qr, k, beta):
+    qs = sorted(qr); Q = bi.encode([queries[q] for q in qs]); out0, out1 = [], []
+    for n, q in enumerate(qs):
+        s0 = D @ Q[n]; top = np.argsort(-s0)[:k]
+        v = Q[n] + beta * D[top].mean(0); v /= np.linalg.norm(v)
+        r0 = [ids[i] for i in np.argsort(-s0)[:100]]; r1 = [ids[i] for i in np.argsort(-(D @ v))[:100]]
+        out0.append((ndcg10(r0, qr[q]), recall(r0, qr[q], 100))); out1.append((ndcg10(r1, qr[q]), recall(r1, qr[q], 100)))
+    return np.array(out0), np.array(out1)
+print("подбор на обучающих (809 вопросов): nDCG@10")
+res = {}
+for k in (1, 3, 5, 10):
+    for beta in (0.25, 0.5, 1.0):
+        b, e = run(qtr, k, beta); res[(k, beta)] = e[:, 0].mean()
+    print(f"  k={k:2d}: " + "  ".join(f"beta={beta}: {res[(k, beta)]:.3f}" for beta in (0.25, 0.5, 1.0)) + f"   (без сдвига {b[:,0].mean():.3f})")
+k, beta = max(res, key=res.get)
+b, e = run(qt, k, beta); d = e[:, 0] - b[:, 0]
+print(f"лучшее на обучающих: k={k}, beta={beta}; на проверочных (300):")
+print(f"  без сдвига : nDCG@10 {b[:,0].mean():.3f}  recall@100 {b[:,1].mean():.3f}")
+print(f"  со сдвигом : nDCG@10 {e[:,0].mean():.3f}  recall@100 {e[:,1].mean():.3f}   лучше {(d&gt;1e-9).sum()}, хуже {(d&lt;-1e-9).sum()}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">подбор на обучающих (809 вопросов): nDCG@10
+  k= 1: beta=0.25: 0.662  beta=0.5: 0.658  beta=1.0: 0.646   (без сдвига 0.660)
+  k= 3: beta=0.25: 0.657  beta=0.5: 0.656  beta=1.0: 0.646   (без сдвига 0.660)
+  k= 5: beta=0.25: 0.657  beta=0.5: 0.650  beta=1.0: 0.627   (без сдвига 0.660)
+  k=10: beta=0.25: 0.656  beta=0.5: 0.648  beta=1.0: 0.623   (без сдвига 0.660)
+лучшее на обучающих: k=1, beta=0.25; на проверочных (300):
+  без сдвига : nDCG@10 0.648  recall@100 0.925
+  со сдвигом : nDCG@10 0.639  recall@100 0.945   лучше 23, хуже 38</code></pre>
+<p>Что видно. На обучающих вопросах почти все сочетания хуже обычного векторного поиска (0,660); только самый осторожный вариант — один документ, beta = 0,25 — чуть выше, 0,662, и рост этот в пределах случайности. Чем больше документов и больше beta, тем хуже: k = 10, beta = 1,0 даёт 0,623. На проверочных выбранная настройка опустила nDCG@10 с 0,648 до 0,639 (23 вопроса лучше, 38 хуже). Зато полнота на глубине 100 выросла с 0,925 до 0,945: средняя по вопросам доля правильных статей за сотым местом (1 − recall@100) сократилась с 7,5% до 5,5%: сдвиг втащил часть «потерянных» статей в первую сотню, и потолок для следующего шага поднялся на 2 процентных пункта. Вывод: на этом наборе сдвиг Роккио — плохой способ ставить лучших наверх, но неплохой способ собрать список кандидатов поглубже. Что с этим делать, — на следующей ступени.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Забывают нормировать вектор после сдвига. Без нормировки длина вектора меняется, и при скалярном произведении вместо косинуса меняется масштаб оценок, что ломает пороги и склейку с другими списками.</li>
+<li>Берут много документов и большой beta, «чтобы вектор был устойчивее». Средний вектор десяти документов — это вектор темы, а не ответа; в наших замерах такие варианты хуже всего.</li>
+<li>Судят о сдвиге только по первой десятке. Он может портить порядок и при этом поднимать потолок для пересортировки; надо смотреть обе метрики.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Формула Роккио (Rocchio).</strong> Сдвиг вектора вопроса к среднему вектору подходящих документов и от среднего вектора неподходящих.</p>
+<p><strong>Средний вектор (центроид, centroid).</strong> Покомпонентное среднее нескольких векторов, «центр» группы документов.</p>
+<p><strong>Коэффициент сдвига (beta).</strong> Насколько сильно новый вектор вопроса тянется к центру найденных документов.</p>
+<p><strong>Нормировка вектора.</strong> Деление вектора на его длину, чтобы длина стала равна единице и сравнение шло только по направлению.</p>
+<p><strong>Кэш векторов корпуса.</strong> Заранее посчитанные и сохранённые векторы всех документов, чтобы не кодировать их при каждом запуске.</p>
+<p><strong>Векторная псевдообратная связь (vector PRF).</strong> Псевдообратная связь, которая меняет вектор вопроса, а не список его слов.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">5</span>
+            <span class="fold-title">Где место расширению: кандидаты для пересортировки и переписывание запроса моделью</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Две предыдущие ступени дали неудобный, но полезный вывод: на этом наборе расширение почти не улучшает первую десятку само по себе, а иногда и портит её, зато может поднять полноту в глубине списка. В двухэтапном поиске из вчерашней дорожки за порядок отвечает пересортировщик, а за полноту — первый поиск. Значит, правильный вопрос не «помогает ли расширение», а «помогает ли расширение как поставщик кандидатов для пересортировки». Это и проверим, а заодно разберём, чем современное переписывание запроса языковой моделью отличается от псевдообратной связи.</p>
+<p><strong>Как это устроено.</strong> Схема: расширенный поиск даёт N кандидатов → перекрёстный кодировщик заново оценивает каждую пару «вопрос — кандидат» → первые 10 идут в ответ. Порядок первого поиска теперь почти не важен (пересортировщик его перепишет), важна только полнота на глубине N. Если расширение поднимает recall@N, у пересортировщика больше шансов найти ответ; если оно вытесняет правильные документы чужими, шансов меньше.</p>
+<p>Переписывание запроса языковой моделью — следующий шаг той же идеи, только слова берутся не из найденных документов, а из знаний модели. Варианты: попросить модель переформулировать вопрос несколькими способами и искать по каждому, склеивая списки (multi-query, например MultiQueryRetriever в LangChain); попросить модель написать гипотетический ответ и искать по его вектору (HyDE, Gao и соавторы, 2022); дописать к запросу сгенерированный псевдодокумент для BM25 (query2doc, Wang и соавторы, 2023). Плюс: модель знает синонимы и раскрывает сокращения даже тогда, когда первый поиск ничего не нашёл, — то есть лечит как раз ту группу вопросов, где RM3 бессилен. Минусы: вызов модели на каждый вопрос (добавляет задержку и деньги), и модель может уверенно дописать неверные факты, которые уведут поиск в сторону, — тот же дрейф, только из другого источника. Эти варианты мы сегодня не запускали, цифр по ним здесь нет.</p>
+<p>Отличие от склейки (RRF) из позапрошлой дорожки: склейка объединяет два готовых списка по разным способам поиска; расширение меняет сам запрос. Их можно сочетать: искать по исходному и по расширенному запросу и склеивать — так расширение добавляет кандидатов, не вытесняя исходные.</p>
+<p><strong>Подробный пример.</strong> Для 300 проверочных вопросов строим четыре списка по 100 кандидатов: BM25, BM25 + RM3 с лучшими настройками со ступени 3, векторы и векторы со сдвигом Роккио со ступени 4. Оценки перекрёстного кодировщика берём из вчерашнего прогона и досчитываем для новых кандидатов, которых вчера не было: таких пар оказалось 8177, на процессоре коробки — 182 секунды, около 22 мс на пару. Затем пересортировываем первые 20 и первые 100 кандидатов каждого списка.</p>
+<pre><code class="language-python"># Ступень 5: расширение как поставщик кандидатов для пересортировки. Оценки перекрёстного кодировщика
+# (cross-encoder/ms-marco-MiniLM-L6-v2) берём из прогона 15.11 и досчитываем для новых кандидатов.
+from lib import *
+import pickle
+ids, texts, queries, qt, _ = load_all()
+old = pickle.load(open("/workspace/put-gen-1115/scifact_runs.pkl", "rb"))["res"]
+best = pickle.load(open("ex4.pkl", "rb"))["best"]
+toks = [words(x) for x in texts]; bm = BM25(toks); tfs = [Counter(t) for t in toks]
+D = corpus_vectors(texts); bi = BiEncoder(); ce = CrossEncoder()
+qs = sorted(qt); Q = bi.encode([queries[q] for q in qs])
+lists = {}
+for n, q in enumerate(qs):
+    s0 = bm.scores(words(queries[q])); qw, _ = rm3(bm, tfs, words(queries[q]), s0, *best[1:])
+    v0 = D @ Q[n]; v = Q[n] + 0.25 * D[np.argsort(-v0)[:1]].mean(0); v /= np.linalg.norm(v)
+    lists[q] = dict(bm=list(np.argsort(-s0)[:100]), rm3=list(np.argsort(-bm25_weighted(bm, qw))[:100]),
+                    bi=list(np.argsort(-v0)[:100]), roc=list(np.argsort(-(D @ v))[:100]))
+need = {q: [i for i in set().union(*lists[q].values()) if i not in old[q]["ce"]] for q in qs}
+npairs = sum(map(len, need.values())); print(f"досчитать пар перекрёстным кодировщиком: {npairs}", flush=True)
+t = time.time(); ces = {}
+for q in qs:
+    sc = dict(old[q]["ce"])
+    if need[q]: sc.update(zip(need[q], ce.score(queries[q], [texts[i] for i in need[q]]).tolist()))
+    ces[q] = sc
+print(f"досчитали за {time.time()-t:.0f} с")
+def ev(name, key, depth):
+    nd, rc = [], []
+    for q in qs:
+        L = lists[q][key]; r = sorted(L[:depth], key=lambda i: -ces[q][i]) + L[depth:]
+        r = [ids[i] for i in r]; nd.append(ndcg10(r, qt[q])); rc.append(recall([ids[i] for i in L], qt[q], depth))
+    print(f"  {name:&lt;34s} потолок recall@{depth} = {np.mean(rc):.3f}   после пересортировки nDCG@10 = {np.mean(nd):.3f}")
+for depth in (20, 100):
+    print(f"пересортировка первых {depth} кандидатов:")
+    ev("BM25", "bm", depth); ev(f"BM25+RM3 (k={best[1]}, m={best[2]}, lam={best[3]})", "rm3", depth)
+    ev("векторы all-MiniLM-L6-v2", "bi", depth); ev("векторы + сдвиг Роккио (k=1, 0.25)", "roc", depth)</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">досчитать пар перекрёстным кодировщиком: 8177
+досчитали за 182 с
+пересортировка первых 20 кандидатов:
+  BM25                               потолок recall@20 = 0.833   после пересортировки nDCG@10 = 0.686
+  BM25+RM3 (k=20, m=30, lam=0.7)     потолок recall@20 = 0.831   после пересортировки nDCG@10 = 0.675
+  векторы all-MiniLM-L6-v2           потолок recall@20 = 0.844   после пересортировки nDCG@10 = 0.689
+  векторы + сдвиг Роккио (k=1, 0.25) потолок recall@20 = 0.858   после пересортировки nDCG@10 = 0.699
+пересортировка первых 100 кандидатов:
+  BM25                               потолок recall@100 = 0.886   после пересортировки nDCG@10 = 0.673
+  BM25+RM3 (k=20, m=30, lam=0.7)     потолок recall@100 = 0.899   после пересортировки nDCG@10 = 0.683
+  векторы all-MiniLM-L6-v2           потолок recall@100 = 0.925   после пересортировки nDCG@10 = 0.687
+  векторы + сдвиг Роккио (k=1, 0.25) потолок recall@100 = 0.945   после пересортировки nDCG@10 = 0.690</code></pre>
+<p>Что видно. Лучший результат в таблице — векторы со сдвигом Роккио плюс пересортировка первых 20: nDCG@10 = 0,699 против 0,689 у обычных векторов с той же пересортировкой. Тот самый сдвиг, который сам по себе портил первую десятку (0,648 → 0,639), после пересортировки дал +0,010, потому что поднял потолок на глубине 20 с 0,844 до 0,858. С RM3 картина зависит от глубины: на 20 кандидатах он чуть хуже обычного BM25 (0,675 против 0,686), на 100 — чуть лучше (0,683 против 0,673), вслед за полнотой (0,886 → 0,899). Все различия здесь — порядка одной сотой на 300 вопросах; мы не проверяли их на случайность (как это делается — в дорожке про проверку качества, ступень про разброс), так что честный вывод осторожный: расширение стоит пробовать как способ углубить список кандидатов перед пересортировкой, и решать по замеру на своих вопросах, а не включать по умолчанию.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Оценивают расширение отдельно от пересортировки и выбрасывают его, увидев, что первая десятка не выросла. В связке значение имеет полнота кандидатов, а не их порядок.</li>
+<li>Заменяют исходный запрос переписанным моделью целиком. Безопаснее искать и по исходному, и по переписанному и склеивать списки, чтобы ошибка модели не выкинула точные совпадения.</li>
+<li>Не считают цену: второй проход, новые кандидаты для пересортировщика (у нас 22 мс на пару на процессоре) и, для переписывания моделью, ещё один вызов модели на каждый вопрос.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Переписывание запроса (query rewriting).</strong> Замена или дополнение вопроса пользователя новой формулировкой, сделанной программой или языковой моделью.</p>
+<p><strong>Многозапросный поиск (multi-query retrieval).</strong> Поиск по нескольким переформулировкам одного вопроса со склейкой результатов.</p>
+<p><strong>HyDE (гипотетический документ).</strong> Приём, когда модель пишет предполагаемый ответ, а ищут по его вектору вместо вектора вопроса.</p>
+<p><strong>query2doc.</strong> Приём, когда сгенерированный моделью псевдодокумент дописывают к запросу для поиска по словам.</p>
+<p><strong>Список кандидатов (candidate pool).</strong> Документы, которые первый поиск передаёт пересортировщику.</p>
+<p><strong>Глубина пересортировки.</strong> Сколько первых кандидатов заново оценивает пересортировщик.</p>
+<p><strong>Задержка (latency).</strong> Время от вопроса до ответа; каждый дополнительный проход и вызов модели её увеличивает.</p>
+          </div>
+        </details>
+      </div>
+      <p class="bio" style="margin-top:1.4rem;text-align:center">Словарь целиком — <a href="/slovar">/slovar</a>, новости — <a href="/novosti">/novosti</a>. Все дорожки — <a href="/put">/put</a>.</p>
+    </section>
+    <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
+  </div>
+  <script src="js/app.js?v=ui20261019ux" defer></script>
+</body>
+</html>
