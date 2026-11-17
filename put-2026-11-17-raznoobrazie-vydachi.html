@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Как не набить ответ повторами: разнообразие выдачи, MMR и один кусок на документ · py.motomov.ru</title>
+  <meta name="description" content="Пять ступеней: откуда в выдаче повторы и почему они дороги; как устроен MMR — жадный выбор с штрафом за похожесть, по шагам; цена разнообразия на чистой базе — что MMR делает с nDCG@10 при разных lam; повторы от нарезки на куски — группировка по документу против порога и MMR; где разнообразие ломается — шкалы оценок, похожие правильные ответы. Все цифры — из запусков на наборе SciFact.">
+  <meta name="theme-color" content="#f3efe6">
+  <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
+  <link rel="canonical" href="https://py.motomov.ru/put-2026-11-17-raznoobrazie-vydachi">
+  <link rel="stylesheet" href="styles.css?v=ui20261019ux">
+  <script>try{var d=document.documentElement,s=localStorage;if(s.getItem("moto-theme")==="dark")d.dataset.theme="dark";var f=s.getItem("moto-fs");if(f&&f!=="1")d.dataset.fs=f;if(s.getItem("moto-comfy")==="1")d.dataset.comfy="1"}catch(e){}</script>
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="novosti.html" aria-label="На главную: новости">
+        <img class="brand-logo" src="https://www.motomov.ru/logo.jpg" width="32" height="32" alt="">
+        <span class="brand-name">Moto<span class="brand-dot">·</span><span class="brand-py">py</span></span>
+      </a>
+      <nav class="nav" aria-label="Разделы сайта">
+        <a href="novosti.html">Новости</a><a href="metodichka.html">Методичка</a><a class="active" aria-current="page" href="put.html">Дорожка</a><a href="slovar.html">Словарь</a><a href="kb.html">База</a><a href="archive.html">Архив</a>
+      </nav>
+      <details class="nav-more">
+        <summary aria-label="Ещё разделы">Ещё <span aria-hidden="true">▾</span></summary>
+        <div class="nav-more-list"><a href="spravochnik.html">Справочник Python</a><a href="news.html">Python: уроки</a><a href="course.html">Курс</a><a href="slovar-python.html">Словарь Python</a><a href="youtube.html">YouTube</a><a href="index.html">Старт</a><a href="https://www.motomov.ru/">Визитка motomov.ru</a></div>
+      </details>
+    </header>
+    <header class="hero">
+      <span class="badge">дорожка · 17.11.2026 · разнообразие выдачи</span>
+      <h1>Как не набить ответ повторами: разнообразие выдачи, MMR и один кусок на документ</h1>
+      <p class="bio">Три прошлые дорожки — <a href="/put-2026-11-14-gibridnyj-poisk">гибридный поиск</a>, <a href="/put-2026-11-15-peresortirovka">пересортировка</a> и <a href="/put-2026-11-16-rasshirenie-zaprosa">расширение запроса</a> — учили поиск находить нужное и ставить его повыше. Сегодня обратная сторона: что делать, когда первая десятка заполнена почти одинаковыми текстами. В RAG (ответ модели по найденным кускам) это прямые потери: место в контексте модели ограничено, и пять пересказов одного абзаца вытесняют другие источники. Узкий вопрос дня: как выбрать десять результатов, которые и близки к вопросу, и не повторяют друг друга, — разнообразие выдачи (diversification), и прежде всего самый известный способ, MMR (maximal marginal relevance, «наибольшая добавочная польза»). Разберём формулу по шагам, измерим, сколько разнообразие стоит, сравним MMR с простым правилом «не больше одного куска на документ» и посмотрим, где оно ломается. Данные и модели те же, что в прошлые дни: набор SciFact из сборника BEIR (5183 аннотации научных статей, 300 проверочных утверждений с размеченными правильными статьями), двойной кодировщик sentence-transformers/all-MiniLM-L6-v2 и перекрёстный cross-encoder/ms-marco-MiniLM-L6-v2 через ONNX Runtime на процессоре коробки. Данные английские, поэтому и примеры на английском. Все цифры ниже — из наших запусков; спойлер: на чистой базе MMR скорее вредит, а на нарезанной на куски выигрывает более простое правило.</p>
+      <p class="bio" style="margin-top:.6rem">Все дорожки — <a href="/put">/put</a>. Прошлая — <a href="/put-2026-11-16-rasshirenie-zaprosa">расширение запроса и псевдообратная связь</a>.</p>
+    </header>
+    <section>
+      <div class="fold-list">
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">1</span>
+            <span class="fold-title">Откуда в выдаче повторы и почему они дороги</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Поиск оценивает каждый документ отдельно: насколько он близок к вопросу. Он не смотрит, что уже стоит выше в списке. Если в базе пять версий одной инструкции, или статья нарезана на куски с перекрытием, все копии получат почти одинаковую высокую оценку и встанут рядом. Для человека это раздражает, а для RAG стоит денег и качества: в контекст модели обычно кладут фиксированное число кусков или токенов, и каждый повтор занимает место, где мог бы оказаться другой источник. Поэтому перед тем как бороться с повторами, надо измерить, сколько их у вас на самом деле и откуда они берутся.</p>
+<p><strong>Как это устроено.</strong> Обычная выдача — это сортировка по одной оценке: близости к вопросу (relevance). У векторного поиска это косинус между вектором вопроса и вектором текста: число от −1 до 1, чем ближе к 1, тем похожее смысл. Если два текста почти одинаковы, их векторы почти совпадают, значит, и косинус каждого с вопросом почти один и тот же. Поэтому повторы не разбросаны по выдаче, а идут пачкой.</p>
+<p>Повторы бывают трёх видов. Точные копии — один и тот же текст, загруженный дважды; их ловят хэшем (короткой «подписью» текста, которая совпадает только у одинаковых строк) после нормализации: нижний регистр, без лишних пробелов и знаков. Почти-копии — версии документа, пересказы, письмо и ответ с цитатой; хэш их не видит, нужен порог похожести или приёмы вроде MinHash, о которых шла речь в <a href="/put-2026-11-11-dedup">дорожке про дедупликацию</a>. Третий вид — повторы, которые вы создали сами, когда нарезали документ на куски с перекрытием: соседние куски делят половину слов.</p>
+<p>Важно отличать повтор от похожести по теме. Две разные статьи об одном белке будут близки по смыслу, и косинус между ними высокий, но каждая несёт свои факты. Удаление дублей (deduplication) — разовая чистка базы по правилу «это одно и то же». Разнообразие выдачи (diversification) — решение на каждый вопрос: какой набор результатов принесёт больше разной пользы. Дальше на всей дорожке это различие будет главным.</p>
+<p>Ограничение: никакой метод не знает, что такое «одно и то же», лучше вас. Модель векторов меряет похожесть смысла, а не совпадение фактов, поэтому порог «0.9 — это дубль» надо проверять глазами на вашей базе, а не брать из чужой статьи.</p>
+<p><strong>Подробный пример.</strong> Общий модуль lib.py — тот же, что в прошлые дни (обёртки моделей, BM25, nDCG@10, загрузка SciFact, кэш векторов корпуса), плюс сегодняшнее добавление в конце — функция mmr, о ней следующая ступень. Сначала смотрим, сколько повторов в самой базе SciFact и в первой десятке обычного векторного поиска.</p>
+<pre><code class="language-python">import json, time, math, re, numpy as np, onnxruntime as ort
+from tokenizers import Tokenizer
+from collections import Counter, defaultdict
+HERE = "/workspace/put-gen-1117"
+so = ort.SessionOptions(); so.intra_op_num_threads = 8
+
+class CrossEncoder:
+    """Перекрёстный кодировщик: вопрос и текст идут в модель ОДНОЙ строкой [CLS] вопрос [SEP] текст [SEP]."""
+    def __init__(self, path=f"{HERE}/models/ms", max_len=512):
+        self.tok = Tokenizer.from_file(f"{path}/tokenizer.json")
+        self.tok.enable_truncation(max_len, strategy="only_second")   # режем только текст, вопрос целиком
+        self.tok.enable_padding()
+        self.sess = ort.InferenceSession(f"{path}/model.onnx", so, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+    def score(self, query, docs, batch=32):
+        out = []
+        for s in range(0, len(docs), batch):
+            enc = self.tok.encode_batch([(query, d) for d in docs[s:s+batch]])
+            feed = {"input_ids": np.array([e.ids for e in enc], dtype=np.int64),
+                    "attention_mask": np.array([e.attention_mask for e in enc], dtype=np.int64),
+                    "token_type_ids": np.array([e.type_ids for e in enc], dtype=np.int64)}
+            out.append(self.sess.run(None, {k: v for k, v in feed.items() if k in self.names})[0][:, 0])
+        return np.concatenate(out)
+
+class BiEncoder:
+    """Двойной кодировщик: каждый текст отдельно -&gt; вектор (среднее по токенам), сравнение косинусом."""
+    def __init__(self, path=f"{HERE}/models/bi", max_len=256):
+        self.tok = Tokenizer.from_file(f"{path}/tokenizer.json")
+        self.tok.enable_truncation(max_len); self.tok.enable_padding()
+        self.sess = ort.InferenceSession(f"{path}/model.onnx", so, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+    def encode(self, texts, batch=64):
+        out = []
+        for s in range(0, len(texts), batch):
+            enc = self.tok.encode_batch(texts[s:s+batch])
+            ids = np.array([e.ids for e in enc], dtype=np.int64); m = np.array([e.attention_mask for e in enc], dtype=np.int64)
+            feed = {"input_ids": ids, "attention_mask": m, "token_type_ids": np.zeros_like(ids)}
+            h = self.sess.run(None, {k: v for k, v in feed.items() if k in self.names})[0]
+            v = (h * m[..., None]).sum(1) / m.sum(1, keepdims=True)
+            out.append(v / np.linalg.norm(v, axis=1, keepdims=True))
+        return np.concatenate(out).astype(np.float32)
+
+def words(t): return re.findall(r"\w+", t.lower())
+class BM25:
+    def __init__(self, docs, k1=1.2, b=0.75):
+        self.k1, self.b, self.N = k1, b, len(docs)
+        self.len = np.array([len(d) for d in docs], float); self.avg = self.len.mean()
+        self.post = defaultdict(list)
+        for i, d in enumerate(docs):
+            for w, c in Counter(d).items(): self.post[w].append((i, c))
+    def scores(self, q):
+        s = np.zeros(self.N)
+        for w in set(q):
+            p = self.post.get(w, []); n = len(p)
+            idf = math.log(1 + (self.N - n + 0.5) / (n + 0.5))
+            for i, tf in p:
+                s[i] += idf * tf * (self.k1 + 1) / (tf + self.k1 * (1 - self.b + self.b * self.len[i] / self.avg))
+        return s
+
+def ndcg10(ranked, rel):
+    """nDCG@10 для двоичных меток: сумма 1/log2(место+1) по правильным в первой десятке, делённая на лучшее возможное."""
+    dcg = sum(1 / math.log2(r + 2) for r, d in enumerate(ranked[:10]) if d in rel)
+    idcg = sum(1 / math.log2(r + 2) for r in range(min(len(rel), 10)))
+    return dcg / idcg
+def recall(ranked, rel, k): return len(set(ranked[:k]) &amp; rel) / len(rel)
+
+def load_scifact(split="test"):
+    corpus = [json.loads(l) for l in open(f"{HERE}/scifact/corpus.jsonl")]
+    queries = {q["_id"]: q["text"] for q in map(json.loads, open(f"{HERE}/scifact/queries.jsonl"))}
+    qrels = defaultdict(set)
+    for line in list(open(f"{HERE}/scifact/qrels/{split}.tsv"))[1:]:
+        q, d, s = line.split("\t")
+        if int(s) &gt; 0: qrels[q].add(d)
+    return corpus, queries, dict(qrels)
+
+# --- добавлено для дорожки 16.11: стоп-слова, BM25 с весами слов, RM3, кэш векторов ---
+STOP = set("""a an the of in on at to for from by with without and or not no nor is are was were be been being
+has have had do does did this that these those it its as than then there their they them we our you your he she his her
+which who whom what when where why how can could may might will would shall should into over under between
+during after before about above below up down out off also such both each other more most less least very
+via among within per however while if but so all any some only same own just""".split())
+def terms(t): return [w for w in words(t) if w not in STOP and len(w) &gt; 1]
+
+def bm25_weighted(bm, qw):
+    """BM25, где у каждого слова запроса свой вес (у обычного запроса вес = сколько раз слово встретилось)."""
+    s = np.zeros(bm.N)
+    for w, wt in qw.items():
+        p = bm.post.get(w, []); n = len(p)
+        if not n: continue
+        idf = math.log(1 + (bm.N - n + 0.5) / (n + 0.5))
+        for i, tf in p:
+            s[i] += wt * idf * tf * (bm.k1 + 1) / (tf + bm.k1 * (1 - bm.b + bm.b * bm.len[i] / bm.avg))
+    return s
+
+def rm3(bm, docs_tf, q_terms, first_scores, k=10, m=20, lam=0.5, uniform=False):
+    """RM3: берём k лучших документов первого прохода, считаем, какие слова в них частые
+    (с учётом веса документа), берём m лучших слов и смешиваем с исходным запросом: lam — доля исходного."""
+    top = np.argsort(-first_scores)[:k]
+    sc = first_scores[top]; w_doc = np.ones(k) if uniform else np.exp(sc - sc.max()); w_doc /= w_doc.sum()   # вес документа ~ exp(оценка) или поровну
+    rel = Counter()
+    for wd, i in zip(w_doc, top):
+        tf = docs_tf[i]; L = sum(tf.values())
+        for w, c in tf.items():
+            if w not in STOP and len(w) &gt; 1 and not w.isdigit(): rel[w] += wd * c / L
+    exp = dict(rel.most_common(m)); z = sum(exp.values())
+    orig = Counter(q_terms); zq = sum(orig.values())
+    qw = defaultdict(float)
+    for w, c in orig.items(): qw[w] += lam * c / zq
+    for w, v in exp.items(): qw[w] += (1 - lam) * v / z
+    return dict(qw), exp
+
+def load_all():
+    corpus, queries, qt = load_scifact("test"); _, _, qtr = load_scifact("train")
+    ids = [d["_id"] for d in corpus]; texts = [(d["title"] + ". " + d["text"]).strip() for d in corpus]
+    return ids, texts, queries, qt, qtr
+
+def corpus_vectors(texts):
+    import os
+    f = f"{HERE}/corpus_vec.npy"
+    if os.path.exists(f): return np.load(f)
+    D = BiEncoder().encode(texts); np.save(f, D); return D
+
+# --- добавлено для дорожки 17.11: разнообразие выдачи, MMR ---
+def mmr(rel, V, cand, k=10, lam=0.7):
+    """MMR: жадно берём по одному документу. Очки кандидата = lam * близость к вопросу
+    - (1 - lam) * наибольшая близость к уже взятым. rel — близость к вопросу, V — нормированные векторы."""
+    cand = list(cand); chosen = []; maxsim = np.full(len(cand), -np.inf)
+    Vc = V[cand]; r = np.array([rel[i] for i in cand], float)
+    while len(chosen) &lt; min(k, len(cand)):
+        pen = np.where(np.isfinite(maxsim), maxsim, 0.0)
+        s = lam * r - (1 - lam) * pen
+        for j in chosen: s[j] = -np.inf
+        j = int(np.argmax(s)); chosen.append(j)
+        maxsim = np.maximum(maxsim, Vc @ Vc[j])
+    return [cand[j] for j in chosen]</code></pre>
+<pre><code class="language-python"># Ступень 1: сколько повторов в обычной выдаче и в самой базе SciFact (векторы all-MiniLM-L6-v2, косинус).
+from lib import *
+import hashlib
+ids, texts, queries, qt, _ = load_all()
+D = corpus_vectors(texts); bi = BiEncoder()
+norm = lambda t: " ".join(words(t))
+h = Counter(hashlib.md5(norm(t).encode()).hexdigest() for t in texts)
+print(f"документов в базе: {len(texts)}; точных повторов после нормализации текста: {sum(c-1 for c in h.values() if c &gt; 1)}")
+S = D @ D.T; np.fill_diagonal(S, -1)
+for th in (0.95, 0.9, 0.8):
+    print(f"  пар документов с косинусом &gt;= {th}: {int((np.triu(S, 1) &gt;= th).sum())}")
+i, j = np.unravel_index(np.argmax(np.triu(S, 1)), S.shape)
+print(f"самая похожая пара: косинус {S[i,j]:.3f}\n  A: {texts[i][:160]}\n  B: {texts[j][:160]}")
+qs = sorted(qt); Q = bi.encode([queries[q] for q in qs])
+mx, mean, hi = [], [], 0
+for n, q in enumerate(qs):
+    top = np.argsort(-(D @ Q[n]))[:10]; P = D[top] @ D[top].T; iu = np.triu_indices(10, 1)
+    mean.append(P[iu].mean()); mx.append(P[iu].max()); hi += P[iu].max() &gt;= 0.9
+print(f"\nпервая десятка поиска по векторам, {len(qs)} тестовых вопросов:")
+print(f"  средний косинус между документами десятки: {np.mean(mean):.3f}")
+print(f"  средний косинус самой похожей пары в десятке: {np.mean(mx):.3f}")
+print(f"  вопросов, где в десятке есть пара с косинусом &gt;= 0.9: {hi}")
+rand = D[np.random.default_rng(0).choice(len(D), 2000, replace=False)]; R = rand @ rand.T
+print(f"для сравнения: средний косинус двух случайных документов базы: {R[np.triu_indices(2000,1)].mean():.3f}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">документов в базе: 5183; точных повторов после нормализации текста: 0
+  пар документов с косинусом &gt;= 0.95: 0
+  пар документов с косинусом &gt;= 0.9: 4
+  пар документов с косинусом &gt;= 0.8: 331
+самая похожая пара: косинус 0.924
+  A: A global role for KLF1 in erythropoiesis revealed by ChIP-seq in primary erythroid cells.. KLF1 regulates a diverse suite of genes to direct erythroid cell diff
+  B: Novel roles for KLF1 in erythropoiesis revealed by mRNA-seq.. KLF1 (formerly known as EKLF) regulates the development of erythroid cells from bi-potent progenit
+
+первая десятка поиска по векторам, 300 тестовых вопросов:
+  средний косинус между документами десятки: 0.471
+  средний косинус самой похожей пары в десятке: 0.740
+  вопросов, где в десятке есть пара с косинусом &gt;= 0.9: 4
+для сравнения: средний косинус двух случайных документов базы: 0.132</code></pre>
+<p>Что видно. SciFact — чистая база: после нормализации ни одной точной копии, ни одной пары с косинусом от 0,95, всего 4 пары от 0,9. Самая похожая пара (0,924) — вовсе не дубль: это две разные работы одной темы про белок KLF1, одна сделана методом ChIP-seq, другая — mRNA-seq. По порогу 0,9 их бы «склеили» и потеряли одну из работ. В первой десятке документы похожи друг на друга заметно сильнее случайных (средний косинус 0,471 против 0,132 у двух случайных статей) — это нормально: все они о теме вопроса. Но настоящих повторов (пара от 0,9) в десятке почти нет — 4 вопроса из 300. Запомним это: если повторов мало, бороться не с чем, и в ступени 3 мы увидим, что тогда разнообразие только мешает.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Включают «разнообразие» до того, как измерили повторы. Сначала посчитайте, как часто в десятке встречаются пары выше порога и из чего они состоят.</li>
+<li>Считают высокую похожесть доказательством дубля. Пример выше: 0,924 у двух разных научных работ.</li>
+<li>Чистят повторы только при загрузке базы и забывают про нарезку на куски — главный источник повторов в RAG, о нём ступень 4.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Повтор (дубль, duplicate).</strong> Документ, который несёт ту же информацию, что уже есть в выдаче или базе.</p>
+<p><strong>Почти-копия (near-duplicate).</strong> Текст, отличающийся от другого мелкими правками, форматом или пересказом.</p>
+<p><strong>Хэш (hash).</strong> Короткая подпись текста, одинаковая только у одинаковых строк; ловит точные копии.</p>
+<p><strong>Нормализация текста.</strong> Приведение к общему виду перед сравнением: регистр, пробелы, знаки препинания.</p>
+<p><strong>Удаление дублей (deduplication).</strong> Разовая чистка базы от копий по заранее выбранному правилу.</p>
+<p><strong>Разнообразие выдачи (diversification).</strong> Выбор результатов под конкретный вопрос так, чтобы они не повторяли друг друга.</p>
+<p><strong>Избыточность (redundancy).</strong> Насколько результаты в списке похожи друг на друга; здесь меряем средним косинусом между ними.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">2</span>
+            <span class="fold-title">MMR по шагам: близость к вопросу минус похожесть на уже выбранное</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> MMR — самый распространённый способ разнообразить выдачу; он встроен в популярные библиотеки для RAG (например, в LangChain это поиск max_marginal_relevance_search с параметрами fetch_k — сколько кандидатов взять, и lambda_mult — тот самый вес). Его включают одной строкой, и поэтому важно понимать, что именно он считает: иначе невозможно предсказать, когда он поможет, а когда выкинет нужный документ.</p>
+<p><strong>Как это устроено.</strong> Метод предложили Карбонелл и Голдштейн в 1998 году. Сначала обычный поиск даёт список кандидатов, например 100 лучших. Затем выдачу собирают жадно (greedy), по одному результату: на каждом шаге для каждого ещё не взятого кандидата считают очки = lam × близость к вопросу − (1 − lam) × наибольшая похожесть на любой уже взятый результат. Берут кандидата с наибольшими очками, добавляют в выдачу и повторяют, пока не наберут нужное число.</p>
+<p>Параметр lam (лямбда, от 0 до 1) — ползунок между «точнее» и «разнообразнее». При lam = 1 штрафа нет, и получается обычная выдача. При lam = 0 близость к вопросу не важна вовсе, и метод набирает максимально непохожие друг на друга тексты. Первый результат всегда совпадает с обычной выдачей: на первом шаге брать ещё нечего, штраф нулевой.</p>
+<p>Полезно переписать правило как сравнение двух кандидатов. Повтор A (близость sA, похожесть на взятое pA) проиграет новому тексту B (sB, pB), если lam × (sA − sB) &lt; (1 − lam) × (pA − pB). Словами: разница в близости к вопросу должна перевешиваться разницей в похожести на уже взятое. Отсюда главное ограничение: обе величины должны быть на одной шкале. Если близость — это логит пересортировщика от −11 до 10, а похожесть — косинус от 0 до 1, штраф просто тонет (ступень 5).</p>
+<p>Отличие от соседних приёмов. Удаление дублей по порогу говорит «да или нет»: кандидат выкидывается, если похож на взятый сильнее порога. MMR ничего не выкидывает насовсем — он мягко понижает похожих, и повтор может вернуться, если других хороших кандидатов нет. Стоимость: на каждом из k шагов надо сравнить всех кандидатов с только что взятым, то есть около k × N умножений векторов; для 10 из 100 это доли миллисекунды.</p>
+<p><strong>Подробный пример.</strong> Режем каждую статью SciFact на куски по 60 слов с перекрытием 30 (так часто делают в RAG) и кодируем все куски. Затем берём вопрос, у которого первая десятка кусков почти вся из одной статьи, и проходим MMR при lam = 0,7 по шагам.</p>
+<pre><code class="language-python"># Режем каждую статью SciFact на куски по 60 слов с перекрытием 30 слов (шаг 30) и кодируем all-MiniLM-L6-v2.
+from lib import *
+import pickle
+ids, texts, queries, qt, _ = load_all()
+ch_text, ch_doc = [], []
+for d, t in enumerate(texts):
+    w = t.split()
+    for s in range(0, max(1, len(w) - 30), 30):
+        ch_text.append(" ".join(w[s:s+60])); ch_doc.append(d)
+print(f"кусков: {len(ch_text)} из {len(texts)} статей", flush=True)
+t0 = time.time(); C = BiEncoder().encode(ch_text, batch=128)
+print(f"закодировали за {time.time()-t0:.0f} с")
+np.save("chunk_vec.npy", C); pickle.dump(dict(text=ch_text, doc=ch_doc), open("chunks.pkl", "wb"))</code></pre>
+<pre><code class="language-text">кусков: 34459 из 5183 статей
+закодировали за 169 с</code></pre>
+<pre><code class="language-python"># Ступень 2: MMR по шагам на одном вопросе SciFact, поиск по кускам (60 слов, перекрытие 30), lam = 0.7.
+from lib import *
+import pickle
+ids, texts, queries, qt, _ = load_all()
+C = np.load("chunk_vec.npy"); meta = pickle.load(open("chunks.pkl", "rb")); doc = np.array(meta["doc"])
+# сначала: насколько похожи соседние куски одной статьи и куски разных статей
+same_nb = [C[i] @ C[i+1] for i in range(len(C)-1) if doc[i] == doc[i+1]]
+rng = np.random.default_rng(0); a = rng.integers(0, len(C), 5000); b = rng.integers(0, len(C), 5000)
+print(f"косинус соседних кусков одной статьи (перекрытие 30 слов): среднее {np.mean(same_nb):.3f}, доля &gt;= 0.9: {np.mean(np.array(same_nb) &gt;= 0.9):.2f}")
+print(f"косинус двух случайных кусков: среднее {np.mean([C[i] @ C[j] for i, j in zip(a, b) if doc[i] != doc[j]]):.3f}\n")
+bi = BiEncoder(); qs = sorted(qt); Q = bi.encode([queries[q] for q in qs])
+best = None
+for n, q in enumerate(qs):
+    top = np.argsort(-(C @ Q[n]))[:10]; u = len(set(doc[top]))
+    if len(queries[q]) &lt; 70 and (best is None or u &lt; best[0]): best = (u, n)
+n = best[1]; q = qs[n]; s = C @ Q[n]; cand = np.argsort(-s)[:100]
+print(f"вопрос: «{queries[q]}»; правильные статьи: {sorted(qt[q])}")
+print("обычная выдача, первые 6 кусков:")
+for r, i in enumerate(cand[:6], 1): print(f"  {r}. кусок {i} из статьи {ids[doc[i]]}  близость к вопросу {s[i]:.3f}  «{meta['text'][i][:70]}…»")
+lam = 0.7; chosen = []
+print(f"\nMMR, lam = {lam}: очки = {lam} * близость - {1-lam:.1f} * max косинус с уже взятыми")
+for step in range(4):
+    rows = []
+    for i in cand[:12]:
+        if i in chosen: continue
+        pen = max((C[i] @ C[j] for j in chosen), default=0.0)
+        rows.append((lam * s[i] - (1 - lam) * pen, i, pen))
+    rows.sort(reverse=True)
+    print(f" шаг {step+1}:")
+    for sc, i, pen in rows[:4]:
+        print(f"   кусок {i} (статья {ids[doc[i]]}): близость {s[i]:.3f}, max косинус с взятыми {pen:.3f}, очки {sc:.3f}")
+    chosen.append(rows[0][1]); print(f"   -&gt; берём кусок {rows[0][1]}")
+print("\nпроверка функцией mmr из lib.py:", mmr(s, C, cand, 4, lam))
+print("\nиз какой статьи каждый из 10 кусков ответа (* — правильная статья):")
+for name, top in [("обычная выдача", list(cand[:10])), ("MMR lam=0.7", mmr(s, C, cand, 10, 0.7)), ("MMR lam=0.5", mmr(s, C, cand, 10, 0.5))]:
+    print(f"  {name:&lt;15s}", " ".join(("*" if ids[doc[i]] in qt[q] else "") + ids[doc[i]] for i in top))</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">косинус соседних кусков одной статьи (перекрытие 30 слов): среднее 0.809, доля &gt;= 0.9: 0.15
+косинус двух случайных кусков: среднее 0.102
+
+вопрос: «Hypoglycemia increases the risk of dementia.»; правильные статьи: ['13282296']
+обычная выдача, первые 6 кусков:
+  1. кусок 14365 из статьи 13282296  близость к вопросу 0.850  «no studies to date have evaluated whether hypoglycemia is a risk facto…»
+  2. кусок 14374 из статьи 13282296  близость к вопросу 0.822  «CI, 1.42-2.64). The attributable risk of dementia between individuals …»
+  3. кусок 14364 из статьи 13282296  близость к вопросу 0.820  «Hypoglycemic episodes and risk of dementia in older patients with type…»
+  4. кусок 14377 из статьи 13282296  близость к вопросу 0.815  «2.36; 95% CI, 1.57-3.55). CONCLUSIONS Among older patients with type 2…»
+  5. кусок 14372 из статьи 13282296  близость к вопросу 0.746  «had both dementia and at least 1 episode of hypoglycemia (16.95%). Com…»
+  6. кусок 14370 из статьи 13282296  близость к вопросу 0.725  «models, adjusted for age, sex, race/ethnicity, education, body mass in…»
+
+MMR, lam = 0.7: очки = 0.7 * близость - 0.3 * max косинус с уже взятыми
+ шаг 1:
+   кусок 14365 (статья 13282296): близость 0.850, max косинус с взятыми 0.000, очки 0.595
+   кусок 14374 (статья 13282296): близость 0.822, max косинус с взятыми 0.000, очки 0.575
+   кусок 14364 (статья 13282296): близость 0.820, max косинус с взятыми 0.000, очки 0.574
+   кусок 14377 (статья 13282296): близость 0.815, max косинус с взятыми 0.000, очки 0.570
+   -&gt; берём кусок 14365
+ шаг 2:
+   кусок 14374 (статья 13282296): близость 0.822, max косинус с взятыми 0.856, очки 0.318
+   кусок 14372 (статья 13282296): близость 0.746, max косинус с взятыми 0.714, очки 0.308
+   кусок 14364 (статья 13282296): близость 0.820, max косинус с взятыми 0.922, очки 0.298
+   кусок 14377 (статья 13282296): близость 0.815, max косинус с взятыми 0.933, очки 0.290
+   -&gt; берём кусок 14374
+ шаг 3:
+   кусок 14364 (статья 13282296): близость 0.820, max косинус с взятыми 0.922, очки 0.298
+   кусок 14377 (статья 13282296): близость 0.815, max косинус с взятыми 0.933, очки 0.290
+   кусок 14371 (статья 13282296): близость 0.720, max косинус с взятыми 0.733, очки 0.284
+   кусок 14372 (статья 13282296): близость 0.746, max косинус с взятыми 0.797, очки 0.283
+   -&gt; берём кусок 14364
+ шаг 4:
+   кусок 14377 (статья 13282296): близость 0.815, max косинус с взятыми 0.933, очки 0.290
+   кусок 14371 (статья 13282296): близость 0.720, max косинус с взятыми 0.733, очки 0.284
+   кусок 14372 (статья 13282296): близость 0.746, max косинус с взятыми 0.797, очки 0.283
+   кусок 14370 (статья 13282296): близость 0.725, max косинус с взятыми 0.816, очки 0.263
+   -&gt; берём кусок 14377
+
+проверка функцией mmr из lib.py: [np.int64(14365), np.int64(14374), np.int64(14364), np.int64(14377)]
+
+из какой статьи каждый из 10 кусков ответа (* — правильная статья):
+  обычная выдача  *13282296 *13282296 *13282296 *13282296 *13282296 *13282296 *13282296 *13282296 *13282296 *13282296
+  MMR lam=0.7     *13282296 *13282296 *13282296 *13282296 *13282296 *13282296 *13282296 9194077 *13282296 21472388
+  MMR lam=0.5     *13282296 9194077 11886686 21472388 27076725 37583120 *13282296 10190462 6309659 5402581</code></pre>
+<p>Что видно. Соседние куски одной статьи похожи сильно (средний косинус 0,809), но выше 0,9 только 15% таких пар — порог «0,9 значит повтор» пропустит большую часть повторов от нарезки. На вопрос «Hypoglycemia increases the risk of dementia» (гипогликемия повышает риск деменции) вся обычная десятка — куски одной и той же, правильной, статьи. На втором шаге MMR штрафует кусок 14374 за похожесть 0,856 на уже взятый: его очки падают с 0,575 до 0,318. Но он всё равно побеждает, потому что все соседние кандидаты — тоже куски той же статьи и наказаны ещё сильнее. При lam = 0,7 первая чужая статья появляется только на 8-м месте; при lam = 0,5 правильная статья занимает два места из десяти, а остальные восемь — другие статьи. Это и есть ползунок в действии: выбор lam решает, увидит ли модель в контексте несколько разных частей правильной статьи (вывод, цифры, методы) или восемь соседних работ.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Думают, что MMR выкидывает повторы. Он их только понижает; если хороших других кандидатов нет, повторы останутся.</li>
+<li>Дают MMR слишком мало кандидатов: если в первых 20 все куски одной статьи, разнообразить не из чего. Число кандидатов (fetch_k) должно быть в несколько раз больше, чем результатов.</li>
+<li>Берут lam «по умолчанию» из библиотеки, не проверив на своих вопросах; в LangChain это 0,5, а ниже видно, насколько это сильный сдвиг.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>MMR (maximal marginal relevance).</strong> Жадный выбор выдачи, где очки = близость к вопросу минус похожесть на уже выбранное, с весом lam.</p>
+<p><strong>Добавочная польза (marginal relevance).</strong> Сколько нового даёт результат с учётом того, что уже стоит в выдаче.</p>
+<p><strong>Жадный алгоритм (greedy).</strong> Строит ответ по шагу, каждый раз беря лучшее сейчас и не пересматривая прошлые выборы.</p>
+<p><strong>lam (лямбда).</strong> Вес близости к вопросу в MMR; 1 — обычная выдача, меньше — сильнее штраф за повторы.</p>
+<p><strong>Кандидаты (candidate pool, fetch_k).</strong> Сколько результатов обычного поиска передают MMR для выбора.</p>
+<p><strong>Нарезка с перекрытием (overlapping chunks).</strong> Деление текста на куски, где соседние делят часть слов, чтобы мысль не порвалась на границе.</p>
+<p><strong>Штраф за похожесть.</strong> Вычитаемое в MMR: (1 − lam) × наибольший косинус кандидата с уже взятыми.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">3</span>
+            <span class="fold-title">Сколько стоит разнообразие на чистой базе: nDCG@10 при разных lam</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Разнообразие продают как бесплатное улучшение, но у него есть цена: каждый раз, когда MMR ставит «непохожий» документ выше «похожего», он ставит менее близкий к вопросу документ выше более близкого. Если более близкий был правильным, качество падает. Прежде чем включать MMR в продукт, надо измерить эту цену на своих вопросах той же метрикой, которой мерите поиск.</p>
+<p><strong>Как это устроено.</strong> Мерить нужно две вещи сразу. Первая — качество: nDCG@10 (метрика порядка, которая даёт больше очков за правильные документы выше в десятке, подробно — в <a href="/put-2026-11-15-peresortirovka">дорожке про пересортировку</a>) и recall@10 (доля правильных документов, попавших в десятку). Вторая — то, ради чего всё затевалось: избыточность, здесь средний косинус между документами десятки. Хорошая настройка снижает избыточность и почти не трогает качество.</p>
+<p>Есть ловушка в самих метриках. nDCG и recall оценивают каждый документ отдельно: два правильных документа дают два попадания, даже если пересказывают друг друга. Поэтому обычные метрики не умеют вознаградить разнообразие — они его только наказывают, когда оно вытесняет правильные документы. Для честной оценки разнообразия придумали метрики с аспектами (например, α-nDCG): разметка говорит, какой подтеме вопроса отвечает документ, а повторная подтема даёт меньше очков. Без такой разметки остаётся смотреть на качество и избыточность рядом.</p>
+<p>Отдельно стоит смотреть на вопросы, у которых несколько правильных ответов: именно там разнообразие могло бы помочь — или навредить, если правильные ответы похожи друг на друга.</p>
+<p><strong>Подробный пример.</strong> Поиск по векторам целых статей, 50 кандидатов, MMR выбирает 10; прогоняем шесть значений lam на всех 300 проверочных вопросах.</p>
+<pre><code class="language-python"># Ступень 3: MMR на уровне целых статей SciFact, разные lam. Близость к вопросу и между статьями — косинус all-MiniLM-L6-v2.
+# Кандидаты — первые 50 по векторам; MMR выбирает из них 10.
+from lib import *
+ids, texts, queries, qt, _ = load_all()
+D = corpus_vectors(texts); bi = BiEncoder()
+qs = sorted(qt); Q = bi.encode([queries[q] for q in qs])
+multi = [n for n, q in enumerate(qs) if len(qt[q]) &gt;= 2]
+print(f"тестовых вопросов: {len(qs)}, из них с двумя и более правильными статьями: {len(multi)}")
+print(f"{'lam':&gt;5s} {'nDCG@10':&gt;8s} {'recall@10':&gt;9s} {'ср.косинус в десятке':&gt;21s} {'правильных в пятёрке (вопросы с 2+)':&gt;36s}")
+for lam in (1.0, 0.9, 0.8, 0.7, 0.5, 0.3):
+    nd, rc, red, r5 = [], [], [], []
+    t = time.time()
+    for n, q in enumerate(qs):
+        s = D @ Q[n]; cand = np.argsort(-s)[:50]
+        top = mmr(s, D, cand, 10, lam)
+        r = [ids[i] for i in top]; nd.append(ndcg10(r, qt[q])); rc.append(recall(r, qt[q], 10))
+        P = D[top] @ D[top].T; red.append(P[np.triu_indices(10, 1)].mean())
+        if n in multi: r5.append(len(set(r[:5]) &amp; qt[q]))
+    print(f"{lam:5.1f} {np.mean(nd):8.3f} {np.mean(rc):9.3f} {np.mean(red):21.3f} {np.mean(r5):36.3f}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">тестовых вопросов: 300, из них с двумя и более правильными статьями: 23
+  lam  nDCG@10 recall@10  ср.косинус в десятке  правильных в пятёрке (вопросы с 2+)
+  1.0    0.648     0.788                 0.471                                1.652
+  0.9    0.646     0.787                 0.449                                1.609
+  0.8    0.635     0.769                 0.423                                1.478
+  0.7    0.620     0.750                 0.392                                1.261
+  0.5    0.537     0.604                 0.317                                0.609
+  0.3    0.500     0.518                 0.296                                0.435</code></pre>
+<p>Что видно. На этой базе любое заметное разнообразие стоит качества. lam = 0,9 почти ничего не меняет (nDCG@10 0,648 → 0,646). lam = 0,7 снижает избыточность с 0,471 до 0,392 и nDCG@10 до 0,620; lam = 0,5 — до 0,537, а recall@10 падает с 0,788 до 0,604: почти каждый пятый правильный документ вылетает из десятки. Хуже всего на тех 23 вопросах, где правильных статей две и больше: в пятёрке их было в среднем 1,65, при lam = 0,5 стало 0,61. Причина видна в ступени 5: правильные статьи одного вопроса похожи друг на друга, и MMR считает вторую из них повтором. Вывод для чистой базы без копий: MMR здесь лечит болезнь, которой нет.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Смотрят только на избыточность («список стал разнообразнее») и не проверяют, сколько правильных документов потеряли.</li>
+<li>Ждут, что nDCG вырастет от разнообразия. Обычный nDCG за разнообразие не награждает; рост возможен, только если MMR вытеснил неправильные повторы и пустил правильный документ.</li>
+<li>Подбирают lam на тех же вопросах, на которых потом отчитываются. Как и в прошлых дорожках, настройку подбирают на одной части вопросов, а проверяют на другой.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>nDCG@10.</strong> Метрика порядка: правильные документы выше в десятке дают больше очков, 1 — идеальный порядок.</p>
+<p><strong>recall@10 (полнота).</strong> Доля правильных документов вопроса, которые попали в первую десятку.</p>
+<p><strong>Цена разнообразия.</strong> Потеря качества выдачи в обмен на меньшую избыточность.</p>
+<p><strong>Подтема (aspect, subtopic).</strong> Отдельная сторона вопроса, которой может отвечать документ.</p>
+<p><strong>α-nDCG.</strong> Вариант nDCG, который снижает очки за документы, повторно отвечающие на уже покрытую подтему.</p>
+<p><strong>Разметка по подтемам.</strong> Отметки, какой подтеме вопроса отвечает каждый документ; без неё разнообразие честно не измерить.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">4</span>
+            <span class="fold-title">Повторы от нарезки на куски: один кусок на документ против порога и MMR</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> В RAG ищут не по целым документам, а по кускам (chunks), и почти всегда с перекрытием. Тогда у хорошего документа несколько кусков, близких к вопросу, и они занимают первую десятку целиком. Это самый частый и самый измеримый источник повторов, и для него есть способ проще MMR: группировка по документу (grouping, collapsing) — брать из каждого документа не больше одного (или двух) лучших кусков.</p>
+<p><strong>Как это устроено.</strong> У каждого куска при нарезке сохраняют номер исходного документа. Дальше идут по обычной выдаче сверху вниз и пропускают кусок, если из его документа уже взято сколько разрешено. Это правило не зависит ни от шкалы оценок, ни от модели векторов: оно знает, что куски — части одного целого, а не догадывается об этом по похожести. Похожий режим есть во многих поисковых системах — схлопывание или группировка выдачи по полю.</p>
+<p>Порог похожести решает ту же задачу хуже: соседние куски делят только часть слов, и их косинус часто ниже порога (у нас выше 0,9 только 15% соседних пар), а далёкие куски одной статьи похожи ещё меньше. MMR снимает повторы мягко и зависит от lam: слабый lam не разгоняет пачку кусков, сильный начинает вытеснять и правильные документы.</p>
+<p>Ограничение группировки: если в документе две разные нужные части (например, вывод и таблица цифр), правило «один кусок» отдаст только одну. Поэтому часто берут один-два куска на документ или, наоборот, сначала выбирают документы, а потом из каждого — лучшие куски, сколько позволяет бюджет контекста.</p>
+<p><strong>Подробный пример.</strong> Те же 34 459 кусков, 100 кандидатов на вопрос, в ответ идут 10 кусков. Качество меряем по статьям: сколько разных статей в десятке, recall@10 и nDCG@10 по списку статей без повторов, и у скольких вопросов в десятке есть хотя бы два куска одной статьи.</p>
+<pre><code class="language-python"># Ступень 4: поиск по кускам (60 слов, перекрытие 30) — здесь повторы настоящие: соседние куски одной статьи.
+# Кандидаты — 100 лучших кусков по косинусу all-MiniLM-L6-v2; в ответ идут 10 кусков.
+from lib import *
+import pickle
+ids, texts, queries, qt, _ = load_all()
+C = np.load("chunk_vec.npy"); meta = pickle.load(open("chunks.pkl", "rb")); doc = np.array(meta["doc"])
+bi = BiEncoder(); qs = sorted(qt); Q = bi.encode([queries[q] for q in qs])
+def plain(s, cand): return list(cand[:10])
+def one_per_doc(s, cand):
+    seen, out = set(), []
+    for i in cand:
+        if doc[i] not in seen: seen.add(doc[i]); out.append(i)
+        if len(out) == 10: break
+    return out
+def thresh(th):
+    def f(s, cand):
+        out = []
+        for i in cand:
+            if all(C[i] @ C[j] &lt; th for j in out): out.append(i)
+            if len(out) == 10: break
+        return out
+    return f
+ways = [("просто 10 лучших кусков", plain), ("не больше одного куска на статью", one_per_doc),
+        ("порог: выкинуть кусок, если косинус &gt;= 0.9 с уже взятым", thresh(0.9)),
+        ("порог 0.8", thresh(0.8))] + [(f"MMR lam={l}", (lambda l: lambda s, c: mmr(s, C, c, 10, l))(l)) for l in (0.9, 0.7, 0.5)]
+print(f"кусков в базе: {len(C)}; вопросов: {len(qs)}")
+print(f"{'способ':&lt;58s} {'статей в 10':&gt;11s} {'recall@10 статей':&gt;16s} {'nDCG@10 статей':&gt;14s} {'вопросов с повтором статьи':&gt;27s}")
+for name, f in ways:
+    u, rc, nd, rep = [], [], [], 0; t = time.time()
+    for n, q in enumerate(qs):
+        s = C @ Q[n]; cand = np.argsort(-s)[:100]
+        top = f(s, cand); ds = [ids[doc[i]] for i in top]
+        uniq = list(dict.fromkeys(ds)); u.append(len(uniq)); rep += len(uniq) &lt; len(ds)
+        rc.append(recall(uniq, qt[q], 10)); nd.append(ndcg10(uniq, qt[q]))
+    print(f"{name:&lt;58s} {np.mean(u):11.2f} {np.mean(rc):16.3f} {np.mean(nd):14.3f} {rep:27d}   ({(time.time()-t)*1000/len(qs):.1f} мс на вопрос)")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">кусков в базе: 34459; вопросов: 300
+способ                                                     статей в 10 recall@10 статей nDCG@10 статей  вопросов с повтором статьи
+просто 10 лучших кусков                                           5.26            0.770          0.666                         297   (0.8 мс на вопрос)
+не больше одного куска на статью                                 10.00            0.832          0.688                           0   (0.7 мс на вопрос)
+порог: выкинуть кусок, если косинус &gt;= 0.9 с уже взятым           5.78            0.777          0.670                         294   (0.7 мс на вопрос)
+порог 0.8                                                         7.25            0.796          0.677                         282   (0.8 мс на вопрос)
+MMR lam=0.9                                                       6.28            0.781          0.673                         281   (0.8 мс на вопрос)
+MMR lam=0.7                                                       8.20            0.771          0.664                         201   (0.8 мс на вопрос)
+MMR lam=0.5                                                       9.73            0.694          0.611                          61   (0.8 мс на вопрос)</code></pre>
+<p>Что видно. Обычная выдача по кускам в среднем приносит всего 5,26 разных статей из 10 мест, повторы есть в 297 вопросах из 300. Правило «не больше одного куска на статью» даёт 10 разных статей и лучшее качество: recall@10 0,770 → 0,832, nDCG@10 0,666 → 0,688. Это заметно лучше и поиска по целым статьям из ступени 3 (0,648 и 0,788): куски точнее попадают в нужное место текста, а группировка убирает их цену. Порог 0,9 почти ничего не делает (5,78 статьи), порог 0,8 — наполовину (7,25). MMR при lam = 0,9 слаб (6,28), при lam = 0,7 разнообразнее (8,20), но качество уже не растёт (nDCG@10 0,664), а при lam = 0,5 статей почти 10, но recall@10 падает до 0,694 — MMR вытесняет правильные статьи похожими на них. Все способы стоят меньше миллисекунды на вопрос, так что выбор здесь не про скорость.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Не хранят номер документа у куска. Тогда группировка невозможна, и приходится угадывать повторы по похожести.</li>
+<li>Считают качество по кускам, а не по документам: десять кусков одной правильной статьи выглядят как «10 попаданий», хотя модель получила один источник.</li>
+<li>Берут MMR там, где хватает знания о структуре данных: если повторы — это куски одного документа или версии одного файла, правило по полю надёжнее любой похожести.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Кусок (chunk).</strong> Часть документа, которую индексируют и ищут отдельно.</p>
+<p><strong>Группировка по документу (grouping, collapsing).</strong> Правило выдачи: из одного документа не больше заданного числа кусков.</p>
+<p><strong>Номер исходного документа.</strong> Поле, которое сохраняют у каждого куска, чтобы знать, откуда он.</p>
+<p><strong>Порог похожести.</strong> Число, выше которого два текста считают повтором и один выкидывают.</p>
+<p><strong>Бюджет контекста.</strong> Сколько кусков или токенов можно положить в запрос к модели.</p>
+<p><strong>Качество по документам.</strong> Оценка выдачи после схлопывания кусков в их документы, без повторов.</p>
+<p><strong>Схлопывание (collapse).</strong> Замена нескольких результатов из одного источника одним.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">5</span>
+            <span class="fold-title">Где разнообразие ломается: шкалы оценок и похожие правильные ответы</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> В настоящей связке MMR ставят после пересортировки, а судьёй похожести остаются векторы. Тут два тихих сбоя: оценки разных моделей живут на разных шкалах, и штраф либо тонет, либо всё перевешивает; а «похожие» правильные ответы MMR принимает за повторы. Оба сбоя не дают ошибок в коде — просто выдача становится хуже, и это видно только по замерам.</p>
+<p><strong>Как это устроено.</strong> Шкалы. Перекрёстный кодировщик выдаёт логит — сырое число без верхней и нижней границы (у нас от −11,4 до 10,0), разница между соседними кандидатами часто в несколько единиц. Косинус между текстами лежит от 0 до 1. Подставив логит в формулу MMR как близость, получаем штраф не больше (1 − lam) × 1, который почти не меняет порядок. Обычное лечение — нормировать близость на каждом вопросе, например сжать в 0..1 (минимум → 0, максимум → 1, min-max). Но тогда штраф становится настоящим, и lam надо подбирать заново.</p>
+<p>Похожие правильные ответы. У вопроса с несколькими правильными документами они обычно об одном и том же: например, две работы про один эффект. Их векторы близки, и MMR понижает вторую как «повтор». Для задачи «дать модели разные доказательства» это вред: подтверждение из второй независимой работы — ценная информация, хоть и похожая по смыслу.</p>
+<p>Отличие от проблем пересортировки: там модель ошибается в оценке одного документа, здесь каждый отдельный шаг верен, а ломается сочетание — две правильные по отдельности оценки складываются в неверный выбор.</p>
+<p><strong>Подробный пример.</strong> Берём оценки перекрёстного кодировщика из прогона 15.11 (до 100 кандидатов от BM25 и до 100 от векторов на вопрос), 50 лучших по кодировщику отдаём MMR и сравниваем сырые логиты с сжатыми в 0..1. Затем считаем, насколько похожи между собой правильные статьи одного вопроса.</p>
+<pre><code class="language-python"># Ступень 5: где MMR ломается. (а) Шкалы: близость к вопросу — логит перекрёстного кодировщика
+# cross-encoder/ms-marco-MiniLM-L6-v2 (оценки из прогона 15.11), похожесть между статьями — косинус all-MiniLM-L6-v2.
+# (б) Похожие — не значит лишние: насколько похожи между собой правильные статьи одного вопроса.
+from lib import *
+import pickle
+ids, texts, queries, qt, _ = load_all()
+D = corpus_vectors(texts); bi = BiEncoder(); qs = sorted(qt); Q = bi.encode([queries[q] for q in qs])
+old = pickle.load(open("/workspace/put-gen-1115/scifact_runs.pkl", "rb"))["res"]
+allce = np.concatenate([list(old[q]["ce"].values()) for q in qs])
+print(f"логиты перекрёстного кодировщика по всем парам: от {allce.min():.1f} до {allce.max():.1f}, разброс (ст. откл.) {allce.std():.2f}")
+print(f"косинусы между статьями в десятке (ступень 1): в среднем 0.47, почти всегда между 0 и 1\n")
+def run(lam, how):
+    nd, red, changed = [], [], 0
+    for n, q in enumerate(qs):
+        sc = old[q]["ce"]; cand = sorted(sc, key=lambda i: -sc[i])[:50]
+        r = np.array([sc[i] for i in cand])
+        if how == "minmax": r = (r - r.min()) / (r.max() - r.min() + 1e-9)
+        rel = dict(zip(cand, r))
+        top = mmr(rel, D, cand, 10, lam) if lam &lt; 1 else cand[:10]
+        changed += top != cand[:10]
+        nd.append(ndcg10([ids[i] for i in top], qt[q])); P = D[top] @ D[top].T; red.append(P[np.triu_indices(10, 1)].mean())
+    return np.mean(nd), np.mean(red), changed
+print(f"{'вариант':&lt;44s} {'nDCG@10':&gt;8s} {'ср.косинус в 10':&gt;16s} {'вопросов, где порядок изменился':&gt;32s}")
+nd, rd, ch = run(1.0, "raw"); print(f"{'пересортировка без MMR':&lt;44s} {nd:8.3f} {rd:16.3f} {ch:32d}")
+for lam in (0.7, 0.5):
+    for how, lab in (("raw", "сырые логиты"), ("minmax", "логиты, сжатые в 0..1 по вопросу")):
+        nd, rd, ch = run(lam, how); print(f"{f'MMR lam={lam}, {lab}':&lt;44s} {nd:8.3f} {rd:16.3f} {ch:32d}")
+pair = []
+for q in qs:
+    r = [ids.index(d) for d in qt[q] if d in ids]
+    for a in range(len(r)):
+        for b in range(a + 1, len(r)): pair.append(D[r[a]] @ D[r[b]])
+print(f"\nпар правильных статей у одного вопроса: {len(pair)}; их средний косинус {np.mean(pair):.3f} (средний в обычной десятке 0.47)")
+print(f"доля таких пар с косинусом &gt;= 0.7: {np.mean(np.array(pair) &gt;= 0.7):.2f}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">логиты перекрёстного кодировщика по всем парам: от -11.4 до 10.0, разброс (ст. откл.) 3.07
+косинусы между статьями в десятке (ступень 1): в среднем 0.47, почти всегда между 0 и 1
+
+вариант                                       nDCG@10  ср.косинус в 10  вопросов, где порядок изменился
+пересортировка без MMR                          0.684            0.403                                0
+MMR lam=0.7, сырые логиты                       0.686            0.399                              168
+MMR lam=0.7, логиты, сжатые в 0..1 по вопросу    0.676            0.367                              298
+MMR lam=0.5, сырые логиты                       0.682            0.393                              251
+MMR lam=0.5, логиты, сжатые в 0..1 по вопросу    0.653            0.317                              300
+
+пар правильных статей у одного вопроса: 64; их средний косинус 0.674 (средний в обычной десятке 0.47)
+доля таких пар с косинусом &gt;= 0.7: 0.50</code></pre>
+<p>Что видно. С сырыми логитами MMR меняет порядок в 168 вопросах из 300 (при lam = 0,7), но избыточность почти не падает (0,403 → 0,399), и nDCG@10 стоит на месте (0,684 → 0,686; разница такого размера на 300 вопросах — в пределах случайности). То есть MMR формально работает, а по сути только переставляет соседей с близкими логитами. После сжатия в 0..1 штраф начинает действовать: избыточность 0,367 при lam = 0,7 и 0,317 при lam = 0,5, а nDCG@10 падает до 0,676 и 0,653. Вторая цифра объясняет ступень 3: 64 пары правильных статей одного вопроса имеют средний косинус 0,674 — выше, чем средний в обычной десятке (0,47), и половина пар выше 0,7. Для MMR правильные ответы выглядят как повторы друг друга.</p>
+<p>Что делать на практике. Сначала устраните повторы, которые знаете по структуре: точные копии хэшем при загрузке, куски — группировкой по документу. MMR включайте, если после этого измерения показывают повторы в выдаче, и подбирайте lam на отложенных вопросах, глядя на качество и избыточность рядом. Близость перед MMR приводите к шкале косинуса. Если вопросы правда многоаспектные (у запроса «ягуар» — и животное, и машина), смотрите в сторону методов с явными подтемами (например, xQuAD), где разнообразие считается по подтемам, а не по похожести векторов.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Подают в MMR логиты пересортировщика без нормировки и делают вывод «MMR не помогает», хотя он просто не включился.</li>
+<li>Нормируют и оставляют прежний lam: после нормировки тот же lam означает совсем другой штраф.</li>
+<li>Используют MMR там, где важны подтверждения из нескольких источников (медицина, право, проверка фактов): он охотнее всего выбрасывает именно второй источник о том же.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Логит (logit).</strong> Сырая оценка модели до превращения в вероятность; у неё нет фиксированных границ.</p>
+<p><strong>Шкала оценки.</strong> Диапазон и смысл чисел, которые выдаёт модель; у логита и косинуса они разные.</p>
+<p><strong>Нормировка min-max.</strong> Сжатие оценок одного вопроса в 0..1: худший кандидат получает 0, лучший — 1.</p>
+<p><strong>Многоаспектный вопрос.</strong> Вопрос, у которого несколько разных смыслов или сторон, каждой нужен свой документ.</p>
+<p><strong>xQuAD.</strong> Метод разнообразия, который явно делит вопрос на подтемы и выбирает документы так, чтобы покрыть каждую.</p>
+<p><strong>Независимое подтверждение.</strong> Второй источник, который сообщает тот же факт; похож на первый, но не лишний.</p>
+<p><strong>Отложенные вопросы (held-out).</strong> Вопросы, которые не участвовали в подборе настроек и служат для честной проверки.</p>
+          </div>
+        </details>
+      </div>
+      <p class="bio" style="margin-top:1.4rem;text-align:center">Словарь целиком — <a href="/slovar">/slovar</a>, новости — <a href="/novosti">/novosti</a>. Все дорожки — <a href="/put">/put</a>.</p>
+    </section>
+    <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
+  </div>
+  <script src="js/app.js?v=ui20261019ux" defer></script>
+</body>
+</html>
