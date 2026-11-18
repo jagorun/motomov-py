@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Как ужать векторы поиска в 4–32 раза: int8, двоичные векторы и пересчёт кандидатов · py.motomov.ru</title>
+  <meta name="description" content="Пять ступеней: сколько памяти занимает векторный индекс и как распределены числа внутри векторов; int8 — 256 ступенек на число и калибровка отрезка; двоичные векторы — знак числа и расстояние Хэмминга; двухшаговый поиск — грубо по битам, точно по кандидатам; укороченные векторы, PCA и матрёшка, и где сжатие ломается. Все цифры — из наших запусков на наборе SciFact.">
+  <meta name="theme-color" content="#f3efe6">
+  <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
+  <link rel="canonical" href="https://py.motomov.ru/put-2026-11-18-szhatie-vektorov">
+  <link rel="stylesheet" href="styles.css?v=ui20261019ux">
+  <script>try{var d=document.documentElement,s=localStorage;if(s.getItem("moto-theme")==="dark")d.dataset.theme="dark";var f=s.getItem("moto-fs");if(f&&f!=="1")d.dataset.fs=f;if(s.getItem("moto-comfy")==="1")d.dataset.comfy="1"}catch(e){}</script>
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="novosti.html" aria-label="На главную: новости">
+        <img class="brand-logo" src="https://www.motomov.ru/logo.jpg" width="32" height="32" alt="">
+        <span class="brand-name">Moto<span class="brand-dot">·</span><span class="brand-py">py</span></span>
+      </a>
+      <nav class="nav" aria-label="Разделы сайта">
+        <a href="novosti.html">Новости</a><a href="metodichka.html">Методичка</a><a class="active" aria-current="page" href="put.html">Дорожка</a><a href="slovar.html">Словарь</a><a href="kb.html">База</a><a href="archive.html">Архив</a>
+      </nav>
+      <details class="nav-more">
+        <summary aria-label="Ещё разделы">Ещё <span aria-hidden="true">▾</span></summary>
+        <div class="nav-more-list"><a href="spravochnik.html">Справочник Python</a><a href="news.html">Python: уроки</a><a href="course.html">Курс</a><a href="slovar-python.html">Словарь Python</a><a href="youtube.html">YouTube</a><a href="index.html">Старт</a><a href="https://www.motomov.ru/">Визитка motomov.ru</a></div>
+      </details>
+    </header>
+    <header class="hero">
+      <span class="badge">дорожка · 18.11.2026 · сжатие векторов</span>
+      <h1>Как ужать векторы поиска в 4–32 раза: int8, двоичные векторы и пересчёт кандидатов</h1>
+      <p class="bio">Четыре прошлые дорожки — <a href="/put-2026-11-14-gibridnyj-poisk">гибридный поиск</a>, <a href="/put-2026-11-15-peresortirovka">пересортировка</a>, <a href="/put-2026-11-16-rasshirenie-zaprosa">расширение запроса</a> и <a href="/put-2026-11-17-raznoobrazie-vydachi">разнообразие выдачи</a> — были о том, как найти нужное и поставить повыше. Сегодня вопрос про деньги и железо: векторы всех кусков базы обычно держат в оперативной памяти, и при миллионах кусков это гигабайты. Узкий вопрос дня: как хранить каждый вектор не 32 битами на число, а 8 или даже одним битом, и что при этом теряет поиск. Это сжатие векторов (embedding quantization) — родственник сжатия весов модели из <a href="/put-2026-10-18-kvantovanie">дорожки про квантование</a>, но сжимаем мы не модель, а базу её ответов. В <a href="/put-2026-11-13-poisk-sosedej">дорожке про поиск соседей</a> было произведение квантователей; сегодня — более простые и очень распространённые способы: int8, двоичные векторы, двухшаговый поиск с пересчётом и укорачивание векторов. Данные и модель те же, что в прошлые дни: набор SciFact из сборника BEIR (5183 аннотации научных статей, 300 проверочных утверждений с размеченными правильными статьями) и двойной кодировщик sentence-transformers/all-MiniLM-L6-v2 (384 числа на вектор) через ONNX Runtime на процессоре коробки. Все цифры ниже — из наших запусков; спойлер: int8 на этих данных не теряет ничего заметного, одни биты теряют много, а биты плюс пересчёт ста кандидатов возвращают качество целиком.</p>
+      <p class="bio" style="margin-top:.6rem">Все дорожки — <a href="/put">/put</a>. Прошлая — <a href="/put-2026-11-17-raznoobrazie-vydachi">разнообразие выдачи, MMR и один кусок на документ</a>.</p>
+    </header>
+    <section>
+      <div class="fold-list">
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">1</span>
+            <span class="fold-title">Сколько весит векторный индекс и что внутри вектора</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Векторный поиск быстр, пока векторы лежат в оперативной памяти: каждый вопрос сравнивается с тысячами или миллионами векторов, и читать их с диска на каждый вопрос слишком медленно. Память же стоит денег, особенно в облаке, где цена сервера растёт вместе с её объёмом. Поэтому вопрос «сколько весит индекс» встаёт раньше, чем кажется: при миллионе кусков и обычной модели это уже больше гигабайта только на сами числа, без текстов и служебных структур. Прежде чем что-то сжимать, надо посчитать, сколько места занято, и понять, как устроены числа внутри вектора, — от этого зависит, какой способ сжатия подойдёт.</p>
+<p><strong>Как это устроено.</strong> Вектор (embedding) — это список чисел фиксированной длины, который модель выдаёт для текста; длину называют размерностью. У нашей модели all-MiniLM-L6-v2 размерность 384. Каждое число по умолчанию хранится как float32 — число с плавающей точкой (дробное число, у которого отдельно хранятся цифры и порядок) в 32 битах, то есть 4 байта. Значит, один вектор — 384 × 4 = 1536 байт, а память всего индекса равна «число кусков × размерность × 4 байта». Эта формула линейна: удвоили базу — удвоили память; взяли модель с размерностью 1024 вместо 384 — память выросла почти втрое.</p>
+<p>Уменьшить эту сумму можно тремя путями, и вся дорожка про них. Первый — хранить каждое число грубее: не 32 бита, а 8 (int8, ступень 2) или вообще 1 (двоичный вектор, ступень 3). Второй — хранить меньше чисел: укоротить вектор (ступень 5). Третий — сочетать грубую копию для быстрого отбора с точной для окончательного решения (ступень 4). Все три меняют не модель, а только то, как записаны её ответы.</p>
+<p>Чтобы понять, сколько информации можно выбросить, полезно посмотреть на сами числа. Модель выдаёт векторы длины 1 (нормированные: сумма квадратов чисел равна единице), поэтому каждое отдельное число маленькое — порядка 1/√384 ≈ 0,05. Важно, как они разбросаны: если у какой-то координаты (одного места в списке, например «число №17») почти все значения одного знака, бит знака о ней почти ничего не скажет; если координата всегда равна нулю, её можно не хранить вовсе.</p>
+<p>Отличие от соседних понятий. Квантование весов из <a href="/put-2026-10-18-kvantovanie">дорожки про сжатие модели</a> делает модель меньше и быстрее, но векторы базы остаются прежними. Произведение квантователей (product quantization) из <a href="/put-2026-11-13-poisk-sosedej">дорожки про поиск соседей</a> режет вектор на части и заменяет каждую номером похожего образца — сжимает сильнее, но сложнее в настройке. Сегодняшние способы проще: каждое число или каждая координата обрабатывается отдельно.</p>
+<p><strong>Подробный пример.</strong> Общий модуль lib.py — тот же, что в прошлые дни (обёртки моделей, BM25, nDCG@10, загрузка SciFact, кэш векторов корпуса), плюс сегодняшние добавления в конце: кэш векторов вопросов, общая функция оценки и три маленькие функции сжатия — int8_quantize/int8_restore, to_bits и hamming. Качество меряем, как раньше, nDCG@10 (насколько высоко в первой десятке стоят правильные статьи, от 0 до 1) и recall@100 (какая доля правильных статей попала в первую сотню).</p>
+<pre><code class="language-python">import json, time, math, re, numpy as np, onnxruntime as ort
+from tokenizers import Tokenizer
+from collections import Counter, defaultdict
+HERE = "/workspace/put-gen-1118"
+so = ort.SessionOptions(); so.intra_op_num_threads = 8
+
+class CrossEncoder:
+    """Перекрёстный кодировщик: вопрос и текст идут в модель ОДНОЙ строкой [CLS] вопрос [SEP] текст [SEP]."""
+    def __init__(self, path=f"{HERE}/models/ms", max_len=512):
+        self.tok = Tokenizer.from_file(f"{path}/tokenizer.json")
+        self.tok.enable_truncation(max_len, strategy="only_second")   # режем только текст, вопрос целиком
+        self.tok.enable_padding()
+        self.sess = ort.InferenceSession(f"{path}/model.onnx", so, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+    def score(self, query, docs, batch=32):
+        out = []
+        for s in range(0, len(docs), batch):
+            enc = self.tok.encode_batch([(query, d) for d in docs[s:s+batch]])
+            feed = {"input_ids": np.array([e.ids for e in enc], dtype=np.int64),
+                    "attention_mask": np.array([e.attention_mask for e in enc], dtype=np.int64),
+                    "token_type_ids": np.array([e.type_ids for e in enc], dtype=np.int64)}
+            out.append(self.sess.run(None, {k: v for k, v in feed.items() if k in self.names})[0][:, 0])
+        return np.concatenate(out)
+
+class BiEncoder:
+    """Двойной кодировщик: каждый текст отдельно -&gt; вектор (среднее по токенам), сравнение косинусом."""
+    def __init__(self, path=f"{HERE}/models/bi", max_len=256):
+        self.tok = Tokenizer.from_file(f"{path}/tokenizer.json")
+        self.tok.enable_truncation(max_len); self.tok.enable_padding()
+        self.sess = ort.InferenceSession(f"{path}/model.onnx", so, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+    def encode(self, texts, batch=64):
+        out = []
+        for s in range(0, len(texts), batch):
+            enc = self.tok.encode_batch(texts[s:s+batch])
+            ids = np.array([e.ids for e in enc], dtype=np.int64); m = np.array([e.attention_mask for e in enc], dtype=np.int64)
+            feed = {"input_ids": ids, "attention_mask": m, "token_type_ids": np.zeros_like(ids)}
+            h = self.sess.run(None, {k: v for k, v in feed.items() if k in self.names})[0]
+            v = (h * m[..., None]).sum(1) / m.sum(1, keepdims=True)
+            out.append(v / np.linalg.norm(v, axis=1, keepdims=True))
+        return np.concatenate(out).astype(np.float32)
+
+def words(t): return re.findall(r"\w+", t.lower())
+class BM25:
+    def __init__(self, docs, k1=1.2, b=0.75):
+        self.k1, self.b, self.N = k1, b, len(docs)
+        self.len = np.array([len(d) for d in docs], float); self.avg = self.len.mean()
+        self.post = defaultdict(list)
+        for i, d in enumerate(docs):
+            for w, c in Counter(d).items(): self.post[w].append((i, c))
+    def scores(self, q):
+        s = np.zeros(self.N)
+        for w in set(q):
+            p = self.post.get(w, []); n = len(p)
+            idf = math.log(1 + (self.N - n + 0.5) / (n + 0.5))
+            for i, tf in p:
+                s[i] += idf * tf * (self.k1 + 1) / (tf + self.k1 * (1 - self.b + self.b * self.len[i] / self.avg))
+        return s
+
+def ndcg10(ranked, rel):
+    """nDCG@10 для двоичных меток: сумма 1/log2(место+1) по правильным в первой десятке, делённая на лучшее возможное."""
+    dcg = sum(1 / math.log2(r + 2) for r, d in enumerate(ranked[:10]) if d in rel)
+    idcg = sum(1 / math.log2(r + 2) for r in range(min(len(rel), 10)))
+    return dcg / idcg
+def recall(ranked, rel, k): return len(set(ranked[:k]) &amp; rel) / len(rel)
+
+def load_scifact(split="test"):
+    corpus = [json.loads(l) for l in open(f"{HERE}/scifact/corpus.jsonl")]
+    queries = {q["_id"]: q["text"] for q in map(json.loads, open(f"{HERE}/scifact/queries.jsonl"))}
+    qrels = defaultdict(set)
+    for line in list(open(f"{HERE}/scifact/qrels/{split}.tsv"))[1:]:
+        q, d, s = line.split("\t")
+        if int(s) &gt; 0: qrels[q].add(d)
+    return corpus, queries, dict(qrels)
+
+# --- добавлено для дорожки 16.11: стоп-слова, BM25 с весами слов, RM3, кэш векторов ---
+STOP = set("""a an the of in on at to for from by with without and or not no nor is are was were be been being
+has have had do does did this that these those it its as than then there their they them we our you your he she his her
+which who whom what when where why how can could may might will would shall should into over under between
+during after before about above below up down out off also such both each other more most less least very
+via among within per however while if but so all any some only same own just""".split())
+def terms(t): return [w for w in words(t) if w not in STOP and len(w) &gt; 1]
+
+def bm25_weighted(bm, qw):
+    """BM25, где у каждого слова запроса свой вес (у обычного запроса вес = сколько раз слово встретилось)."""
+    s = np.zeros(bm.N)
+    for w, wt in qw.items():
+        p = bm.post.get(w, []); n = len(p)
+        if not n: continue
+        idf = math.log(1 + (bm.N - n + 0.5) / (n + 0.5))
+        for i, tf in p:
+            s[i] += wt * idf * tf * (bm.k1 + 1) / (tf + bm.k1 * (1 - bm.b + bm.b * bm.len[i] / bm.avg))
+    return s
+
+def rm3(bm, docs_tf, q_terms, first_scores, k=10, m=20, lam=0.5, uniform=False):
+    """RM3: берём k лучших документов первого прохода, считаем, какие слова в них частые
+    (с учётом веса документа), берём m лучших слов и смешиваем с исходным запросом: lam — доля исходного."""
+    top = np.argsort(-first_scores)[:k]
+    sc = first_scores[top]; w_doc = np.ones(k) if uniform else np.exp(sc - sc.max()); w_doc /= w_doc.sum()   # вес документа ~ exp(оценка) или поровну
+    rel = Counter()
+    for wd, i in zip(w_doc, top):
+        tf = docs_tf[i]; L = sum(tf.values())
+        for w, c in tf.items():
+            if w not in STOP and len(w) &gt; 1 and not w.isdigit(): rel[w] += wd * c / L
+    exp = dict(rel.most_common(m)); z = sum(exp.values())
+    orig = Counter(q_terms); zq = sum(orig.values())
+    qw = defaultdict(float)
+    for w, c in orig.items(): qw[w] += lam * c / zq
+    for w, v in exp.items(): qw[w] += (1 - lam) * v / z
+    return dict(qw), exp
+
+def load_all():
+    corpus, queries, qt = load_scifact("test"); _, _, qtr = load_scifact("train")
+    ids = [d["_id"] for d in corpus]; texts = [(d["title"] + ". " + d["text"]).strip() for d in corpus]
+    return ids, texts, queries, qt, qtr
+
+def corpus_vectors(texts):
+    import os
+    f = f"{HERE}/corpus_vec.npy"
+    if os.path.exists(f): return np.load(f)
+    D = BiEncoder().encode(texts); np.save(f, D); return D
+
+# --- добавлено для дорожки 17.11: разнообразие выдачи, MMR ---
+def mmr(rel, V, cand, k=10, lam=0.7):
+    """MMR: жадно берём по одному документу. Очки кандидата = lam * близость к вопросу
+    - (1 - lam) * наибольшая близость к уже взятым. rel — близость к вопросу, V — нормированные векторы."""
+    cand = list(cand); chosen = []; maxsim = np.full(len(cand), -np.inf)
+    Vc = V[cand]; r = np.array([rel[i] for i in cand], float)
+    while len(chosen) &lt; min(k, len(cand)):
+        pen = np.where(np.isfinite(maxsim), maxsim, 0.0)
+        s = lam * r - (1 - lam) * pen
+        for j in chosen: s[j] = -np.inf
+        j = int(np.argmax(s)); chosen.append(j)
+        maxsim = np.maximum(maxsim, Vc @ Vc[j])
+    return [cand[j] for j in chosen]
+
+# --- добавлено для дорожки 18.11: сжатие векторов (int8, биты, укорачивание) ---
+def query_vectors(qs, queries):
+    """Векторы тестовых вопросов, тоже с кэшем на диске."""
+    import os
+    f = f"{HERE}/query_vec.npy"
+    if os.path.exists(f): return np.load(f)
+    Q = BiEncoder().encode([queries[q] for q in qs]); np.save(f, Q); return Q
+
+def evaluate(score_rows, ids, qs, qt):
+    """score_rows(n) -&gt; оценки всех статей для вопроса n. Возвращает средние nDCG@10, recall@10, recall@100."""
+    nd, r10, r100 = [], [], []
+    for n, q in enumerate(qs):
+        r = [ids[i] for i in np.argsort(-score_rows(n))[:100]]
+        nd.append(ndcg10(r, qt[q])); r10.append(recall(r, qt[q], 10)); r100.append(recall(r, qt[q], 100))
+    return np.mean(nd), np.mean(r10), np.mean(r100)
+
+def int8_quantize(X, lo, hi):
+    """Скалярное квантование: отрезок [lo, hi] по каждой координате делим на 255 ступенек, число -&gt; номер ступеньки 0..255."""
+    step = (hi - lo) / 255.0
+    return np.clip(np.round((X - lo) / step), 0, 255).astype(np.uint8), step
+def int8_restore(codes, lo, step):
+    """Обратно: номер ступеньки -&gt; середина ступеньки (приближённое число)."""
+    return codes.astype(np.float32) * step + lo
+
+def to_bits(X, center=None):
+    """Двоичное квантование: от каждого числа остаётся знак (1, если больше центра). 8 знаков упаковываем в байт."""
+    if center is not None: X = X - center
+    return np.packbits(X &gt; 0, axis=1)
+POP = np.array([bin(i).count("1") for i in range(256)], dtype=np.uint8)
+def hamming(qbits, Dbits):
+    """Расстояние Хэмминга: в скольких битах вектор вопроса и вектор статьи расходятся (XOR и подсчёт единиц)."""
+    return POP[np.bitwise_xor(Dbits, qbits)].sum(1, dtype=np.int32)</code></pre>
+<pre><code class="language-python"># Ступень 1: сколько места занимают векторы и какой качество у точного поиска — эталон для всех сжатий.
+from lib import *
+ids, texts, queries, qt, _ = load_all()
+qs = sorted(qt); D = corpus_vectors(texts); Q = query_vectors(qs, queries)
+n, d = D.shape
+print(f"статей: {n}, размерность вектора: {d}, тип: {D.dtype}")
+print(f"один вектор: {d*4} байт; вся база: {D.nbytes/2**20:.1f} МиБ")
+for N in (10**6, 10**8):
+    print(f"если бы статей было {N:&gt;11,}: float32 {N*d*4/2**30:7.1f} ГиБ, int8 {N*d/2**30:6.1f} ГиБ, биты {N*d/8/2**30:5.2f} ГиБ".replace(",", " "))
+nd, r10, r100 = evaluate(lambda k: D @ Q[k], ids, qs, qt)
+print(f"точный поиск float32 по {len(qs)} вопросам: nDCG@10 {nd:.3f}, recall@10 {r10:.3f}, recall@100 {r100:.3f}")
+print("как распределены числа внутри векторов статей:")
+print(f"  все координаты: от {D.min():.3f} до {D.max():.3f}; 99% лежат между {np.percentile(D,0.5):.3f} и {np.percentile(D,99.5):.3f}")
+mu = D.mean(0); sd = D.std(0)
+print(f"  среднее по координатам: от {mu.min():.3f} до {mu.max():.3f}; разброс (ст. откл.) от {sd.min():.3f} до {sd.max():.3f}")
+dead = np.where(sd &lt; 1e-6)[0]
+print(f"  «мёртвых» координат (у всех статей почти ноль, разброс &lt; 1e-6): {len(dead)} — номера {dead.tolist()}; их знак — случайный шум")
+live = sd &gt;= 1e-6; ratio = np.where(live, np.abs(mu) / np.where(live, sd, 1), 0)
+j = int(np.argmax(ratio))
+print(f"  самая «сдвинутая» живая координата №{j}: среднее {mu[j]:.3f} при разбросе {sd[j]:.3f}; положительна у {np.mean(D[:,j]&gt;0)*100:.0f}% статей")
+print(f"  живых координат, где знак у 90%+ статей одинаковый: {int(np.sum(live &amp; (np.maximum(np.mean(D&gt;0,0), np.mean(D&lt;=0,0)) &gt;= 0.9)))} из {d}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">статей: 5183, размерность вектора: 384, тип: float32
+один вектор: 1536 байт; вся база: 7.6 МиБ
+если бы статей было   1 000 000: float32     1.4 ГиБ  int8    0.4 ГиБ  биты  0.04 ГиБ
+если бы статей было 100 000 000: float32   143.1 ГиБ  int8   35.8 ГиБ  биты  4.47 ГиБ
+точный поиск float32 по 300 вопросам: nDCG@10 0.648, recall@10 0.788, recall@100 0.925
+как распределены числа внутри векторов статей:
+  все координаты: от -0.261 до 0.280; 99% лежат между -0.132 и 0.132
+  среднее по координатам: от -0.050 до 0.049; разброс (ст. откл.) от 0.000 до 0.064
+  «мёртвых» координат (у всех статей почти ноль, разброс &lt; 1e-6): 3 — номера [127, 223, 319]; их знак — случайный шум
+  самая «сдвинутая» живая координата №349: среднее -0.050 при разбросе 0.046; положительна у 14% статей
+  живых координат, где знак у 90%+ статей одинаковый: 0 из 384</code></pre>
+<p>Что видно. Вся база SciFact весит 7,6 МиБ — мелочь, но та же модель на миллионе кусков заняла бы 1,4 ГиБ, а на ста миллионах — 143 ГиБ, это уже несколько дорогих серверов. Эталон, с которым будем сравнивать всё сжатое: точный поиск даёт nDCG@10 0,648 и recall@100 0,925. Числа внутри векторов действительно маленькие: 99% лежат между −0,132 и 0,132. Нашлись три «мёртвые» координаты (№127, 223, 319): у всех статей там почти ноль, и при хранении знака они дадут случайный шум. Живые координаты в среднем немного сдвинуты от нуля (самая сдвинутая, №349, положительна только у 14% статей), но ни у одной знак не совпадает у 90% статей и больше — значит, бит знака почти у каждой координаты что-то различает.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Считают память только по векторам и забывают про тексты кусков, метаданные и структуру индекса (граф HNSW сам по себе может занять заметную долю). Сжатие векторов уменьшает только первую часть.</li>
+<li>Выбирают модель с размерностью побольше «на всякий случай», не посчитав, что память и время перебора растут вместе с размерностью.</li>
+<li>Сжимают, не замерив качество до сжатия на своих вопросах: потом нечем доказать, что сжатие ничего не сломало.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Размерность.</strong> Сколько чисел в одном векторе; у all-MiniLM-L6-v2 — 384.</p>
+<p><strong>float32.</strong> Обычный формат дробного числа в 32 битах (4 байта); в нём модели выдают векторы.</p>
+<p><strong>Координата.</strong> Одно место в векторе, например «число №17»; у всех векторов базы оно отвечает одному и тому же направлению.</p>
+<p><strong>Нормированный вектор.</strong> Вектор длины 1; для таких векторов косинус равен простому скалярному произведению.</p>
+<p><strong>Сжатие векторов (embedding quantization).</strong> Запись чисел вектора меньшим числом бит ценой небольшой неточности.</p>
+<p><strong>Мёртвая координата.</strong> Координата, которая у всех текстов почти равна нулю и не несёт информации.</p>
+<p><strong>МиБ и ГиБ.</strong> Мебибайт (2²⁰ байт) и гибибайт (2³⁰ байт) — точные «двоичные» мегабайт и гигабайт.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">2</span>
+            <span class="fold-title">int8: 256 ступенек на число и калибровка отрезка</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Int8 — самый безопасный способ сжатия: память уменьшается ровно вчетверо, а качество поиска обычно почти не меняется. Его поддерживают многие векторные базы и библиотеки, и часто это первый шаг, который стоит сделать, когда индекс перестаёт помещаться в память. Но «почти не меняется» верно только при правильной калибровке — выборе отрезка, который делят на ступеньки. Ошибка здесь тихая: поиск продолжает работать, просто хуже, и без замера этого никто не заметит.</p>
+<p><strong>Как это устроено.</strong> Идея — скалярное квантование (scalar quantization): каждое число заменяем номером ближайшей ступеньки на заранее выбранном отрезке. В одном байте помещается 256 разных значений, поэтому отрезок [lo; hi] делим на 255 равных шагов. Шаг кодирования: номер = округлить((x − lo) / шаг), и если число вышло за отрезок, номер прижимаем к 0 или 255. Шаг восстановления: x ≈ lo + номер × шаг. Ошибка одного числа не больше половины шага.</p>
+<p>Главное решение — откуда взять lo и hi. Можно взять один общий отрезок на все координаты, от минус до плюс самого большого по модулю числа. Можно у каждой координаты свой отрезок — от её минимума до максимума по базе; тогда у «узких» координат ступеньки мельче, и точность выше. Можно обрезать выбросы, взяв, например, отрезок от 1-го до 99-го процентиля (процентиль — значение, ниже которого лежит заданная доля чисел); ступеньки становятся ещё мельче, но крайние значения прижимаются к краю. Отрезки считают один раз по базе или по выборке из неё — это и есть калибровка.</p>
+<p>Вопрос при этом обычно не сжимают: он один, места не занимает, и его float32-вектор умножают на восстановленные векторы базы. Это называют асимметричным поиском — база грубая, вопрос точный. Так ошибка возникает только с одной стороны произведения.</p>
+<p>Ограничение: int8 даёт выигрыш ровно в 4 раза, не больше. Можно взять 4 бита (16 ступенек) или 2 бита (4 ступеньки), но с каждым срезанным битом ошибка растёт вдвое. Отличие от двоичных векторов следующей ступени: здесь сохраняется величина числа, хоть и грубо, а там остаётся только знак.</p>
+<p><strong>Подробный пример.</strong> Сжимаем векторы всех 5183 статей разными способами и сравниваем с точным поиском: качество, сколько статей из точной первой десятки осталось в десятке после сжатия и средняя ошибка одного числа.</p>
+<pre><code class="language-python"># Ступень 2: int8 — каждое число превращаем в номер одной из 256 ступенек. Вопрос остаётся float32 (асимметричный поиск).
+from lib import *
+ids, texts, queries, qt, _ = load_all()
+qs = sorted(qt); D = corpus_vectors(texts); Q = query_vectors(qs, queries)
+exact = [set(np.argsort(-(D @ Q[k]))[:10]) for k in range(len(qs))]
+def report(name, Dr):
+    nd, r10, r100 = evaluate(lambda k: Dr @ Q[k], ids, qs, qt)
+    same = np.mean([len(exact[k] &amp; set(np.argsort(-(Dr @ Q[k]))[:10])) for k in range(len(qs))])
+    err = np.abs(Dr - D).mean()
+    print(f"{name:52s} nDCG@10 {nd:.3f}  recall@100 {r100:.3f}  совпало с точной десяткой {same:4.2f} из 10  ср.ошибка числа {err:.5f}")
+report("float32 (эталон)", D)
+g = np.abs(D).max()                                              # 1) один общий отрезок на все координаты
+c, st = int8_quantize(D, -g, g); report(f"int8, общий отрезок [-{g:.3f}; {g:.3f}]", int8_restore(c, -g, st))
+lo, hi = D.min(0), D.max(0)                                       # 2) свой отрезок у каждой координаты: min..max по базе
+lo2, hi2 = np.where(hi &gt; lo, lo, -1e-6), np.where(hi &gt; lo, hi, 1e-6)
+c, st = int8_quantize(D, lo2, hi2); report("int8, свой отрезок у координаты (min..max по базе)", int8_restore(c, lo2, st))
+plo, phi = np.percentile(D, 1, 0), np.percentile(D, 99, 0)       # 3) свой отрезок, но выбросы обрезаем (1-й..99-й процентиль)
+phi = np.maximum(phi, plo + 1e-6)
+c, st = int8_quantize(D, plo, phi); report("int8, свой отрезок, обрезка 1%..99%", int8_restore(c, plo, st))
+print(f"  доля чисел, упёршихся в край при обрезке: {np.mean((D &lt; plo) | (D &gt; phi))*100:.1f}%")
+rng = np.random.default_rng(0); sub = rng.choice(len(D), 200, replace=False)   # 4) отрезки посчитали по 200 статьям, а не по всей базе
+slo, shi = D[sub].min(0), D[sub].max(0); shi = np.maximum(shi, slo + 1e-6)
+c, st = int8_quantize(D, slo, shi); report("int8, отрезки по выборке из 200 статей", int8_restore(c, slo, st))
+print(f"  доля чисел базы вне отрезков, посчитанных по выборке: {np.mean((D &lt; slo) | (D &gt; shi))*100:.2f}%")
+for bits in (4, 2):                                               # 5) меньше ступенек: 16 и 4
+    levels = 2**bits - 1; step = (hi2 - lo2) / levels
+    Dr = np.clip(np.round((D - lo2) / step), 0, levels) * step + lo2
+    report(f"{bits} бита на число ({levels+1} {"ступенек" if levels+1 &gt;= 5 else "ступеньки"}), свой отрезок", Dr.astype(np.float32))</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">float32 (эталон)                                     nDCG@10 0.648  recall@100 0.925  совпало с точной десяткой 10.00 из 10  ср.ошибка числа 0.00000
+int8, общий отрезок [-0.280; 0.280]                  nDCG@10 0.651  recall@100 0.925  совпало с точной десяткой 9.93 из 10  ср.ошибка числа 0.00055
+int8, свой отрезок у координаты (min..max по базе)   nDCG@10 0.650  recall@100 0.928  совпало с точной десяткой 9.96 из 10  ср.ошибка числа 0.00033
+int8, свой отрезок, обрезка 1%..99%                  nDCG@10 0.650  recall@100 0.928  совпало с точной десяткой 9.59 из 10  ср.ошибка числа 0.00051
+  доля чисел, упёршихся в край при обрезке: 2.0%
+int8, отрезки по выборке из 200 статей               nDCG@10 0.649  recall@100 0.928  совпало с точной десяткой 9.75 из 10  ср.ошибка числа 0.00040
+  доля чисел базы вне отрезков, посчитанных по выборке: 0.99%
+4 бита на число (16 ступенек), свой отрезок          nDCG@10 0.640  recall@100 0.925  совпало с точной десяткой 9.21 из 10  ср.ошибка числа 0.00564
+2 бита на число (4 ступеньки), свой отрезок          nDCG@10 0.607  recall@100 0.920  совпало с точной десяткой 7.11 из 10  ср.ошибка числа 0.02867</code></pre>
+<p>Что видно. Все варианты int8 дают nDCG@10 от 0,649 до 0,651 против 0,648 у точного поиска. То, что сжатый поиск чуть «лучше», — не чудо, а случайность: разница в 0,002–0,003 на 300 вопросах — это один-два вопроса, где правильная статья сдвинулась на место. Честный вывод — «потерь не видно». Тоньше показатель совпадения десяток: при своём отрезке у каждой координаты из точной десятки остаётся 9,96 статьи из 10, при общем отрезке — 9,93. Обрезка выбросов уменьшила шаг, но ухудшила совпадение до 9,59: 2% чисел упёрлись в край, а крайние значения как раз и отличают статьи друг от друга. Калибровка по выборке из 200 статей почти так же хороша (9,75), хотя 1% чисел базы выходит за её отрезки. С 4 битами потери уже видны (nDCG@10 0,640, совпадение 9,21), с 2 битами — заметны (0,607 и 7,11).</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Калибруют отрезки по маленькой или нетипичной выборке (например, по первым загруженным документам одной темы), а потом добавляют в базу тексты другого рода, у которых числа выходят за края.</li>
+<li>Обрезают выбросы «как в учебнике про квантование весов», не проверив, что для векторов поиска крайние значения важны.</li>
+<li>Принимают прирост в третьем знаке после сжатия за улучшение и делают из этого выводы; на нескольких сотнях вопросов это шум.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Скалярное квантование (scalar quantization).</strong> Замена каждого числа номером ближайшей ступеньки на отрезке.</p>
+<p><strong>int8.</strong> Целое число в одном байте; 256 возможных значений.</p>
+<p><strong>Калибровка.</strong> Выбор отрезка [lo; hi], который делят на ступеньки, по данным базы или выборки.</p>
+<p><strong>Шаг квантования.</strong> Расстояние между соседними ступеньками; ошибка числа не больше половины шага.</p>
+<p><strong>Процентиль.</strong> Значение, ниже которого лежит заданная доля чисел; 99-й процентиль оставляет выше себя 1%.</p>
+<p><strong>Выброс.</strong> Редкое значение, сильно отличающееся от большинства; при обрезке прижимается к краю отрезка.</p>
+<p><strong>Асимметричный поиск.</strong> Векторы базы хранятся сжатыми, а вектор вопроса остаётся точным.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">3</span>
+            <span class="fold-title">Двоичные векторы: знак числа и расстояние Хэмминга</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Двоичный вектор сжимает базу в 32 раза: от каждого числа остаётся один бит. Миллион векторов нашей модели занял бы не 1,4 ГиБ, а около 46 МиБ — такой индекс помещается в память любого ноутбука и даже телефона. Сравнивать биты процессор умеет очень быстро. Но выброшено почти всё, кроме знака, и поиск по одним битам заметно хуже. Понять, сколько именно он теряет и почему, нужно, чтобы правильно использовать его на следующей ступени — не как окончательный ответ, а как быстрое сито.</p>
+<p><strong>Как это устроено.</strong> Шаг первый — бинаризация: каждое число вектора заменяем единицей, если оно больше нуля, и нулём иначе. 384 числа превращаются в 384 бита, их упаковывают по 8 в байт — 48 байт на вектор. Шаг второй — сравнение. Вместо косинуса считают расстояние Хэмминга (Hamming distance) — число позиций, в которых два набора бит расходятся. Для этого берут XOR (операция «исключающее или»: 1 там, где биты разные) и считают единицы; у процессоров для подсчёта единиц есть отдельная инструкция popcount. Чем меньше расстояние, тем векторы ближе.</p>
+<p>Почему это вообще работает. Знак координаты говорит, по какую сторону от плоскости через ноль лежит вектор. Если два вектора близки, они чаще оказываются по одну сторону от таких плоскостей. Для случайных плоскостей это строгая формула (метод SimHash, Мозес Чарикар (Moses Charikar), 2002): вероятность, что бит совпадёт, равна 1 − угол/180°. Поэтому доля совпавших бит — грубая оценка угла, а значит, и косинуса. У нас плоскости не случайные — это сами координаты модели, — но идея та же.</p>
+<p>Есть промежуточный вариант — асимметричный: биты храним только у базы, а вопрос оставляем float32 и считаем произведение вопроса на вектор из +1 и −1. Это по-прежнему 48 байт на статью в памяти, но вопрос теряет меньше. Иногда советуют перед бинаризацией вычесть из всех векторов среднее по базе, чтобы у каждой координаты единиц и нулей было поровну, или случайно повернуть пространство; полезность таких приёмов зависит от модели, и её надо проверять.</p>
+<p>Ограничение: расстояние Хэмминга принимает мало разных значений (от 0 до 384), поэтому много статей получают одинаковое расстояние, и порядок внутри таких ничьих случаен. Отличие от int8: там сохраняется величина числа, здесь — только его знак, и разница в качестве поэтому не «чуть-чуть», а заметная.</p>
+<p><strong>Подробный пример.</strong> Сравниваем точный поиск с несколькими вариантами двоичного: биты с обеих сторон, асимметричный вариант, без мёртвых координат, с вычитанием среднего, со случайным поворотом. Отдельно проверяем, насколько доля совпавших бит следует за косинусом, и сколько разных расстояний бывает на один вопрос.</p>
+<pre><code class="language-python"># Ступень 3: двоичные векторы — от каждого числа остаётся один бит (знак). 384 числа -&gt; 48 байт.
+from lib import *
+ids, texts, queries, qt, _ = load_all()
+qs = sorted(qt); D = corpus_vectors(texts); Q = query_vectors(qs, queries)
+exact = [set(np.argsort(-(D @ Q[k]))[:10]) for k in range(len(qs))]
+d = D.shape[1]
+def report(name, score_rows):
+    nd, r10, r100 = evaluate(score_rows, ids, qs, qt)
+    same = np.mean([len(exact[k] &amp; set(np.argsort(-score_rows(k))[:10])) for k in range(len(qs))])
+    print(f"{name:58s} nDCG@10 {nd:.3f}  recall@100 {r100:.3f}  совпало с точной десяткой {same:4.2f} из 10")
+report("float32 (эталон)", lambda k: D @ Q[k])
+Db = to_bits(D); Qb = to_bits(Q)
+print(f"размер базы: float32 {D.nbytes/1024:.0f} КиБ, биты {Db.nbytes/1024:.0f} КиБ (в {D.nbytes/Db.nbytes:.0f} раза меньше)")
+report("биты и у статей, и у вопроса: расстояние Хэмминга", lambda k: -hamming(Qb[k], Db).astype(float))
+S = np.unpackbits(Db, axis=1)[:, :d].astype(np.float32) * 2 - 1      # бит -&gt; +1 / -1
+report("биты у статей, вопрос float32 (асимметрично)", lambda k: S @ Q[k])
+mu = D.mean(0)
+live = D.std(0) &gt;= 1e-6
+Dn = np.packbits(D[:, live] &gt; 0, axis=1); Qn = np.packbits(Q[:, live] &gt; 0, axis=1)
+report(f"биты без 3 мёртвых координат ({live.sum()} бит), без вычитания", lambda k: -hamming(Qn[k], Dn).astype(float))
+Dc = to_bits(D, mu); Qc = to_bits(Q, mu)
+report("биты после вычитания среднего по базе", lambda k: -hamming(Qc[k], Dc).astype(float))
+Dl = np.packbits((D - mu)[:, live] &gt; 0, axis=1); Ql = np.packbits((Q - mu)[:, live] &gt; 0, axis=1)
+report(f"то же, без 3 мёртвых координат ({live.sum()} бит)", lambda k: -hamming(Ql[k], Dl).astype(float))
+R, _ = np.linalg.qr(np.random.default_rng(1).normal(size=(d, d)))   # случайный поворот пространства
+Dr = to_bits(D @ R); Qr = to_bits(Q @ R)
+report("биты после случайного поворота (SimHash)", lambda k: -hamming(Qr[k], Dr).astype(float))
+# как соотносится косинус и расстояние Хэмминга: по 2000 случайных пар статей
+rng = np.random.default_rng(0); a, b = rng.integers(0, len(D), (2, 2000))
+cos = (D[a] * D[b]).sum(1); ham = POP[np.bitwise_xor(Dl[a], Dl[b])].sum(1)
+print(f"связь на 2000 случайных парах: корреляция косинуса и доли совпавших бит = {np.corrcoef(cos, 1 - ham/live.sum())[0,1]:.3f}")
+print(f"  теория для случайных плоскостей (SimHash): доля совпавших бит ≈ 1 - угол/180°; при косинусе 0.5 (угол 60°) это {1-60/180:.3f}")
+ties = np.mean([len(np.unique(-hamming(Ql[k], Dl))) for k in range(len(qs))])
+print(f"разных значений расстояния Хэмминга на вопрос: в среднем {ties:.0f} на {len(D)} статей — много ничьих")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">float32 (эталон)                                           nDCG@10 0.648  recall@100 0.925  совпало с точной десяткой 10.00 из 10
+размер базы: float32 7774 КиБ, биты 243 КиБ (в 32 раза меньше)
+биты и у статей, и у вопроса: расстояние Хэмминга          nDCG@10 0.574  recall@100 0.891  совпало с точной десяткой 5.65 из 10
+биты у статей, вопрос float32 (асимметрично)               nDCG@10 0.612  recall@100 0.900  совпало с точной десяткой 6.98 из 10
+биты без 3 мёртвых координат (381 бит), без вычитания      nDCG@10 0.574  recall@100 0.893  совпало с точной десяткой 5.64 из 10
+биты после вычитания среднего по базе                      nDCG@10 0.574  recall@100 0.875  совпало с точной десяткой 5.60 из 10
+то же, без 3 мёртвых координат (381 бит)                   nDCG@10 0.580  recall@100 0.875  совпало с точной десяткой 5.63 из 10
+биты после случайного поворота (SimHash)                   nDCG@10 0.566  recall@100 0.890  совпало с точной десяткой 5.72 из 10
+связь на 2000 случайных парах: корреляция косинуса и доли совпавших бит = 0.754
+  теория для случайных плоскостей (SimHash): доля совпавших бит ≈ 1 - угол/180°; при косинусе 0.5 (угол 60°) это 0.667
+разных значений расстояния Хэмминга на вопрос: в среднем 99 на 5183 статей — много ничьих</code></pre>
+<p>Что видно. Индекс стал в 32 раза меньше (243 КиБ против 7774 КиБ), а качество упало: nDCG@10 0,574 вместо 0,648, и из точной десятки осталось в среднем 5,65 статьи. Зато recall@100 держится лучше — 0,891 против 0,925: правильные статьи из десятки выпадают, но в основном остаются в сотне. Это ключ к следующей ступени. Асимметричный вариант заметно лучше (0,612 и 6,98 из 10) при той же памяти базы. А популярные приёмы на этой модели не помогли: вычитание среднего, выбрасывание мёртвых координат и случайный поворот дают от 0,566 до 0,580 — в пределах шума от простого варианта, а вычитание среднего даже уменьшило recall@100 (0,875). Доля совпавших бит связана с косинусом заметно, но не жёстко (корреляция 0,754 на 2000 случайных парах). И на один вопрос в среднем всего 99 разных расстояний на 5183 статьи — порядок внутри одинаковых расстояний биты не различают.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Используют двоичный поиск как окончательный ответ и удивляются, что первая десятка стала хуже; биты хороши как первый отбор, а не как судья.</li>
+<li>Переносят приём «вычтите среднее» или «поверните» из чужой статьи, не проверив на своей модели; у нас он ничего не дал.</li>
+<li>Бинаризуют модель с маленькой размерностью и ждут того же, что у больших: чем меньше бит, тем грубее оценка угла, и у 384 бит запас меньше, чем у 1024.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Двоичный вектор (binary embedding).</strong> Вектор, где от каждого числа остался один бит — знак.</p>
+<p><strong>Бинаризация.</strong> Замена числа единицей, если оно больше порога (обычно нуля), и нулём иначе.</p>
+<p><strong>Расстояние Хэмминга (Hamming distance).</strong> Число позиций, в которых два набора бит различаются.</p>
+<p><strong>XOR.</strong> Операция над битами: даёт 1, если биты разные, и 0, если одинаковые.</p>
+<p><strong>popcount.</strong> Инструкция процессора, которая за один шаг считает единицы в машинном слове.</p>
+<p><strong>SimHash.</strong> Способ получать биты знаками проекций на случайные плоскости; доля совпавших бит оценивает угол.</p>
+<p><strong>Ничья.</strong> Одинаковая оценка у нескольких документов; порядок между ними выбирается случайно.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">4</span>
+            <span class="fold-title">Пересчёт: грубо по битам, точно по кандидатам</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Прошлая ступень показала неудобную вещь: биты экономят в 32 раза, но портят первую десятку, хотя правильные статьи в основном остаются в первой сотне. Двухшаговый поиск использует именно это: биты быстро и дёшево отбирают кандидатов, а окончательный порядок решают точные векторы — только для этих кандидатов. Так можно держать в памяти маленький двоичный индекс, а большие точные векторы хранить на диске и читать лишь сотню на вопрос. Это та же схема «быстрый отбор, потом внимательная проверка», что и в <a href="/put-2026-11-15-peresortirovka">дорожке про пересортировку</a>, только второй шаг здесь — не другая модель, а та же самая, но без сжатия.</p>
+<p><strong>Как это устроено.</strong> Шаг первый: для вопроса считаем расстояние Хэмминга до всех двоичных векторов базы и берём k ближайших — это кандидаты. Порядок внутри них неважен, поэтому достаточно частичной сортировки (выбрать k наименьших, не сортируя весь список). Шаг второй: для каждого кандидата берём его точный вектор (float32 или int8) и считаем точную оценку с float32-вектором вопроса. Шаг третий: сортируем кандидатов по точной оценке и отдаём первую десятку. Такой пересчёт оценок (rescoring) стоит k умножений вместо умножений на всю базу.</p>
+<p>Единственная настройка — k, число кандидатов. Если k мало, правильная статья может не попасть в кандидаты, и второй шаг её уже не спасёт: он умеет только переставлять то, что дали. Если k велико, растёт работа второго шага и чтение с диска. Поэтому полезно мерить отдельно две вещи: покрытие — какая доля точной десятки попала в кандидатов, и итоговое качество после пересчёта.</p>
+<p>Для второго шага годится и int8 из ступени 2: тогда на диске лежит вчетверо меньше. Получается популярная связка «биты в памяти — int8 на диске — float32 только у вопроса».</p>
+<p>Ограничение: двухшаговая схема не быстрее точного перебора сама по себе — выигрыш зависит от того, насколько быстро считается Хэмминг. В библиотеках вроде FAISS (у неё есть двоичные индексы) это делается инструкцией popcount и очень быстро; в нашем учебном коде на numpy расстояние считается таблицей и проигрывает умножению матриц, которое numpy отдаёт оптимизированной библиотеке. Отличие от пересортировки: там второй шаг умнее первого, здесь второй шаг — то же самое измерение, только точнее.</p>
+<p><strong>Подробный пример.</strong> Для каждого вопроса берём k ближайших по битам (k от 10 до 500), пересчитываем оценки по float32 и по int8 и смотрим покрытие точной десятки, nDCG@10 и долю правильных статей среди кандидатов. В конце — грубое время на вопрос у нас, с оговоркой выше.</p>
+<pre><code class="language-python"># Ступень 4: двухшаговый поиск. Шаг 1 — грубо по битам (Хэмминг), берём k кандидатов. Шаг 2 — пересчёт точной оценки
+# только для этих k: вопрос float32 на векторы статей float32 или int8 (их можно держать на диске и читать k штук).
+from lib import *
+ids, texts, queries, qt, _ = load_all()
+qs = sorted(qt); D = corpus_vectors(texts); Q = query_vectors(qs, queries)
+exact = [np.argsort(-(D @ Q[k]))[:10] for k in range(len(qs))]
+Db = to_bits(D); Qb = to_bits(Q)
+lo, hi = D.min(0), D.max(0); lo, hi = np.where(hi &gt; lo, lo, -1e-6), np.where(hi &gt; lo, hi, 1e-6)
+c8, st = int8_quantize(D, lo, hi); D8 = int8_restore(c8, lo, st)
+print(f"{'k':&gt;5s} {'точная десятка среди кандидатов':&gt;32s} {'nDCG@10 пересчёт float32':&gt;25s} {'nDCG@10 пересчёт int8':&gt;22s} {'recall@k*':&gt;12s}")
+for K in (10, 20, 50, 100, 200, 500):
+    cover, nd32, nd8, r100 = [], [], [], []
+    for n, q in enumerate(qs):
+        ham = hamming(Qb[n], Db)
+        cand = np.argpartition(ham, K)[:K]                         # K ближайших по битам (порядок внутри неважен)
+        cover.append(len(set(cand) &amp; set(exact[n])) / 10)
+        for Dx, acc in ((D, nd32), (D8, nd8)):
+            s = Dx[cand] @ Q[n]; order = cand[np.argsort(-s)]
+            acc.append(ndcg10([ids[i] for i in order], qt[q]))
+        r100.append(recall([ids[i] for i in cand], qt[q], K) if K &gt;= 100 else float("nan"))
+    print(f"{K:5d} {np.mean(cover):32.3f} {np.mean(nd32):25.3f} {np.mean(nd8):22.3f} {np.nanmean(r100) if K&gt;=100 else float('nan'):12.3f}")
+print("* recall@k — доля правильных статей, попавших в k кандидатов первого шага (печатаем для k &gt;= 100)")
+print("для сравнения: точный поиск float32 — nDCG@10 0.648; одни биты без пересчёта — 0.574")
+# время на один вопрос (numpy на нашем боксе, 5183 статьи) — грубая прикидка, не тест скорости:
+# умножение float32 numpy отдаёт быстрой библиотеке BLAS, а Хэмминг мы считаем таблицей на чистом numpy, без инструкции popcount
+t = time.perf_counter()
+for n in range(len(qs)): s = D @ Q[n]; np.argpartition(-s, 10)[:10]
+t32 = (time.perf_counter() - t) / len(qs)
+t = time.perf_counter()
+for n in range(len(qs)):
+    ham = hamming(Qb[n], Db); cand = np.argpartition(ham, 100)[:100]; s = D[cand] @ Q[n]
+tb = (time.perf_counter() - t) / len(qs)
+print(f"время на вопрос у нас: полный перебор float32 {t32*1000:.2f} мс; биты + пересчёт 100 {tb*1000:.2f} мс")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">    k  точная десятка среди кандидатов  nDCG@10 пересчёт float32  nDCG@10 пересчёт int8    recall@k*
+   10                            0.565                     0.621                  0.622          nan
+   20                            0.739                     0.630                  0.631          nan
+   50                            0.885                     0.638                  0.639          nan
+  100                            0.942                     0.648                  0.648        0.891
+  200                            0.979                     0.649                  0.650        0.925
+  500                            0.998                     0.648                  0.650        0.963
+* recall@k — доля правильных статей, попавших в k кандидатов первого шага (печатаем для k &gt;= 100)
+для сравнения: точный поиск float32 — nDCG@10 0.648; одни биты без пересчёта — 0.574
+время на вопрос у нас: полный перебор float32 0.04 мс; биты + пересчёт 100 0.69 мс</code></pre>
+<p>Что видно. Уже при k = 100 пересчёт возвращает качество точного поиска целиком: nDCG@10 0,648 — ровно как у полного перебора float32, хотя в памяти были только биты. Покрытие точной десятки при этом 0,942 — немного статей из точной десятки не дошли до второго шага, но, судя по тому, что nDCG@10 не упал, это были в основном не правильные статьи. При k = 10 пересчёт помогает мало (0,621): он только переставляет ту же десятку. Пересчёт по int8 даёт то же, что по float32 (разница в третьем знаке), значит, на диске можно хранить вчетверо меньше. Время у нас — 0,04 мс на полный перебор против 0,69 мс на биты с пересчётом: это не довод против метода, а иллюстрация оговорки про учебный numpy и маленькую базу; скорость надо мерить в той библиотеке и на том объёме, которые будут в работе.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Берут k равным размеру выдачи (10 из 10) и решают, что пересчёт бесполезен; кандидатов должно быть в несколько раз больше, чем нужно в ответе.</li>
+<li>Подбирают k по итоговому nDCG и не смотрят покрытие; при смене базы покрытие падает первым, и это ранний сигнал.</li>
+<li>Мерят скорость на игрушечном коде и маленькой базе и делают вывод о проде; на сотнях миллионов векторов узким местом становятся память и чтение, а не арифметика.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Двухшаговый поиск.</strong> Быстрый грубый отбор кандидатов, затем точная оценка только для них.</p>
+<p><strong>Кандидаты.</strong> Небольшой список документов, отобранных первым шагом для проверки вторым.</p>
+<p><strong>Пересчёт оценок (rescoring).</strong> Повторная оценка кандидатов точными векторами и сортировка по ней.</p>
+<p><strong>Покрытие.</strong> Доля документов точной выдачи, попавших в кандидатов первого шага.</p>
+<p><strong>Частичная сортировка.</strong> Выбор k наименьших элементов без упорядочивания всего списка; дешевле полной сортировки.</p>
+<p><strong>FAISS.</strong> Библиотека для поиска похожих векторов; среди прочего умеет двоичные индексы с расстоянием Хэмминга.</p>
+<p><strong>Полный перебор (brute force).</strong> Сравнение вопроса со всеми векторами базы; точно, но дорого на больших базах.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">5</span>
+            <span class="fold-title">Укороченные векторы, матрёшка и где сжатие ломается</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Кроме «грубее записать каждое число» есть второй путь — хранить меньше чисел. Некоторые современные модели прямо разрешают отрезать хвост вектора: например, у моделей OpenAI text-embedding-3 в API есть параметр dimensions, который возвращает укороченный вектор. Это удобно, но работает только у моделей, которые специально так обучали. Отрезать хвост у обычной модели — частая и тихая ошибка. А ещё у любого сжатия есть общие ловушки, которые всплывают уже после внедрения: пороги, новые данные, проверка не на тех вопросах.</p>
+<p><strong>Как это устроено.</strong> Обучение «матрёшкой» (Matryoshka Representation Learning, работа Kusupati и соавторов, 2022) устроено так: при обучении модели потерю считают не только для полного вектора, но и для его начальных кусков — первых 64, 128, 256 чисел и так далее. Модель учится складывать самое важное в начало, как матрёшка, где внутри большой фигуры есть меньшие. У такой модели первые m координат — сами по себе хороший вектор; после отрезания его нужно заново нормировать к длине 1.</p>
+<p>У модели, обученной обычно, все координаты равноправны, и отрезать начало — значит выбросить случайную часть информации. Для неё есть другой способ: метод главных компонент (PCA, principal component analysis). Он находит по базе направления, вдоль которых векторы разбросаны сильнее всего, поворачивает пространство так, чтобы первые координаты шли вдоль них, и уже потом отрезает хвост. PCA подгоняют по данным, поэтому честная проверка — подогнать на одной части базы, а мерить на всей.</p>
+<p>Сжатие меняет шкалу оценок. После int8 косинус почти не меняется, а у асимметричного двоичного варианта (вопрос float32 на вектор из ±1) получаются числа совсем другого размера. Если где-то в системе стоит порог вроде «показывать, только если похожесть больше 0,5» или «ответа нет, если лучшая оценка меньше X», после сжатия его надо подобрать заново — об этой ловушке шла речь и в <a href="/put-2026-11-14-gibridnyj-poisk">дорожке про гибридный поиск</a>.</p>
+<p>Ограничение: способы складываются, но и потери складываются. Укороченный двоичный вектор экономит больше всего, но теряет больше всего; на практике его почти всегда сочетают с пересчётом из ступени 4. Отличие от дообучения: ни один из этих способов не учит модель заново — мы только иначе храним то, что она уже выдала.</p>
+<p><strong>Подробный пример.</strong> Наша all-MiniLM-L6-v2 матрёшкой не обучалась — проверяем, что будет, если просто отрезать хвост, и сравниваем с PCA той же длины. Затем подгоняем PCA по случайной половине статей, чтобы убрать подгонку под тест. В конце сравниваем лучшую оценку на вопрос у точных, int8 и двоичных векторов.</p>
+<pre><code class="language-python"># Ступень 5: укороченные векторы и где сжатие ломается.
+# all-MiniLM-L6-v2 НЕ обучали «матрёшкой», поэтому первые координаты у неё не важнее последних — проверяем, что будет.
+from lib import *
+ids, texts, queries, qt, _ = load_all()
+qs = sorted(qt); D = corpus_vectors(texts); Q = query_vectors(qs, queries)
+def norm(X): return X / np.maximum(np.linalg.norm(X, axis=1, keepdims=True), 1e-12)
+mu = D.mean(0); U, S, Vt = np.linalg.svd(D - mu, full_matrices=False)    # главные направления базы (PCA)
+var = S**2 / (S**2).sum()
+print(f"доля разброса базы в первых главных направлениях: 64 — {var[:64].sum():.2f}, 128 — {var[:128].sum():.2f}, 192 — {var[:192].sum():.2f}")
+print(f"{'размерность':&gt;11s} {'байт float32':&gt;13s} {'первые m координат':&gt;19s} {'m главных направлений (PCA)':&gt;28s}")
+for m in (384, 256, 192, 128, 64, 32):
+    a = evaluate(lambda k, Dm=norm(D[:, :m]), Qm=norm(Q[:, :m]): Dm @ Qm[k], ids, qs, qt)[0]
+    P = Vt[:m].T
+    b = evaluate(lambda k, Dm=norm((D - mu) @ P), Qm=norm((Q - mu) @ P): Dm @ Qm[k], ids, qs, qt)[0]
+    print(f"{m:11d} {m*4:13d} {a:19.3f} {b:28.3f}")
+# PCA подогнали по той же базе, на которой меряем. Честнее: подогнать по другой половине статей.
+rng = np.random.default_rng(0); half = rng.permutation(len(D))[: len(D)//2]
+mu2 = D[half].mean(0); Vt2 = np.linalg.svd(D[half] - mu2, full_matrices=False)[2]
+for m in (128, 64):
+    P = Vt2[:m].T
+    b = evaluate(lambda k, Dm=norm((D - mu2) @ P), Qm=norm((Q - mu2) @ P): Dm @ Qm[k], ids, qs, qt)[0]
+    print(f"PCA {m}, подогнанный по случайной половине статей: nDCG@10 {b:.3f}")
+# Шкала оценок меняется: порог «похоже, если косинус &gt;= X», подобранный на float32, к сжатым оценкам не подходит.
+Db = np.unpackbits(to_bits(D), axis=1)[:, :384].astype(np.float32) * 2 - 1
+top_f = np.array([np.max(D @ Q[k]) for k in range(len(qs))])
+top_b = np.array([np.max(Db @ Q[k]) for k in range(len(qs))])
+lo, hi = D.min(0), D.max(0); lo, hi = np.where(hi &gt; lo, lo, -1e-6), np.where(hi &gt; lo, hi, 1e-6)
+c8, st = int8_quantize(D, lo, hi); D8 = int8_restore(c8, lo, st)
+top_8 = np.array([np.max(D8 @ Q[k]) for k in range(len(qs))])
+print(f"лучшая оценка на вопрос (медиана): float32 {np.median(top_f):.3f}, int8 {np.median(top_8):.3f}, биты статей x float-вопрос {np.median(top_b):.3f}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">доля разброса базы в первых главных направлениях: 64 — 0.66, 128 — 0.84, 192 — 0.93
+размерность  байт float32  первые m координат  m главных направлений (PCA)
+        384          1536               0.648                        0.638
+        256          1024               0.641                        0.634
+        192           768               0.616                        0.627
+        128           512               0.601                        0.614
+         64           256               0.491                        0.544
+         32           128               0.340                        0.444
+PCA 128, подогнанный по случайной половине статей: nDCG@10 0.611
+PCA 64, подогнанный по случайной половине статей: nDCG@10 0.539
+лучшая оценка на вопрос (медиана): float32 0.626, int8 0.626, биты статей x float-вопрос 9.773</code></pre>
+<p>Что видно. Отрезание хвоста у обычной модели до 256 чисел почти безвредно (0,641), но дальше качество падает быстро: 0,601 при 128 и 0,491 при 64. PCA той же длины теряет меньше: 0,614 при 128 и 0,544 при 64 — первые 128 главных направлений собирают 84% разброса базы. При честной подгонке по половине статей PCA почти не хуже (0,611 и 0,539), значит, выигрыш не от подгонки под тест. Любопытная деталь: PCA на полной длине 384 даёт 0,638, а не 0,648 — сам поворот ничего не меняет, но PCA сначала вычитает среднее, а после этого косинусы меняются; это та же история, что с вычитанием среднего перед бинаризацией на ступени 3. И про пороги: медиана лучшей оценки на вопрос у float32 и int8 одинакова (0,626), а у асимметричного двоичного варианта — 9,773. Порог, подобранный на точных векторах, к нему просто неприменим.</p>
+<p>Что делать на практике. Начинайте с int8 — это вчетверо меньше почти без потерь, что мы и увидели. Если нужно сильнее, берите биты в памяти и пересчёт ста-двухсот кандидатов по int8 с диска. Укорачивайте вектор, только если модель обучена матрёшкой (это написано в её описании), а для обычной — через PCA и с замером. И каждый раз мерьте на своих вопросах и пересматривайте пороги.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Отрезают хвост вектора у модели, которую не обучали матрёшкой, потому что «так делают с text-embedding-3»; без такого обучения первые координаты не важнее последних.</li>
+<li>Забывают заново нормировать укороченный вектор и сравнивают векторы разной длины.</li>
+<li>Оставляют старые пороги похожести после сжатия; фильтр «ответа нет» начинает срабатывать всегда или никогда.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Укорачивание вектора (truncation).</strong> Хранение только первых m координат с последующей нормировкой.</p>
+<p><strong>Обучение матрёшкой (Matryoshka Representation Learning).</strong> Обучение, при котором начальные куски вектора сами по себе годятся для поиска.</p>
+<p><strong>Метод главных компонент (PCA).</strong> Поворот пространства так, чтобы первые координаты шли вдоль направлений наибольшего разброса данных.</p>
+<p><strong>Главное направление.</strong> Направление, вдоль которого векторы базы разбросаны сильнее всего.</p>
+<p><strong>Доля разброса.</strong> Какая часть общего разброса данных приходится на выбранные направления.</p>
+<p><strong>Порог похожести.</strong> Число, ниже которого результат считают нерелевантным; зависит от шкалы оценок.</p>
+<p><strong>Подгонка под тест.</strong> Настройка метода на тех же данных, на которых его потом проверяют; завышает результат.</p>
+          </div>
+        </details>
+      </div>
+      <p class="bio" style="margin-top:1.4rem;text-align:center">Словарь целиком — <a href="/slovar">/slovar</a>, новости — <a href="/novosti">/novosti</a>. Все дорожки — <a href="/put">/put</a>.</p>
+    </section>
+    <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
+  </div>
+  <script src="js/app.js?v=ui20261019ux" defer></script>
+</body>
+</html>
