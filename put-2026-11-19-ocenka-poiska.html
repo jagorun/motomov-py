@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Как честно измерить качество поиска: метрики, разброс и проверка без ручной разметки · py.motomov.ru</title>
+  <meta name="description" content="Пять ступеней: испытательный набор и метрики поиска — precision, recall, MRR, nDCG; что прячет одно среднее — нули и единицы, победы и поражения по вопросам; шум — бутстрэп, парная проверка и сколько нужно вопросов; синтетические вопросы и утечка; модель-судья, её перекос в пользу своей пересортировки и дыры в разметке. Все цифры — из наших запусков на наборе SciFact.">
+  <meta name="theme-color" content="#f3efe6">
+  <link rel="icon" href="https://www.motomov.ru/favicon.png" type="image/png">
+  <link rel="canonical" href="https://py.motomov.ru/put-2026-11-19-ocenka-poiska">
+  <link rel="stylesheet" href="styles.css?v=ui20261019ux">
+  <script>try{var d=document.documentElement,s=localStorage;if(s.getItem("moto-theme")==="dark")d.dataset.theme="dark";var f=s.getItem("moto-fs");if(f&&f!=="1")d.dataset.fs=f;if(s.getItem("moto-comfy")==="1")d.dataset.comfy="1"}catch(e){}</script>
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="wrap">
+    <header class="site-header">
+      <a class="brand" href="novosti.html" aria-label="На главную: новости">
+        <img class="brand-logo" src="https://www.motomov.ru/logo.jpg" width="32" height="32" alt="">
+        <span class="brand-name">Moto<span class="brand-dot">·</span><span class="brand-py">py</span></span>
+      </a>
+      <nav class="nav" aria-label="Разделы сайта">
+        <a href="novosti.html">Новости</a><a href="metodichka.html">Методичка</a><a class="active" aria-current="page" href="put.html">Дорожка</a><a href="slovar.html">Словарь</a><a href="kb.html">База</a><a href="archive.html">Архив</a>
+      </nav>
+      <details class="nav-more">
+        <summary aria-label="Ещё разделы">Ещё <span aria-hidden="true">▾</span></summary>
+        <div class="nav-more-list"><a href="spravochnik.html">Справочник Python</a><a href="news.html">Python: уроки</a><a href="course.html">Курс</a><a href="slovar-python.html">Словарь Python</a><a href="youtube.html">YouTube</a><a href="index.html">Старт</a><a href="https://www.motomov.ru/">Визитка motomov.ru</a></div>
+      </details>
+    </header>
+    <header class="hero">
+      <span class="badge">дорожка · 19.11.2026 · оценка поиска</span>
+      <h1>Как честно измерить качество поиска: метрики, разброс и проверка без ручной разметки</h1>
+      <p class="bio">Пять прошлых дорожок — <a href="/put-2026-11-14-gibridnyj-poisk">гибридный поиск</a>, <a href="/put-2026-11-15-peresortirovka">пересортировка</a>, <a href="/put-2026-11-16-rasshirenie-zaprosa">расширение запроса</a>, <a href="/put-2026-11-17-raznoobrazie-vydachi">разнообразие выдачи</a> и <a href="/put-2026-11-18-szhatie-vektorov">сжатие векторов</a> — каждый раз заканчивались фразой «nDCG@10 стал таким-то». Сегодня разбираем сам градусник. Узкий вопрос дня: как понять, что один поиск действительно лучше другого, а не случайно выиграл на этих вопросах, и что делать, когда размеченных вопросов нет. Это оценка качества поиска (retrieval evaluation): испытательный набор, метрики, разброс и проверка без людей. В <a href="/put-2026-10-08-proverka-kachestva">дорожке про проверку модели</a> мы оценивали ответы модели целиком; здесь — только первый шаг RAG, поиск, у которого своя арифметика. Данные и модели те же, что в прошлые дни: набор SciFact из сборника BEIR (5183 аннотации научных статей, 300 проверочных утверждений с размеченными правильными статьями), двойной кодировщик all-MiniLM-L6-v2 и перекрёстный кодировщик ms-marco-MiniLM через ONNX Runtime на процессоре коробки. Сравниваем пять систем: BM25, векторы, гибрид RRF, двоичные векторы и векторы с пересортировкой первых 30. Все цифры ниже — из наших запусков.</p>
+      <p class="bio" style="margin-top:.6rem">Все дорожки — <a href="/put">/put</a>. Прошлая — <a href="/put-2026-11-18-szhatie-vektorov">сжатие векторов: int8, двоичные векторы и пересчёт кандидатов</a>.</p>
+    </header>
+    <section>
+      <div class="fold-list">
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">1</span>
+            <span class="fold-title">Испытательный набор и метрики: что именно мы меряем</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Любое изменение поиска — новая модель векторов, гибрид, пересортировка, сжатие — кто-то должен принять или отклонить. Если решать «на глаз» по пяти любимым вопросам, легко принять поломку за улучшение: на этих пяти стало лучше, а на сотне других хуже. Испытательный набор и метрика превращают «кажется, стало лучше» в число, которое можно сравнить со вчерашним и показать коллеге. Но число полезно, только если понимаешь, что именно оно считает: разные метрики награждают разное поведение, и одна и та же выдача может получить 0,1 по одной и 1,0 по другой.</p>
+<p><strong>Как это устроено.</strong> Испытательный набор (test collection) состоит из трёх частей: база документов, список вопросов и разметка — для каждого вопроса перечень документов, которые человек признал правильными ответами (по-английски эти метки называют qrels, query relevance judgments). Система поиска для каждого вопроса выдаёт упорядоченный список номеров документов; метрика сравнивает этот список с разметкой и даёт число от 0 до 1 на каждый вопрос, а итог — среднее по всем вопросам. Важная деталь: всё, чего нет в разметке, метрика считает неправильным, даже если человек просто не смотрел на этот документ. К этому мы вернёмся в пятой ступени.</p>
+<p>Основные метрики отвечают на разные вопросы. Точность на k (precision@k, P@10) — какая доля первых k мест занята правильными; она полезна, когда правильных много, но если на вопрос всего одна правильная статья, даже идеальный поиск получит P@10 = 0,1. Полнота на k (recall@k, R@10, R@100) — какую долю всех правильных мы нашли в первых k местах; для RAG полнота на глубине, которую мы отдаём модели, важнее всего: чего нет в контексте, того модель не прочитает. Средний обратный ранг (MRR, mean reciprocal rank) смотрит только на место первой правильной: на первом месте — 1, на втором — 1/2, на десятом — 1/10, дальше десятки — 0. Это метрика для сценария «пользователь читает сверху и останавливается на первом подходящем». Успех на 1 (success@1) — просто «правильная ли первая»; грубо, но понятно любому.</p>
+<p>nDCG@10 (нормированный дисконтированный суммарный выигрыш) учитывает все правильные в первой десятке и их места: каждая правильная на месте r приносит 1/log₂(r+1) — на первом месте 1, на втором 0,63, на десятом 0,29, — а сумма делится на лучшую возможную сумму для этого вопроса, чтобы максимум был 1. Отсюда «нормированный». Если разметка бывает не только «да/нет», а с оценками «отлично / частично», nDCG умеет учитывать и это. Поэтому nDCG@10 — главная метрика сборника BEIR, на котором выросли почти все сравнения моделей поиска, включая таблицу MTEB.</p>
+<p>Отличие от соседнего понятия. В <a href="/put-2026-10-08-proverka-kachestva">дорожке про проверку модели</a> мы оценивали конечный ответ: правильно ли модель решила задачу. Здесь меряем только первый шаг RAG — нашёл ли поиск нужные документы. Это разные поломки: хороший поиск не спасёт от модели, которая не умеет читать контекст, а лучшая модель не ответит, если поиск не принёс нужного куска. Поэтому в работе их меряют раздельно.</p>
+<p><strong>Подробный пример.</strong> Общий модуль lib.py — тот же, что в прошлые дни (обёртки моделей, BM25, загрузка SciFact). Новое — evlib.py с метриками одного вопроса и бутстрэпом, и подготовительный ex0_runs.py: он один раз прогоняет пять систем на 300 настоящих вопросах SciFact и на 300 синтетических (о них в четвёртой ступени) и сохраняет выдачи в runs.pkl, чтобы все остальные примеры работали за секунды. Системы: BM25 (поиск по словам), векторы (косинус all-MiniLM-L6-v2), гибрид RRF (склейка двух списков по местам с k = 60), биты (двоичные векторы из вчерашней дорожки) и векторы + пересортировка (первые 30 кандидатов перекрёстным кодировщиком ms-marco-MiniLM-L6-v2). Подготовка заняла на коробке 549 секунд, почти всё время — перекрёстный кодировщик на 22 283 парах «вопрос — статья».</p>
+<pre><code class="language-python">import json, time, math, re, numpy as np, onnxruntime as ort
+from tokenizers import Tokenizer
+from collections import Counter, defaultdict
+HERE = "/workspace/put-gen-1119"
+so = ort.SessionOptions(); so.intra_op_num_threads = 8
+
+class CrossEncoder:
+    """Перекрёстный кодировщик: вопрос и текст идут в модель ОДНОЙ строкой [CLS] вопрос [SEP] текст [SEP]."""
+    def __init__(self, path=f"{HERE}/models/ms", max_len=512):
+        self.tok = Tokenizer.from_file(f"{path}/tokenizer.json")
+        self.tok.enable_truncation(max_len, strategy="only_second")   # режем только текст, вопрос целиком
+        self.tok.enable_padding()
+        self.sess = ort.InferenceSession(f"{path}/model.onnx", so, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+    def score(self, query, docs, batch=32):
+        out = []
+        for s in range(0, len(docs), batch):
+            enc = self.tok.encode_batch([(query, d) for d in docs[s:s+batch]])
+            feed = {"input_ids": np.array([e.ids for e in enc], dtype=np.int64),
+                    "attention_mask": np.array([e.attention_mask for e in enc], dtype=np.int64),
+                    "token_type_ids": np.array([e.type_ids for e in enc], dtype=np.int64)}
+            out.append(self.sess.run(None, {k: v for k, v in feed.items() if k in self.names})[0][:, 0])
+        return np.concatenate(out)
+
+class BiEncoder:
+    """Двойной кодировщик: каждый текст отдельно -&gt; вектор (среднее по токенам), сравнение косинусом."""
+    def __init__(self, path=f"{HERE}/models/bi", max_len=256):
+        self.tok = Tokenizer.from_file(f"{path}/tokenizer.json")
+        self.tok.enable_truncation(max_len); self.tok.enable_padding()
+        self.sess = ort.InferenceSession(f"{path}/model.onnx", so, providers=["CPUExecutionProvider"])
+        self.names = [i.name for i in self.sess.get_inputs()]
+    def encode(self, texts, batch=64):
+        out = []
+        for s in range(0, len(texts), batch):
+            enc = self.tok.encode_batch(texts[s:s+batch])
+            ids = np.array([e.ids for e in enc], dtype=np.int64); m = np.array([e.attention_mask for e in enc], dtype=np.int64)
+            feed = {"input_ids": ids, "attention_mask": m, "token_type_ids": np.zeros_like(ids)}
+            h = self.sess.run(None, {k: v for k, v in feed.items() if k in self.names})[0]
+            v = (h * m[..., None]).sum(1) / m.sum(1, keepdims=True)
+            out.append(v / np.linalg.norm(v, axis=1, keepdims=True))
+        return np.concatenate(out).astype(np.float32)
+
+def words(t): return re.findall(r"\w+", t.lower())
+class BM25:
+    def __init__(self, docs, k1=1.2, b=0.75):
+        self.k1, self.b, self.N = k1, b, len(docs)
+        self.len = np.array([len(d) for d in docs], float); self.avg = self.len.mean()
+        self.post = defaultdict(list)
+        for i, d in enumerate(docs):
+            for w, c in Counter(d).items(): self.post[w].append((i, c))
+    def scores(self, q):
+        s = np.zeros(self.N)
+        for w in set(q):
+            p = self.post.get(w, []); n = len(p)
+            idf = math.log(1 + (self.N - n + 0.5) / (n + 0.5))
+            for i, tf in p:
+                s[i] += idf * tf * (self.k1 + 1) / (tf + self.k1 * (1 - self.b + self.b * self.len[i] / self.avg))
+        return s
+
+def ndcg10(ranked, rel):
+    """nDCG@10 для двоичных меток: сумма 1/log2(место+1) по правильным в первой десятке, делённая на лучшее возможное."""
+    dcg = sum(1 / math.log2(r + 2) for r, d in enumerate(ranked[:10]) if d in rel)
+    idcg = sum(1 / math.log2(r + 2) for r in range(min(len(rel), 10)))
+    return dcg / idcg
+def recall(ranked, rel, k): return len(set(ranked[:k]) &amp; rel) / len(rel)
+
+def load_scifact(split="test"):
+    corpus = [json.loads(l) for l in open(f"{HERE}/scifact/corpus.jsonl")]
+    queries = {q["_id"]: q["text"] for q in map(json.loads, open(f"{HERE}/scifact/queries.jsonl"))}
+    qrels = defaultdict(set)
+    for line in list(open(f"{HERE}/scifact/qrels/{split}.tsv"))[1:]:
+        q, d, s = line.split("\t")
+        if int(s) &gt; 0: qrels[q].add(d)
+    return corpus, queries, dict(qrels)
+
+# --- добавлено для дорожки 16.11: стоп-слова, BM25 с весами слов, RM3, кэш векторов ---
+STOP = set("""a an the of in on at to for from by with without and or not no nor is are was were be been being
+has have had do does did this that these those it its as than then there their they them we our you your he she his her
+which who whom what when where why how can could may might will would shall should into over under between
+during after before about above below up down out off also such both each other more most less least very
+via among within per however while if but so all any some only same own just""".split())
+def terms(t): return [w for w in words(t) if w not in STOP and len(w) &gt; 1]
+
+def bm25_weighted(bm, qw):
+    """BM25, где у каждого слова запроса свой вес (у обычного запроса вес = сколько раз слово встретилось)."""
+    s = np.zeros(bm.N)
+    for w, wt in qw.items():
+        p = bm.post.get(w, []); n = len(p)
+        if not n: continue
+        idf = math.log(1 + (bm.N - n + 0.5) / (n + 0.5))
+        for i, tf in p:
+            s[i] += wt * idf * tf * (bm.k1 + 1) / (tf + bm.k1 * (1 - bm.b + bm.b * bm.len[i] / bm.avg))
+    return s
+
+def rm3(bm, docs_tf, q_terms, first_scores, k=10, m=20, lam=0.5, uniform=False):
+    """RM3: берём k лучших документов первого прохода, считаем, какие слова в них частые
+    (с учётом веса документа), берём m лучших слов и смешиваем с исходным запросом: lam — доля исходного."""
+    top = np.argsort(-first_scores)[:k]
+    sc = first_scores[top]; w_doc = np.ones(k) if uniform else np.exp(sc - sc.max()); w_doc /= w_doc.sum()   # вес документа ~ exp(оценка) или поровну
+    rel = Counter()
+    for wd, i in zip(w_doc, top):
+        tf = docs_tf[i]; L = sum(tf.values())
+        for w, c in tf.items():
+            if w not in STOP and len(w) &gt; 1 and not w.isdigit(): rel[w] += wd * c / L
+    exp = dict(rel.most_common(m)); z = sum(exp.values())
+    orig = Counter(q_terms); zq = sum(orig.values())
+    qw = defaultdict(float)
+    for w, c in orig.items(): qw[w] += lam * c / zq
+    for w, v in exp.items(): qw[w] += (1 - lam) * v / z
+    return dict(qw), exp
+
+def load_all():
+    corpus, queries, qt = load_scifact("test"); _, _, qtr = load_scifact("train")
+    ids = [d["_id"] for d in corpus]; texts = [(d["title"] + ". " + d["text"]).strip() for d in corpus]
+    return ids, texts, queries, qt, qtr
+
+def corpus_vectors(texts):
+    import os
+    f = f"{HERE}/corpus_vec.npy"
+    if os.path.exists(f): return np.load(f)
+    D = BiEncoder().encode(texts); np.save(f, D); return D
+
+# --- добавлено для дорожки 17.11: разнообразие выдачи, MMR ---
+def mmr(rel, V, cand, k=10, lam=0.7):
+    """MMR: жадно берём по одному документу. Очки кандидата = lam * близость к вопросу
+    - (1 - lam) * наибольшая близость к уже взятым. rel — близость к вопросу, V — нормированные векторы."""
+    cand = list(cand); chosen = []; maxsim = np.full(len(cand), -np.inf)
+    Vc = V[cand]; r = np.array([rel[i] for i in cand], float)
+    while len(chosen) &lt; min(k, len(cand)):
+        pen = np.where(np.isfinite(maxsim), maxsim, 0.0)
+        s = lam * r - (1 - lam) * pen
+        for j in chosen: s[j] = -np.inf
+        j = int(np.argmax(s)); chosen.append(j)
+        maxsim = np.maximum(maxsim, Vc @ Vc[j])
+    return [cand[j] for j in chosen]
+
+# --- добавлено для дорожки 18.11: сжатие векторов (int8, биты, укорачивание) ---
+def query_vectors(qs, queries):
+    """Векторы тестовых вопросов, тоже с кэшем на диске."""
+    import os
+    f = f"{HERE}/query_vec.npy"
+    if os.path.exists(f): return np.load(f)
+    Q = BiEncoder().encode([queries[q] for q in qs]); np.save(f, Q); return Q
+
+def evaluate(score_rows, ids, qs, qt):
+    """score_rows(n) -&gt; оценки всех статей для вопроса n. Возвращает средние nDCG@10, recall@10, recall@100."""
+    nd, r10, r100 = [], [], []
+    for n, q in enumerate(qs):
+        r = [ids[i] for i in np.argsort(-score_rows(n))[:100]]
+        nd.append(ndcg10(r, qt[q])); r10.append(recall(r, qt[q], 10)); r100.append(recall(r, qt[q], 100))
+    return np.mean(nd), np.mean(r10), np.mean(r100)
+
+def int8_quantize(X, lo, hi):
+    """Скалярное квантование: отрезок [lo, hi] по каждой координате делим на 255 ступенек, число -&gt; номер ступеньки 0..255."""
+    step = (hi - lo) / 255.0
+    return np.clip(np.round((X - lo) / step), 0, 255).astype(np.uint8), step
+def int8_restore(codes, lo, step):
+    """Обратно: номер ступеньки -&gt; середина ступеньки (приближённое число)."""
+    return codes.astype(np.float32) * step + lo
+
+def to_bits(X, center=None):
+    """Двоичное квантование: от каждого числа остаётся знак (1, если больше центра). 8 знаков упаковываем в байт."""
+    if center is not None: X = X - center
+    return np.packbits(X &gt; 0, axis=1)
+POP = np.array([bin(i).count("1") for i in range(256)], dtype=np.uint8)
+def hamming(qbits, Dbits):
+    """Расстояние Хэмминга: в скольких битах вектор вопроса и вектор статьи расходятся (XOR и подсчёт единиц)."""
+    return POP[np.bitwise_xor(Dbits, qbits)].sum(1, dtype=np.int32)</code></pre>
+<pre><code class="language-python"># Сегодняшние добавления: метрики одного вопроса, загрузка выдач и бутстрэп.
+from lib import *
+import pickle
+ORDER = ["BM25", "векторы", "гибрид RRF", "биты", "векторы + пересортировка"]
+def per_query(ranked, rel):
+    """Все метрики для одного вопроса. ranked — номера статей по порядку, rel — множество правильных номеров."""
+    hits = [d in rel for d in ranked]
+    first = next((r for r, h in enumerate(hits[:10]) if h), None)          # место первой правильной в десятке
+    dcg = sum(1 / math.log2(r + 2) for r, h in enumerate(hits[:10]) if h)
+    idcg = sum(1 / math.log2(r + 2) for r in range(min(len(rel), 10)))
+    return {"P@10": sum(hits[:10]) / 10, "R@10": sum(hits[:10]) / len(rel), "R@100": sum(hits[:100]) / len(rel),
+            "MRR@10": 0 if first is None else 1 / (first + 1), "nDCG@10": dcg / idcg if idcg else 0, "успех@1": float(hits[0])}
+def table(run, rels):
+    """run[система] — список выдач по вопросам; возвращает {система: {метрика: массив значений по вопросам}}."""
+    out = {}
+    for name, lists in run.items():
+        rows = [per_query(L, rels[n]) for n, L in enumerate(lists)]
+        out[name] = {m: np.array([r[m] for r in rows]) for m in rows[0]}
+    return out
+def load():
+    R = pickle.load(open("runs.pkl", "rb"))
+    ids, texts, queries, qt, _ = load_all(); pos = {d: i for i, d in enumerate(ids)}
+    rels = [{pos[d] for d in qt[q]} for q in R["qs"]]
+    return R, ids, texts, queries, rels
+def boot_ci(x, B=10000, seed=0):
+    """Бутстрэп: 10 000 раз набираем 300 вопросов с возвращением и смотрим, как гуляет среднее."""
+    rng = np.random.default_rng(seed); idx = rng.integers(0, len(x), (B, len(x)))
+    m = x[idx].mean(1); return np.percentile(m, 2.5), np.percentile(m, 97.5)</code></pre>
+<pre><code class="language-python"># Подготовка (запускается один раз): выдачи пяти поисковых систем на 300 настоящих вопросах SciFact
+# и на 300 «синтетических» вопросах (заголовок статьи как вопрос), плюс оценки перекрёстного кодировщика
+# (для синтетики — по тексту статьи без заголовка) для всех пар «вопрос — статья», которые попали в первую десятку хоть одной системы. Всё сохраняем в runs.pkl.
+from lib import *
+import pickle, os
+ids, texts, queries, qt, _ = load_all()
+qs = sorted(qt); D = corpus_vectors(texts); Q = query_vectors(qs, queries)
+titles = [d["title"] for d in json.loads("[" + ",".join(open(f"{HERE}/scifact/corpus.jsonl")) + "]")]
+bodies = [d["text"] for d in json.loads("[" + ",".join(open(f"{HERE}/scifact/corpus.jsonl")) + "]")]
+bi, ce = BiEncoder(), CrossEncoder()
+if not os.path.exists("body_vec.npy"): np.save("body_vec.npy", bi.encode(bodies))   # векторы статей БЕЗ заголовка
+B = np.load("body_vec.npy")
+def top(s, k=100): return list(np.argsort(-s, kind="stable")[:k])
+def rrf(lists, k=60):
+    sc = defaultdict(float)
+    for L in lists:
+        for r, d in enumerate(L): sc[d] += 1 / (k + r + 1)
+    return sorted(sc, key=lambda d: -sc[d])[:100]
+CE = {}
+def ce_scores(qtext, cand, docs):
+    need = [i for i in cand if (qtext, i) not in CE]
+    if need:
+        for i, s in zip(need, ce.score(qtext, [docs[i] for i in need])): CE[(qtext, i)] = float(s)
+    return [CE[(qtext, i)] for i in cand]
+def systems(qtexts, qvecs, Dm, bm, docs, depth=30):
+    bits = to_bits(Dm); run = defaultdict(list)
+    for n, (qtext, qv) in enumerate(zip(qtexts, qvecs)):
+        b = top(bm.scores(words(qtext))); d = top(Dm @ qv)
+        h = top(-hamming(to_bits(qv[None])[0], bits).astype(float))
+        sc = ce_scores(qtext, d[:depth], docs); rr = [d[:depth][j] for j in np.argsort(-np.array(sc), kind="stable")] + d[depth:]
+        run["BM25"].append(b); run["векторы"].append(d); run["гибрид RRF"].append(rrf([b, d]))
+        run["биты"].append(h); run["векторы + пересортировка"].append(rr)
+        for name in run: ce_scores(qtext, run[name][n][:10], docs)          # судье нужны все первые десятки
+        if n % 50 == 0: print(n, len(CE), flush=True)
+    return dict(run)
+t = time.time()
+real = systems([queries[q] for q in qs], Q, D, BM25([words(x) for x in texts]), texts)
+print("настоящие вопросы готовы", round(time.time() - t), "с", flush=True)
+rng = np.random.default_rng(0)
+pool = [i for i in range(len(texts)) if len(words(titles[i])) &gt;= 5 and len(bodies[i]) &gt; 200]
+syn = sorted(rng.choice(pool, 300, replace=False).tolist())
+SQ = bi.encode([titles[i] for i in syn])
+synth = systems([titles[i] for i in syn], SQ, B, BM25([words(x) for x in bodies]), bodies)
+bm_full = BM25([words(x) for x in texts])
+leak = {"BM25": [top(bm_full.scores(words(titles[i]))) for i in syn], "векторы": [top(D @ v) for v in SQ]}
+print("синтетика готова", round(time.time() - t), "с; пар для судьи:", len(CE))
+pickle.dump(dict(qs=qs, real=real, syn=syn, synth=synth, leak=leak, CE=CE, titles=titles), open("runs.pkl", "wb"))</code></pre>
+<pre><code class="language-python"># Ступень 1: испытательный набор и метрики. Пять систем поиска на 300 вопросах SciFact.
+from evlib import *
+R, ids, texts, queries, rels = load()
+print(f"вопросов: {len(rels)}; правильных статей на вопрос: в среднем {np.mean([len(r) for r in rels]):.2f};",
+      "распределение:", dict(sorted(Counter(len(r) for r in rels).items())))
+# один вопрос под лупой: где стоят правильные статьи и как из этого получаются числа
+n = next(n for n, r in enumerate(rels) if len(r) == 2 and len(set(R["real"]["векторы"][n][:10]) &amp; r) == 1)
+L = R["real"]["векторы"][n]
+print(f"\nвопрос: «{queries[R['qs'][n]]}»; правильных статей: {len(rels[n])}")
+for r, d in enumerate(L[:10]): print(f"  место {r+1:2d}: {'✓' if d in rels[n] else '·'}  {texts[d][:70]}")
+miss = [L.index(d) + 1 if d in L else '&gt;100' for d in rels[n] if d not in L[:10]]
+print("  вторая правильная статья стоит на месте:", miss)
+print("  метрики этого вопроса:", {k: round(v, 3) for k, v in per_query(L, rels[n]).items()})
+T = table(R["real"], rels)
+print("\nсредние по 300 вопросам:")
+print(f"{'система':26s}" + "".join(f"{m:&gt;9s}" for m in T["BM25"]))
+for name in ORDER: print(f"{name:26s}" + "".join(f"{T[name][m].mean():9.3f}" for m in T[name]))
+print(f"\nпотолок P@10 при наших метках: {np.mean([min(len(r), 10) / 10 for r in rels]):.3f} (даже идеальный поиск)")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">вопросов: 300; правильных статей на вопрос: в среднем 1.13; распределение: {1: 277, 2: 14, 3: 4, 4: 3, 5: 2}
+
+вопрос: «Replacement of histone H2A with H2A.Z slows gene activation in yeasts by stabilizing +1 nucleosomes.»; правильных статей: 2
+  место  1: ·  Stepwise Histone Replacement by SWR1 Requires Dual Activation with His
+  место  2: ·  Variant Histone H2A.Z Is Globally Localized to the Promoters of Inacti
+  место  3: ·  Global Regulation of H2A.Z Localization by the INO80 Chromatin-Remodel
+  место  4: ·  Histone Variant H2A.Z Marks the 5′ Ends of Both Active and Inactive Ge
+  место  5: ·  Histones are incorporated in trans during reassembly of the yeast PHO5
+  место  6: ·  Histone acetylation and deacetylation in yeast. Histone acetylation an
+  место  7: ·  Genomewide analysis of nucleosome density histone acetylation and HDAC
+  место  8: ·  Preferential occupancy of histone variant H2AZ at inactive promoters i
+  место  9: ·  Swc2 is a widely conserved H2AZ-binding module essential for ATP-depen
+  место 10: ✓  Genome-Wide Dynamics of Htz1, a Histone H2A Variant that Poises Repres
+  вторая правильная статья стоит на месте: [20]
+  метрики этого вопроса: {'P@10': 0.1, 'R@10': 0.5, 'R@100': 1.0, 'MRR@10': 0.1, 'nDCG@10': 0.177, 'успех@1': 0.0}
+
+средние по 300 вопросам:
+система                        P@10     R@10    R@100   MRR@10  nDCG@10  успех@1
+BM25                          0.087    0.791    0.886    0.628    0.662    0.533
+векторы                       0.089    0.788    0.925    0.607    0.648    0.503
+гибрид RRF                    0.091    0.809    0.955    0.654    0.687    0.560
+биты                          0.082    0.726    0.891    0.535    0.574    0.440
+векторы + пересортировка      0.092    0.816    0.925    0.661    0.692    0.583
+
+потолок P@10 при наших метках: 0.113 (даже идеальный поиск)</code></pre>
+<p>Что видно. У 277 вопросов из 300 ровно одна правильная статья, поэтому P@10 у всех систем около 0,09 при потолке 0,113 — эта метрика здесь почти ничего не различает. Разбор одного вопроса показывает, как одна выдача даёт совсем разные числа: правильная статья на десятом месте, вторая — на двадцатом, и получилось P@10 = 0,1, R@10 = 0,5, R@100 = 1,0, MRR = 0,1, nDCG@10 = 0,177. Заметьте и девять статей выше неё: почти все про гистоны и их вариант H2A.Z — для человека многие выглядят подходящими, но в разметке их нет, и метрика считает их ошибками. По средним лучшая — векторы + пересортировка (nDCG@10 0,692), за ней гибрид (0,687); по R@100 картина другая: гибрид 0,955, а пересортировка равна векторам (0,925) — она переставляет только первые 30 и не может вытащить то, чего в них нет.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Берут P@10 там, где у вопроса одна-две правильные статьи. Потолок метрики выходит около 0,1, и любые различия тонут в округлении.</li>
+<li>Меряют R@100, а модели отдают пять кусков. Полнота на глубине, которой никто не пользуется, красиво растёт и ничего не говорит о качестве ответа; меряйте на той глубине, которую реально кладёте в контекст.</li>
+<li>Сравнивают числа из разных наборов или с разными разметками («у нас nDCG 0,7, а в статье 0,5»). Метрика имеет смысл только относительно своего набора вопросов и своей разметки.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Испытательный набор (test collection).</strong> База документов, вопросы и разметка правильных ответов к ним.</p>
+<p><strong>Разметка (qrels).</strong> Для каждого вопроса — список документов, которые человек признал правильными.</p>
+<p><strong>Точность на k (precision@k).</strong> Доля правильных среди первых k мест выдачи.</p>
+<p><strong>Полнота на k (recall@k).</strong> Доля всех правильных документов вопроса, попавших в первые k мест.</p>
+<p><strong>Средний обратный ранг (MRR).</strong> Среднее по вопросам от 1/место первой правильной; ноль, если её нет в отсечке.</p>
+<p><strong>nDCG@10.</strong> Сумма 1/log₂(место+1) по правильным в десятке, делённая на лучшую возможную сумму.</p>
+<p><strong>Успех на 1 (success@1).</strong> Доля вопросов, у которых правильная стоит на первом месте.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">2</span>
+            <span class="fold-title">Что прячет одно среднее: смотрим на вопросы по отдельности</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Среднее по 300 вопросам — одно число, и за ним может скрываться что угодно: система стала чуть лучше везде, или сильно лучше на двадцати вопросах и заметно хуже на десяти. Для продукта это разные истории. Во втором случае кто-то из пользователей получит поломку, которой раньше не было, — и жалоба придёт именно от него. Поэтому перед тем как радоваться приросту среднего, смотрят на распределение по вопросам и на счёт «выиграл / ничья / проиграл».</p>
+<p><strong>Как это устроено.</strong> Метрика считается для каждого вопроса отдельно, и эти числа можно разглядывать как обычные данные. Для набора с одной правильной статьёй на вопрос nDCG@10 устроен почти как переключатель: если статья на первом месте — 1, если её нет в десятке — 0, а между ними лишь девять промежуточных значений (0,63 за второе место, 0,5 за третье и так далее). Поэтому распределение получается двугорбым: много нулей, много единиц и немного середины. Среднее такого распределения плохо описывает «типичный вопрос»: медиана (значение посередине упорядоченного списка) может быть равна 1, а среднее — 0,7.</p>
+<p>Сравнение двух систем лучше всего делать попарно (paired comparison): у каждого вопроса считаем разность «новая минус старая» и смотрим на эти 300 разностей. Это честнее, чем сравнивать два средних, потому что трудность вопроса одинакова для обеих систем и вычитается: трудный вопрос плох у обеих, лёгкий хорош у обеих, а разность показывает именно вклад изменения. Счёт «выиграл / ничья / проиграл» — самый простой отчёт по разностям; ещё полезно посмотреть, какую часть прироста дали самые крупные изменения, — так видно, держится ли выигрыш на широком фронте или на горстке вопросов.</p>
+<p>Третий вопрос — согласны ли метрики между собой. Если пять систем выстраиваются в один и тот же порядок по nDCG, MRR и успеху на 1, выбор метрики не важен. Если порядок меняется, значит, системы различаются поведением: одна чаще ставит правильную первой, другая чаще находит её где-то в списке. Тогда выбирают метрику под сценарий, а не ту, где новая система выглядит лучше.</p>
+<p>Отличие от соседнего понятия. Анализ ошибок (error analysis) — это чтение конкретных проигранных вопросов глазами; здесь мы делаем шаг перед ним — находим, какие вопросы стоит прочитать. Список «пересортировка проиграла на этих 47 вопросах» — лучший вход в анализ ошибок.</p>
+<p><strong>Подробный пример.</strong> Для систем из первой ступени смотрим долю нулей и единиц, медиану и среднее; затем считаем выигрыши и проигрыши каждой системы против «векторов» и сколько из разницы средних дают десять самых крупных плюсов и десять самых крупных минусов; в конце выстраиваем системы по пяти метрикам.</p>
+<pre><code class="language-python"># Ступень 2: что прячет одно среднее. Распределение по вопросам, победы и поражения, согласие метрик.
+from evlib import *
+R, ids, texts, queries, rels = load(); T = table(R["real"], rels)
+for name in ["векторы", "векторы + пересортировка"]:
+    x = T[name]["nDCG@10"]
+    print(f"{name}: nDCG@10 = 0 у {np.mean(x == 0)*100:.0f}% вопросов, = 1 у {np.mean(x &gt;= 0.999)*100:.0f}%, "
+          f"между — у {np.mean((x &gt; 0) &amp; (x &lt; 0.999))*100:.0f}%; медиана {np.median(x):.3f}, среднее {x.mean():.3f}")
+print("\nпопарно с «векторами» по nDCG@10 (выигрыш / ничья / проигрыш, число вопросов):")
+base = T["векторы"]["nDCG@10"]
+for name in ORDER:
+    if name == "векторы": continue
+    d = T[name]["nDCG@10"] - base
+    print(f"  {name:26s} +{np.sum(d &gt; 1e-9):3d} / ={np.sum(np.abs(d) &lt;= 1e-9):3d} / -{np.sum(d &lt; -1e-9):3d}"
+          f"   разница средних {d.mean():+.3f}; из неё на 10 самых крупных изменений: {np.sort(d)[::-1][:10].sum()/len(d):+.3f} / {np.sort(d)[:10].sum()/len(d):+.3f}")
+print("\nпорядок систем по разным метрикам (лучшая первой):")
+for m in ["nDCG@10", "MRR@10", "успех@1", "R@10", "R@100"]:
+    print(f"  {m:8s}: " + " &gt; ".join(sorted(ORDER, key=lambda s: -T[s][m].mean())))</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">векторы: nDCG@10 = 0 у 20% вопросов, = 1 у 48%, между — у 32%; медиана 0.782, среднее 0.648
+векторы + пересортировка: nDCG@10 = 0 у 17% вопросов, = 1 у 54%, между — у 29%; медиана 1.000, среднее 0.692
+
+попарно с «векторами» по nDCG@10 (выигрыш / ничья / проигрыш, число вопросов):
+  BM25                       + 74 / =159 / - 67   разница средних +0.013; из неё на 10 самых крупных изменений: +0.029 / -0.028
+  гибрид RRF                 + 86 / =178 / - 36   разница средних +0.039; из неё на 10 самых крупных изменений: +0.020 / -0.023
+  биты                       + 22 / =188 / - 90   разница средних -0.075; из неё на 10 самых крупных изменений: +0.012 / -0.026
+  векторы + пересортировка   + 75 / =178 / - 47   разница средних +0.043; из неё на 10 самых крупных изменений: +0.028 / -0.019
+
+порядок систем по разным метрикам (лучшая первой):
+  nDCG@10 : векторы + пересортировка &gt; гибрид RRF &gt; BM25 &gt; векторы &gt; биты
+  MRR@10  : векторы + пересортировка &gt; гибрид RRF &gt; BM25 &gt; векторы &gt; биты
+  успех@1 : векторы + пересортировка &gt; гибрид RRF &gt; BM25 &gt; векторы &gt; биты
+  R@10    : векторы + пересортировка &gt; гибрид RRF &gt; BM25 &gt; векторы &gt; биты
+  R@100   : гибрид RRF &gt; векторы &gt; векторы + пересортировка &gt; биты &gt; BM25</code></pre>
+<p>Что видно. У «векторов» 20% вопросов с нулём и 48% с единицей; медиана 0,782 при среднем 0,648. У пересортировки медиана уже 1,0 — больше половины вопросов решены идеально, — а среднее 0,692 тянут вниз 17% нулей. Попарный счёт показывает разную природу прироста: пересортировка выиграла на 75 вопросах и проиграла на 47, то есть ломает она тоже немало; гибрид выиграл на 86 и проиграл только на 36 — он надёжнее, хотя прирост среднего почти такой же (+0,039 против +0,043). BM25 против векторов — 74 на 67: средние близки (+0,013), но это две разные системы, каждая хороша на своих вопросах, и именно поэтому гибрид их выигрывает. Десять крупнейших изменений дают у BM25 +0,029 и −0,028 — больше, чем вся разница средних: то есть «почти одинаково» здесь значит «сильно по-разному, но в сумме ноль». По первым четырём метрикам порядок одинаковый, а по R@100 он другой: гибрид первый, BM25 последний — глубоко BM25 находит хуже всех, хотя наверху ставит правильную чаще векторов.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Принимают изменение по приросту среднего, не посмотрев на проигрыши. +0,04 при 47 проигранных вопросах — это 47 пользователей, у которых стало хуже; их надо прочитать до выкатки.</li>
+<li>Сравнивают средние двух систем, посчитанные на разных подмножествах вопросов (например, у одной часть вопросов упала с ошибкой и выпала из подсчёта). Попарное сравнение возможно только на одних и тех же вопросах.</li>
+<li>Выбирают метрику после того, как увидели результаты. Метрику фиксируют заранее под сценарий: для RAG — полнота на реальной глубине контекста и nDCG, для «одной ссылки» — MRR или успех на 1.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Распределение по вопросам.</strong> Набор чисел метрики для каждого вопроса отдельно, а не только их среднее.</p>
+<p><strong>Медиана.</strong> Значение посередине упорядоченного списка; половина вопросов не хуже, половина не лучше.</p>
+<p><strong>Попарное сравнение (paired comparison).</strong> Сравнение двух систем через разности на одних и тех же вопросах.</p>
+<p><strong>Выигрыш / ничья / проигрыш (win/tie/loss).</strong> Сколько вопросов новая система улучшила, оставила как было и ухудшила.</p>
+<p><strong>Анализ ошибок (error analysis).</strong> Чтение конкретных проигранных вопросов, чтобы понять причину поломки.</p>
+<p><strong>Двугорбое распределение.</strong> Распределение с двумя пиками, здесь — у нуля и у единицы; среднее у него плохо описывает типичный случай.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">3</span>
+            <span class="fold-title">Шум: доверительный интервал, парная проверка и сколько нужно вопросов</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> 300 вопросов — это выборка из всех вопросов, которые когда-нибудь зададут пользователи. Возьми другие 300 — средние будут другими, и разница между системами тоже. Вопрос «стала ли система лучше» на самом деле звучит так: «если бы вопросы были другими, сохранился бы выигрыш?». Без ответа на него команда месяцами принимает и откатывает изменения, которые на деле ничего не меняют, а потом удивляется, почему продукт не становится лучше.</p>
+<p><strong>Как это устроено.</strong> Самый простой способ оценить разброс — бутстрэп (bootstrap): из наших 300 вопросов много раз (у нас 10 000) набираем новые 300 «с возвращением» — какой-то вопрос попадёт дважды, какой-то ни разу — и каждый раз считаем среднее. Средние будут гулять; отрезок, в который попали 95% из них, называют 95-процентным доверительным интервалом (confidence interval). Это не магия, а честное признание: на таком числе вопросов среднее известно только с такой точностью. Ширина интервала падает примерно как 1/√(число вопросов): чтобы сузить его вдвое, нужно вчетверо больше вопросов.</p>
+<p>Для сравнения двух систем одиночные интервалы — плохой инструмент. Они почти всегда перекрываются, потому что в них сидит разброс трудности вопросов, а он у двух систем общий. Правильный путь — попарный: интервал считают для разностей по вопросам (из второй ступени). Ещё один популярный способ — проверка перестановкой (permutation test, randomization test): если бы системы на самом деле не отличались, то у каждого вопроса было бы всё равно, какую из двух оценок назвать «новой». Мы 10 000 раз случайно меняем местами оценки внутри каждого вопроса и смотрим, как часто случайная разница средних по модулю не меньше настоящей. Эта доля — p-значение (p-value): вероятность увидеть такую разницу, если её на самом деле нет. Обычно разницу считают надёжной при p меньше 0,05, но порог — договорённость, а не закон природы.</p>
+<p>Отсюда практический вопрос: сколько вопросов нужно? Ответ зависит от того, насколько велика разница и насколько она «шумная» (сколько вопросов меняется в обе стороны). Проверить можно прямо на своих данных: берём много случайных поднаборов по 30, 50, 100 вопросов и считаем, как часто на поднаборе новая система оказывается не лучше старой. Это и есть вероятность принять неверное решение, если бы у нас было только столько вопросов.</p>
+<p>Отличие от соседнего понятия. Статистическая значимость не равна важности: при 10 000 вопросах разница в 0,002 тоже станет «значимой», но пользователь её не заметит. Значимость отвечает на вопрос «не случайность ли это», а важность — «стоит ли оно цены»: лишнего времени на пересортировку или удвоения памяти индекса.</p>
+<p><strong>Подробный пример.</strong> Для каждой системы — nDCG@10 с 95-процентным интервалом бутстрэпа; затем для каждой разницы с «векторами» — интервал разницы, p-значение проверки перестановкой и перекрываются ли одиночные интервалы; в конце — 2000 случайных поднаборов разного размера для двух настоящих улучшений.</p>
+<pre><code class="language-python"># Ступень 3: шум. Доверительные интервалы бутстрэпом, парная проверка разниц и сколько нужно вопросов.
+from evlib import *
+R, ids, texts, queries, rels = load(); T = table(R["real"], rels)
+print("nDCG@10 и 95% интервал бутстрэпа (10 000 повторов):")
+for name in ORDER:
+    lo, hi = boot_ci(T[name]["nDCG@10"]); print(f"  {name:26s} {T[name]['nDCG@10'].mean():.3f}  [{lo:.3f}; {hi:.3f}]  ширина {hi-lo:.3f}")
+def paired(a, b, B=10000, seed=0):
+    """Парная проверка перестановкой: у каждого вопроса случайно меняем местами оценки двух систем.
+    p — доля перестановок, где разница средних по модулю не меньше настоящей."""
+    d = a - b; rng = np.random.default_rng(seed)
+    signs = rng.choice([-1, 1], (B, len(d))); fake = np.abs((signs * d).mean(1))
+    return d.mean(), np.mean(fake &gt;= abs(d.mean()) - 1e-12)
+print("\nразница с «векторами» и парная проверка (p — вероятность увидеть такую разницу случайно):")
+for name in ORDER:
+    if name == "векторы": continue
+    a, b = T[name]["nDCG@10"], T["векторы"]["nDCG@10"]
+    m, p = paired(a, b); lo, hi = boot_ci(a - b)
+    lo1, hi1 = boot_ci(a); lo2, hi2 = boot_ci(b)
+    print(f"  {name:26s} разница {m:+.3f}, 95% интервал разницы [{lo:+.3f}; {hi:+.3f}], p = {p:.4f};"
+          f" одиночные интервалы {'перекрываются' if lo1 &lt;= hi2 and lo2 &lt;= hi1 else 'не перекрываются'}")
+print("\nкак часто маленький набор вопросов покажет обратный порядок (2000 случайных поднаборов):")
+rng = np.random.default_rng(1)
+for a, b in [("векторы + пересортировка", "векторы"), ("гибрид RRF", "векторы")]:
+    d = T[a]["nDCG@10"] - T[b]["nDCG@10"]
+    row = []
+    for k in (30, 50, 100, 200):
+        means = np.array([d[rng.choice(len(d), k, replace=False)].mean() for _ in range(2000)])
+        row.append(f"{k} вопросов: {np.mean(means &lt;= 0)*100:4.1f}%")
+    print(f"  «{a}» не лучше «{b}»: " + "; ".join(row))</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">nDCG@10 и 95% интервал бутстрэпа (10 000 повторов):
+  BM25                       0.662  [0.616; 0.706]  ширина 0.091
+  векторы                    0.648  [0.603; 0.692]  ширина 0.090
+  гибрид RRF                 0.687  [0.642; 0.730]  ширина 0.089
+  биты                       0.574  [0.526; 0.619]  ширина 0.094
+  векторы + пересортировка   0.692  [0.646; 0.735]  ширина 0.089
+
+разница с «векторами» и парная проверка (p — вероятность увидеть такую разницу случайно):
+  BM25                       разница +0.013, 95% интервал разницы [-0.024; +0.051], p = 0.4905; одиночные интервалы перекрываются
+  гибрид RRF                 разница +0.039, 95% интервал разницы [+0.012; +0.066], p = 0.0050; одиночные интервалы перекрываются
+  биты                       разница -0.075, 95% интервал разницы [-0.100; -0.052], p = 0.0000; одиночные интервалы перекрываются
+  векторы + пересортировка   разница +0.043, 95% интервал разницы [+0.014; +0.073], p = 0.0032; одиночные интервалы перекрываются
+
+как часто маленький набор вопросов покажет обратный порядок (2000 случайных поднаборов):
+  «векторы + пересортировка» не лучше «векторы»: 30 вопросов: 16.6%; 50 вопросов:  9.1%; 100 вопросов:  1.9%; 200 вопросов:  0.0%
+  «гибрид RRF» не лучше «векторы»: 30 вопросов: 16.8%; 50 вопросов:  9.2%; 100 вопросов:  2.5%; 200 вопросов:  0.1%</code></pre>
+<p>Что видно. На 300 вопросах ширина 95-процентного интервала у каждой системы около 0,09: «векторы» — это где-то от 0,603 до 0,692. Одиночные интервалы перекрываются во всех четырёх сравнениях — даже для битов, которые проиграли 0,075, — то есть по ним мы не смогли бы различить ни одну пару. Попарная проверка различает: гибрид (+0,039, интервал разницы от +0,012 до +0,066, p = 0,005) и пересортировка (+0,043, p = 0,003) лучше по-настоящему, биты хуже по-настоящему (p меньше 1/10 000), а «BM25 лучше векторов на 0,013» — шум: p = 0,49, интервал разницы захватывает ноль с обеих сторон. Поднаборы показывают цену маленького набора: на 30 вопросах пересортировка в 16,6% случаев выглядит не лучше векторов, на 50 — в 9,1%, на 100 — в 1,9%, на 200 — ни разу из 2000. Для разниц порядка 0,04 сотни вопросов — минимум.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Сравнивают системы по перекрытию одиночных интервалов. Это сильно занижает чувствительность: у нас все четыре пары «перекрываются», хотя три разницы настоящие.</li>
+<li>Делают «быструю проверку» на 20–30 вопросах и принимают решение. При разнице около 0,04 каждое шестое такое решение будет неверным.</li>
+<li>Перебирают десятки настроек на одном наборе и выбирают лучшую по среднему. Самая удачная из двадцати случайных настроек выиграет и без настоящего улучшения; настройки подбирают на одних вопросах, а итог проверяют на других (так мы делали с RM3 в <a href="/put-2026-11-16-rasshirenie-zaprosa">дорожке про расширение запроса</a>).</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Бутстрэп (bootstrap).</strong> Многократный набор вопросов «с возвращением» из имеющихся, чтобы увидеть, как гуляет среднее.</p>
+<p><strong>Доверительный интервал (confidence interval).</strong> Отрезок, в который при повторных выборках попадает 95% средних.</p>
+<p><strong>Проверка перестановкой (permutation test).</strong> Случайный обмен оценками двух систем внутри каждого вопроса, чтобы узнать, какие разницы бывают «просто так».</p>
+<p><strong>p-значение (p-value).</strong> Вероятность увидеть разницу не меньше нашей, если на самом деле системы одинаковы.</p>
+<p><strong>Статистическая значимость.</strong> Уверенность, что разница не случайна; ничего не говорит о том, велика ли она.</p>
+<p><strong>Подбор на тесте (test set overfitting).</strong> Выбор настроек по тем же вопросам, на которых потом сообщают результат; итог получается завышенным.</p>
+<p><strong>Поднабор (subsample).</strong> Случайная часть вопросов, на которой проверяют, устойчив ли вывод.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">4</span>
+            <span class="fold-title">Вопросы без людей: синтетический набор и утечка</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> У SciFact разметку сделали учёные, а у вашей базы — документации компании, договоров, переписки — её нет ни у кого. Разметить 300 вопросов вручную — это несколько дней работы знающего человека, и делать это приходится каждый раз, когда база заметно меняется. Поэтому почти все команды начинают с синтетического набора (synthetic test set): вопросы делают из самих документов, и «правильным ответом» считается документ, из которого вопрос сделан. Это дёшево и масштабируется, но у такого градусника свои искажения, и их надо знать заранее.</p>
+<p><strong>Как это устроено.</strong> Шаги такие: выбираем случайные документы (лучше с учётом того, о чём реально спрашивают); для каждого делаем вопрос — заголовок, первую фразу или вопрос, который сформулировала языковая модель по тексту документа (в инструментах вроде Ragas и LlamaIndex это готовые функции генерации вопросов); правильным ответом объявляем исходный документ (или кусок). Дальше всё как в первой ступени: прогоняем системы и считаем метрики. Разметки людьми нет, но есть пары «вопрос — свой документ».</p>
+<p>Первое искажение — утечка (leakage): вопрос дословно взят из текста, который лежит в индексе. Тогда поиск находит документ просто по совпадению строки, и метрика меряет «умеет ли поиск найти цитату», а не «умеет ли он найти ответ». Лечится тем, что фрагмент, из которого сделан вопрос, убирают из индексируемого текста, или модель переформулирует вопрос своими словами. Второе искажение — лёгкость: синтетический вопрос почти всегда повторяет слова документа, а настоящий пользователь пишет своими словами, поэтому абсолютные числа на синтетике завышены, а разницы между системами сжаты. Третье — у каждого синтетического вопроса ровно один «правильный» документ, хотя по смыслу подходит и десяток соседних: всё остальное считается ошибкой.</p>
+<p>Поэтому на синтетике смотрят не на абсолютное число («у нас 0,95, отлично»), а на порядок систем: если он совпадает с порядком на небольшом наборе настоящих вопросов, синтетике можно доверять для быстрых сравнений. Если не совпадает, синтетика меряет что-то не то. Проверить совпадение порядка можно, посчитав, сколько пар систем упорядочены одинаково.</p>
+<p>Отличие от соседнего понятия. Синтетические данные для обучения (как в <a href="/put-2026-11-12-kontrastnoe-obuchenie">дорожке про контрастное обучение</a>) нужны, чтобы модель научилась; синтетический испытательный набор — чтобы её проверить. Если делать оба одним способом, проверка будет хвалить модель за умение решать именно такие вопросы.</p>
+<p><strong>Подробный пример.</strong> Берём 300 случайных статей SciFact (заголовок не короче пяти слов, текст длиннее 200 знаков) и используем заголовок как вопрос. Честный вариант: индекс построен только по тексту аннотаций без заголовков (отдельные векторы body_vec.npy и отдельный BM25), и пересортировщик тоже видит текст без заголовка. Вариант с утечкой: заголовок остаётся в индексируемом тексте, как у обычного SciFact. Сравниваем с настоящими вопросами и считаем, сколько слов вопроса встречается в правильной статье.</p>
+<pre><code class="language-python"># Ступень 4: вопросы без людей. Заголовок статьи как вопрос, правильный ответ — сама статья.
+from evlib import *
+R, ids, texts, queries, rels = load(); syn = R["syn"]; titles = R["titles"]
+srels = [{i} for i in syn]
+print("примеры синтетических вопросов:"); [print("  «" + titles[i] + "»") for i in syn[:3]]
+TS = table(R["synth"], srels); TR = table(R["real"], rels)
+print(f"\n{'система':26s}{'синт. nDCG@10':&gt;14s}{'синт. успех@1':&gt;14s}{'синт. R@100':&gt;12s}{'настоящ. nDCG@10':&gt;18s}")
+for name in ORDER:
+    print(f"{name:26s}{TS[name]['nDCG@10'].mean():14.3f}{TS[name]['успех@1'].mean():14.3f}{TS[name]['R@100'].mean():12.3f}{TR[name]['nDCG@10'].mean():18.3f}")
+rs = sorted(ORDER, key=lambda s: -TS[s]["nDCG@10"].mean()); rr = sorted(ORDER, key=lambda s: -TR[s]["nDCG@10"].mean())
+print("\nпорядок на синтетике :", " &gt; ".join(rs)); print("порядок на настоящих:", " &gt; ".join(rr))
+pairs = [(a, b) for i, a in enumerate(ORDER) for b in ORDER[i+1:]]
+agree = sum((TS[a]["nDCG@10"].mean() - TS[b]["nDCG@10"].mean()) * (TR[a]["nDCG@10"].mean() - TR[b]["nDCG@10"].mean()) &gt; 0 for a, b in pairs)
+print(f"пар систем, упорядоченных одинаково: {agree} из {len(pairs)}")
+TL = table(R["leak"], srels)
+print("\nутечка: заголовок оставили внутри индексируемого текста")
+for name in ["BM25", "векторы"]:
+    print(f"  {name:10s} успех@1 без утечки {TS[name]['успех@1'].mean():.3f}  → с утечкой {TL[name]['успех@1'].mean():.3f};"
+          f"  nDCG@10 {TS[name]['nDCG@10'].mean():.3f} → {TL[name]['nDCG@10'].mean():.3f}")
+lq = np.mean([len(words(titles[i])) for i in syn]); lr = np.mean([len(words(queries[q])) for q in R["qs"]])
+print(f"\nдлина вопроса в словах: синтетика {lq:.1f}, настоящие {lr:.1f}")
+ov = lambda q, d: len(set(words(q)) &amp; set(words(texts[d]))) / max(1, len(set(words(q))))
+print(f"доля слов вопроса, которые есть в правильной статье: синтетика {np.mean([ov(titles[i], i) for i in syn]):.2f} (по тексту без заголовка: "
+      f"{np.mean([len(set(words(titles[i])) &amp; set(words(texts[i][len(titles[i]):]))) / len(set(words(titles[i]))) for i in syn]):.2f}), "
+      f"настоящие {np.mean([np.mean([ov(queries[q], d) for d in rels[n]]) for n, q in enumerate(R['qs'])]):.2f}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">примеры синтетических вопросов:
+  «The journey of developing hematopoietic stem cells.»
+  «Effects of an opal termination codon preceding the nsP4 gene sequence in the O'Nyong-Nyong virus genome on Anopheles gambiae infectivity.»
+  «Mechanisms of Renal Cell Apoptosis Induced by Cyclosporine A: A Systematic Review of in vitro Studies»
+
+система                    синт. nDCG@10 синт. успех@1 синт. R@100  настоящ. nDCG@10
+BM25                               0.948         0.910       0.997             0.662
+векторы                            0.944         0.883       1.000             0.648
+гибрид RRF                         0.961         0.917       1.000             0.687
+биты                               0.912         0.840       0.997             0.574
+векторы + пересортировка           0.966         0.930       1.000             0.692
+
+порядок на синтетике : векторы + пересортировка &gt; гибрид RRF &gt; BM25 &gt; векторы &gt; биты
+порядок на настоящих: векторы + пересортировка &gt; гибрид RRF &gt; BM25 &gt; векторы &gt; биты
+пар систем, упорядоченных одинаково: 10 из 10
+
+утечка: заголовок оставили внутри индексируемого текста
+  BM25       успех@1 без утечки 0.910  → с утечкой 0.993;  nDCG@10 0.948 → 0.998
+  векторы    успех@1 без утечки 0.883  → с утечкой 0.967;  nDCG@10 0.944 → 0.986
+
+длина вопроса в словах: синтетика 13.9, настоящие 13.1
+доля слов вопроса, которые есть в правильной статье: синтетика 1.00 (по тексту без заголовка: 0.81), настоящие 0.58</code></pre>
+<p>Что видно. На синтетике все системы выглядят почти идеальными: nDCG@10 от 0,912 до 0,966 против 0,574–0,692 на настоящих вопросах. Разрыв между лучшей и худшей системой сжался с 0,118 до 0,054 — синтетика хуже различает системы. Зато порядок совпал полностью: все 10 пар систем упорядочены так же, как на настоящих вопросах. Причина лёгкости видна в последней строке: 81% слов заголовка есть в тексте аннотации даже без заголовка, а у настоящих утверждений — только 58% слов правильной статьи. Утечка добивает измерение: если заголовок оставить в индексе, успех на 1 у BM25 растёт с 0,910 до 0,993 — на 99% вопросов поиск просто находит строку, и разница между системами почти исчезает.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Делают вопросы из текста и не убирают этот текст из индекса. Метрика близка к 1 у любой системы и ничего не различает.</li>
+<li>Сообщают абсолютное число с синтетики как «качество поиска». На наших данных это 0,94 вместо 0,65; пользователи с настоящими вопросами увидят второе.</li>
+<li>Не сверяют синтетику с настоящими вопросами. Даже несколько десятков размеченных вручную настоящих вопросов дают грубую сверку порядка систем, а сотня и больше — надёжную (почему — в третьей ступени).</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Синтетический испытательный набор (synthetic test set).</strong> Вопросы, сделанные из самих документов базы, где правильный ответ — исходный документ.</p>
+<p><strong>Утечка (leakage).</strong> Ситуация, когда текст вопроса дословно лежит в индексе и поиск находит его по совпадению строки.</p>
+<p><strong>Псевдовопрос (pseudo-query).</strong> Заголовок, фраза или переформулировка из документа, используемая вместо настоящего вопроса.</p>
+<p><strong>Словарное перекрытие.</strong> Доля слов вопроса, которые встречаются в правильном документе; чем она выше, тем легче задача для BM25.</p>
+<p><strong>Согласие порядка.</strong> Сколько пар систем упорядочены одинаково на двух наборах вопросов.</p>
+<p><strong>Генерация вопросов моделью.</strong> Языковая модель читает документ и пишет вопрос, на который он отвечает; так устроены генераторы в Ragas и LlamaIndex.</p>
+          </div>
+        </details>
+        <details class="fold-item">
+          <summary>
+            <span class="fold-arrow" aria-hidden="true"></span>
+            <span class="fold-date">5</span>
+            <span class="fold-title">Модель-судья: где помогает, где подсуживает себе и где дыры в разметке</span>
+          </summary>
+          <div class="fold-body">
+<p><strong>Зачем это в работе.</strong> Второй способ обойтись без людей — попросить модель решить, подходит ли документ к вопросу. Сегодня так делают почти все: языковая модель-судья (LLM-as-a-judge) или перекрёстный кодировщик оценивают пары «вопрос — документ», и метрики считают по этим меткам. Это даёт разметку для любой базы за минуты. Но судья — тоже модель со своими ошибками, и самая неприятная из них — он особенно хвалит системы, которые похожи на него самого.</p>
+<p><strong>Как это устроено.</strong> Шаг первый — пул (pooling): судить все документы базы для каждого вопроса слишком дорого, поэтому берут объединение первых десяток всех сравниваемых систем и оценивают только его. Так же делают и с людьми на конференциях TREC — это классический способ разметки. Шаг второй — судья выдаёт оценку; для перекрёстного кодировщика это логит (число без верхней и нижней границы, чем больше, тем увереннее), и чтобы получить «да/нет», нужен порог. Шаг третий — по меткам судьи считают те же nDCG и MRR, что и по меткам людей.</p>
+<p>Насколько судья согласен с людьми, проверяют на вопросах, где разметка людей есть. Удобная мера — AUC (площадь под кривой ошибок): доля пар «правильная и неправильная статья», в которых судья поставил правильную выше. AUC 0,5 — судья угадывает, 1,0 — разделяет идеально. Порог при этом двигает две ошибки в разные стороны: низкий порог признаёт больше правильных, но и больше лишних, высокий — наоборот.</p>
+<p>Главная ловушка — перекос в свою пользу (self-preference bias). Если пересортировка и судья — одна и та же модель, то пересортировка по определению ставит наверх то, что нравится судье, и по меткам судьи получает почти идеальный результат, даже там, где люди с ней не согласны. С языковыми моделями то же самое: модель-судья завышает ответы своего семейства. Лечение — судья должен быть независимым от проверяемых систем: другая модель, а лучше выборочная сверка с людьми.</p>
+<p>Есть у судьи и полезная сторона: он находит дыры в разметке людей. Метки ставят по пулу тех систем, что были у разметчиков; документ, который никто тогда не нашёл, остаётся неразмеченным и считается ошибкой. Если судья уверенно ставит такой документ выше размеченного правильного, его стоит показать человеку: часто это настоящий правильный ответ, и тогда новая система наказана несправедливо. Отличие от соседнего понятия: пересортировка использует ту же модель, чтобы переставить выдачу для пользователя, а судья — чтобы поставить оценку системе; одна и та же модель в двух ролях сразу и есть источник перекоса.</p>
+<p><strong>Подробный пример.</strong> Судья — перекрёстный кодировщик ms-marco-MiniLM-L6-v2, тот же, что внутри системы «векторы + пересортировка» (специально, чтобы увидеть перекос). Пул — объединение первых десяток пяти систем. Сначала сверяем судью с разметкой: AUC и доли признанных при порогах −2, 0, +2, +4. Затем ставим порог 0, считаем nDCG@10 по меткам судьи и по меткам людей на одних и тех же вопросах. В конце ищем неразмеченные статьи, которые судья ставит выше всех размеченных правильных.</p>
+<pre><code class="language-python"># Ступень 5: модель-судья. Перекрёстный кодировщик ставит метки вместо людей; где он совпадает с разметкой и где врёт.
+from evlib import *
+R, ids, texts, queries, rels = load(); CE = R["CE"]; qs = R["qs"]
+pool = [sorted({d for name in ORDER for d in R["real"][name][n][:10]}) for n in range(len(qs))]
+print(f"пул для судьи: в среднем {np.mean([len(p) for p in pool]):.1f} статей на вопрос (объединение первых десяток пяти систем)")
+pos = np.array([CE[(queries[q], d)] for n, q in enumerate(qs) for d in pool[n] if d in rels[n]])
+neg = np.array([CE[(queries[q], d)] for n, q in enumerate(qs) for d in pool[n] if d not in rels[n]])
+auc = np.mean(pos[:, None] &gt; neg[None, :]) + 0.5 * np.mean(pos[:, None] == neg[None, :])
+print(f"оценка судьи: у размеченных правильных медиана {np.median(pos):+.2f}, у остальных {np.median(neg):+.2f}; "
+      f"AUC = {auc:.3f} (доля пар «правильная выше неправильной»)")
+for t in (-2, 0, 2, 4):
+    print(f"  порог {t:+d}: размеченных правильных судья признал {np.mean(pos &gt; t)*100:4.1f}%; "
+          f"неразмеченных признал правильными {np.mean(neg &gt; t)*100:4.1f}% ({np.sum(neg &gt; t)} статей)")
+t = 0
+jrels = [{d for d in pool[n] if CE[(queries[q], d)] &gt; t} for n, q in enumerate(qs)]
+print(f"вопросов, где ни одна размеченная правильная не попала в пул: {sum(not (set(p) &amp; r) for p, r in zip(pool, rels))}")
+print(f"\nс порогом {t}: судья нашёл в среднем {np.mean([len(r) for r in jrels]):.2f} «правильных» на вопрос; "
+      f"вопросов, где судья не признал ничего: {sum(len(r) == 0 for r in jrels)}")
+keep = [n for n in range(len(qs)) if jrels[n]]
+TH = table({k: [v[n] for n in keep] for k, v in R["real"].items()}, [rels[n] for n in keep])
+TJ = table({k: [v[n] for n in keep] for k, v in R["real"].items()}, [jrels[n] for n in keep])
+print(f"\nсравниваем на тех же {len(keep)} вопросах, где судья хоть что-то признал")
+print(f"{'система':26s}{'nDCG@10 люди':&gt;14s}{'nDCG@10 судья':&gt;15s}")
+for name in ORDER: print(f"{name:26s}{TH[name]['nDCG@10'].mean():14.3f}{TJ[name]['nDCG@10'].mean():15.3f}")
+print("порядок по людям:", " &gt; ".join(sorted(ORDER, key=lambda s: -TH[s]["nDCG@10"].mean())))
+print("порядок по судье:", " &gt; ".join(sorted(ORDER, key=lambda s: -TJ[s]["nDCG@10"].mean())))
+gh = TH["векторы + пересортировка"]["nDCG@10"].mean() - TH["векторы"]["nDCG@10"].mean()
+gj = TJ["векторы + пересортировка"]["nDCG@10"].mean() - TJ["векторы"]["nDCG@10"].mean()
+print(f"\nвыигрыш пересортировки над «векторами»: по людям {gh:+.3f}, по судье {gj:+.3f} — судья и пересортировщик одна и та же модель")
+# дыры в разметке: статьи, которые судья ставит ВЫШЕ размеченной правильной
+def best_labeled(n, q):
+    sc = [CE[(queries[q], r)] for r in rels[n] if (queries[q], r) in CE]
+    return max(sc) if sc else None                       # None — ни одна правильная не попала в пул
+holes = [(n, d) for n, q in enumerate(qs) if best_labeled(n, q) is not None
+         for d in pool[n] if d not in rels[n] and CE[(queries[q], d)] &gt; best_labeled(n, q)]
+print(f"неразмеченных статей, которые судья ставит выше всех размеченных правильных своего вопроса: {len(holes)} "
+      f"(в {len({n for n, _ in holes})} вопросах из {len(qs)})")
+strong = [(n, d) for n, d in holes if CE[(queries[qs[n]], d)] &gt; 2]
+print(f"из них судья уверенно (оценка &gt; +2) считает правильными: {len(strong)} статей в {len({n for n, _ in strong})} вопросах")
+n, d = strong[0]
+r = max((x for x in rels[n] if (queries[qs[n]], x) in CE), key=lambda x: CE[(queries[qs[n]], x)])
+print(f"пример: вопрос «{queries[qs[n]]}»\n  размеченная: {texts[r][:110]}\n  судья выше : {texts[d][:110]}")
+print(f"  оценки судьи: размеченная {CE[(queries[qs[n]], r)]:+.2f}, неразмеченная {CE[(queries[qs[n]], d)]:+.2f}")</code></pre>
+<p>У нас этот код напечатал:</p>
+<pre><code class="language-text">пул для судьи: в среднем 25.1 статей на вопрос (объединение первых десяток пяти систем)
+оценка судьи: у размеченных правильных медиана +2.69, у остальных -5.37; AUC = 0.880 (доля пар «правильная выше неправильной»)
+  порог -2: размеченных правильных судья признал 82.1%; неразмеченных признал правильными 21.3% (1533 статей)
+  порог +0: размеченных правильных судья признал 72.1%; неразмеченных признал правильными 11.2% (806 статей)
+  порог +2: размеченных правильных судья признал 57.5%; неразмеченных признал правильными  4.5% (322 статей)
+  порог +4: размеченных правильных судья признал 40.3%; неразмеченных признал правильными  1.5% (107 статей)
+вопросов, где ни одна размеченная правильная не попала в пул: 25
+
+с порогом 0: судья нашёл в среднем 3.43 «правильных» на вопрос; вопросов, где судья не признал ничего: 47
+
+сравниваем на тех же 253 вопросах, где судья хоть что-то признал
+система                     nDCG@10 люди  nDCG@10 судья
+BM25                               0.712          0.816
+векторы                            0.702          0.767
+гибрид RRF                         0.736          0.847
+биты                               0.634          0.659
+векторы + пересортировка           0.755          0.944
+порядок по людям: векторы + пересортировка &gt; гибрид RRF &gt; BM25 &gt; векторы &gt; биты
+порядок по судье: векторы + пересортировка &gt; гибрид RRF &gt; BM25 &gt; векторы &gt; биты
+
+выигрыш пересортировки над «векторами»: по людям +0.053, по судье +0.177 — судья и пересортировщик одна и та же модель
+неразмеченных статей, которые судья ставит выше всех размеченных правильных своего вопроса: 701 (в 109 вопросах из 300)
+из них судья уверенно (оценка &gt; +2) считает правильными: 110 статей в 48 вопросах
+пример: вопрос «Rapid phosphotransfer rates govern fidelity in two component systems»
+  размеченная: Using Structural Information to Change the Phosphotransfer Specificity of a Two-Component Chemotaxis Signallin
+  судья выше : Specificity Residues Determine Binding Affinity for Two-Component Signal Transduction Systems. UNLABELLED Two-
+  оценки судьи: размеченная +1.46, неразмеченная +3.60</code></pre>
+<p>Что видно. Судья неплохо отличает размеченные статьи: медиана оценки +2,69 против −5,37 у остальных, AUC 0,880. Но любой порог — компромисс: при пороге 0 он признаёт только 72% размеченных правильных и вдобавок 806 неразмеченных статей (11%), а у 47 вопросов из 300 не признаёт ничего. Порядок пяти систем по судье совпал с порядком по людям, зато величины разошлись: выигрыш пересортировки над «векторами» по людям +0,053, а по судье +0,177 — в три с лишним раза больше, потому что пересортировка и есть судья. Это и есть перекос в свою пользу. Дыры в разметке тоже видны: в 48 вопросах судья уверенно (оценка больше +2) ставит 110 неразмеченных статей выше размеченной правильной. В примере про скорость переноса фосфата в двухкомпонентных системах размеченная статья получила +1,46, а неразмеченная статья про остатки, задающие специфичность связывания в тех же системах, — +3,60; правильная ли она, решит только специалист, но смотреть на неё стоит.</p>
+<p><strong>Где обычно ошибаются.</strong></p>
+<ul>
+<li>Судят систему той же моделью, что стоит внутри неё. У нас это утроило выигрыш пересортировки; с языковыми моделями-судьями то же происходит с ответами их собственного семейства.</li>
+<li>Берут порог судьи «на глаз» (0 для логита или 0,5 для вероятности) и не сверяют с людьми. Порог меняет и долю признанных правильных, и число лишних в разы.</li>
+<li>Считают все неразмеченные документы неправильными и списывают новый поиск, который нашёл то, чего не видели разметчики. Документы, которые новая система поднимает высоко, а разметки у них нет, сначала показывают человеку.</li>
+</ul>
+<p><strong>Словарь ступени.</strong></p>
+<p><strong>Модель-судья (LLM-as-a-judge).</strong> Модель, которая вместо человека решает, подходит ли документ или ответ к вопросу.</p>
+<p><strong>Пул (pooling).</strong> Объединение первых мест нескольких систем; размечают только его, а не всю базу.</p>
+<p><strong>Логит.</strong> Сырая оценка модели без границ; чтобы получить «да/нет», нужен порог.</p>
+<p><strong>AUC.</strong> Доля пар «правильный и неправильный документ», где судья поставил правильный выше; 0,5 — угадывание, 1 — идеал.</p>
+<p><strong>Перекос в свою пользу (self-preference bias).</strong> Судья завышает оценки системам, которые устроены как он сам.</p>
+<p><strong>Дыра в разметке.</strong> Правильный документ, который разметчики не видели, поэтому метрика считает его ошибкой.</p>
+<p><strong>Неразмеченный документ (unjudged).</strong> Документ, для которого нет метки человека; по умолчанию метрики считают его неправильным.</p>
+          </div>
+        </details>
+      </div>
+      <p class="bio" style="margin-top:1.4rem;text-align:center">Словарь целиком — <a href="/slovar">/slovar</a>, новости — <a href="/novosti">/novosti</a>. Все дорожки — <a href="/put">/put</a>.</p>
+    </section>
+    <footer class="site"><a href="https://www.motomov.ru/">motomov.ru</a> · <a href="https://github.com/jagorun/motomov-py">репозиторий</a></footer>
+  </div>
+  <script src="js/app.js?v=ui20261019ux" defer></script>
+</body>
+</html>
