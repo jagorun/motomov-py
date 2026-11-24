@@ -720,7 +720,7 @@ function monthLabel(key) {
   return ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"][Number(m[2]) - 1] + " " + m[1];
 }
 async function loadNovosti() {
-  return loadFeed(document.getElementById("novosti-list"), { months: false, empty: '<div class="empty">Новостей пока нет. Утренняя сводка придёт в 07:00 по Москве.</div>' });
+  return loadFeed(document.getElementById("novosti-list"), { months: false, empty: '<div class="empty">Новостей пока нет.</div>' });
 }
 async function loadArchive() {
   return loadFeed(document.getElementById("archive-list"), { months: true, empty: '<div class="empty">Архив пока пуст.</div>' });
@@ -729,6 +729,7 @@ async function loadFeed(list, opts) {
   let items = [];
   try { [items] = await Promise.all([fetchJson("data/novosti.json"), feedDigestMeta()]); } catch (e) { items = []; }
   if (!Array.isArray(items) || !items.length) { list.innerHTML = opts.empty; return; }
+  try { vzFeedHero(items, opts); } catch (e) {}
   const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   const url0 = new URL(location.href);
   const months = Array.from(new Set(items.map(monthKey).filter(Boolean)));
@@ -809,7 +810,7 @@ async function loadFeed(list, opts) {
     const filteredNote = st.q.trim() || st.tag || st.slot || st.month;
     status.textContent = filteredNote
       ? `Найдено: ${filtered.length} ${ruPlural(filtered.length, "выпуск", "выпуска", "выпусков")} из ${items.length}`
-      : `Всего ${items.length} ${ruPlural(items.length, "выпуск", "выпуска", "выпусков")} · две сводки в день`;
+      : `Всего ${items.length} ${ruPlural(items.length, "выпуск", "выпуска", "выпусков")}`;
   }
   function feedEnsureMonths(arr) { return Promise.all(Array.from(new Set(arr.map(feedMonthOf))).map(feedDigestMonth)); }
   // чего нет в указателе (свежий выпуск до пересборки и т.п.) — догружаем сам выпуск, только для карточек на экране
@@ -1581,3 +1582,132 @@ function loadAiItem(id) {
   if (!/(^|\.)motomov\.ru$/.test(location.hostname)) return;
   document.querySelectorAll('a[href="index.html"]').forEach((a) => { a.setAttribute("href", "start"); });
 })();
+
+// ---- Скрытые разделы: давно не обновлялись, из меню убраны (страницы и данные на месте, открываются по прямой ссылке).
+// Вернуть раздел — удалить его из списка. ----
+const HIDDEN_SECTIONS = ["news", "course", "slovar-python", "youtube"];
+(function () {
+  const re = new RegExp("^(?:\\./|/)?(?:" + HIDDEN_SECTIONS.map((x) => x.replace(/-/g, "\\-")).join("|") + ")(?:\\.html)?(?:[?#].*)?$");
+  document.querySelectorAll(".site-header .nav a, .nav-more-list a").forEach((a) => {
+    if (!a.classList.contains("active") && re.test(a.getAttribute("href") || "")) a.remove();
+  });
+})();
+// ---- Стиль визитки motomov.ru: сетка, светящиеся пятна, курсор-свечение и карусель «Главное» как у афоризмов ----
+const VZ_REDUCE = !!(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches);
+(function () {
+  const b = document.body; if (!b || !b.classList.contains("vz")) return;
+  ["a", "b"].forEach((k) => { if (!b.querySelector(".bg-orb." + k)) { const o = document.createElement("div"); o.className = "bg-orb " + k; o.setAttribute("aria-hidden", "true"); b.prepend(o); } });
+  if (!b.querySelector(".bg-grid")) { const g = document.createElement("div"); g.className = "bg-grid"; g.setAttribute("aria-hidden", "true"); b.prepend(g); }
+  if (VZ_REDUCE || !window.matchMedia || !matchMedia("(pointer: fine)").matches) return;
+  const glow = document.createElement("div"); glow.className = "cursor-glow"; glow.setAttribute("aria-hidden", "true"); b.appendChild(glow);
+  let x = -999, y = -999, tx = -999, ty = -999, raf = 0;
+  const loop = () => {
+    x += (tx - x) * 0.12; y += (ty - y) * 0.12;
+    glow.style.transform = "translate(" + (x - 120) + "px," + (y - 120) + "px)";
+    raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.5 ? requestAnimationFrame(loop) : 0;
+  };
+  addEventListener("pointermove", (e) => { tx = e.clientX; ty = e.clientY; if (x < -900) { x = tx; y = ty; } if (!raf) raf = requestAnimationFrame(loop); }, { passive: true });
+})();
+function vzCarousel(root, opts) {
+  const INTERVAL = 9000;
+  root.classList.add("carousel"); root.setAttribute("aria-roledescription", "карусель");
+  root.innerHTML = '<div class="progress" aria-hidden="true"></div><div class="spark-layer" aria-hidden="true"></div><div class="carousel-track" aria-live="polite"></div><div class="carousel-controls"><button type="button" class="carousel-btn" data-prev aria-label="Предыдущая новость">‹</button><div class="dots"></div><button type="button" class="carousel-btn" data-next aria-label="Следующая новость">›</button></div>';
+  const track = root.querySelector(".carousel-track"), dots = root.querySelector(".dots"), progress = root.querySelector(".progress"), layer = root.querySelector(".spark-layer");
+  let slides = [], index = 0, timer = 0, praf = 0, startedAt = 0, paused = false;
+  function burst() {
+    if (VZ_REDUCE) return;
+    for (let i = 0; i < 8; i++) {
+      const s = document.createElement("span"); s.className = "spark";
+      s.style.left = (20 + Math.random() * 60) + "%"; s.style.top = (20 + Math.random() * 50) + "%";
+      s.style.setProperty("--dx", (Math.random() * 40 - 20) + "px"); s.style.setProperty("--dy", (-20 - Math.random() * 40) + "px");
+      layer.appendChild(s); setTimeout(() => s.remove(), 900);
+    }
+  }
+  function paintDots() {
+    dots.innerHTML = slides.map((_, i) => `<button type="button" class="dot" aria-label="Новость ${i + 1} из ${slides.length}"${i === index ? ' aria-current="true"' : ""}></button>`).join("");
+  }
+  function resetProgress() {
+    if (praf) cancelAnimationFrame(praf); praf = 0;
+    progress.style.transform = "scaleX(0)";
+    if (VZ_REDUCE || paused || slides.length < 2) return;
+    startedAt = performance.now();
+    const tick = (now) => { const p = Math.min(1, (now - startedAt) / INTERVAL); progress.style.transform = "scaleX(" + p + ")"; if (p < 1) praf = requestAnimationFrame(tick); };
+    praf = requestAnimationFrame(tick);
+  }
+  function stop() { clearInterval(timer); timer = 0; if (praf) cancelAnimationFrame(praf); praf = 0; }
+  function restart() { stop(); resetProgress(); if (!VZ_REDUCE && !paused && slides.length > 1) timer = setInterval(() => go(index + 1, false), INTERVAL); }
+  function go(next, user) {
+    if (!slides.length) return;
+    const nodes = track.children, prev = index;
+    index = (next + slides.length) % slides.length;
+    Array.from(nodes).forEach((n, i) => {
+      n.classList.remove("is-active", "is-leaving");
+      if (i === index) n.classList.add("is-active");
+      else if (i === prev && !VZ_REDUCE && prev !== index) n.classList.add("is-leaving");
+      n.setAttribute("aria-hidden", String(i !== index)); n.querySelectorAll("a").forEach((a) => { a.tabIndex = i === index ? 0 : -1; });
+    });
+    paintDots();
+    root.classList.remove("flash"); void root.offsetWidth; root.classList.add("flash");
+    burst();
+    if (user) restart(); else resetProgress();
+  }
+  function set(list, pop) {
+    slides = list; index = 0;
+    track.innerHTML = list.map((x, i) => `<div class="carousel-item${i === 0 ? " is-active" : ""}"${i ? ' aria-hidden="true"' : ""}>${x}</div>`).join("");
+    track.querySelectorAll(".carousel-item:not(.is-active) a").forEach((a) => { a.tabIndex = -1; });
+    root.querySelector(".carousel-controls").hidden = list.length < 2;
+    paintDots();
+    if (pop && !VZ_REDUCE) { root.classList.add("reshuffled"); setTimeout(() => root.classList.remove("reshuffled"), 700); burst(); }
+    restart();
+  }
+  root.addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b || !root.contains(b)) return;
+    if (b.hasAttribute("data-prev")) go(index - 1, true);
+    else if (b.hasAttribute("data-next")) go(index + 1, true);
+    else if (b.classList.contains("dot")) go(Array.from(dots.children).indexOf(b), true);
+  });
+  root.addEventListener("keydown", (e) => { if (e.key === "ArrowLeft") go(index - 1, true); else if (e.key === "ArrowRight") go(index + 1, true); });
+  const hold = (v) => { paused = v; if (v) stop(); else restart(); };
+  root.addEventListener("mouseenter", () => hold(true)); root.addEventListener("mouseleave", () => hold(false));
+  root.addEventListener("focusin", () => hold(true)); root.addEventListener("focusout", (e) => { if (!root.contains(e.relatedTarget)) hold(false); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) stop(); else if (!paused) restart(); });
+  // свайп на телефоне
+  let sx = null;
+  root.addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; }, { passive: true });
+  root.addEventListener("touchend", (e) => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) > 45) go(index + (dx < 0 ? 1 : -1), true); }, { passive: true });
+  return { set };
+}
+function vzSlideHtml(it, n) {
+  const tags = (n.t || []).slice(0, 3).map((t) => tagChipHtml(feedTag(t))).join("");
+  const href = briefHref(it) + "#" + encodeURIComponent(n.a || "");
+  return `<blockquote><p class="vz-kicker">${escapeHtml(it.dateLabel || it.date || "")}${tags ? ` <span class="vz-tags">${tags}</span>` : ""}</p><p class="vz-head"><a href="${escapeHtml(href)}">${escapeHtml(n.h)}</a></p>${n.g ? `<p class="vz-gist">${escapeHtml(n.g)}</p>` : ""}</blockquote>`;
+}
+async function vzNewsFor(it) {
+  await feedDigestMonth(feedMonthOf(it));
+  let news = feedMetaOf(it) ? feedNewsOf(it) : null;
+  if (!news || !news.length) { try { await feedLoadOne(it); } catch (e) {} news = feedNewsOf(it); }
+  return news || [];
+}
+async function vzFeedHero(items, opts) {
+  const host = document.getElementById("vz-hero"); if (!host) return;
+  const box = host.querySelector("[data-vz-carousel]"), btn = host.querySelector("[data-vz-more]");
+  const car = vzCarousel(box);
+  const ai = items.filter((x) => x.kind === "ai");
+  let pos = 0;
+  const pickIndex = () => (opts.months ? Math.floor(Math.random() * ai.length) : pos);
+  async function show(pop) {
+    for (let tries = 0; tries < 4; tries++) {
+      const i = pickIndex(), it = ai[i]; if (!it) return;
+      const news = await vzNewsFor(it);
+      if (news.length) {
+        car.set(news.slice(0, 7).map((n) => vzSlideHtml(it, n)), pop);
+        const lab = host.querySelector("[data-vz-label]"); if (lab) lab.textContent = it.dateLabel || "";
+        return;
+      }
+      pos = (pos + 1) % ai.length;
+    }
+    host.hidden = true;
+  }
+  if (btn) btn.addEventListener("click", () => { pos = (pos + 1) % ai.length; show(true); });
+  await show(false);
+}
