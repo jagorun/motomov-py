@@ -1144,7 +1144,9 @@ async function loadAiItem(id) {
   /* --- настройки: шрифт, тема, удобная строка --- */
   // тема: явный выбор (moto-theme = dark/light) важнее системной; без выбора — как в системе
   const sysDark = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
-  const isDark = () => { const t = raw("moto-theme", ""); return t === "dark" || (t !== "light" && !!(sysDark && sysDark.matches)); };
+  // системную тему берут только страницы, где ранний скрипт в <head> её уже учёл (data-sys="1"), иначе тяжёлая страница мигнула бы светлой
+  const followSys = root.dataset.sys === "1";
+  const isDark = () => { const t = raw("moto-theme", ""); return t === "dark" || (followSys && t !== "light" && !!(sysDark && sysDark.matches)); };
   if (sysDark && sysDark.addEventListener) sysDark.addEventListener("change", () => applyPrefs());
   function applyPrefs() {
     const fs = raw("moto-fs", "1"); if (fs === "1") delete root.dataset.fs; else root.dataset.fs = fs;
@@ -1430,7 +1432,7 @@ async function loadAiItem(id) {
 })();
 // ---- прокручиваемые ряды (меню, разделы выпуска, теги): помечаем, с какой стороны есть ещё ----
 (function () {
-  const SEL = ".site-header .nav, .issue-toc, .chips";
+  const SEL = ".site-header .nav, .issue-toc, .chips, #kb-filters, #slovar-filters, #py-slovar-filters";
   const mark = (e) => {
     const max = e.scrollWidth - e.clientWidth;
     if (max <= 2) { e.removeAttribute("data-fade"); return; }

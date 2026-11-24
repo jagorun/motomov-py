@@ -829,3 +829,19 @@ html[data-comfy="1"] .issue{max-width:62ch}
 @media(max-width:520px){.issue-nav{grid-template-columns:1fr}.issue-nav-btn.newer{text-align:left}.feed-card{padding:.9rem .95rem}.issue{font-size:1.04rem}.issue-dek p{font-size:1.1rem}.issue-glossary{padding:.9rem .8rem .7rem}}
 @media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
 @media print{.feed-tools,.feed-more,.brief-side,.share-btn,.gl-toggle{display:none!important}.issue{max-width:none}}
+
+/* ===== Разделы 2026-11-24: телефон — компактная шапка-карточка, метки фильтров одной прокручиваемой строкой ===== */
+@media(max-width:700px){
+  .hero{padding:1.3rem 1.15rem 1.2rem;text-align:left}
+  .hero .bio{margin-left:0;margin-right:0}
+  .hero .contacts{justify-content:flex-start}
+  .hero h1{font-size:clamp(1.45rem,6vw,1.8rem);line-height:1.2}
+  #kb-filters,#slovar-filters,#py-slovar-filters{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:.15rem}
+  #kb-filters::-webkit-scrollbar,#slovar-filters::-webkit-scrollbar,#py-slovar-filters::-webkit-scrollbar{display:none}
+  :is(#kb-filters,#slovar-filters,#py-slovar-filters) > *{flex:0 0 auto;white-space:nowrap}
+}
+:is(#kb-filters,#slovar-filters,#py-slovar-filters)[data-fade]{-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+:is(#kb-filters,#slovar-filters,#py-slovar-filters)[data-fade="r"]{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 2rem),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 2rem),transparent)}
+:is(#kb-filters,#slovar-filters,#py-slovar-filters)[data-fade="l"]{-webkit-mask-image:linear-gradient(to right,transparent,#000 2rem);mask-image:linear-gradient(to right,transparent,#000 2rem)}
+:is(#kb-filters,#slovar-filters,#py-slovar-filters)[data-fade="lr"]{-webkit-mask-image:linear-gradient(to right,transparent,#000 2rem,#000 calc(100% - 2rem),transparent);mask-image:linear-gradient(to right,transparent,#000 2rem,#000 calc(100% - 2rem),transparent)}
+:where(.news-card,.fold-item > summary,.ghost-btn,.lesson-tab,.filter-row button,.put-road,.card,.lesson-card,.kb-card,.nav a,.nav-more summary):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
