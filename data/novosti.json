@@ -1,5 +1,14 @@
 [
   {
+    "id": "2026-11-24-vecher",
+    "kind": "ai",
+    "date": "2026-11-24",
+    "dateLabel": "24.11.2026, вторник",
+    "topic": "инфраструктура и модели",
+    "title": "Новости ИИ · 24.11.2026 · SpaceX сдаёт вычисления, Amazon берёт Decart, ERNIE 5.5 Flash",
+    "summary": "По данным NYT, SpaceX признаёт отставание в ИИ и сдаёт вычисления Anthropic и Google, Amazon покупает технологию оптимизации Decart для чипов Trainium, а США внесли Megaspeed в Entity List. Baidu открыла веса ERNIE 5.5 Flash Preview, GPT-6.2 пришла в обычный чат ChatGPT."
+  },
+  {
     "id": "2026-11-24-utro",
     "kind": "ai",
     "date": "2026-11-24",
