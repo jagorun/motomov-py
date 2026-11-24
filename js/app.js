@@ -1450,3 +1450,8 @@ async function loadAiItem(id) {
   new MutationObserver(() => { clearTimeout(t); t = setTimeout(scan, 120); }).observe(document.body, { childList: true, subtree: true });
   addEventListener("resize", scan);
 })();
+// ---- «Старт»: адрес / уводит на Новости (и /index.html туда же), поэтому карта контура открывается по /start ----
+(function () {
+  if (!/(^|\.)motomov\.ru$/.test(location.hostname)) return;
+  document.querySelectorAll('a[href="index.html"]').forEach((a) => { a.setAttribute("href", "start"); });
+})();
