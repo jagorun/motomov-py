@@ -237,41 +237,117 @@ function dayLabel(date) {
   if (diff === 1) return "Вчера, " + base;
   return base + ", " + RU_WEEKDAYS[d.getDay()];
 }
-function novostiRowHtml(it) {
-  const slot = newsSlot(it);
-  const gist = it.topic || it.summary || "";
-  return `<a class="news-card" href="${briefHref(it)}"><span class="news-slot slot-${slot.key}">${slot.label}</span><span class="news-text"><span class="news-head">${escapeHtml(newsHeadline(it))}</span><span class="news-gist">${escapeHtml(gist)}</span></span><span class="news-go" aria-hidden="true">\u203a</span></a>`;
+// ===== Лента новостей (2026-11-24): карточки, метки, поиск, фильтры, порции =====
+const FEED_PAGE = 16;
+const FEED_TAG_ALIAS = { "агенты": "агент", "модели": "модель", "чипы": "чип", "роботы": "робот", "инфраструктура": "инфра", "регулирование": "регуляторика", "инструмент": "инструменты", "research": "исследование" };
+const FEED_TAGS = ["агент", "модель", "чип", "инфра", "продукт", "исследование", "регуляторика", "безопасность", "робот", "энергия", "био", "космос", "RAG"];
+const FEED_HUE = { "агент": 265, "модель": 212, "чип": 28, "инфра": 190, "продукт": 160, "исследование": 238, "регуляторика": 352, "безопасность": 8, "робот": 40, "энергия": 50, "био": 118, "космос": 285, "RAG": 310 };
+function feedTag(t) {
+  const k = String(t || "").trim();
+  const l = k.toLowerCase();
+  return FEED_TAG_ALIAS[l] || (/^[A-Z]{2,}$/.test(k) ? k : l);
 }
-function renderNewsDays(list, items) {
-  list.innerHTML = "";
+function feedHue(t) {
+  const k = feedTag(t);
+  if (FEED_HUE[k] != null) return FEED_HUE[k];
+  let h = 0; for (let i = 0; i < k.length; i++) h = (h * 31 + k.charCodeAt(i)) % 360;
+  return h;
+}
+function tagChipHtml(t) {
+  return `<span class="tag" style="--h:${feedHue(t)}">${escapeHtml(t)}</span>`;
+}
+function feedNorm(s) { return String(s || "").toLowerCase().replace(/ё/g, "е"); }
+function feedWords(q) { return feedNorm(q).split(/\s+/).filter((w) => w.length > 0); }
+function feedMark(text, words) {
+  const s = String(text || "");
+  if (!words || !words.length) return escapeHtml(s);
+  const re = new RegExp("(" + words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/е/g, "[её]")).join("|") + ")", "giu");
+  let out = "", last = 0, m;
+  while ((m = re.exec(s))) {
+    if (!m[0]) { re.lastIndex++; continue; }
+    out += escapeHtml(s.slice(last, m.index)) + "<mark>" + escapeHtml(m[0]) + "</mark>";
+    last = m.index + m[0].length;
+  }
+  return out + escapeHtml(s.slice(last));
+}
+function ruPlural(n, one, few, many) {
+  const a = Math.abs(n) % 100, b = a % 10;
+  if (a > 10 && a < 20) return many;
+  if (b > 1 && b < 5) return few;
+  if (b === 1) return one;
+  return many;
+}
+// метки, объём и число новостей из текста выпуска; кэш в localStorage (только для ускорения, без данных пользователя)
+const FEED_META_KEY = "mpy-feed-meta-v1";
+const feedMeta = (() => { try { return JSON.parse(localStorage.getItem(FEED_META_KEY) || "{}") || {}; } catch (e) { return {}; } })();
+const feedBodies = new Map();
+function feedSig(it) { return String(it.title || "").length + ":" + String(it.summary || "").length; }
+function feedMetaOf(it) { const m = feedMeta[it.id]; return m && m.s === feedSig(it) ? m : null; }
+function feedSaveMeta() {
+  clearTimeout(feedSaveMeta._t);
+  feedSaveMeta._t = setTimeout(() => { try { localStorage.setItem(FEED_META_KEY, JSON.stringify(feedMeta)); } catch (e) {} }, 400);
+}
+function feedMetaFromBody(body) {
+  const tags = []; let words = 0, n = 0, g = 0, kind = "normal";
+  body.forEach((raw) => {
+    const ln = String(raw);
+    if (/^## /.test(ln)) kind = sectionKind(ln.slice(3));
+    else if (/^### /.test(ln)) {
+      if (kind === "glossary") g += 1;
+      else if (kind !== "promo") {
+        n += 1;
+        (ln.match(/\[([^\]]+)\]/g) || []).forEach((x) => { const t = feedTag(x.slice(1, -1)); if (t && !tags.includes(t)) tags.push(t); });
+      }
+    }
+    words += ln.split(/\s+/).filter(Boolean).length;
+  });
+  return { t: tags, w: words, n, g };
+}
+async function feedLoadOne(it) {
+  if (feedBodies.has(it.id)) return;
+  let body = Array.isArray(it.body) ? it.body : null;
+  if (!body) {
+    try { const full = await loadAiItem(it.id); body = full && Array.isArray(full.body) ? full.body : []; } catch (e) { body = []; }
+  }
+  feedBodies.set(it.id, feedNorm(body.join("\n")));
+  if (body.length) { feedMeta[it.id] = Object.assign({ s: feedSig(it) }, feedMetaFromBody(body)); feedSaveMeta(); }
+}
+async function feedLoadMany(items, onProgress) {
+  const queue = items.filter((it) => !feedBodies.has(it.id));
+  const total = items.length; let done = total - queue.length;
+  const worker = async () => { while (queue.length) { const it = queue.shift(); await feedLoadOne(it); done += 1; if (onProgress) onProgress(done, total); } };
+  await Promise.all(Array.from({ length: 6 }, worker));
+}
+function feedMetaHtml(m) {
+  if (!m) return "";
+  const mins = Math.max(1, Math.round(m.w / 170));
+  return `<span class="feed-rt">${m.n ? m.n + " " + ruPlural(m.n, "новость", "новости", "новостей") + " · " : ""}${mins} мин</span>`;
+}
+function novostiRowHtml(it, words) {
+  const slot = newsSlot(it);
+  const m = feedMetaOf(it);
+  const topic = it.topic && it.topic.length <= 60 ? `<span class="feed-topic">${escapeHtml(it.topic)}</span>` : "";
+  const sum = it.summary || (it.topic && !topic ? it.topic : "");
+  return `<a class="news-card feed-card" href="${briefHref(it)}" data-id="${escapeHtml(it.id)}"><span class="feed-meta"><span class="news-slot slot-${slot.key}">${slot.label}</span>${topic}<span class="feed-rt-box">${feedMetaHtml(m)}</span></span><h3 class="news-head">${feedMark(newsHeadline(it), words)}</h3>${sum ? `<span class="feed-sum">${feedMark(sum, words)}</span>` : ""}<span class="feed-tags">${m ? m.t.map(tagChipHtml).join("") : ""}</span></a>`;
+}
+// дни с липкими заголовками; append=true дописывает порцию к уже отрисованному
+function renderNewsDays(list, items, opts) {
+  const o = opts || {};
+  if (!o.append) { list.innerHTML = ""; list._curDay = null; list._box = null; }
   list.classList.remove("fold-list");
   list.classList.add("news-days");
-  let cur = null, box = null;
-  const days = [];
   items.forEach((it) => {
     const d = it.date || String(it.id || "").slice(0, 10);
-    if (d !== cur) {
-      cur = d;
-      const dayId = "day-" + d;
-      const day = el(`<section class="news-day" id="${escapeHtml(dayId)}"><h3 class="news-day-title">${escapeHtml(dayLabel(d))}</h3><div class="news-day-list"></div></section>`);
+    if (d !== list._curDay || !list._box) {
+      list._curDay = d;
+      const day = el(`<section class="news-day" id="${escapeHtml("day-" + d)}" aria-label="${escapeHtml(dayLabel(d))}"><h2 class="news-day-title"><time datetime="${escapeHtml(d)}">${escapeHtml(dayLabel(d))}</time></h2><div class="news-day-list"></div></section>`);
       list.appendChild(day);
-      box = day.querySelector(".news-day-list");
-      days.push({ id: dayId, label: dayLabel(d) });
+      list._box = day.querySelector(".news-day-list");
     }
-    box.appendChild(el(novostiRowHtml(it)));
+    list._box.appendChild(el(novostiRowHtml(it, o.words)));
   });
   const nav = document.getElementById("novosti-day-nav");
-  if (nav) {
-    if (days.length > 1) {
-      nav.style.display = "";
-      nav.innerHTML = days.map((dy) => {
-        const short = dy.label.replace(/, .*/, "");
-        return `<a href="#${escapeHtml(dy.id)}">${escapeHtml(short)}</a>`;
-      }).join("");
-    } else {
-      nav.style.display = "none";
-    }
-  }
+  if (nav) nav.style.display = "none";
 }
 // ---- one AI issue: sections, numbered items, collapsible glossary ----
 function linkifyText(text) {
@@ -281,22 +357,29 @@ function linkifyText(text) {
     out += escapeHtml(text.slice(last, m.index));
     let host = m[1];
     try { host = new URL(m[1]).hostname.replace(/^www\./, ""); } catch (e) {}
-    out += `<a class="src-link" href="${escapeHtml(m[1])}" target="_blank" rel="noopener">${escapeHtml(host)}</a>`;
+    out += `<a class="src-link" href="${escapeHtml(m[1])}" target="_blank" rel="noopener" title="${escapeHtml(m[1])}">${escapeHtml(host)}</a>`;
     last = m.index + m[1].length;
   }
   out += escapeHtml(text.slice(last));
   return out
     .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
-    .replace(/^(Что это|Зачем сегодня|Зачем|Не путать с|Источник):/, "<strong>$1:</strong>");
+    .replace(/^(Что это|Зачем сегодня|Зачем[^:<]{0,40}|Не путать с|Источник):/, "<strong>$1:</strong>");
+}
+const SRC_LINE = /^\s*(Источник[а-яё]*(?:\s*\([^)]{0,40}\))?)\s*:\s*/i;
+function srcLineHtml(t) {
+  const m = SRC_LINE.exec(t);
+  return `<p class="src-line"><span class="src-label">${escapeHtml(m[1])}</span> ${linkifyText(t.slice(m[0].length))}</p>`;
 }
 function paraHtml(line) {
   const t = line.replace(/Источник:\s*/g, "Источник: ");
   if (/^[-*]\s+/.test(t)) return null;
+  if (SRC_LINE.test(t) && /https?:\/\//.test(t)) return srcLineHtml(t);
   return `<p>${linkifyText(t)}</p>`;
 }
 function linesHtml(lines) {
   let html = "", ul = [];
-  const flush = () => { if (ul.length) { html += "<ul>" + ul.map((x) => `<li>${linkifyText(x)}</li>`).join("") + "</ul>"; ul = []; } };
+  const li = (x) => SRC_LINE.test(x) && /https?:\/\//.test(x) ? `<li class="src-li">${srcLineHtml(x)}</li>` : `<li>${linkifyText(x)}</li>`;
+  const flush = () => { if (ul.length) { html += "<ul>" + ul.map(li).join("") + "</ul>"; ul = []; } };
   lines.forEach((ln) => {
     if (!ln.trim()) return;
     if (ln.startsWith("```")) { flush(); html += renderBody([ln]); return; }
@@ -327,55 +410,108 @@ function splitItems(lines) {
   });
   return { pre, items };
 }
-function itemTitleHtml(title) {
+// заголовок новости: «1. 23.11 · Z.ai: … [модель] [агент]» -> номер, дата, заголовок, метки (текст не меняется, только раскладка)
+function itemTitleParts(title) {
   const tags = [];
-  const clean = title.replace(/\s*\[([^\]]+)\]/g, (_, t) => { tags.push(t); return ""; }).trim();
-  return { title: escapeHtml(clean), tags: tags.map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join("") };
+  let t = title.replace(/\s*\[([^\]]+)\]/g, (_, x) => { tags.push(x); return ""; }).trim();
+  let num = "";
+  const nm = /^(\d{1,2})[.)]\s+/.exec(t); if (nm) { num = nm[1]; t = t.slice(nm[0].length); }
+  let date = "";
+  const dm = /^(\d{1,2}(?:[–-]\d{1,2})?\.\d{1,2}(?:[–-]\d{1,2}\.\d{1,2})?)\s+·\s+/.exec(t); if (dm) { date = dm[1]; t = t.slice(dm[0].length); }
+  return { num, date, title: t, tags };
+}
+function itemTitleHtml(title) {
+  const p = itemTitleParts(title);
+  return { title: escapeHtml(p.title), tags: p.tags.map(tagChipHtml).join("") };
 }
 function sectionKind(title) {
-  const t = title.toLowerCase();
+  const t = String(title || "").toLowerCase();
+  if (/заголовок дня/.test(t)) return "dek";
   if (/коротко|главное|итог дня|суть/.test(t)) return "lead";
   if (/словар/.test(t)) return "glossary";
   if (/подписк|акци|триал/.test(t)) return "promo";
   return "normal";
 }
+function tocLabel(title) { return String(title || "").replace(/^\d{1,2}[.)]\s+/, "").replace(/ к вечеру| за ночь/i, ""); }
+function glossaryTermHtml(title) {
+  const m = /^(.*?)\s*(\([^()]*\))\s*$/.exec(title);
+  return m && m[1] ? `<span class="gl-term">${escapeHtml(m[1])}</span> <span class="gl-alt">${escapeHtml(m[2])}</span>` : `<span class="gl-term">${escapeHtml(title)}</span>`;
+}
 function renderAiIssue(brief) {
   const secs = splitSections(brief.body || []);
   if (!secs.length) return null;
-  let toc = [], html = "", n = 0;
+  const toc = []; let html = "", n = 0, terms = 0;
   secs.forEach((sec, si) => {
     const kind = sectionKind(sec.title);
     const anchor = "s" + (si + 1);
     const { pre, items } = splitItems(sec.lines);
+    if (kind === "dek") {
+      html += `<section class="issue-dek" id="${anchor}"><h2 class="issue-kicker">${escapeHtml(sec.title)}</h2>${linesHtml(sec.lines)}</section>`;
+      return;
+    }
     if (kind === "lead") {
+      toc.push({ a: anchor, t: tocLabel(sec.title || "Коротко"), sub: [] });
       html += `<section class="issue-lead" id="${anchor}"><h2>${escapeHtml(sec.title || "Коротко")}</h2>${linesHtml(sec.lines)}</section>`;
       return;
     }
     if (kind === "glossary") {
-      const cards = items.map((it) => `<details class="gl-item"><summary>${escapeHtml(it.title)}</summary><div class="gl-body">${linesHtml(it.lines)}</div></details>`).join("");
-      toc.push([anchor, "Словарь"]);
-      html += `<section class="issue-sec issue-glossary" id="${anchor}"><h2>${escapeHtml(sec.title)} <span class="count">${items.length}</span></h2>${linesHtml(pre)}<div class="gl-list">${cards}</div></section>`;
+      terms += items.length;
+      const cards = items.map((it) => `<details class="gl-item"><summary>${glossaryTermHtml(it.title)}</summary><div class="gl-body">${linesHtml(it.lines)}</div></details>`).join("");
+      toc.push({ a: anchor, t: "Словарь", sub: [] });
+      const tools = items.length > 1 ? `<button type="button" class="gl-toggle" aria-expanded="false">Раскрыть все</button>` : "";
+      html += `<section class="issue-sec issue-glossary" id="${anchor}"><div class="gl-head"><h2>${escapeHtml(sec.title)} <span class="count">${items.length}</span></h2>${tools}</div>${pre.some((l) => l.trim()) ? `<div class="gl-intro">${linesHtml(pre)}</div>` : ""}<div class="gl-list">${cards}</div></section>`;
       return;
     }
     if (kind === "promo") {
       const text = sec.lines.filter((l) => l.trim());
       const short = text.length <= 1 && items.length === 0;
-      html += `<section class="issue-sec${short ? " issue-note" : ""}" id="${anchor}"><h2>${escapeHtml(sec.title)}</h2>${linesHtml(sec.lines.filter((l) => !/^### /.test(l)))}${items.map((it) => `<h3>${escapeHtml(it.title)}</h3>${linesHtml(it.lines)}`).join("")}</section>`;
+      if (!short) toc.push({ a: anchor, t: tocLabel(sec.title), sub: [] });
+      html += `<section class="issue-sec issue-promo${short ? " issue-note" : ""}" id="${anchor}"><h2>${escapeHtml(sec.title)}</h2>${linesHtml(sec.lines.filter((l) => !/^### /.test(l)))}${items.map((it) => `<h3>${escapeHtml(it.title)}</h3>${linesHtml(it.lines)}`).join("")}</section>`;
       return;
     }
-    if (sec.title) toc.push([anchor, sec.title.replace(/ к вечеру| за ночь/i, "")]);
+    const entry = { a: anchor, t: tocLabel(sec.title), sub: [] };
+    if (sec.title) toc.push(entry);
     let inner = linesHtml(pre);
     if (items.length) {
       inner += `<ol class="issue-items">` + items.map((it) => {
         n += 1;
-        const t = itemTitleHtml(it.title);
-        return `<li class="issue-item" id="n${n}"><span class="num">${n}</span><div class="issue-item-body"><h3>${t.title}</h3>${t.tags ? `<div class="tags">${t.tags}</div>` : ""}${linesHtml(it.lines)}</div></li>`;
+        const p = itemTitleParts(it.title);
+        entry.sub.push({ a: "n" + n, t: p.title });
+        const date = p.date ? `<span class="issue-item-date">${escapeHtml(p.date)}</span>` : "";
+        const tags = p.tags.length ? `<span class="tags">${p.tags.map(tagChipHtml).join("")}</span>` : "";
+        return `<li class="issue-item" id="n${n}"><span class="num" aria-hidden="true">${escapeHtml(p.num || String(n))}</span><div class="issue-item-body">${date || tags ? `<div class="issue-item-meta">${date}${tags}</div>` : ""}<h3>${escapeHtml(p.title)}</h3>${linesHtml(it.lines)}</div></li>`;
       }).join("") + `</ol>`;
     }
     html += `<section class="issue-sec" id="${anchor}">${sec.title ? `<h2>${escapeHtml(sec.title)}</h2>` : ""}${inner}</section>`;
   });
-  const tocHtml = toc.length > 1 ? `<nav class="issue-toc" aria-label="Разделы выпуска">${toc.map(([a, t]) => `<a href="#${a}">${escapeHtml(t)}</a>`).join("")}</nav>` : "";
-  return { tocHtml, html };
+  const tocHtml = toc.length > 1
+    ? `<nav class="issue-toc" aria-label="Содержание выпуска"><p class="toc-title">Содержание</p><ol>${toc.map((e) => `<li><a href="#${e.a}">${escapeHtml(e.t)}</a>${e.sub.length ? `<ol class="toc-sub">${e.sub.map((s) => `<li><a href="#${s.a}">${escapeHtml(s.t)}</a></li>`).join("")}</ol>` : ""}</li>`).join("")}</ol></nav>`
+    : "";
+  return { tocHtml, html, items: n, terms };
+}
+function setupIssueToc(root) {
+  const toc = root.querySelector(".issue-toc"); if (!toc) return;
+  const links = Array.from(toc.querySelectorAll("a"));
+  const targets = links.map((a) => document.getElementById(a.getAttribute("href").slice(1))).filter(Boolean);
+  let q = false, cur = null;
+  const keepVisible = (a, topA) => {
+    // держим активный пункт в видимой части оглавления, не прокручивая страницу
+    if (toc.scrollHeight > toc.clientHeight + 4) { const r = a.getBoundingClientRect(), b = toc.getBoundingClientRect(); if (r.top < b.top + 30 || r.bottom > b.bottom - 30) toc.scrollTop += r.top - b.top - b.height / 3; }
+    if (topA && toc.scrollWidth > toc.clientWidth + 2) { const r = topA.getBoundingClientRect(), b = toc.getBoundingClientRect(); if (r.left < b.left || r.right > b.right) toc.scrollLeft += r.left - b.left - 16; }
+  };
+  const upd = () => {
+    q = false;
+    const line = Math.min(innerHeight * 0.3, 260);
+    let active = null;
+    for (const t of targets) { if (t.getBoundingClientRect().top - line <= 0) active = t; else break; }
+    if (active === cur) return; cur = active;
+    links.forEach((a) => { const on = !!active && a.getAttribute("href") === "#" + active.id; a.classList.toggle("active", on); if (on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current"); });
+    toc.querySelectorAll(":scope > ol > li").forEach((li) => li.classList.toggle("in", !!li.querySelector("a.active")));
+    const a = toc.querySelector("a.active"); if (a) keepVisible(a, toc.querySelector(":scope > ol > li.in > a"));
+  };
+  addEventListener("scroll", () => { if (!q) { q = true; requestAnimationFrame(upd); } }, { passive: true });
+  addEventListener("resize", upd);
+  upd();
 }
 // ---- общие помощники списков: синонимы тегов, порционная отрисовка, задержка поиска ----
 const TAG_ALIAS = { "агент": "агенты", "инфраструктура": "инфра", "регулирование": "регуляторика", "инструмент": "инструменты", "бенчмарк": "бенчмарки" };
@@ -502,21 +638,10 @@ async function loadSlovar() {
   draw("");
   if (input) onSearchInput(input, draw);
 }
-const NOVOSTI_RECENT_LIMIT = 14;
 async function fetchJson(url) {
   const r = await fetch(url, { cache: "no-cache" });
   if (!r.ok) return [];
   return r.json();
-}
-async function loadNovosti() {
-  const list = document.getElementById("novosti-list");
-  const items = await fetchJson("data/novosti.json");
-  list.innerHTML = "";
-  if (!items.length) {
-    list.innerHTML = '<div class="empty">Новостей пока нет. Утренняя сводка придёт в 07:00 по Москве.</div>';
-    return;
-  }
-  renderNewsDays(list, items.slice(0, NOVOSTI_RECENT_LIMIT));
 }
 function monthKey(it) {
   const d = it.date || String(it.id || "").slice(0, 10);
@@ -525,46 +650,144 @@ function monthKey(it) {
 function monthLabel(key) {
   const m = /^(\d{4})-(\d{2})$/.exec(key);
   if (!m) return key;
-  return RU_MONTHS_GEN[Number(m[2]) - 1] + " " + m[1];
+  return ["январь","февраль","март","апрель","май","июнь","июль","август","сентябрь","октябрь","ноябрь","декабрь"][Number(m[2]) - 1] + " " + m[1];
 }
-async function loadArchive(monthParam) {
-  const list = document.getElementById("archive-list");
-  const filters = document.getElementById("archive-filters");
-  const items = await fetchJson("data/novosti.json");
-  if (!items.length) {
-    list.innerHTML = '<div class="empty">Архив пока пуст.</div>';
-    return;
-  }
+async function loadNovosti() {
+  return loadFeed(document.getElementById("novosti-list"), { months: false, empty: '<div class="empty">Новостей пока нет. Утренняя сводка придёт в 07:00 по Москве.</div>' });
+}
+async function loadArchive() {
+  return loadFeed(document.getElementById("archive-list"), { months: true, empty: '<div class="empty">Архив пока пуст.</div>' });
+}
+async function loadFeed(list, opts) {
+  let items = [];
+  try { items = await fetchJson("data/novosti.json"); } catch (e) { items = []; }
+  if (!Array.isArray(items) || !items.length) { list.innerHTML = opts.empty; return; }
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const url0 = new URL(location.href);
   const months = Array.from(new Set(items.map(monthKey).filter(Boolean)));
-  let active = monthParam && months.includes(monthParam) ? monthParam : "";
-  function draw() {
-    const shown = active ? items.filter((it) => monthKey(it) === active) : items;
-    list.innerHTML = "";
-    if (!shown.length) {
-      list.innerHTML = '<div class="empty">За этот месяц записей нет.</div>';
-      return;
+  const st = {
+    q: url0.searchParams.get("q") || "",
+    slot: ["utro", "vecher"].includes(url0.searchParams.get("slot")) ? url0.searchParams.get("slot") : "",
+    tag: url0.searchParams.get("tag") || "",
+    month: opts.months && months.includes(url0.searchParams.get("month")) ? url0.searchParams.get("month") : "",
+    deep: url0.searchParams.get("deep") === "1",
+    shown: FEED_PAGE
+  };
+  // панель поиска и фильтров
+  let tools = document.getElementById("feed-tools");
+  if (!tools) { tools = document.createElement("div"); tools.id = "feed-tools"; list.before(tools); }
+  tools.className = "feed-tools";
+  const tagBtns = ['<button type="button" class="chip" data-tag="">Все темы</button>'].concat(FEED_TAGS.map((t) => `<button type="button" class="chip" data-tag="${escapeHtml(t)}" style="--h:${feedHue(t)}">${escapeHtml(t)}</button>`)).join("");
+  const monthBtns = opts.months ? `<div class="chips feed-months" role="group" aria-label="Месяц"><button type="button" class="chip" data-month="">Все месяцы</button>${months.map((m) => `<button type="button" class="chip" data-month="${escapeHtml(m)}">${escapeHtml(monthLabel(m))}</button>`).join("")}</div>` : "";
+  tools.innerHTML = `<div class="feed-search" role="search"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input type="search" id="feed-q" placeholder="Поиск по выпускам" aria-label="Поиск по заголовкам и кратким описаниям выпусков" autocomplete="off" enterkeyhint="search"><kbd aria-hidden="true">/</kbd></div><div class="feed-row"><div class="seg" role="group" aria-label="Время выпуска"><button type="button" data-slot="">Все</button><button type="button" data-slot="utro">Утро</button><button type="button" data-slot="vecher">Вечер</button></div><label class="feed-deep"><input type="checkbox" id="feed-deep"> искать и в тексте выпусков</label></div><div class="chips feed-tagrow" role="group" aria-label="Темы">${tagBtns}</div>${monthBtns}<p class="feed-status" id="feed-status" aria-live="polite"></p>`;
+  const old = document.getElementById("archive-filters"); if (old) old.remove();
+  const input = tools.querySelector("#feed-q"), deep = tools.querySelector("#feed-deep"), status = tools.querySelector("#feed-status");
+  input.value = st.q; deep.checked = st.deep;
+  let more = list.parentNode.querySelector(".feed-more");
+  if (!more) { more = el('<button type="button" class="feed-more"></button>'); list.after(more); }
+  const sync = () => {
+    tools.querySelectorAll("[data-slot]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.slot === st.slot)));
+    tools.querySelectorAll("[data-tag]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.tag === st.tag)));
+    tools.querySelectorAll("[data-month]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.month === st.month)));
+    const u = new URL(location.href);
+    [["q", st.q.trim()], ["slot", st.slot], ["tag", st.tag], ["month", st.month], ["deep", st.deep && st.q.trim() ? "1" : ""]].forEach(([k, v]) => { if (v) u.searchParams.set(k, v); else u.searchParams.delete(k); });
+    history.replaceState(history.state, "", u);
+  };
+  const base = () => items.filter((it) => (!st.slot || newsSlot(it).key === st.slot) && (!st.month || monthKey(it) === st.month));
+  let filtered = [], drawTok = 0;
+  function matches(it, words) {
+    if (st.tag) { const m = feedMetaOf(it); if (!m || !m.t.includes(st.tag)) return false; }
+    if (words.length) {
+      const hay = feedNorm([it.title, it.summary, it.topic, it.dateLabel].join(" ")) + (st.deep ? "\n" + (feedBodies.get(it.id) || "") : "");
+      if (!words.every((w) => hay.includes(w))) return false;
     }
-    renderNewsDays(list, shown);
-    const url = new URL(location.href);
-    if (active) url.searchParams.set("month", active);
-    else url.searchParams.delete("month");
-    history.replaceState({}, "", url);
+    return true;
   }
-  if (filters) {
-    filters.innerHTML = "";
-    filters.appendChild(el(`<button type="button" class="ghost-btn${active ? "" : " active"}" data-month="">Все</button>`));
-    months.forEach((m) => {
-      filters.appendChild(el(`<button type="button" class="ghost-btn${active === m ? " active" : ""}" data-month="${escapeHtml(m)}">${escapeHtml(monthLabel(m))}</button>`));
-    });
-    filters.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-month]");
-      if (!btn) return;
-      active = btn.getAttribute("data-month") || "";
-      Array.from(filters.querySelectorAll("button")).forEach((b) => b.classList.toggle("active", b === btn));
-      draw();
-    });
+  function paintMore() {
+    const left = filtered.length - st.shown;
+    more.hidden = left <= 0;
+    if (left > 0) { const k = Math.min(FEED_PAGE, left); more.textContent = `Показать ещё ${k} ${ruPlural(k, "выпуск", "выпуска", "выпусков")} · осталось ${left}`; }
   }
-  draw();
+  async function draw(keepShown) {
+    const tok = ++drawTok;
+    sync();
+    const words = feedWords(st.q);
+    const scope = base();
+    const needAll = st.tag ? scope.filter((it) => !feedMetaOf(it)) : [];
+    const needText = st.deep && words.length ? scope.filter((it) => !feedBodies.has(it.id)) : [];
+    const need = Array.from(new Set(needAll.concat(needText)));
+    if (need.length) {
+      status.textContent = `Загружаю выпуски для ${st.tag ? "фильтра по теме" : "поиска по тексту"}: 0 из ${need.length}…`;
+      await feedLoadMany(need, (d, t) => { if (tok === drawTok) status.textContent = `Загружаю выпуски для ${st.tag ? "фильтра по теме" : "поиска по тексту"}: ${d} из ${t}…`; });
+      if (tok !== drawTok) return;
+    }
+    filtered = scope.filter((it) => matches(it, words));
+    if (!keepShown) st.shown = FEED_PAGE;
+    const apply = () => {
+      if (!filtered.length) {
+        list.innerHTML = `<div class="empty feed-empty">Ничего не нашлось. <button type="button" class="link-btn" data-reset>Сбросить фильтры</button></div>`;
+      } else {
+        renderNewsDays(list, filtered.slice(0, st.shown), { words });
+      }
+      paintMore();
+      observeCards();
+    };
+    if (document.startViewTransition && !reduce && list.querySelector(".news-card")) document.startViewTransition(apply); else apply();
+    const filteredNote = st.q.trim() || st.tag || st.slot || st.month;
+    status.textContent = filteredNote
+      ? `Найдено: ${filtered.length} ${ruPlural(filtered.length, "выпуск", "выпуска", "выпусков")} из ${items.length}`
+      : `Всего ${items.length} ${ruPlural(items.length, "выпуск", "выпуска", "выпусков")} · две сводки в день`;
+  }
+  // метки и время чтения догружаются только для карточек на экране
+  const pending = new Set(); let running = 0;
+  const pump = () => {
+    while (running < 3 && pending.size) {
+      const card = pending.values().next().value; pending.delete(card);
+      const it = items.find((x) => x.id === card.dataset.id); if (!it) continue;
+      running += 1;
+      feedLoadOne(it).then(() => { running -= 1; paintCard(card, it); pump(); });
+    }
+  };
+  function paintCard(card, it) {
+    const m = feedMetaOf(it); if (!m || !card.isConnected) return;
+    const tg = card.querySelector(".feed-tags"); if (tg && !tg.childElementCount) tg.innerHTML = m.t.map(tagChipHtml).join("");
+    const rt = card.querySelector(".feed-rt-box"); if (rt && !rt.childElementCount) rt.innerHTML = feedMetaHtml(m);
+  }
+  const io = "IntersectionObserver" in window ? new IntersectionObserver((ens) => ens.forEach((en) => {
+    if (!en.isIntersecting) return; io.unobserve(en.target); pending.add(en.target); pump();
+  }), { rootMargin: "200px 0px" }) : null;
+  function observeCards() {
+    if (!io) return;
+    list.querySelectorAll(".feed-card").forEach((c) => { const it = items.find((x) => x.id === c.dataset.id); if (it && !feedMetaOf(it)) io.observe(c); });
+  }
+  more.addEventListener("click", () => {
+    const from = st.shown; st.shown += FEED_PAGE;
+    renderNewsDays(list, filtered.slice(from, st.shown), { append: true, words: feedWords(st.q) });
+    paintMore(); observeCards();
+    const first = list.querySelectorAll(".feed-card")[from]; if (first) first.focus({ preventScroll: true });
+  });
+  tools.addEventListener("click", (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    if (b.hasAttribute("data-slot")) st.slot = b.dataset.slot;
+    else if (b.hasAttribute("data-tag")) st.tag = st.tag === b.dataset.tag ? "" : b.dataset.tag;
+    else if (b.hasAttribute("data-month")) st.month = b.dataset.month;
+    else return;
+    draw();
+  });
+  list.addEventListener("click", (e) => {
+    if (!e.target.closest("[data-reset]")) return;
+    st.q = ""; st.slot = ""; st.tag = ""; st.month = ""; input.value = ""; draw(); input.focus();
+  });
+  let qt = 0;
+  input.addEventListener("input", () => { clearTimeout(qt); qt = setTimeout(() => { st.q = input.value; draw(); }, 160); });
+  input.addEventListener("keydown", (e) => { if (e.key === "Escape" && input.value) { input.value = ""; st.q = ""; draw(); } });
+  deep.addEventListener("change", () => { st.deep = deep.checked; if (st.q.trim()) draw(); else sync(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "/" || e.ctrlKey || e.metaKey || e.altKey) return;
+    const t = e.target; if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    e.preventDefault(); input.focus(); input.select();
+  });
+  await draw();
 }
 async function loadBrief(id, kind) {
   const root = document.getElementById("brief-root");
@@ -618,27 +841,46 @@ async function loadBrief(id, kind) {
     const newer = same[si - 1];
     const older = same[si + 1];
     const slot = newsSlot(brief);
-    const navBtn = (it, dir) => it
-      ? `<a class="issue-nav-btn ${dir}" href="${briefHref(it)}"><small>${dir === "older" ? "← раньше" : "позже →"}</small><span>${escapeHtml(dayLabel(it.date).replace(/^(Сегодня|Вчера), /, "$1, ") + " \u00b7 " + newsSlot(it).label)}</span></a>`
-      : `<span class="issue-nav-btn ${dir} disabled"><small>${dir === "older" ? "← раньше" : "позже →"}</small><span>нет</span></span>`;
-    const pager = `<div class="issue-nav">${navBtn(older, "older")}${navBtn(newer, "newer")}</div>`;
-    root.innerHTML = `<a class="back-link" href="novosti.html">← Все новости</a><header class="issue-head"><div class="issue-meta"><span class="news-slot slot-${slot.key}">${slot.label}</span> ${escapeHtml(dayLabel(brief.date))}</div><h1>${escapeHtml(newsHeadline(brief))}</h1>${issue ? "" : `<p class="issue-summary">${escapeHtml(brief.summary || "")}</p>`}</header>${issue ? issue.tocHtml + `<article class="issue">${issue.html}</article>` : `<article class="article">${renderBody(brief.body || [])}</article>`}${pager}`;
-    if (issue) {
-      const tocLinks = root.querySelectorAll(".issue-toc a");
-      if (tocLinks.length) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((en) => {
-            if (en.isIntersecting) {
-              const id = en.target.id;
-              tocLinks.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + id));
-            }
-          });
-        }, { rootMargin: "-15% 0px -55% 0px", threshold: 0.1 });
-        root.querySelectorAll(".issue-sec, .issue-lead, .issue-glossary").forEach((sec) => {
-          if (sec.id) observer.observe(sec);
-        });
+    const navBtn = (it, dir) => {
+      const label = dir === "older" ? "← Предыдущий выпуск" : "Следующий выпуск →";
+      return it
+        ? `<a class="issue-nav-btn ${dir}" href="${briefHref(it)}" rel="${dir === "older" ? "prev" : "next"}"><small>${label}</small><span class="nav-when">${escapeHtml(dayLabel(it.date) + " \u00b7 " + newsSlot(it).label)}</span><span class="nav-title">${escapeHtml(newsHeadline(it))}</span></a>`
+        : `<span class="issue-nav-btn ${dir} disabled"><small>${label}</small><span class="nav-when">${dir === "older" ? "это самый ранний" : "это самый свежий"}</span></span>`;
+    };
+    const pager = `<nav class="issue-nav" aria-label="Соседние выпуски">${navBtn(older, "older")}${navBtn(newer, "newer")}</nav>`;
+    const topic = brief.topic && brief.topic.length <= 60 ? `<span class="issue-topic">${escapeHtml(brief.topic)}</span>` : "";
+    const stats = issue && (issue.items || issue.terms)
+      ? `<span class="issue-stats">${issue.items ? issue.items + " " + ruPlural(issue.items, "новость", "новости", "новостей") : ""}${issue.items && issue.terms ? " · " : ""}${issue.terms ? issue.terms + " " + ruPlural(issue.terms, "термин", "термина", "терминов") + " в словаре" : ""}</span>`
+      : "";
+    const share = `<button type="button" class="share-btn" data-share>Поделиться</button>`;
+    const head = `<a class="back-link" href="novosti.html">← Все новости</a><header class="issue-head"><div class="issue-meta"><span class="news-slot slot-${slot.key}">${slot.label}</span><time datetime="${escapeHtml(brief.date || "")}">${escapeHtml(dayLabel(brief.date))}</time>${topic}</div><h1>${escapeHtml(newsHeadline(brief))}</h1>${issue ? "" : `<p class="issue-summary">${escapeHtml(brief.summary || "")}</p>`}<div class="issue-sub">${stats}${share}</div></header>`;
+    const article = issue ? `<article class="issue">${issue.html}</article>` : `<article class="article">${renderBody(brief.body || [])}</article>`;
+    root.innerHTML = `<div class="brief-layout${issue && issue.tocHtml ? " has-toc" : ""}">${issue && issue.tocHtml ? `<aside class="brief-side">${issue.tocHtml}</aside>` : ""}<div class="brief-main">${head}${article}${pager}</div></div>`;
+    if (issue) setupIssueToc(root);
+    root.addEventListener("click", async (e) => {
+      const g = e.target.closest(".gl-toggle");
+      if (g) {
+        const open = g.getAttribute("aria-expanded") !== "true";
+        g.closest(".issue-glossary").querySelectorAll("details.gl-item").forEach((d) => { d.open = open; });
+        g.setAttribute("aria-expanded", String(open)); g.textContent = open ? "Свернуть все" : "Раскрыть все";
+        return;
       }
-    }
+      const s = e.target.closest("[data-share]");
+      if (s) {
+        const url = location.origin + location.pathname.replace(/\.html$/, "") + "?id=" + encodeURIComponent(brief.id) + "&kind=ai";
+        try {
+          if (navigator.share) { await navigator.share({ title: document.title, url }); return; }
+          await navigator.clipboard.writeText(url); s.textContent = "Ссылка скопирована ✓";
+        } catch (err) { if (err && err.name === "AbortError") return; s.textContent = "Не вышло"; }
+        setTimeout(() => { s.textContent = "Поделиться"; }, 1800);
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+      const t = e.target; if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+      if (e.key === "[" && older) location.href = briefHref(older);
+      if (e.key === "]" && newer) location.href = briefHref(newer);
+    });
     return;
   }
   root.innerHTML = `<span class="badge">${kindLabel(brief.kind)} \u00b7 ${escapeHtml(brief.dateLabel)} \u00b7 ${escapeHtml(brief.topic || "")}</span><h1>${escapeHtml(brief.title)}</h1><p class="bio" style="margin:0.6rem 0 1.1rem">${escapeHtml(brief.summary)}</p><article class="article">${renderBody(brief.body || [])}</article><div class="pager">${prev ? `<a class="ghost-btn" href="${briefHref(prev)}">← ${escapeHtml(prev.title)}</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel}</a>`}${next ? `<a class="ghost-btn" href="${briefHref(next)}">${escapeHtml(next.title)} →</a>` : `<a class="ghost-btn" href="${backHref}">${backLabel} →</a>`}</div>`;
@@ -900,15 +1142,19 @@ async function loadAiItem(id) {
   const mk = (h) => { const t = document.createElement("template"); t.innerHTML = h.trim(); return t.content.firstChild; };
 
   /* --- настройки: шрифт, тема, удобная строка --- */
+  // тема: явный выбор (moto-theme = dark/light) важнее системной; без выбора — как в системе
+  const sysDark = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
+  const isDark = () => { const t = raw("moto-theme", ""); return t === "dark" || (t !== "light" && !!(sysDark && sysDark.matches)); };
+  if (sysDark && sysDark.addEventListener) sysDark.addEventListener("change", () => applyPrefs());
   function applyPrefs() {
     const fs = raw("moto-fs", "1"); if (fs === "1") delete root.dataset.fs; else root.dataset.fs = fs;
-    const th = raw("moto-theme", ""); if (th === "dark") root.dataset.theme = "dark"; else delete root.dataset.theme;
+    const th = isDark() ? "dark" : ""; if (th === "dark") root.dataset.theme = "dark"; else delete root.dataset.theme;
     if (raw("moto-comfy", "") === "1") root.dataset.comfy = "1"; else delete root.dataset.comfy;
     const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.content = th === "dark" ? "#191d1a" : "#f3efe6";
     syncButtons();
   }
   function syncButtons() {
-    const dark = raw("moto-theme", "") === "dark", comfy = raw("moto-comfy", "") === "1", fs = +raw("moto-fs", "1");
+    const dark = isDark(), comfy = raw("moto-comfy", "") === "1", fs = +raw("moto-fs", "1");
     document.querySelectorAll('[data-ux="theme"]').forEach((b) => { b.textContent = dark ? "☀ Светлая" : "☾ Тёмная"; b.setAttribute("aria-label", dark ? "Включить светлую тему" : "Включить тёмную тему"); });
     document.querySelectorAll('[data-ux="comfy"]').forEach((b) => b.setAttribute("aria-pressed", comfy));
     document.querySelectorAll('[data-ux="fs-"]').forEach((b) => (b.disabled = fs <= 0));
@@ -974,7 +1220,7 @@ async function loadAiItem(id) {
     if (u) {
       const a = u.dataset.ux;
       if (a === "fs-" || a === "fs+") setRaw("moto-fs", String(Math.max(0, Math.min(3, +raw("moto-fs", "1") + (a === "fs+" ? 1 : -1)))));
-      else if (a === "theme") setRaw("moto-theme", raw("moto-theme", "") === "dark" ? "light" : "dark");
+      else if (a === "theme") setRaw("moto-theme", isDark() ? "light" : "dark");
       else if (a === "comfy") setRaw("moto-comfy", raw("moto-comfy", "") === "1" ? null : "1");
       else if (a === "bm") { openPanel(); return; }
       else if (a === "bm-close") { closePanel(); return; }

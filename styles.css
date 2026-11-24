@@ -695,3 +695,137 @@ html,html:root{scroll-padding-top:calc(var(--hdr) + .75rem)}
 .nav[data-fade="r"],.issue-toc[data-fade="r"],.chips[data-fade="r"]{-webkit-mask-image:linear-gradient(to right,#000 calc(100% - 2rem),transparent);mask-image:linear-gradient(to right,#000 calc(100% - 2rem),transparent)}
 .nav[data-fade="l"],.issue-toc[data-fade="l"],.chips[data-fade="l"]{-webkit-mask-image:linear-gradient(to right,transparent,#000 2rem);mask-image:linear-gradient(to right,transparent,#000 2rem)}
 .nav[data-fade="lr"],.issue-toc[data-fade="lr"],.chips[data-fade="lr"]{-webkit-mask-image:linear-gradient(to right,transparent,#000 2rem,#000 calc(100% - 2rem),transparent);mask-image:linear-gradient(to right,transparent,#000 2rem,#000 calc(100% - 2rem),transparent)}
+
+/* ===== Лента и выпуск ИИ 2026-11-24: колонка чтения, поиск, фильтры, метки, оглавление сбоку ===== */
+:root{--read-font:system-ui,-apple-system,"Segoe UI Variable Text","Segoe UI",Roboto,"Noto Sans","Helvetica Neue",Arial,sans-serif;--measure:70ch;--focus:0 0 0 3px color-mix(in srgb,var(--accent) 45%,transparent)}
+:is(.feed-tools,.news-days,.issue,.issue-head,.issue-nav) :is(a,button,input,summary):focus-visible,.feed-card:focus-visible,.issue-toc a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;box-shadow:none}
+/* панель поиска и фильтров */
+.feed-tools{display:flex;flex-direction:column;gap:.6rem;margin:0 0 1.2rem}
+.feed-search{position:relative;display:flex;align-items:center}
+.feed-search svg{position:absolute;left:.85rem;color:var(--muted);pointer-events:none}
+.feed-search input{width:100%;font:inherit;font-size:1rem;padding:.72rem 2.6rem .72rem 2.5rem;border-radius:999px;border:1px solid var(--line);background:var(--card-solid,#fffcf6);color:var(--text);-webkit-appearance:none;appearance:none}
+.feed-search input:focus{outline:none;border-color:var(--accent);box-shadow:var(--focus)}
+.feed-search input::-webkit-search-cancel-button{cursor:pointer}
+.feed-search kbd{position:absolute;right:.9rem;font:600 .75rem var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:.35rem;padding:.05rem .4rem;pointer-events:none}
+.feed-search input:focus ~ kbd,.feed-search input:not(:placeholder-shown) ~ kbd{display:none}
+@media(hover:none){.feed-search kbd{display:none}}
+.feed-row{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .9rem}
+.seg{display:inline-flex;padding:.2rem;border-radius:999px;background:var(--accent-soft);gap:.15rem}
+.seg button{font:inherit;font-size:.88rem;border:0;background:transparent;color:var(--text);padding:.32rem .85rem;border-radius:999px;cursor:pointer;min-height:32px}
+.seg button[aria-pressed="true"]{background:var(--card-solid,#fffcf6);color:var(--accent);font-weight:650;box-shadow:0 1px 3px rgba(30,40,30,.14)}
+.feed-deep{display:inline-flex;align-items:center;gap:.4rem;font-size:.88rem;color:var(--muted);cursor:pointer;user-select:none}
+.feed-deep input{width:1rem;height:1rem;accent-color:var(--accent)}
+.chip{font:inherit;font-size:.84rem;white-space:nowrap;flex:0 0 auto;padding:.3rem .75rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer;min-height:32px}
+.chip[style*="--h"]{border-color:hsl(var(--h) 45% 50% / .35)}
+.chip:hover{border-color:var(--accent)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#f7f4ea;font-weight:600}
+.chip[style*="--h"][aria-pressed="true"]{background:hsl(var(--h) 45% 36%);border-color:hsl(var(--h) 45% 36%)}
+.feed-tools .chips{margin:0}
+.feed-status{margin:0;font-size:.84rem;color:var(--muted);min-height:1.2em}
+/* дни и карточки */
+.news-day-title{position:sticky;top:calc(var(--hdr) - 1px);z-index:4;margin:0 -.4rem .5rem;padding:.4rem .6rem;font-size:.8rem;letter-spacing:.06em;background:color-mix(in srgb,var(--bg0) 96%,transparent);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:.6rem}
+.feed-card{display:flex;flex-direction:column;align-items:stretch;gap:.35rem;padding:1rem 1.1rem;font-family:var(--read-font)}
+.feed-card .news-head{font-size:1.08rem;line-height:1.32;font-weight:680;margin:0;text-wrap:balance;color:var(--text)}
+.feed-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.35rem .6rem;font-size:.8rem;color:var(--muted)}
+.feed-meta .news-slot{margin:0}
+.feed-topic{font-weight:600;color:var(--accent);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.feed-rt-box:empty{display:none}
+.feed-rt{font-variant-numeric:tabular-nums}
+.feed-rt-box{margin-left:auto}
+.feed-sum{color:var(--muted);font-size:.95rem;line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-wrap:pretty;max-width:var(--measure)}
+.feed-tags{display:flex;flex-wrap:wrap;gap:.3rem}
+.feed-tags:empty{display:none}
+.feed-card mark,.issue mark{background:color-mix(in srgb,#e8c547 45%,transparent);color:inherit;border-radius:.2em;padding:0 .1em}
+.feed-more{display:block;width:100%;margin:1.1rem 0 0;font:inherit;font-weight:600;color:var(--accent);padding:.85rem;border:1px dashed var(--accent);border-radius:1rem;background:transparent;cursor:pointer}
+.feed-more:hover{background:var(--accent-soft)}
+.feed-more[hidden]{display:none}
+.link-btn{font:inherit;color:var(--accent);background:none;border:0;text-decoration:underline;cursor:pointer;padding:0}
+/* метки с оттенком темы */
+.tag{font-size:.74rem;line-height:1.5;padding:.05rem .5rem;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:600;white-space:nowrap}
+.tag[style*="--h"]{background:hsl(var(--h) 60% 50% / .13);color:hsl(var(--h) 50% 30%)}
+html[data-theme="dark"] .tag[style*="--h"]{background:hsl(var(--h) 45% 55% / .18);color:hsl(var(--h) 65% 78%)}
+html[data-theme="dark"] .chip[style*="--h"][aria-pressed="true"]{background:hsl(var(--h) 40% 62%);border-color:hsl(var(--h) 40% 62%);color:#14181a}
+html[data-theme="dark"] :is(.chip,.feed-search input,.seg button[aria-pressed="true"]){background-color:var(--card-solid)}
+html[data-theme="dark"] .chip[aria-pressed="true"]:not([style*="--h"]){background:var(--accent);color:#122015}
+html[data-theme="dark"] .news-day-title{background:color-mix(in srgb,#191d1a 96%,transparent)}
+/* выпуск: колонка чтения */
+.wrap:has(.brief-layout.has-toc){max-width:1180px}
+.brief-main{min-width:0}
+.issue-head{max-width:var(--measure)}
+.issue-head h1{font-family:var(--read-font);font-size:clamp(1.45rem,1.1rem + 1.4vw,2.05rem);line-height:1.2;letter-spacing:-.01em;margin:.5rem 0 .7rem;text-wrap:balance}
+.issue-meta{flex-wrap:wrap;gap:.35rem .6rem;font-size:.88rem}
+.issue-topic{color:var(--accent);font-weight:600}
+.issue-topic::before{content:"·";color:var(--muted);margin-right:.6rem;font-weight:400}
+.issue-sub{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .9rem;margin:0 0 .9rem;font-size:.88rem;color:var(--muted)}
+.share-btn{font:inherit;font-size:.85rem;color:var(--accent);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.25rem .8rem;cursor:pointer;min-height:32px}
+.share-btn:hover{border-color:var(--accent);background:var(--accent-soft)}
+.issue{font-family:var(--read-font);font-size:1.07rem;line-height:1.7;max-width:var(--measure);hyphens:auto;-webkit-hyphens:auto;overflow-wrap:break-word}
+.issue p,.issue li{text-wrap:pretty}
+.issue h2{font-size:1.22rem;line-height:1.3;letter-spacing:-.005em;margin:0 0 .7rem;text-wrap:balance}
+.issue-dek{margin:0 0 1.4rem;padding:0 0 1.1rem;border-bottom:1px solid var(--line)}
+.issue-dek .issue-kicker{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 .35rem}
+.issue-dek p{font-size:1.18rem;line-height:1.55;color:var(--text);margin:0}
+.issue-item{padding:1.05rem 1.1rem}
+.issue-item h3{font-size:1.12rem;line-height:1.35;margin:.15rem 0 .45rem;text-wrap:balance}
+.issue-item-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .45rem;margin:.1rem 0 .1rem}
+.issue-item-meta .tags{margin:0}
+.issue-item-date{font-size:.78rem;font-weight:650;color:var(--muted);font-variant-numeric:tabular-nums;margin-right:.15rem}
+/* строки «Источник:» — компактные ссылки-чипы */
+.src-line{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .4rem;font-size:.84rem;color:var(--muted);margin:.55rem 0 0!important}
+.src-label{font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.05em}
+.src-line .src-link{display:inline-flex;align-items:center;gap:.2rem;padding:.1rem .55rem;border-radius:999px;border:1px solid var(--line);background:var(--card);color:var(--accent);text-decoration:none;font-size:.82rem;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.src-line .src-link::after{content:"↗";font-size:.8em;opacity:.7}
+.src-line .src-link:hover{border-color:var(--accent);background:var(--accent-soft)}
+.issue li.src-li{list-style:none;margin-left:-1.15rem}
+/* словарь выпуска — отдельная плашка */
+.issue-glossary{padding:1.1rem 1.1rem .9rem;border-radius:1.1rem;background:color-mix(in srgb,var(--accent) 6%,var(--card-solid,#fffcf6));border:1px solid var(--line)}
+.gl-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem;margin:0 0 .6rem}
+.gl-head h2{margin:0}
+.gl-toggle{font:inherit;font-size:.84rem;color:var(--accent);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.25rem .8rem;cursor:pointer;min-height:32px}
+.gl-toggle:hover{border-color:var(--accent)}
+.gl-intro{font-size:.92rem;color:var(--muted);margin:0 0 .7rem}
+.gl-intro p{margin:0}
+.gl-item summary{display:block}
+.gl-alt{font-weight:400;color:var(--muted);font-size:.92em}
+.gl-body{font-size:.96rem;line-height:1.6}
+/* оглавление: на телефоне — липкий ряд, на широком экране — колонка слева */
+.issue-toc .toc-title{display:none}
+.issue-toc ol{list-style:none;margin:0;padding:0}
+.issue-toc > ol{display:flex;gap:.35rem}
+.issue-toc > ol > li{flex:0 0 auto}
+.issue-toc .toc-sub{display:none}
+.issue-toc a.active{background:var(--accent);color:#f7f4ea;border-color:var(--accent)}
+@media(max-width:1099px){
+  .brief-layout.has-toc{display:flex;flex-direction:column}
+  .brief-layout.has-toc .brief-main{display:contents}
+  .brief-layout.has-toc .brief-main > *{order:3}
+  .brief-layout.has-toc .brief-main > :is(.back-link,.issue-head,.ux-bar){order:1}
+  .brief-side{order:2;position:sticky;top:calc(var(--hdr) - 1px);z-index:6}
+  .brief-side .issue-toc{position:static}
+  .brief-layout.has-toc .back-link{align-self:flex-start}
+  .issue-toc > ol > li.in > a{background:var(--accent);color:#f7f4ea;border-color:var(--accent)}
+  html[data-theme="dark"] .issue-toc > ol > li.in > a{color:#122015}
+}
+html[data-comfy="1"] .issue{max-width:62ch}
+@media(min-width:1100px){
+  #brief-root:has(.brief-layout.has-toc),html[data-comfy="1"] #brief-root:has(.brief-layout.has-toc){max-width:none}
+  .brief-layout.has-toc{max-width:calc(15rem + 2.75rem + 74ch);margin:0 auto;display:grid;grid-template-columns:15rem minmax(0,1fr);column-gap:2.75rem;align-items:start}
+  .brief-side{position:sticky;top:calc(var(--hdr) + 1rem)}
+  .brief-side .issue-toc{position:static;display:block;background:none!important;padding:0;margin:0;max-height:calc(100vh - var(--hdr) - 2rem);overflow:auto;scrollbar-width:thin;-webkit-mask-image:none!important;mask-image:none!important}
+  .issue-toc .toc-title{display:block;font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin:0 0 .5rem .7rem}
+  .issue-toc > ol{display:block;border-left:2px solid var(--line)}
+  .issue-toc li{margin:0}
+  .issue-toc a{display:block;white-space:normal;border:0;background:none;border-radius:0 .5rem .5rem 0;padding:.32rem .7rem;margin-left:-2px;border-left:2px solid transparent;font-size:.88rem;line-height:1.35;color:var(--muted)}
+  .issue-toc a:hover{color:var(--accent);background:var(--accent-soft)}
+  .issue-toc a.active,html[data-theme="dark"] .issue-toc a.active{background:var(--accent-soft);color:var(--accent);border-left-color:var(--accent);font-weight:650}
+  .issue-toc .toc-sub{display:block;margin:.1rem 0 .3rem}
+  .issue-toc .toc-sub a{font-size:.8rem;padding:.22rem .7rem .22rem 1.35rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .issue-toc > ol > li:not(.in) > .toc-sub{display:none}
+  .brief-main .issue-nav{max-width:var(--measure)}
+}
+/* соседние выпуски */
+.issue-nav-btn .nav-when{font-weight:600;font-size:.86rem}
+.issue-nav-btn .nav-title{font-weight:500;font-size:.86rem;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media(max-width:520px){.issue-nav{grid-template-columns:1fr}.issue-nav-btn.newer{text-align:left}.feed-card{padding:.9rem .95rem}.issue{font-size:1.04rem}.issue-dek p{font-size:1.1rem}.issue-glossary{padding:.9rem .8rem .7rem}}
+@media(prefers-reduced-motion:reduce){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}}
+@media print{.feed-tools,.feed-more,.brief-side,.share-btn,.gl-toggle{display:none!important}.issue{max-width:none}}
