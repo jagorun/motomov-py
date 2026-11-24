@@ -1,9 +1,36 @@
 {
   "cleanUrls": true,
   "redirects": [
-    { "source": "/", "destination": "/novosti", "permanent": false }
+    {
+      "source": "/",
+      "destination": "/novosti",
+      "permanent": false
+    }
   ],
   "rewrites": [
-    { "source": "/start", "destination": "/index" }
+    {
+      "source": "/start",
+      "destination": "/index"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/data/novosti/items/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/data/novosti/digest/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=60, stale-while-revalidate=3600"
+        }
+      ]
+    }
   ]
 }

@@ -845,3 +845,43 @@ html[data-comfy="1"] .issue{max-width:62ch}
 :is(#kb-filters,#slovar-filters,#py-slovar-filters)[data-fade="l"]{-webkit-mask-image:linear-gradient(to right,transparent,#000 2rem);mask-image:linear-gradient(to right,transparent,#000 2rem)}
 :is(#kb-filters,#slovar-filters,#py-slovar-filters)[data-fade="lr"]{-webkit-mask-image:linear-gradient(to right,transparent,#000 2rem,#000 calc(100% - 2rem),transparent);mask-image:linear-gradient(to right,transparent,#000 2rem,#000 calc(100% - 2rem),transparent)}
 :where(.news-card,.fold-item > summary,.ghost-btn,.lesson-tab,.filter-row button,.put-road,.card,.lesson-card,.kb-card,.nav a,.nav-more summary):focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ===== Лента 2026-11-24, вечер: «главное в выпуске» на карточке, скелетоны, плавные переходы ===== */
+.feed-card{position:relative;cursor:pointer}
+.feed-card .feed-link{color:inherit;text-decoration:none}
+.feed-card .feed-link::after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:0}
+.feed-card .feed-link:focus-visible{outline:none}
+.feed-card:has(.feed-link:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.feed-card:hover{border-color:var(--accent)}
+.feed-card:hover .feed-link{color:var(--accent)}
+.feed-card.has-news .feed-sum{-webkit-line-clamp:2}
+.feed-news:empty{display:none}
+.feed-news{position:relative;z-index:1;margin-top:.35rem;padding-top:.6rem;border-top:1px dashed var(--line);cursor:auto}
+.fn-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:0 0 .35rem}
+.fn-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.45rem;counter-reset:fn}
+.fn-list li{position:relative;padding-left:1.45rem;min-width:0;counter-increment:fn}
+.fn-list li::before{content:counter(fn);position:absolute;left:0;top:.1rem;width:1.05rem;height:1.05rem;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:.66rem;font-weight:700;line-height:1.05rem;text-align:center}
+.fn-link{display:inline;color:var(--text);text-decoration:none;font-weight:600;font-size:.93rem;line-height:1.38}
+.fn-link:hover .fn-h{color:var(--accent);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 40%,transparent);text-underline-offset:2px}
+.fn-tags{display:inline-flex;flex-wrap:wrap;gap:.2rem;vertical-align:.08em}
+.fn-tags .tag{font-size:.66rem;padding:0 .4rem}
+.fn-g{display:block;font-size:.85rem;line-height:1.4;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fn-list li.more:not([hidden]){animation:fn-in .22s ease-out both}
+.fn-more{font:inherit;font-size:.82rem;font-weight:600;color:var(--accent);background:none;border:0;padding:.35rem 0 0 1.45rem;cursor:pointer}
+.fn-more:hover{text-decoration:underline}
+.feed-card.fn-fresh .feed-news{animation:fn-in .25s ease-out both}
+@keyframes fn-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(max-width:520px){.fn-g{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}}
+.issue-item.hash-hit{box-shadow:0 0 0 2px var(--accent);transition:box-shadow .6s ease}
+/* скелетоны вместо «Загрузка…» */
+.skel{display:flex;flex-direction:column;gap:.8rem}
+.skel-card{padding:1rem 1.1rem;border-radius:1rem;border:1px solid var(--line);background:var(--card)}
+.skel-line{height:.8rem;border-radius:.4rem;margin:.45rem 0;background:linear-gradient(90deg,var(--accent-soft) 0%,color-mix(in srgb,var(--accent) 22%,transparent) 50%,var(--accent-soft) 100%);background-size:200% 100%;animation:skel 1.3s ease-in-out infinite}
+.skel-line.w30{width:30%}.skel-line.w50{width:50%}.skel-line.w70{width:70%}.skel-line.w90{width:90%}.skel-line.h{height:1.15rem}
+@keyframes skel{from{background-position:100% 0}to{background-position:-100% 0}}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+/* плавный переход между лентой и выпуском (Chrome/Edge/Safari 18+, остальные — обычный переход) */
+.issue-head h1{view-transition-name:issue-title}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.2s}
+::view-transition-group(issue-title){animation-duration:.28s;animation-timing-function:cubic-bezier(.2,.7,.2,1)}
+@media(prefers-reduced-motion:reduce){.skel-line,.feed-card.fn-fresh .feed-news,.fn-list li.more:not([hidden]){animation:none}.issue-item.hash-hit{transition:none}}

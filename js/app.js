@@ -8,9 +8,10 @@
   if (document.getElementById("news-list")) loadNews();
   if (document.getElementById("youtube-list")) loadYoutube();
   if (document.getElementById("python-deep-list")) loadPythonDeep();
-  if (document.getElementById("novosti-list")) loadNovosti();
-  if (document.getElementById("archive-list")) loadArchive(params.get("month"));
-  if (document.getElementById("brief-root")) loadBrief(params.get("id"), params.get("kind"));
+  // лента и выпуск стартуют после разбора всего файла (их помощники объявлены ниже как const)
+  if (document.getElementById("novosti-list")) Promise.resolve().then(() => loadNovosti());
+  if (document.getElementById("archive-list")) Promise.resolve().then(() => loadArchive(params.get("month")));
+  if (document.getElementById("brief-root")) Promise.resolve().then(() => loadBrief(params.get("id"), params.get("kind")));
 })();
 function el(html) {
   const t = document.createElement("template");
@@ -31,8 +32,10 @@ function kindLabel(kind) {
   if (kind === "youtube") return "youtube";
   return "заметка";
 }
+// на py.motomov.ru сразу чистый адрес /brief (без перенаправления 308 с brief.html — минус один запрос на переход)
 function briefHref(it) {
-  return `brief.html?id=${encodeURIComponent(it.id)}&kind=${encodeURIComponent(it.kind)}`;
+  const path = /(^|\.)motomov\.ru$/.test(location.hostname) ? "brief" : "brief.html";
+  return `${path}?id=${encodeURIComponent(it.id)}&kind=${encodeURIComponent(it.kind)}`;
 }
 function renderBody(parts) {
   return parts.map((block) => {
@@ -277,31 +280,80 @@ function ruPlural(n, one, few, many) {
   if (b === 1) return one;
   return many;
 }
-// метки, объём и число новостей из текста выпуска; кэш в localStorage (только для ускорения, без данных пользователя)
+// метки, объём, число новостей и «главное в выпуске»:
+// 1) готовый указатель data/novosti/digest/ (meta.json + YYYY-MM.json, собирает scripts/build_digest_index.py);
+// 2) если записи нет или подпись не совпала — сам выпуск (items/<id>.json или body в карточке), разбор здесь же.
 const FEED_META_KEY = "mpy-feed-meta-v1";
 const feedMeta = (() => { try { return JSON.parse(localStorage.getItem(FEED_META_KEY) || "{}") || {}; } catch (e) { return {}; } })();
 const feedBodies = new Map();
+const feedNewsMem = new Map();
+const FEED_DIGEST = { meta: {}, metaP: null, months: new Map(), monthData: new Map() };
 function feedSig(it) { return String(it.title || "").length + ":" + String(it.summary || "").length; }
-function feedMetaOf(it) { const m = feedMeta[it.id]; return m && m.s === feedSig(it) ? m : null; }
+function feedDigestMeta() {
+  if (!FEED_DIGEST.metaP) {
+    FEED_DIGEST.metaP = fetch("data/novosti/digest/meta.json").then((r) => (r.ok ? r.json() : null)).catch(() => null)
+      .then((d) => { FEED_DIGEST.meta = (d && d.items) || {}; FEED_DIGEST.monthList = (d && d.months) || []; return FEED_DIGEST.meta; });
+  }
+  return FEED_DIGEST.metaP;
+}
+function feedMonthOf(it) { return String(it.date || it.id || "").slice(0, 7); }
+function feedDigestMonth(m) {
+  if (!/^\d{4}-\d{2}$/.test(m)) return Promise.resolve({});
+  if (!FEED_DIGEST.months.has(m)) {
+    FEED_DIGEST.months.set(m, fetch("data/novosti/digest/" + m + ".json").then((r) => (r.ok ? r.json() : null)).catch(() => null)
+      .then((d) => { const v = (d && d.items) || {}; FEED_DIGEST.monthData.set(m, v); return v; }));
+  }
+  return FEED_DIGEST.months.get(m);
+}
+function feedMetaOf(it) {
+  const d = FEED_DIGEST.meta[it.id]; if (d && d.s === feedSig(it)) return d;
+  const m = feedMeta[it.id]; return m && m.s === feedSig(it) ? m : null;
+}
+function feedNewsOf(it) {
+  if (feedNewsMem.has(it.id)) return feedNewsMem.get(it.id);
+  const md = FEED_DIGEST.monthData.get(feedMonthOf(it)); const e = md && md[it.id];
+  return e && e.s === feedSig(it) ? e.news : null;
+}
 function feedSaveMeta() {
   clearTimeout(feedSaveMeta._t);
   feedSaveMeta._t = setTimeout(() => { try { localStorage.setItem(FEED_META_KEY, JSON.stringify(feedMeta)); } catch (e) {} }, 400);
 }
+function feedGist(lines) {
+  for (const raw of lines) {
+    let s = String(raw).trim();
+    if (!s || /^\s*[-*]?\s*Источник/i.test(s) || s.startsWith("```")) continue;
+    s = s.replace(/^[-*]\s+/, "").replace(/\*\*/g, "");
+    const m = /^(.+?[.!?…])(?=\s+[«"(A-ZА-ЯЁ0-9]|$)/.exec(s);
+    const first = m && m[1].length >= 25 ? m[1] : s;
+    if (first.length <= 120) return first;
+    let cut = first.slice(0, 120);
+    if (cut.slice(40).includes(" ")) cut = cut.slice(0, cut.lastIndexOf(" "));
+    return cut.replace(/[\s,;:—–-]+$/, "") + "…";
+  }
+  return "";
+}
 function feedMetaFromBody(body) {
-  const tags = []; let words = 0, n = 0, g = 0, kind = "normal";
+  const tags = []; const news = []; let words = 0, g = 0, kind = "normal", cur = null;
   body.forEach((raw) => {
     const ln = String(raw);
-    if (/^## /.test(ln)) kind = sectionKind(ln.slice(3));
-    else if (/^### /.test(ln)) {
-      if (kind === "glossary") g += 1;
-      else if (kind !== "promo") {
-        n += 1;
-        (ln.match(/\[([^\]]+)\]/g) || []).forEach((x) => { const t = feedTag(x.slice(1, -1)); if (t && !tags.includes(t)) tags.push(t); });
-      }
-    }
     words += ln.split(/\s+/).filter(Boolean).length;
+    if (/^## /.test(ln)) { kind = sectionKind(ln.slice(3)); cur = null; return; }
+    if (/^### /.test(ln)) {
+      cur = null;
+      if (kind === "glossary") g += 1;
+      else if (kind === "normal") {
+        const p = itemTitleParts(ln.slice(4).trim());
+        const t = [];
+        p.tags.forEach((x) => { const k = feedTag(x); if (k && !t.includes(k)) t.push(k); if (k && !tags.includes(k)) tags.push(k); });
+        cur = { a: "n" + (news.length + 1), h: p.title, d: p.date, t, lines: [] };
+        news.push(cur);
+      }
+      return;
+    }
+    if (cur) cur.lines.push(ln);
   });
-  return { t: tags, w: words, n, g };
+  const out = news.map((x) => { const e = { a: x.a, h: x.h }; if (x.d) e.d = x.d; if (x.t.length) e.t = x.t; const gi = feedGist(x.lines); if (gi) e.g = gi; return e; });
+  return { meta: { t: tags, w: words, n: news.length, g }, news: out };
 }
 async function feedLoadOne(it) {
   if (feedBodies.has(it.id)) return;
@@ -310,7 +362,11 @@ async function feedLoadOne(it) {
     try { const full = await loadAiItem(it.id); body = full && Array.isArray(full.body) ? full.body : []; } catch (e) { body = []; }
   }
   feedBodies.set(it.id, feedNorm(body.join("\n")));
-  if (body.length) { feedMeta[it.id] = Object.assign({ s: feedSig(it) }, feedMetaFromBody(body)); feedSaveMeta(); }
+  if (body.length) {
+    const r = feedMetaFromBody(body);
+    feedNewsMem.set(it.id, r.news);
+    feedMeta[it.id] = Object.assign({ s: feedSig(it) }, r.meta); feedSaveMeta();
+  }
 }
 async function feedLoadMany(items, onProgress) {
   const queue = items.filter((it) => !feedBodies.has(it.id));
@@ -323,12 +379,22 @@ function feedMetaHtml(m) {
   const mins = Math.max(1, Math.round(m.w / 170));
   return `<span class="feed-rt">${m.n ? m.n + " " + ruPlural(m.n, "новость", "новости", "новостей") + " · " : ""}${mins} мин</span>`;
 }
+const FEED_NEWS_TOP = 5;
+function feedNewsHtml(it, news, words) {
+  if (!news || !news.length) return "";
+  const href = briefHref(it);
+  const li = (x, i) => `<li${i >= FEED_NEWS_TOP ? ' class="more" hidden' : ""}><a class="fn-link" href="${href}#${escapeHtml(x.a)}"><span class="fn-h">${feedMark(x.h, words)}</span>${(x.t || []).length ? ` <span class="fn-tags">${x.t.map(tagChipHtml).join("")}</span>` : ""}</a>${x.g ? `<span class="fn-g">${feedMark(x.g, words)}</span>` : ""}</li>`;
+  const rest = news.length - FEED_NEWS_TOP;
+  return `<div class="fn-title">Главное в выпуске</div><ol class="fn-list">${news.map(li).join("")}</ol>${rest > 0 ? `<button type="button" class="fn-more" aria-expanded="false" data-more="${rest}">ещё ${rest} ${ruPlural(rest, "новость", "новости", "новостей")}</button>` : ""}`;
+}
 function novostiRowHtml(it, words) {
   const slot = newsSlot(it);
   const m = feedMetaOf(it);
+  const news = feedNewsOf(it);
   const topic = it.topic && it.topic.length <= 60 ? `<span class="feed-topic">${escapeHtml(it.topic)}</span>` : "";
   const sum = it.summary || (it.topic && !topic ? it.topic : "");
-  return `<a class="news-card feed-card" href="${briefHref(it)}" data-id="${escapeHtml(it.id)}"><span class="feed-meta"><span class="news-slot slot-${slot.key}">${slot.label}</span>${topic}<span class="feed-rt-box">${feedMetaHtml(m)}</span></span><h3 class="news-head">${feedMark(newsHeadline(it), words)}</h3>${sum ? `<span class="feed-sum">${feedMark(sum, words)}</span>` : ""}<span class="feed-tags">${m ? m.t.map(tagChipHtml).join("") : ""}</span></a>`;
+  const href = briefHref(it);
+  return `<article class="feed-card news-card${news && news.length ? " has-news" : ""}" data-id="${escapeHtml(it.id)}" data-href="${href}"><div class="feed-meta"><span class="news-slot slot-${slot.key}">${slot.label}</span>${topic}<span class="feed-rt-box">${feedMetaHtml(m)}</span></div><h3 class="news-head"><a class="feed-link" href="${href}">${feedMark(newsHeadline(it), words)}</a></h3>${sum ? `<p class="feed-sum">${feedMark(sum, words)}</p>` : ""}<div class="feed-tags">${m && !(news && news.length) ? m.t.map(tagChipHtml).join("") : ""}</div><div class="feed-news">${feedNewsHtml(it, news, words)}</div></article>`;
 }
 // дни с липкими заголовками; append=true дописывает порцию к уже отрисованному
 function renderNewsDays(list, items, opts) {
@@ -639,7 +705,8 @@ async function loadSlovar() {
   if (input) onSearchInput(input, draw);
 }
 async function fetchJson(url) {
-  const r = await fetch(url, { cache: "no-cache" });
+  // обычный режим кэша: Vercel отдаёт ленту с must-revalidate (свежесть та же), а <link rel="preload"> срабатывает без второй загрузки
+  const r = await fetch(url);
   if (!r.ok) return [];
   return r.json();
 }
@@ -660,7 +727,7 @@ async function loadArchive() {
 }
 async function loadFeed(list, opts) {
   let items = [];
-  try { items = await fetchJson("data/novosti.json"); } catch (e) { items = []; }
+  try { [items] = await Promise.all([fetchJson("data/novosti.json"), feedDigestMeta()]); } catch (e) { items = []; }
   if (!Array.isArray(items) || !items.length) { list.innerHTML = opts.empty; return; }
   const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   const url0 = new URL(location.href);
@@ -698,7 +765,8 @@ async function loadFeed(list, opts) {
   function matches(it, words) {
     if (st.tag) { const m = feedMetaOf(it); if (!m || !m.t.includes(st.tag)) return false; }
     if (words.length) {
-      const hay = feedNorm([it.title, it.summary, it.topic, it.dateLabel].join(" ")) + (st.deep ? "\n" + (feedBodies.get(it.id) || "") : "");
+      const news = feedNewsOf(it) || [];
+      const hay = feedNorm([it.title, it.summary, it.topic, it.dateLabel].concat(news.map((x) => x.h + " " + (x.g || ""))).join(" ")) + (st.deep ? "\n" + (feedBodies.get(it.id) || "") : "");
       if (!words.every((w) => hay.includes(w))) return false;
     }
     return true;
@@ -721,8 +789,13 @@ async function loadFeed(list, opts) {
       await feedLoadMany(need, (d, t) => { if (tok === drawTok) status.textContent = `Загружаю выпуски для ${st.tag ? "фильтра по теме" : "поиска по тексту"}: ${d} из ${t}…`; });
       if (tok !== drawTok) return;
     }
+    // поиск идёт и по заголовкам новостей внутри выпусков: для него догружаем все месяцы указателя (немного, gzip)
+    if (words.length) { await Promise.all((FEED_DIGEST.monthList || []).map(feedDigestMonth)); if (tok !== drawTok) return; }
     filtered = scope.filter((it) => matches(it, words));
     if (!keepShown) st.shown = FEED_PAGE;
+    // главное в выпусках первой порции — до отрисовки, чтобы карточки не прыгали (не дольше 1,2 с)
+    await Promise.race([feedEnsureMonths(filtered.slice(0, st.shown)), new Promise((r) => setTimeout(r, 1200))]);
+    if (tok !== drawTok) return;
     const apply = () => {
       if (!filtered.length) {
         list.innerHTML = `<div class="empty feed-empty">Ничего не нашлось. <button type="button" class="link-btn" data-reset>Сбросить фильтры</button></div>`;
@@ -738,34 +811,75 @@ async function loadFeed(list, opts) {
       ? `Найдено: ${filtered.length} ${ruPlural(filtered.length, "выпуск", "выпуска", "выпусков")} из ${items.length}`
       : `Всего ${items.length} ${ruPlural(items.length, "выпуск", "выпуска", "выпусков")} · две сводки в день`;
   }
-  // метки и время чтения догружаются только для карточек на экране
+  function feedEnsureMonths(arr) { return Promise.all(Array.from(new Set(arr.map(feedMonthOf))).map(feedDigestMonth)); }
+  // чего нет в указателе (свежий выпуск до пересборки и т.п.) — догружаем сам выпуск, только для карточек на экране
   const pending = new Set(); let running = 0;
+  const byId = new Map(items.map((x) => [x.id, x]));
   const pump = () => {
     while (running < 3 && pending.size) {
       const card = pending.values().next().value; pending.delete(card);
-      const it = items.find((x) => x.id === card.dataset.id); if (!it) continue;
+      const it = byId.get(card.dataset.id); if (!it) continue;
       running += 1;
-      feedLoadOne(it).then(() => { running -= 1; paintCard(card, it); pump(); });
+      feedDigestMonth(feedMonthOf(it))
+        .then(() => (feedMetaOf(it) && feedNewsOf(it) ? null : feedLoadOne(it)))
+        .then(() => { running -= 1; paintCard(card, it); pump(); }, () => { running -= 1; pump(); });
     }
   };
   function paintCard(card, it) {
-    const m = feedMetaOf(it); if (!m || !card.isConnected) return;
-    const tg = card.querySelector(".feed-tags"); if (tg && !tg.childElementCount) tg.innerHTML = m.t.map(tagChipHtml).join("");
-    const rt = card.querySelector(".feed-rt-box"); if (rt && !rt.childElementCount) rt.innerHTML = feedMetaHtml(m);
+    if (!card.isConnected) return;
+    const m = feedMetaOf(it), news = feedNewsOf(it), words = feedWords(st.q);
+    const rt = card.querySelector(".feed-rt-box"); if (m && rt && !rt.childElementCount) rt.innerHTML = feedMetaHtml(m);
+    const fn = card.querySelector(".feed-news");
+    if (news && news.length && fn && !fn.childElementCount) { fn.innerHTML = feedNewsHtml(it, news, words); card.classList.add("has-news", "fn-fresh"); }
+    const tg = card.querySelector(".feed-tags"); if (m && tg && !tg.childElementCount && !(news && news.length)) tg.innerHTML = m.t.map(tagChipHtml).join("");
   }
   const io = "IntersectionObserver" in window ? new IntersectionObserver((ens) => ens.forEach((en) => {
     if (!en.isIntersecting) return; io.unobserve(en.target); pending.add(en.target); pump();
-  }), { rootMargin: "200px 0px" }) : null;
+  }), { rootMargin: "300px 0px" }) : null;
   function observeCards() {
-    if (!io) return;
-    list.querySelectorAll(".feed-card").forEach((c) => { const it = items.find((x) => x.id === c.dataset.id); if (it && !feedMetaOf(it)) io.observe(c); });
+    list.querySelectorAll(".feed-card").forEach((c) => {
+      const it = byId.get(c.dataset.id); if (!it) return;
+      if (feedMetaOf(it) && feedNewsOf(it)) return;
+      if (io) io.observe(c); else { pending.add(c); pump(); }
+    });
   }
-  more.addEventListener("click", () => {
+  more.addEventListener("click", async () => {
     const from = st.shown; st.shown += FEED_PAGE;
-    renderNewsDays(list, filtered.slice(from, st.shown), { append: true, words: feedWords(st.q) });
+    const part = filtered.slice(from, st.shown);
+    more.disabled = true;
+    await Promise.race([feedEnsureMonths(part), new Promise((r) => setTimeout(r, 1200))]);
+    more.disabled = false;
+    renderNewsDays(list, part, { append: true, words: feedWords(st.q) });
     paintMore(); observeCards();
-    const first = list.querySelectorAll(".feed-card")[from]; if (first) first.focus({ preventScroll: true });
+    const first = list.querySelectorAll(".feed-card .feed-link")[from]; if (first) first.focus({ preventScroll: true });
   });
+  // раскрыть остальные новости выпуска
+  list.addEventListener("click", (e) => {
+    const b = e.target.closest(".fn-more"); if (!b) return;
+    e.preventDefault();
+    const open = b.getAttribute("aria-expanded") !== "true";
+    b.closest(".feed-news").querySelectorAll("li.more").forEach((li) => { li.hidden = !open; });
+    b.setAttribute("aria-expanded", String(open));
+    const k = Number(b.dataset.more) || 0;
+    b.textContent = open ? "свернуть" : `ещё ${k} ${ruPlural(k, "новость", "новости", "новостей")}`;
+  });
+  // заранее подтягиваем выпуск, на который наводят или нажимают: переход открывается почти мгновенно
+  const warmed = new Set();
+  const warm = (e) => {
+    const card = e.target.closest && e.target.closest(".feed-card"); if (!card) return;
+    const id = card.dataset.id; if (!id || warmed.has(id)) return; warmed.add(id);
+    const it = byId.get(id); if (it && !Array.isArray(it.body)) loadAiItem(id).catch(() => {});
+  };
+  list.addEventListener("pointerover", warm, { passive: true });
+  list.addEventListener("touchstart", warm, { passive: true });
+  list.addEventListener("focusin", warm);
+  // общий заголовок карточки и выпуска для плавного перехода (View Transitions между страницами)
+  list.addEventListener("click", (e) => {
+    const a = e.target.closest("a.feed-link, a.fn-link"); if (!a) return;
+    list.querySelectorAll(".news-head[style]").forEach((h) => h.style.removeProperty("view-transition-name"));
+    const h = a.closest(".feed-card").querySelector(".news-head"); if (h) h.style.setProperty("view-transition-name", "issue-title");
+  });
+  addEventListener("pageshow", () => list.querySelectorAll(".news-head[style]").forEach((h) => h.style.removeProperty("view-transition-name")));
   tools.addEventListener("click", (e) => {
     const b = e.target.closest("button"); if (!b) return;
     if (b.hasAttribute("data-slot")) st.slot = b.dataset.slot;
@@ -794,6 +908,8 @@ async function loadBrief(id, kind) {
   const wantYoutube = kind === "youtube" || (id && String(id).startsWith("yt-"));
   // выпуск ИИ или YouTube — большой briefs.json (python) не нужен
   const needPython = kind !== "ai" && kind !== "youtube";
+  // выпуск ИИ: файл текста тянем сразу, параллельно с лентой (раньше — после неё)
+  const itemEarly = kind === "ai" && id ? loadAiItem(id).catch(() => null) : null;
   const fetches = [
     needPython ? fetchJson("data/briefs.json") : Promise.resolve([]),
     kind === "youtube" ? Promise.resolve([]) : fetchJson("data/novosti.json")
@@ -823,7 +939,7 @@ async function loadBrief(id, kind) {
   const i = id ? pool.findIndex((it) => it.id === id) : -1;
   let brief = i >= 0 ? pool[i] : null;
   if (brief && brief.kind === "ai" && !Array.isArray(brief.body)) {
-    const full = await loadAiItem(brief.id);
+    const full = await (itemEarly && brief.id === id ? itemEarly : loadAiItem(brief.id));
     if (full) brief = full;
   }
   if (!brief) { root.innerHTML = `<div class="empty">Сводка не найдена${id ? " («" + escapeHtml(id) + "»)" : ""}. <a href="archive.html">К архиву</a> · <a href="news.html">К python</a> · <a href="youtube.html">К YouTube</a></div>`; return; }
@@ -857,6 +973,11 @@ async function loadBrief(id, kind) {
     const article = issue ? `<article class="issue">${issue.html}</article>` : `<article class="article">${renderBody(brief.body || [])}</article>`;
     root.innerHTML = `<div class="brief-layout${issue && issue.tocHtml ? " has-toc" : ""}">${issue && issue.tocHtml ? `<aside class="brief-side">${issue.tocHtml}</aside>` : ""}<div class="brief-main">${head}${article}${pager}</div></div>`;
     if (issue) setupIssueToc(root);
+    // переход по ссылке «главное в выпуске» (#n3): после отрисовки докручиваем к новости
+    if (location.hash.length > 1) {
+      const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+      if (target) requestAnimationFrame(() => { target.scrollIntoView({ block: "start" }); target.classList.add("hash-hit"); });
+    }
     root.addEventListener("click", async (e) => {
       const g = e.target.closest(".gl-toggle");
       if (g) {
@@ -1082,10 +1203,15 @@ async function loadYoutube() {
   if (!items.length) { list.innerHTML = '<div class="empty">Пока нет выпусков.</div>'; return; }
   items.forEach((it) => list.appendChild(el(cardHtml(it))));
 }
-async function loadAiItem(id) {
-  const r = await fetch("data/novosti/items/" + encodeURIComponent(id) + ".json", { cache: "no-cache" });
-  if (!r.ok) return null;
-  return r.json();
+// файл выпуска: один запрос на страницу (повторные вызовы ждут тот же ответ); свежесть — по Cache-Control из vercel.json
+const AI_ITEM_CACHE = new Map();
+function loadAiItem(id) {
+  if (!AI_ITEM_CACHE.has(id)) {
+    const p = fetch("data/novosti/items/" + encodeURIComponent(id) + ".json").then((r) => (r.ok ? r.json() : null));
+    p.catch(() => AI_ITEM_CACHE.delete(id));
+    AI_ITEM_CACHE.set(id, p);
+  }
+  return AI_ITEM_CACHE.get(id);
 }
 (function () {
   const nav = document.querySelector(".site-header .nav");
@@ -1261,7 +1387,7 @@ async function loadAiItem(id) {
   });
 
   /* --- появление карточек при прокрутке --- */
-  const REVEAL = ".news-card,.fold-item,.issue-item,.issue-lead,.m-chapter,.put-road,.card,.kb-card,.lesson-card,.gl-item,.sp-item,.course-block,.issue-nav,.more-link";
+  const REVEAL = ".news-card,.feed-card,.fold-item,.issue-item,.issue-lead,.m-chapter,.put-road,.card,.kb-card,.lesson-card,.gl-item,.sp-item,.course-block,.issue-nav,.more-link";
   const io = !reduce && "IntersectionObserver" in window ? new IntersectionObserver((ens) => ens.forEach((en) => {
     if (en.isIntersecting) { en.target.classList.add("ux-in"); io.unobserve(en.target); }
   }), { rootMargin: "0px 0px -4% 0px" }) : null;
@@ -1306,8 +1432,8 @@ async function loadAiItem(id) {
   }
   function markLists() {
     const readMap = getJ("moto-read", {}), isRead = (k) => !!readMap[k];
-    document.querySelectorAll("a.news-card").forEach((a) => {
-      let id = ""; try { id = new URL(a.href).searchParams.get("id") || ""; } catch (e) {}
+    document.querySelectorAll("a.news-card, article.feed-card[data-id]").forEach((a) => {
+      let id = a.dataset.id || ""; if (!id) try { id = new URL(a.href).searchParams.get("id") || ""; } catch (e) {}
       const on = id && isRead("brief:" + id); a.classList.toggle("ux-read", !!on);
       const head = a.querySelector(".news-head"), bd = a.querySelector(".ux-read-badge");
       if (on && !bd && head) head.appendChild(mk('<span class="ux-read-badge">✓ прочитано</span>')); else if (!on && bd) bd.remove();

@@ -1,0 +1,60 @@
+# ЗАГОТОВКА: чтобы включить, перенесите этот файл в .github/workflows/digest-index.yml
+# (токену бота не хватает права workflow, поэтому положить его туда может только владелец).
+name: digest-index
+# Указатель ленты для страниц «Новости»/«Архив»: data/novosti/digest/ (meta.json + YYYY-MM.json).
+# Собирается scripts/build_digest_index.py ТОЛЬКО из чтения data/novosti.json и data/novosti/items/;
+# сами данные ленты этот workflow не меняет и не коммитит. Нет изменений — нет коммита.
+# Своя группа concurrency (не guard-novosti), чтобы не вытеснять запуски сторожа из очереди.
+# Пуш обычный (без force): fetch + reset на свежий main, пересборка, повтор при гонке.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/novosti.json'
+      - 'data/novosti/items/**'
+      - 'scripts/build_digest_index.py'
+  schedule:
+    - cron: '50 * * * *'   # раз в час догоняем (например, после починки ленты сторожем)
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: digest-index
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        run: |
+          set -e
+          # Автор — владелец репозитория (иначе Vercel Hobby не задеплоит коммит бота).
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch --depth=1 origin main
+            git reset --hard origin/main
+            python3 scripts/build_digest_index.py
+            git add -A data/novosti/digest
+            if git diff --cached --quiet; then
+              echo "указатель актуален, коммитить нечего"
+              exit 0
+            fi
+            # страховка: в коммит попадает только data/novosti/digest/
+            if git diff --cached --name-only | grep -v '^data/novosti/digest/'; then
+              echo "неожиданные файлы в коммите — стоп"; exit 1
+            fi
+            git commit --author="jagorun <jagorun@users.noreply.github.com>" -m "digest-index: обновлён указатель ленты"
+            if git push origin HEAD:main; then
+              echo "pushed $(git rev-parse --short HEAD)"
+              exit 0
+            fi
+            echo "push отклонён (параллельный коммит), повтор $attempt"
+            sleep 7
+          done
+          exit 1
