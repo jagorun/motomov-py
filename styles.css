@@ -947,10 +947,11 @@ html[data-theme="dark"] .carousel{box-shadow:0 14px 36px rgba(0,0,0,.28),0 0 40p
 .spark-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .spark{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:vzSpark .85s ease-out forwards}
 @keyframes vzSpark{from{transform:translate(0,0) scale(1);opacity:.95}to{transform:translate(var(--dx),var(--dy)) scale(0);opacity:0}}
-.carousel-track{position:relative;min-height:6.6rem}
-.carousel-item{display:none;opacity:0;transform:translateY(10px)}
-.carousel-item.is-active{display:block;animation:vzQuoteIn .6s cubic-bezier(.22,1,.36,1) forwards}
-.carousel-item.is-leaving{display:block;position:absolute;inset:0 0 auto 0;animation:vzQuoteOut .4s ease forwards;pointer-events:none}
+/* все слайды в одной ячейке сетки: высота = самый длинный слайд, лента ниже не прыгает при смене */
+.carousel-track{position:relative;display:grid;min-height:6.6rem}
+.carousel-item{grid-area:1/1;visibility:hidden;opacity:0;transform:translateY(10px)}
+.carousel-item.is-active{visibility:visible;animation:vzQuoteIn .6s cubic-bezier(.22,1,.36,1) forwards}
+.carousel-item.is-leaving{visibility:visible;animation:vzQuoteOut .4s ease forwards;pointer-events:none}
 @keyframes vzQuoteIn{from{opacity:0;transform:translateY(16px) scale(.98);filter:blur(3px)}to{opacity:1;transform:none;filter:blur(0)}}
 @keyframes vzQuoteOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-12px)}}
 .carousel blockquote{margin:0}
@@ -967,12 +968,13 @@ html[data-theme="dark"] .carousel{box-shadow:0 14px 36px rgba(0,0,0,.28),0 0 40p
 .dots{display:flex;gap:.45rem;justify-content:center;flex:1;flex-wrap:wrap}
 .dot{width:.55rem;height:.55rem;border-radius:50%;border:0;padding:0;background:rgba(139,150,143,.45);cursor:pointer;transition:background .2s,transform .2s,box-shadow .2s}
 .dot[aria-current="true"]{background:var(--accent);transform:scale(1.2);box-shadow:0 0 10px var(--glow)}
-@media(max-width:520px){.carousel{padding:1.1rem 1rem .95rem}.carousel-track{min-height:8.4rem}.vz-gist{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
+.vz-car{min-height:15rem;display:flex;flex-direction:column}.vz-car .carousel-track{flex:1 0 auto;align-content:start}
+@media(max-width:520px){.vz-car{min-height:18.75rem}.carousel{padding:1.1rem 1rem .95rem}.carousel-track{min-height:8.4rem}.vz-gist{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
 @media(prefers-reduced-motion:reduce){
   body.vz :is(.bg-orb,.site-header,.page-intro),.carousel,.carousel-item.is-active,.carousel-item.is-leaving,.spark{animation:none!important}
   body.vz .bg-grid::before{animation:none}
   .carousel-item.is-active{opacity:1;transform:none;filter:none}
-  .carousel-item.is-leaving{display:none}
+  .carousel-item.is-leaving{visibility:hidden}
   body.vz .cursor-glow{display:none}
   body.vz .feed-card:hover{transform:none}
 }
